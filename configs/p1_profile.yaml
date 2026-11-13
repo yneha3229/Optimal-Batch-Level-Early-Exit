@@ -1,0 +1,11 @@
+# P1: per-layer cost profile, c(n) = a + b*n
+model: roberta-base          # architecture only; weights are random (timing does not depend on them)
+num_labels: 3                # MNLI exit head
+gpu_label: A6000             # used in output filenames; run with CUDA_VISIBLE_DEVICES=3
+batch_sizes: [1, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96, 128]
+seq_lens: [64, 128, 256]     # 128 = MNLI padded length we plan to use
+dtypes: [float32, float16]
+modes: [eager, cuda_graph]   # eager = plain PyTorch (research code); cuda_graph = launch overhead removed (optimized server)
+warmup: 10
+repeats: 50
+seed: 0

@@ -1,0 +1,44 @@
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 24459.78it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: textattack/roberta-base-MNLI
+Key                         | Status     |  | 
+----------------------------+------------+--+-
+roberta.pooler.dense.bias   | UNEXPECTED |  | 
+roberta.pooler.dense.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+ep 0 step 500/12270 loss/exit [1.102 1.102 1.097 0.866 0.352 0.23 ] 0.7 min, eta 16.8 min
+ep 0 step 1000/12270 loss/exit [1.103 1.102 0.974 0.604 0.309 0.245] 1.4 min, eta 16.0 min
+ep 0 step 1500/12270 loss/exit [1.103 1.101 0.871 0.512 0.296 0.251] 2.1 min, eta 15.3 min
+ep 0 step 2000/12270 loss/exit [1.103 1.092 0.809 0.465 0.29  0.256] 2.8 min, eta 14.6 min
+ep 0 step 2500/12270 loss/exit [1.102 1.07  0.766 0.436 0.287 0.259] 3.6 min, eta 13.9 min
+ep 0 step 3000/12270 loss/exit [1.102 1.045 0.734 0.416 0.285 0.26 ] 4.3 min, eta 13.3 min
+ep 0 step 3500/12270 loss/exit [1.101 1.019 0.71  0.402 0.283 0.262] 5.0 min, eta 12.6 min
+ep 0 step 4000/12270 loss/exit [1.1   0.994 0.69  0.391 0.282 0.262] 5.7 min, eta 11.9 min
+ep 0 step 4500/12270 loss/exit [1.099 0.973 0.674 0.381 0.28  0.262] 6.5 min, eta 11.1 min
+ep 0 step 5000/12270 loss/exit [1.098 0.954 0.659 0.374 0.279 0.263] 7.2 min, eta 10.4 min
+ep 0 step 5500/12270 loss/exit [1.096 0.937 0.647 0.368 0.278 0.263] 7.9 min, eta 9.7 min
+ep 0 step 6000/12270 loss/exit [1.094 0.922 0.636 0.363 0.277 0.264] 8.6 min, eta 9.0 min
+epoch 0 done: mean loss per exit [1.0934 0.9186 0.6331 0.3614 0.277  0.2634]
+ep 1 step 6500/12270 loss/exit [1.052 0.739 0.479 0.233 0.19  0.188] 9.3 min, eta 8.3 min
+ep 1 step 7000/12270 loss/exit [1.047 0.74  0.475 0.235 0.193 0.191] 10.1 min, eta 7.6 min
+ep 1 step 7500/12270 loss/exit [1.043 0.736 0.475 0.234 0.192 0.189] 10.8 min, eta 6.9 min
+ep 1 step 8000/12270 loss/exit [1.039 0.733 0.472 0.233 0.191 0.189] 11.6 min, eta 6.2 min
+ep 1 step 8500/12270 loss/exit [1.037 0.732 0.471 0.233 0.191 0.189] 12.3 min, eta 5.5 min
+ep 1 step 9000/12270 loss/exit [1.034 0.73  0.469 0.233 0.191 0.188] 13.0 min, eta 4.7 min
+ep 1 step 9500/12270 loss/exit [1.032 0.729 0.467 0.232 0.191 0.188] 13.8 min, eta 4.0 min
+ep 1 step 10000/12270 loss/exit [1.03  0.728 0.465 0.232 0.19  0.188] 14.5 min, eta 3.3 min
+ep 1 step 10500/12270 loss/exit [1.028 0.726 0.464 0.231 0.19  0.188] 15.2 min, eta 2.6 min
+ep 1 step 11000/12270 loss/exit [1.026 0.725 0.462 0.23  0.19  0.187] 16.0 min, eta 1.8 min
+ep 1 step 11500/12270 loss/exit [1.024 0.724 0.461 0.23  0.19  0.187] 16.7 min, eta 1.1 min
+ep 1 step 12000/12270 loss/exit [1.023 0.722 0.46  0.229 0.189 0.186] 17.4 min, eta 0.4 min
+epoch 1 done: mean loss per exit [1.022  0.7218 0.4596 0.2289 0.1884 0.1858]
+training took 17.8 min
+ exit  layer split  accuracy  mean_conf
+    0      2   all    0.5262     0.4893
+    1      4   all    0.7051     0.7191
+    2      6   all    0.8203     0.8506
+    3      8   all    0.8735     0.9312
+    4     10   all    0.8768     0.9422
+    5     12   all    0.8777     0.9437
+oracle (any exit correct): 0.9503; final exit: 0.8777

@@ -1,0 +1,15 @@
+seed 0 done; probes: bandit=300, bandit_probe0.3=99, bandit_probe3=918, bandit_dual1pct=300
+seed 1 done; probes: bandit=314, bandit_probe0.3=84, bandit_probe3=958, bandit_dual1pct=314
+seed 2 done; probes: bandit=295, bandit_probe0.3=85, bandit_probe3=932, bandit_dual1pct=295
+lambda = 0.0003162; mean over the last 500 batches (all seeds):
+  oracle_acc       acc 0.4975  rel_latency 1.154  score 0.4972  fid_score 0.9996
+  oracle_fid       acc 0.4975  rel_latency 1.154  score 0.4972  fid_score 0.9996
+  offline_theory   acc 0.4975  rel_latency 1.154  score 0.4972  fid_score 0.9996
+  bandit           acc 0.4975  rel_latency 1.154  score 0.4972  fid_score 0.9996
+  bandit_probe0.3  acc 0.4975  rel_latency 1.154  score 0.4972  fid_score 0.9996
+  bandit_probe3    acc 0.4975  rel_latency 1.154  score 0.4972  fid_score 0.9996
+  bandit_dual1pct  acc 0.4950  rel_latency 1.140  score 0.4946  fid_score 0.9914
+  ceebert          acc 0.4601  rel_latency 1.406  score 0.4596  fid_score 0.8514
+  cumulative fidelity regret after T=3000: bandit 0.0
+  cumulative fidelity regret after T=3000: bandit_probe0.3 0.0
+  cumulative fidelity regret after T=3000: bandit_probe3 0.0

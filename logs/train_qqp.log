@@ -1,0 +1,53 @@
+Generating train split:   0%|          | 0/363846 [00:00<?, ? examples/s]Generating train split:  17%|█▋        | 62000/363846 [00:00<00:00, 611144.44 examples/s]Generating train split:  42%|████▏     | 151000/363846 [00:00<00:00, 770129.00 examples/s]Generating train split:  65%|██████▍   | 235000/363846 [00:00<00:00, 797078.58 examples/s]Generating train split:  87%|████████▋ | 318000/363846 [00:00<00:00, 805197.54 examples/s]Generating train split: 100%|██████████| 363846/363846 [00:00<00:00, 778662.28 examples/s]
+Generating validation split:   0%|          | 0/40430 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 40430/40430 [00:00<00:00, 692089.26 examples/s]
+Generating test split:   0%|          | 0/390965 [00:00<?, ? examples/s]Generating test split:  13%|█▎        | 52000/390965 [00:00<00:00, 508908.21 examples/s]Generating test split:  34%|███▍      | 133000/390965 [00:00<00:00, 679192.30 examples/s]Generating test split:  55%|█████▍    | 214000/390965 [00:00<00:00, 735766.25 examples/s]Generating test split:  76%|███████▌  | 296000/390965 [00:00<00:00, 765986.96 examples/s]Generating test split:  97%|█████████▋| 378000/390965 [00:00<00:00, 781494.87 examples/s]Generating test split: 100%|██████████| 390965/390965 [00:00<00:00, 738273.96 examples/s]
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3244.38it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: roberta-base
+Key                        | Status     | 
+---------------------------+------------+-
+lm_head.dense.bias         | UNEXPECTED | 
+lm_head.layer_norm.bias    | UNEXPECTED | 
+lm_head.bias               | UNEXPECTED | 
+lm_head.layer_norm.weight  | UNEXPECTED | 
+lm_head.dense.weight       | UNEXPECTED | 
+classifier.dense.weight    | MISSING    | 
+classifier.dense.bias      | MISSING    | 
+classifier.out_proj.bias   | MISSING    | 
+classifier.out_proj.weight | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+ep 0 step 500/11370 loss/exit [0.659 0.649 0.601 0.497 0.469 0.465] 1.1 min, eta 24.9 min
+ep 0 step 1000/11370 loss/exit [0.652 0.623 0.497 0.424 0.41  0.409] 2.2 min, eta 22.5 min
+ep 0 step 1500/11370 loss/exit [0.642 0.581 0.448 0.389 0.379 0.379] 3.3 min, eta 21.9 min
+ep 0 step 2000/11370 loss/exit [0.629 0.549 0.418 0.366 0.359 0.359] 4.4 min, eta 20.5 min
+ep 0 step 2500/11370 loss/exit [0.618 0.525 0.398 0.351 0.345 0.345] 5.4 min, eta 19.1 min
+ep 0 step 3000/11370 loss/exit [0.607 0.505 0.382 0.339 0.334 0.333] 6.5 min, eta 18.1 min
+ep 0 step 3500/11370 loss/exit [0.597 0.49  0.37  0.33  0.325 0.325] 7.5 min, eta 16.8 min
+ep 0 step 4000/11370 loss/exit [0.589 0.477 0.36  0.322 0.318 0.318] 8.5 min, eta 15.7 min
+ep 0 step 4500/11370 loss/exit [0.581 0.466 0.351 0.316 0.312 0.312] 9.5 min, eta 14.5 min
+ep 0 step 5000/11370 loss/exit [0.574 0.456 0.344 0.31  0.306 0.306] 10.5 min, eta 13.4 min
+ep 0 step 5500/11370 loss/exit [0.568 0.447 0.338 0.305 0.301 0.301] 11.5 min, eta 12.3 min
+epoch 0 done: mean loss per exit [0.5655 0.4445 0.3356 0.3029 0.2996 0.2995]
+ep 1 step 6000/11370 loss/exit [0.488 0.338 0.229 0.203 0.201 0.202] 12.5 min, eta 11.2 min
+ep 1 step 6500/11370 loss/exit [0.49  0.335 0.23  0.202 0.201 0.201] 13.5 min, eta 10.1 min
+ep 1 step 7000/11370 loss/exit [0.487 0.334 0.228 0.202 0.2   0.2  ] 14.5 min, eta 9.1 min
+ep 1 step 7500/11370 loss/exit [0.485 0.333 0.228 0.202 0.2   0.2  ] 15.5 min, eta 8.0 min
+ep 1 step 8000/11370 loss/exit [0.484 0.331 0.227 0.201 0.199 0.2  ] 16.5 min, eta 7.0 min
+ep 1 step 8500/11370 loss/exit [0.482 0.33  0.226 0.2   0.198 0.199] 17.5 min, eta 5.9 min
+ep 1 step 9000/11370 loss/exit [0.479 0.328 0.225 0.199 0.198 0.198] 18.6 min, eta 4.9 min
+ep 1 step 9500/11370 loss/exit [0.478 0.326 0.223 0.198 0.197 0.197] 19.6 min, eta 3.9 min
+ep 1 step 10000/11370 loss/exit [0.477 0.325 0.222 0.198 0.196 0.196] 20.6 min, eta 2.8 min
+ep 1 step 10500/11370 loss/exit [0.476 0.324 0.222 0.197 0.196 0.196] 21.6 min, eta 1.8 min
+ep 1 step 11000/11370 loss/exit [0.475 0.323 0.221 0.196 0.195 0.195] 22.6 min, eta 0.8 min
+epoch 1 done: mean loss per exit [0.4744 0.3224 0.2199 0.1956 0.1938 0.194 ]
+training took 23.3 min
+ exit  layer split  accuracy  mean_conf
+    0      2   all    0.7832     0.7936
+    1      4   all    0.8633     0.8717
+    2      6   all    0.9015     0.9229
+    3      8   all    0.9098     0.9340
+    4     10   all    0.9103     0.9356
+    5     12   all    0.9106     0.9375
+oracle (any exit correct): 0.9623; final exit: 0.9106

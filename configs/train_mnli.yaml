@@ -1,0 +1,20 @@
+# Joint backbone + exit-head fine-tuning, RoBERTa-base on MNLI (starts from the MNLI checkpoint)
+task: mnli
+kind: text
+backbone: textattack/roberta-base-MNLI
+tokenizer: textattack/roberta-base-MNLI
+init_heads_from_classifier: true
+classifier_label_perm: [2, 1, 0]   # textattack checkpoint class k == GLUE label perm[k] (checked: 88.0% vs 28.5% unpermuted)
+exit_layers: [2, 4, 6, 8, 10, 12]
+num_labels: 3
+max_len: 128
+epochs: 2
+batch_size: 64
+lr: 2.0e-5          # backbone
+head_lr: 2.0e-4     # exit heads
+weight_decay: 0.01
+warmup_frac: 0.06
+dropout: 0.1
+eval_batch: 256
+log_every: 500
+seed: 0

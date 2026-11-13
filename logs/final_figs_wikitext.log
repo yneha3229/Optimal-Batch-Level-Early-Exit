@@ -1,0 +1,14 @@
+wrote /home/neha/ie624/figures/ex1_speedup_vs_batch_wikitext.png
+wrote /home/neha/ie624/figures/ex4_pareto_B64_wikitext.png
+wrote /home/neha/ie624/results/matched_table_wikitext.md
+wrote /home/neha/ie624/figures/ex6_attack_wikitext.png
+wrote /home/neha/ie624/figures/ex8_rescue_hardest10_wikitext.png
+Traceback (most recent call last):
+  File "/home/neha/ie624/analysis/make_figures.py", line 347, in <module>
+    main()
+  File "/home/neha/ie624/analysis/make_figures.py", line 339, in main
+    main_table(t, sel, gpu)
+  File "/home/neha/ie624/analysis/make_figures.py", line 255, in main_table
+    real = f"{g.loc[f, 'real_speedup']:.2f}×" if g is not None and f in g.index else "—"
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported format string passed to Series.__format__

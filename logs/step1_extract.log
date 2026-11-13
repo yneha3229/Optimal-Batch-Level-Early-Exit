@@ -1,0 +1,19 @@
+mnli val (9815, 6, 768) final acc 0.8779419256240448
+Traceback (most recent call last):
+  File "/home/neha/ie624/traces/extract_hidden.py", line 70, in <module>
+    main()
+  File "/home/neha/ie624/traces/extract_hidden.py", line 66, in main
+    print(args.task, "train", cls.shape, "final acc", (probs[:, -1].argmax(-1) == data.y_tr[:n]).mean(), flush=True)
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: operands could not be broadcast together with shapes (50176,) (50000,) 
+qqp val (40430, 6, 768) final acc 0.9106109324758842
+Traceback (most recent call last):
+  File "/home/neha/ie624/traces/extract_hidden.py", line 70, in <module>
+    main()
+  File "/home/neha/ie624/traces/extract_hidden.py", line 66, in main
+    print(args.task, "train", cls.shape, "final acc", (probs[:, -1].argmax(-1) == data.y_tr[:n]).mean(), flush=True)
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: operands could not be broadcast together with shapes (50176,) (50000,) 
+cifar100 val (10000, 6, 768) final acc 0.9331
+cifar100 train (50000, 6, 768) final acc 0.9883
+ALLDONE

@@ -1,0 +1,13 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+# large or rebuildable artefacts
+checkpoints/
+data/
+traces/hidden/
+traces/*.pt
+logs/smoke/
+evolve/runs/
+# unrelated coursework and third-party papers
+quiz4/
+docs/papers/

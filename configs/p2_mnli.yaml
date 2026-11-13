@@ -1,0 +1,13 @@
+# P2: exit heads on frozen MNLI-fine-tuned RoBERTa-base (DeeBERT stage-2 style)
+backbone: textattack/roberta-base-MNLI
+exit_layers: [2, 4, 6, 8, 10, 12]
+num_labels: 3
+max_len: 128
+train_samples: 100000      # of 393k MNLI train; heads are small, this is plenty for a preliminary run
+feat_batch: 256
+epochs: 4
+batch_size: 256
+lr: 0.002
+weight_decay: 0.01
+dropout: 0.1
+seed: 0

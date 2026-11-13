@@ -1,0 +1,5 @@
+{'task': 'mnli', 'exit': 0, 'heldout_acc': 0.5285, 'train_acc': 0.5298, 'conf': 0.6185, 'lr_evolve': 0.604, 'lr_train': 0.6449, 'mlp_train': 0.6352, 'mlp_train+prev': 0.6352, 'best_gain': 0.0264}
+{'task': 'mnli', 'exit': 1, 'heldout_acc': 0.7011, 'train_acc': 0.7302, 'conf': 0.7382, 'lr_evolve': 0.726, 'lr_train': 0.7414, 'mlp_train': 0.7343, 'mlp_train+prev': 0.7185, 'best_gain': 0.0032}
+{'task': 'mnli', 'exit': 2, 'heldout_acc': 0.8142, 'train_acc': 0.864, 'conf': 0.8011, 'lr_evolve': 0.7601, 'lr_train': 0.7936, 'mlp_train': 0.7827, 'mlp_train+prev': 0.7724, 'best_gain': -0.0076}
+{'task': 'mnli', 'exit': 3, 'heldout_acc': 0.8692, 'train_acc': 0.9571, 'conf': 0.8267, 'lr_evolve': 0.8078, 'lr_train': 0.7941, 'mlp_train': 0.7688, 'mlp_train+prev': 0.7838, 'best_gain': -0.0189}
+{'task': 'mnli', 'exit': 4, 'heldout_acc': 0.8763, 'train_acc': 0.9669, 'conf': 0.8242, 'lr_evolve': 0.8242, 'lr_train': 0.7977, 'mlp_train': 0.7941, 'mlp_train+prev': 0.7681, 'best_gain': -0.0001}

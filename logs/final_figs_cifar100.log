@@ -1,0 +1,21 @@
+wrote /home/neha/ie624/figures/ex1_speedup_vs_batch_cifar100.png
+Traceback (most recent call last):
+  File "/home/neha/ie624/analysis/make_figures.py", line 347, in <module>
+    main()
+  File "/home/neha/ie624/analysis/make_figures.py", line 334, in main
+    ex3_flops_gap(t, sel, gpu)
+  File "/home/neha/ie624/analysis/make_figures.py", line 111, in ex3_flops_gap
+    real = gpu[reg].set_index("family").reindex(fams).real_speedup if reg in gpu else s.loc[fams, "heldout_speedup"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/neha/venv/lib/python3.12/site-packages/pandas/core/frame.py", line 6092, in reindex
+    return super().reindex(
+           ^^^^^^^^^^^^^^^^
+  File "/home/neha/venv/lib/python3.12/site-packages/pandas/core/generic.py", line 5464, in reindex
+    return self._reindex_axes(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/neha/venv/lib/python3.12/site-packages/pandas/core/generic.py", line 5486, in _reindex_axes
+    new_index, indexer = ax.reindex(
+                         ^^^^^^^^^^^
+  File "/home/neha/venv/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 4253, in reindex
+    raise ValueError("cannot reindex on an axis with duplicate labels")
+ValueError: cannot reindex on an axis with duplicate labels

@@ -1,0 +1,80 @@
+regimes: {'enc_eager_meas': (0.3824, 0.02158, 0.4952), 'dec_eager': (0.8991, 0.00015, 0.1495)}
+attack pool: hardest_2pct 98 | funsearch program: False
+
+=== enc_eager_meas: held-out speedup at matched accuracy (sim) ===
+B                       1     8     16    32    64    128
+family                                                   
+bandit                 0.68  1.00  0.93  1.09  1.23  1.35
+bandit+rescue_conf     0.68  1.00  0.93  1.09  1.23  1.35
+bandit_t3pct           0.68  1.00  1.04  1.32  1.36  1.47
+ceebert                1.11  0.91  0.96  1.06  1.27  1.44
+consensus              1.21  1.01  1.11  1.13  1.31  1.36
+full                   1.00  1.00  1.00  1.00  1.00  1.00
+greedy                 1.21   NaN   NaN   NaN   NaN   NaN
+lanes                  1.10  0.99  0.94  1.08  1.32  1.52
+majority               1.21  1.12  1.22  1.31  1.36  1.42
+random_collective      1.22  1.15  1.29  1.39  1.61  1.67
+theory                 1.27  1.21  1.34  1.45  1.60  1.73
+theory+rescue_conf     1.23  1.19  1.31  1.45  1.60  1.73
+theory+rescue_learned  1.27  1.21  1.34  1.45  1.60  1.73
+theory_indiv_only      1.29  1.19  1.29  1.44  1.60  1.73
+threshold              1.21  0.92  0.96  1.10  1.28  1.46
+threshold_nocompact    1.21  0.85  0.82  0.85  0.90  0.94
+unified                1.02  1.11  1.18  1.27  1.35  1.41
+--- enc_eager_meas, B=64 detail ---
+               family  heldout_acc  heldout_acc_drop  heldout_speedup  heldout_flops_frac  hard10_acc  victim_slowdown_k1
+               bandit       0.8697            0.0069           1.2274              0.6211      0.5448              1.0336
+   bandit+rescue_conf       0.8690            0.0076           1.2274              0.6211      0.5428              1.0336
+         bandit_t3pct       0.8683            0.0082           1.3644              0.5655      0.5387              1.0223
+              ceebert       0.8686            0.0079           1.2709              0.5720      0.5519              1.0066
+            consensus       0.8602            0.0164           1.3111              0.6844      0.4898              1.0801
+                 full       0.8766            0.0000           1.0000              1.0000      0.5418              1.0000
+                lanes       0.8508            0.0257           1.3235              0.5327         NaN                 NaN
+             majority       0.8633            0.0132           1.3620              0.6589      0.4756              1.0141
+    random_collective       0.8555            0.0210           1.6056              0.5113      0.4908              1.0096
+               theory       0.8533            0.0232           1.5986              0.5133      0.4898              1.0032
+   theory+rescue_conf       0.8533            0.0232           1.5986              0.5133      0.4898              1.0032
+theory+rescue_learned       0.8533            0.0232           1.5986              0.5133      0.4898              1.0032
+    theory_indiv_only       0.8533            0.0232           1.5986              0.5133      0.4898              1.0032
+            threshold       0.8664            0.0102           1.2815              0.5636      0.5397              1.0074
+  threshold_nocompact       0.8664            0.0102           0.8974              0.5636      0.5397                 NaN
+              unified       0.8659            0.0106           1.3461              0.6667      0.4837              1.0000
+
+=== dec_eager: held-out speedup at matched accuracy (sim) ===
+B                       1     8     16    32    64    128
+family                                                   
+bandit                 0.94  1.11  0.94  1.17  1.09  1.12
+bandit+rescue_conf     0.94  1.11  0.94  1.17  1.09  1.12
+bandit_t3pct           0.94  1.54  1.20  1.37  1.22  1.24
+ceebert                1.52  1.06  0.97  0.94  0.94  0.94
+consensus              1.65  1.27  1.32  1.26  1.37  1.36
+full                   1.00  1.00  1.00  1.00  1.00  1.00
+greedy                 1.65   NaN   NaN   NaN   NaN   NaN
+lanes                  1.50  1.15  0.96  0.94  0.94  0.95
+majority               1.65  1.41  1.45  1.46  1.42  1.41
+random_collective      1.66  1.40  1.46  1.41  1.42  1.41
+theory                 1.74  1.49  1.52  1.49  1.43  1.42
+theory+rescue_conf     1.69  1.45  1.42  1.41  1.41  1.42
+theory+rescue_learned  1.74  1.54  1.52  1.49  1.43  1.42
+theory_indiv_only      1.41  1.27  1.41  1.41  1.41  1.41
+threshold              1.65  1.07  0.98  0.95  0.94  0.95
+threshold_nocompact    1.65  1.07  0.98  0.94  0.94  0.94
+unified                1.40  1.40  1.40  1.40  1.40  1.41
+--- dec_eager, B=64 detail ---
+               family  heldout_acc  heldout_acc_drop  heldout_speedup  heldout_flops_frac  hard10_acc  victim_slowdown_k1
+               bandit       0.8755            0.0010           1.0934              0.8567      0.5316              1.0263
+   bandit+rescue_conf       0.8682            0.0083           1.0934              0.8567      0.5071              1.0263
+         bandit_t3pct       0.8728            0.0038           1.2164              0.7700      0.5173              1.0313
+              ceebert       0.8686            0.0079           0.9405              0.5720      0.5519              1.0001
+            consensus       0.8602            0.0164           1.3685              0.6844      0.4898              1.0801
+                 full       0.8766            0.0000           1.0000              1.0000      0.5418              1.0000
+                lanes       0.8508            0.0257           0.9441              0.5327         NaN                 NaN
+             majority       0.8633            0.0132           1.4216              0.6589      0.4756              1.0141
+    random_collective       0.8640            0.0126           1.4189              0.5609      0.5000              1.0128
+               theory       0.8625            0.0141           1.4315              0.6394      0.4837              1.0078
+   theory+rescue_conf       0.8614            0.0152           1.4076              0.6494      0.4949              1.0000
+theory+rescue_learned       0.8622            0.0144           1.4315              0.6394      0.4807              1.0078
+    theory_indiv_only       0.8533            0.0232           1.4081              0.5133      0.4898              1.0000
+            threshold       0.8664            0.0102           0.9406              0.5636      0.5397              1.0017
+  threshold_nocompact       0.8664            0.0102           0.9366              0.5636      0.5397                 NaN
+              unified       0.8659            0.0106           1.4050              0.6667      0.4837              1.0000

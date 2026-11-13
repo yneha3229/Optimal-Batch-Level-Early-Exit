@@ -1,0 +1,40 @@
+sanity: runner vs trace final-exit agreement 1.0000
+B=   8 full                     18.067s acc 0.9116
+B=   8 heads_only               22.249s acc 0.9116
+B=   8 bandit                   24.163s acc 0.9116
+B=   8 bandit+rescue_conf       24.653s acc 0.9116
+B=   8 bandit_t3pct             17.032s acc 0.9069
+B=   8 ceebert                  22.762s acc 0.9093
+B=   8 consensus                14.524s acc 0.9021
+B=   8 majority                 14.535s acc 0.9011
+B=   8 random_collective        14.818s acc 0.9027
+B=   8 theory                   13.212s acc 0.9004
+B=   8 theory+rescue_conf       15.170s acc 0.8998
+B=   8 theory+rescue_learned    13.173s acc 0.9004
+B=   8 theory_hist              13.271s acc 0.8998
+B=   8 theory_indiv_only        15.520s acc 0.9019
+B=   8 theory_robust            13.342s acc 0.9004
+B=   8 theory_robust8           12.982s acc 0.9004
+B=   8 threshold                20.682s acc 0.9029
+B=   8 threshold_nocompact      20.794s acc 0.9029
+B=   8 unified                  11.893s acc 0.9011
+ B                family  accuracy  acc_drop_pts  real_speedup  sim_speedup
+ 8                  full     0.912         0.000         1.000        1.000
+ 8            heads_only     0.912         0.000         0.812          NaN
+ 8                bandit     0.912         0.000         0.748        0.844
+ 8    bandit+rescue_conf     0.912         0.000         0.733        0.844
+ 8          bandit_t3pct     0.907         0.470         1.061        1.406
+ 8               ceebert     0.909         0.228         0.794        0.958
+ 8             consensus     0.902         0.955         1.244        1.381
+ 8              majority     0.901         1.049         1.243        1.427
+ 8     random_collective     0.903         0.891         1.219        1.535
+ 8                theory     0.900         1.123         1.367        1.805
+ 8    theory+rescue_conf     0.900         1.183         1.191        1.593
+ 8 theory+rescue_learned     0.900         1.123         1.371        1.805
+ 8           theory_hist     0.900         1.178         1.361        1.800
+ 8     theory_indiv_only     0.902         0.970         1.164        1.572
+ 8         theory_robust     0.900         1.123         1.354        1.805
+ 8        theory_robust8     0.900         1.118         1.392        1.828
+ 8             threshold     0.903         0.876         0.874        1.085
+ 8   threshold_nocompact     0.903         0.871         0.869        0.956
+ 8               unified     0.901         1.049         1.519        1.660

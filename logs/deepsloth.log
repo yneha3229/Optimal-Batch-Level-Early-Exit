@@ -1,0 +1,16 @@
+50/500
+100/500
+150/500
+200/500
+250/500
+300/500
+350/500
+400/500
+450/500
+500/500
+exit 0: mean conf clean 0.300 -> attacked 0.065; acc clean 0.422 -> attacked 0.188
+exit 1: mean conf clean 0.573 -> attacked 0.046; acc clean 0.724 -> attacked 0.100
+exit 2: mean conf clean 0.689 -> attacked 0.043; acc clean 0.828 -> attacked 0.124
+exit 3: mean conf clean 0.756 -> attacked 0.042; acc clean 0.886 -> attacked 0.146
+exit 4: mean conf clean 0.812 -> attacked 0.041; acc clean 0.910 -> attacked 0.174
+exit 5: mean conf clean 0.847 -> attacked 0.264; acc clean 0.940 -> attacked 0.346

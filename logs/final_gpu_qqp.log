@@ -1,0 +1,116 @@
+sanity: runner vs trace final-exit agreement 1.0000
+B=  16 full                     9.164s acc 0.9116
+B=  16 heads_only               11.285s acc 0.9116
+B=  16 bandit                   10.765s acc 0.9088
+B=  16 bandit+rescue_conf       11.114s acc 0.9060
+B=  16 bandit_t3pct             9.708s acc 0.9064
+B=  16 ceebert                  11.773s acc 0.9016
+B=  16 consensus                7.854s acc 0.9037
+B=  16 majority                 7.994s acc 0.9039
+B=  16 random_collective        7.367s acc 0.9013
+B=  16 theory                   7.267s acc 0.9024
+B=  16 theory+rescue_conf       8.075s acc 0.8993
+B=  16 theory+rescue_learned    7.275s acc 0.9024
+B=  16 theory_hist              7.218s acc 0.8987
+B=  16 theory_indiv_only        8.480s acc 0.9018
+B=  16 theory_robust            6.791s acc 0.8980
+B=  16 theory_robust8           6.755s acc 0.8972
+B=  16 threshold                11.755s acc 0.9029
+B=  16 threshold_nocompact      11.806s acc 0.9029
+B=  16 unified                  6.051s acc 0.9011
+B=  64 full                     6.496s acc 0.9115
+B=  64 heads_only               6.765s acc 0.9115
+B=  64 bandit                   4.362s acc 0.9089
+B=  64 bandit+rescue_conf       4.385s acc 0.9079
+B=  64 bandit_t3pct             3.140s acc 0.8932
+B=  64 ceebert                  4.049s acc 0.9015
+B=  64 consensus                5.292s acc 0.9065
+B=  64 majority                 4.064s acc 0.9048
+B=  64 random_collective        2.830s acc 0.8972
+B=  64 theory                   3.008s acc 0.8995
+B=  64 theory+rescue_conf       3.051s acc 0.8968
+B=  64 theory+rescue_learned    3.012s acc 0.8995
+B=  64 theory_hist              2.914s acc 0.8981
+B=  64 theory_indiv_only        3.200s acc 0.8985
+B=  64 theory_robust            2.982s acc 0.8983
+B=  64 theory_robust8           2.929s acc 0.8972
+B=  64 threshold                3.994s acc 0.9000
+B=  64 threshold_nocompact      6.896s acc 0.8999
+B=  64 unified                  3.580s acc 0.9010
+B= 128 full                     6.004s acc 0.9115
+B= 128 heads_only               6.122s acc 0.9115
+B= 128 bandit                   3.400s acc 0.9087
+B= 128 bandit+rescue_conf       3.424s acc 0.9085
+B= 128 bandit_t3pct             2.688s acc 0.8976
+B= 128 ceebert                  3.671s acc 0.9092
+B= 128 consensus                3.889s acc 0.8950
+B= 128 majority                 3.058s acc 0.8974
+B= 128 random_collective        2.518s acc 0.8985
+B= 128 theory                   2.476s acc 0.8985
+B= 128 theory+rescue_conf       2.489s acc 0.8984
+B= 128 theory+rescue_learned    2.453s acc 0.8985
+B= 128 theory_hist              2.535s acc 0.8996
+B= 128 theory_indiv_only        2.469s acc 0.8986
+B= 128 theory_robust            2.577s acc 0.8993
+B= 128 theory_robust8           2.572s acc 0.8988
+B= 128 threshold                3.103s acc 0.9028
+B= 128 threshold_nocompact      6.177s acc 0.9028
+B= 128 unified                  3.135s acc 0.9009
+  B                family  accuracy  acc_drop_pts  real_speedup  sim_speedup
+ 16                  full     0.912         0.000         1.000        1.000
+ 16            heads_only     0.912         0.000         0.812          NaN
+ 16                bandit     0.909         0.277         0.851        1.278
+ 16    bandit+rescue_conf     0.906         0.559         0.825        1.278
+ 16          bandit_t3pct     0.906         0.525         0.944        1.428
+ 16               ceebert     0.902         1.000         0.778        1.140
+ 16             consensus     0.904         0.797         1.167        1.336
+ 16              majority     0.904         0.772         1.146        1.302
+ 16     random_collective     0.901         1.029         1.244        1.641
+ 16                theory     0.902         0.925         1.261        1.854
+ 16    theory+rescue_conf     0.899         1.227         1.135        1.706
+ 16 theory+rescue_learned     0.902         0.925         1.260        1.854
+ 16           theory_hist     0.899         1.292         1.270        1.884
+ 16     theory_indiv_only     0.902         0.980         1.081        1.635
+ 16         theory_robust     0.898         1.361         1.350        1.960
+ 16        theory_robust8     0.897         1.440         1.357        1.965
+ 16             threshold     0.903         0.871         0.780        1.123
+ 16   threshold_nocompact     0.903         0.871         0.776        0.888
+ 16               unified     0.901         1.049         1.515        1.723
+ 64                  full     0.912         0.000         1.000        1.000
+ 64            heads_only     0.912         0.000         0.960          NaN
+ 64                bandit     0.909         0.263         1.489        1.555
+ 64    bandit+rescue_conf     0.908         0.357         1.481        1.555
+ 64          bandit_t3pct     0.893         1.830         2.069        2.223
+ 64               ceebert     0.902         0.997         1.605        1.610
+ 64             consensus     0.906         0.501         1.228        1.244
+ 64              majority     0.905         0.675         1.598        1.659
+ 64     random_collective     0.897         1.434         2.295        2.330
+ 64                theory     0.900         1.200         2.159        2.267
+ 64    theory+rescue_conf     0.897         1.473         2.129        2.267
+ 64 theory+rescue_learned     0.900         1.200         2.156        2.267
+ 64           theory_hist     0.898         1.339         2.229        2.336
+ 64     theory_indiv_only     0.898         1.305         2.030        2.166
+ 64         theory_robust     0.898         1.319         2.178        2.324
+ 64        theory_robust8     0.897         1.434         2.218        2.356
+ 64             threshold     0.900         1.156         1.627        1.632
+ 64   threshold_nocompact     0.900         1.161         0.942        0.935
+ 64               unified     0.901         1.047         1.814        1.869
+128                  full     0.911         0.000         1.000        1.000
+128            heads_only     0.911         0.000         0.981          NaN
+128                bandit     0.909         0.274         1.766        1.770
+128    bandit+rescue_conf     0.908         0.299         1.753        1.770
+128          bandit_t3pct     0.898         1.388         2.233        2.278
+128               ceebert     0.909         0.229         1.635        1.559
+128             consensus     0.895         1.652         1.544        1.426
+128              majority     0.897         1.403         1.963        1.989
+128     random_collective     0.898         1.299         2.384        2.407
+128                theory     0.898         1.299         2.425        2.471
+128    theory+rescue_conf     0.898         1.304         2.412        2.471
+128 theory+rescue_learned     0.898         1.299         2.448        2.471
+128           theory_hist     0.900         1.189         2.368        2.416
+128     theory_indiv_only     0.899         1.284         2.432        2.442
+128         theory_robust     0.899         1.219         2.330        2.398
+128        theory_robust8     0.899         1.269         2.334        2.420
+128             threshold     0.903         0.871         1.935        1.843
+128   threshold_nocompact     0.903         0.871         0.972        0.962
+128               unified     0.901         1.055         1.915        1.923

@@ -1,0 +1,40 @@
+cost regimes:
+  enc_eager: a=0.3824 b=0.02158 head=0.1495
+  enc_graph: a=0.0525 b=0.02453 head=0.0215
+  enc_3080ti: a=0.3789 b=0.02992 head=0.1536
+  enc_eager_meas: a=0.3824 b=0.02158 head=0.4952
+  dec_eager: a=0.8991 b=0.00015 head=0.1495
+2040 jobs
+
+held-out wall-clock speedup at matched accuracy (sim):
+family              threshold  threshold_nocompact  consensus  majority  greedy  random_collective  theory_indiv_only  theory
+regime         B                                                                                                             
+dec_eager      1         1.15                 1.15       1.15      1.15    1.15               1.15               1.09    1.12
+               16        0.95                 0.95       1.11      1.13    1.13               1.12               0.96    1.12
+               64        0.94                 0.94       1.09      1.13     NaN               1.12               0.94    1.12
+               128       0.94                 0.94       1.07      1.12     NaN               1.13               0.94    1.12
+enc_3080ti     1         1.07                 1.07       1.07      1.07    1.07               1.07               1.08    1.07
+               16        1.03                 0.94       1.11      1.12    1.12               1.13               1.06    1.12
+               64        1.13                 0.97       1.13      1.17     NaN               1.19               1.15    1.18
+               128       1.17                 0.99       1.12      1.18     NaN               1.21               1.20    1.20
+enc_eager      1         1.07                 1.07       1.07      1.07    1.07               1.07               1.08    1.07
+               16        1.00                 0.93       1.10      1.11    1.11               1.12               1.05    1.12
+               64        1.11                 0.97       1.12      1.17     NaN               1.18               1.13    1.16
+               128       1.16                 0.98       1.12      1.18     NaN               1.21               1.19    1.19
+enc_eager_meas 1         0.84                 0.84       0.84      0.84    0.84               0.84               0.84    0.84
+               16        0.85                 0.80       0.94      0.95    0.95               0.95               0.89    0.95
+               64        1.02                 0.90       1.04      1.08     NaN               1.09               1.04    1.08
+               128       1.10                 0.94       1.07      1.13     NaN               1.15               1.12    1.14
+enc_graph      1         1.10                 1.10       1.10      1.10    1.10               1.10               1.11    1.10
+               16        1.16                 0.99       1.16      1.18    1.18               1.20               1.18    1.18
+               64        1.20                 0.99       1.16      1.20     NaN               1.22               1.22    1.22
+               128       1.21                 1.00       1.13      1.20     NaN               1.24               1.23    1.23
+
+held-out accuracy drop vs full at B=64:
+family          threshold  threshold_nocompact  consensus  majority  random_collective  theory_indiv_only  theory
+regime                                                                                                           
+dec_eager            1.18                 0.18       0.09      0.49               0.72               0.57    0.15
+enc_3080ti           1.18                 1.18       0.09      0.49               0.72               1.15    0.66
+enc_eager            1.18                 1.18       0.09      0.49               0.72               1.15    0.29
+enc_eager_meas       1.18                 0.18       0.09      0.49               0.72               1.15    0.26
+enc_graph            1.18                 1.18       0.09      0.49               0.72               1.15    1.15

@@ -1,0 +1,535 @@
+time=2026-11-06T09:01:44.621Z level=INFO source=routes.go:1511 msg="server config" env="map[CUDA_VISIBLE_DEVICES:3 GGML_VK_VISIBLE_DEVICES: GPU_DEVICE_ORDINAL: HIP_VISIBLE_DEVICES: HSA_OVERRIDE_GFX_VERSION: HTTPS_PROXY: HTTP_PROXY: NO_PROXY: OLLAMA_CONTEXT_LENGTH:16384 OLLAMA_DEBUG:INFO OLLAMA_FLASH_ATTENTION:false OLLAMA_GPU_OVERHEAD:0 OLLAMA_HOST:http://127.0.0.1:11500 OLLAMA_INTEL_GPU:false OLLAMA_KEEP_ALIVE:24h0m0s OLLAMA_KV_CACHE_TYPE: OLLAMA_LLM_LIBRARY: OLLAMA_LOAD_TIMEOUT:5m0s OLLAMA_MAX_LOADED_MODELS:0 OLLAMA_MAX_QUEUE:512 OLLAMA_MODELS:/home/neha/.ollama/models OLLAMA_MULTIUSER_CACHE:false OLLAMA_NEW_ENGINE:false OLLAMA_NOHISTORY:false OLLAMA_NOPRUNE:false OLLAMA_NUM_PARALLEL:6 OLLAMA_ORIGINS:[http://localhost https://localhost http://localhost:* https://localhost:* http://127.0.0.1 https://127.0.0.1 http://127.0.0.1:* https://127.0.0.1:* http://0.0.0.0 https://0.0.0.0 http://0.0.0.0:* https://0.0.0.0:* app://* file://* tauri://* vscode-webview://* vscode-file://*] OLLAMA_REMOTES:[ollama.com] OLLAMA_SCHED_SPREAD:false ROCR_VISIBLE_DEVICES: http_proxy: https_proxy: no_proxy:]"
+time=2026-11-06T09:01:44.621Z level=INFO source=images.go:522 msg="total blobs: 5"
+time=2026-11-06T09:01:44.621Z level=INFO source=images.go:529 msg="total unused blobs removed: 0"
+time=2026-11-06T09:01:44.621Z level=INFO source=routes.go:1564 msg="Listening on 127.0.0.1:11500 (version 0.12.6)"
+time=2026-11-06T09:01:44.622Z level=INFO source=runner.go:80 msg="discovering available GPUs..."
+time=2026-11-06T09:01:51.770Z level=INFO source=types.go:112 msg="inference compute" id=GPU-1b3bc612-c5ec-6981-551f-20f3505b5c9e library=CUDA compute=8.6 name=CUDA0 description="NVIDIA RTX A6000" libdirs=ollama,cuda_v13 driver=13.0 pci_id=5e:00.0 type=discrete total="48.0 GiB" available="47.4 GiB"
+llama_model_loader: loaded meta data with 34 key-value pairs and 339 tensors from /home/neha/.ollama/models/blobs/sha256-60e05f2100071479f596b964f89f510f057ce397ea22f2833a0cfe029bfc2463 (version GGUF V3 (latest))
+llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+llama_model_loader: - kv   0:                       general.architecture str              = qwen2
+llama_model_loader: - kv   1:                               general.type str              = model
+llama_model_loader: - kv   2:                               general.name str              = Qwen2.5 Coder 7B Instruct
+llama_model_loader: - kv   3:                           general.finetune str              = Instruct
+llama_model_loader: - kv   4:                           general.basename str              = Qwen2.5-Coder
+llama_model_loader: - kv   5:                         general.size_label str              = 7B
+llama_model_loader: - kv   6:                            general.license str              = apache-2.0
+llama_model_loader: - kv   7:                       general.license.link str              = https://huggingface.co/Qwen/Qwen2.5-C...
+llama_model_loader: - kv   8:                   general.base_model.count u32              = 1
+llama_model_loader: - kv   9:                  general.base_model.0.name str              = Qwen2.5 Coder 7B
+llama_model_loader: - kv  10:          general.base_model.0.organization str              = Qwen
+llama_model_loader: - kv  11:              general.base_model.0.repo_url str              = https://huggingface.co/Qwen/Qwen2.5-C...
+llama_model_loader: - kv  12:                               general.tags arr[str,6]       = ["code", "codeqwen", "chat", "qwen", ...
+llama_model_loader: - kv  13:                          general.languages arr[str,1]       = ["en"]
+llama_model_loader: - kv  14:                          qwen2.block_count u32              = 28
+llama_model_loader: - kv  15:                       qwen2.context_length u32              = 32768
+llama_model_loader: - kv  16:                     qwen2.embedding_length u32              = 3584
+llama_model_loader: - kv  17:                  qwen2.feed_forward_length u32              = 18944
+llama_model_loader: - kv  18:                 qwen2.attention.head_count u32              = 28
+llama_model_loader: - kv  19:              qwen2.attention.head_count_kv u32              = 4
+llama_model_loader: - kv  20:                       qwen2.rope.freq_base f32              = 1000000.000000
+llama_model_loader: - kv  21:     qwen2.attention.layer_norm_rms_epsilon f32              = 0.000001
+llama_model_loader: - kv  22:                          general.file_type u32              = 15
+llama_model_loader: - kv  23:                       tokenizer.ggml.model str              = gpt2
+llama_model_loader: - kv  24:                         tokenizer.ggml.pre str              = qwen2
+llama_model_loader: - kv  25:                      tokenizer.ggml.tokens arr[str,152064]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+llama_model_loader: - kv  26:                  tokenizer.ggml.token_type arr[i32,152064]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+llama_model_loader: - kv  27:                      tokenizer.ggml.merges arr[str,151387]  = ["Ġ Ġ", "ĠĠ ĠĠ", "i n", "Ġ t",...
+llama_model_loader: - kv  28:                tokenizer.ggml.eos_token_id u32              = 151645
+llama_model_loader: - kv  29:            tokenizer.ggml.padding_token_id u32              = 151643
+llama_model_loader: - kv  30:                tokenizer.ggml.bos_token_id u32              = 151643
+llama_model_loader: - kv  31:               tokenizer.ggml.add_bos_token bool             = false
+llama_model_loader: - kv  32:                    tokenizer.chat_template str              = {%- if tools %}\n    {{- '<|im_start|>...
+llama_model_loader: - kv  33:               general.quantization_version u32              = 2
+llama_model_loader: - type  f32:  141 tensors
+llama_model_loader: - type q4_K:  169 tensors
+llama_model_loader: - type q6_K:   29 tensors
+print_info: file format = GGUF V3 (latest)
+print_info: file type   = Q4_K - Medium
+print_info: file size   = 4.36 GiB (4.91 BPW) 
+load: printing all EOG tokens:
+load:   - 151643 ('<|endoftext|>')
+load:   - 151645 ('<|im_end|>')
+load:   - 151662 ('<|fim_pad|>')
+load:   - 151663 ('<|repo_name|>')
+load:   - 151664 ('<|file_sep|>')
+load: special tokens cache size = 22
+load: token to piece cache size = 0.9310 MB
+print_info: arch             = qwen2
+print_info: vocab_only       = 1
+print_info: model type       = ?B
+print_info: model params     = 7.62 B
+print_info: general.name     = Qwen2.5 Coder 7B Instruct
+print_info: vocab type       = BPE
+print_info: n_vocab          = 152064
+print_info: n_merges         = 151387
+print_info: BOS token        = 151643 '<|endoftext|>'
+print_info: EOS token        = 151645 '<|im_end|>'
+print_info: EOT token        = 151645 '<|im_end|>'
+print_info: PAD token        = 151643 '<|endoftext|>'
+print_info: LF token         = 198 'Ċ'
+print_info: FIM PRE token    = 151659 '<|fim_prefix|>'
+print_info: FIM SUF token    = 151661 '<|fim_suffix|>'
+print_info: FIM MID token    = 151660 '<|fim_middle|>'
+print_info: FIM PAD token    = 151662 '<|fim_pad|>'
+print_info: FIM REP token    = 151663 '<|repo_name|>'
+print_info: FIM SEP token    = 151664 '<|file_sep|>'
+print_info: EOG token        = 151643 '<|endoftext|>'
+print_info: EOG token        = 151645 '<|im_end|>'
+print_info: EOG token        = 151662 '<|fim_pad|>'
+print_info: EOG token        = 151663 '<|repo_name|>'
+print_info: EOG token        = 151664 '<|file_sep|>'
+print_info: max token length = 256
+llama_model_load: vocab only - skipping tensors
+time=2026-11-06T09:02:01.156Z level=INFO source=server.go:400 msg="starting runner" cmd="/usr/local/bin/ollama runner --model /home/neha/.ollama/models/blobs/sha256-60e05f2100071479f596b964f89f510f057ce397ea22f2833a0cfe029bfc2463 --port 45313"
+time=2026-11-06T09:02:01.162Z level=INFO source=server.go:505 msg="system memory" total="93.0 GiB" free="75.6 GiB" free_swap="24.0 GiB"
+time=2026-11-06T09:02:01.163Z level=INFO source=memory.go:36 msg="new model will fit in available VRAM across minimum required GPUs, loading" model=/home/neha/.ollama/models/blobs/sha256-60e05f2100071479f596b964f89f510f057ce397ea22f2833a0cfe029bfc2463 library=CUDA parallel=6 required="15.5 GiB" gpus=1
+time=2026-11-06T09:02:01.164Z level=INFO source=server.go:545 msg=offload library=CUDA layers.requested=-1 layers.model=29 layers.offload=29 layers.split=[29] memory.available="[47.4 GiB]" memory.gpu_overhead="0 B" memory.required.full="15.5 GiB" memory.required.partial="15.5 GiB" memory.required.kv="5.2 GiB" memory.required.allocations="[15.5 GiB]" memory.weights.total="4.1 GiB" memory.weights.repeating="3.7 GiB" memory.weights.nonrepeating="426.4 MiB" memory.graph.full="5.5 GiB" memory.graph.partial="6.8 GiB"
+time=2026-11-06T09:02:01.178Z level=INFO source=runner.go:893 msg="starting go runner"
+load_backend: loaded CPU backend from /usr/local/lib/ollama/libggml-cpu-skylakex.so
+ggml_cuda_init: GGML_CUDA_FORCE_MMQ:    no
+ggml_cuda_init: GGML_CUDA_FORCE_CUBLAS: no
+ggml_cuda_init: found 1 CUDA devices:
+  Device 0: NVIDIA RTX A6000, compute capability 8.6, VMM: yes, ID: GPU-1b3bc612-c5ec-6981-551f-20f3505b5c9e
+load_backend: loaded CUDA backend from /usr/local/lib/ollama/cuda_v13/libggml-cuda.so
+time=2026-11-06T09:02:02.308Z level=INFO source=ggml.go:104 msg=system CPU.0.SSE3=1 CPU.0.SSSE3=1 CPU.0.AVX=1 CPU.0.AVX2=1 CPU.0.F16C=1 CPU.0.FMA=1 CPU.0.BMI2=1 CPU.0.AVX512=1 CPU.0.LLAMAFILE=1 CPU.1.LLAMAFILE=1 CUDA.0.ARCHS=750,800,860,870,890,900,1000,1100,1200,1210 CUDA.0.USE_GRAPHS=1 CUDA.0.PEER_MAX_BATCH_SIZE=128 compiler=cgo(gcc)
+time=2026-11-06T09:02:02.308Z level=INFO source=runner.go:929 msg="Server listening on 127.0.0.1:45313"
+time=2026-11-06T09:02:02.317Z level=INFO source=runner.go:828 msg=load request="{Operation:commit LoraPath:[] Parallel:6 BatchSize:512 FlashAttention:false KvSize:98304 KvCacheType: NumThreads:32 GPULayers:29[ID:GPU-1b3bc612-c5ec-6981-551f-20f3505b5c9e Layers:29(0..28)] MultiUserCache:false ProjectorPath: MainGPU:0 UseMmap:true}"
+time=2026-11-06T09:02:02.317Z level=INFO source=server.go:1272 msg="waiting for llama runner to start responding"
+time=2026-11-06T09:02:02.318Z level=INFO source=server.go:1306 msg="waiting for server to become available" status="llm server loading model"
+ggml_backend_cuda_device_get_memory utilizing NVML memory reporting free: 50891128832 total: 51527024640
+llama_model_load_from_file_impl: using device CUDA0 (NVIDIA RTX A6000) (0000:5e:00.0) - 48533 MiB free
+llama_model_loader: loaded meta data with 34 key-value pairs and 339 tensors from /home/neha/.ollama/models/blobs/sha256-60e05f2100071479f596b964f89f510f057ce397ea22f2833a0cfe029bfc2463 (version GGUF V3 (latest))
+llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+llama_model_loader: - kv   0:                       general.architecture str              = qwen2
+llama_model_loader: - kv   1:                               general.type str              = model
+llama_model_loader: - kv   2:                               general.name str              = Qwen2.5 Coder 7B Instruct
+llama_model_loader: - kv   3:                           general.finetune str              = Instruct
+llama_model_loader: - kv   4:                           general.basename str              = Qwen2.5-Coder
+llama_model_loader: - kv   5:                         general.size_label str              = 7B
+llama_model_loader: - kv   6:                            general.license str              = apache-2.0
+llama_model_loader: - kv   7:                       general.license.link str              = https://huggingface.co/Qwen/Qwen2.5-C...
+llama_model_loader: - kv   8:                   general.base_model.count u32              = 1
+llama_model_loader: - kv   9:                  general.base_model.0.name str              = Qwen2.5 Coder 7B
+llama_model_loader: - kv  10:          general.base_model.0.organization str              = Qwen
+llama_model_loader: - kv  11:              general.base_model.0.repo_url str              = https://huggingface.co/Qwen/Qwen2.5-C...
+llama_model_loader: - kv  12:                               general.tags arr[str,6]       = ["code", "codeqwen", "chat", "qwen", ...
+llama_model_loader: - kv  13:                          general.languages arr[str,1]       = ["en"]
+llama_model_loader: - kv  14:                          qwen2.block_count u32              = 28
+llama_model_loader: - kv  15:                       qwen2.context_length u32              = 32768
+llama_model_loader: - kv  16:                     qwen2.embedding_length u32              = 3584
+llama_model_loader: - kv  17:                  qwen2.feed_forward_length u32              = 18944
+llama_model_loader: - kv  18:                 qwen2.attention.head_count u32              = 28
+llama_model_loader: - kv  19:              qwen2.attention.head_count_kv u32              = 4
+llama_model_loader: - kv  20:                       qwen2.rope.freq_base f32              = 1000000.000000
+llama_model_loader: - kv  21:     qwen2.attention.layer_norm_rms_epsilon f32              = 0.000001
+llama_model_loader: - kv  22:                          general.file_type u32              = 15
+llama_model_loader: - kv  23:                       tokenizer.ggml.model str              = gpt2
+llama_model_loader: - kv  24:                         tokenizer.ggml.pre str              = qwen2
+llama_model_loader: - kv  25:                      tokenizer.ggml.tokens arr[str,152064]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+llama_model_loader: - kv  26:                  tokenizer.ggml.token_type arr[i32,152064]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+llama_model_loader: - kv  27:                      tokenizer.ggml.merges arr[str,151387]  = ["Ġ Ġ", "ĠĠ ĠĠ", "i n", "Ġ t",...
+llama_model_loader: - kv  28:                tokenizer.ggml.eos_token_id u32              = 151645
+llama_model_loader: - kv  29:            tokenizer.ggml.padding_token_id u32              = 151643
+llama_model_loader: - kv  30:                tokenizer.ggml.bos_token_id u32              = 151643
+llama_model_loader: - kv  31:               tokenizer.ggml.add_bos_token bool             = false
+llama_model_loader: - kv  32:                    tokenizer.chat_template str              = {%- if tools %}\n    {{- '<|im_start|>...
+llama_model_loader: - kv  33:               general.quantization_version u32              = 2
+llama_model_loader: - type  f32:  141 tensors
+llama_model_loader: - type q4_K:  169 tensors
+llama_model_loader: - type q6_K:   29 tensors
+print_info: file format = GGUF V3 (latest)
+print_info: file type   = Q4_K - Medium
+print_info: file size   = 4.36 GiB (4.91 BPW) 
+load: printing all EOG tokens:
+load:   - 151643 ('<|endoftext|>')
+load:   - 151645 ('<|im_end|>')
+load:   - 151662 ('<|fim_pad|>')
+load:   - 151663 ('<|repo_name|>')
+load:   - 151664 ('<|file_sep|>')
+load: special tokens cache size = 22
+load: token to piece cache size = 0.9310 MB
+print_info: arch             = qwen2
+print_info: vocab_only       = 0
+print_info: n_ctx_train      = 32768
+print_info: n_embd           = 3584
+print_info: n_layer          = 28
+print_info: n_head           = 28
+print_info: n_head_kv        = 4
+print_info: n_rot            = 128
+print_info: n_swa            = 0
+print_info: is_swa_any       = 0
+print_info: n_embd_head_k    = 128
+print_info: n_embd_head_v    = 128
+print_info: n_gqa            = 7
+print_info: n_embd_k_gqa     = 512
+print_info: n_embd_v_gqa     = 512
+print_info: f_norm_eps       = 0.0e+00
+print_info: f_norm_rms_eps   = 1.0e-06
+print_info: f_clamp_kqv      = 0.0e+00
+print_info: f_max_alibi_bias = 0.0e+00
+print_info: f_logit_scale    = 0.0e+00
+print_info: f_attn_scale     = 0.0e+00
+print_info: n_ff             = 18944
+print_info: n_expert         = 0
+print_info: n_expert_used    = 0
+print_info: causal attn      = 1
+print_info: pooling type     = -1
+print_info: rope type        = 2
+print_info: rope scaling     = linear
+print_info: freq_base_train  = 1000000.0
+print_info: freq_scale_train = 1
+print_info: n_ctx_orig_yarn  = 32768
+print_info: rope_finetuned   = unknown
+print_info: model type       = 7B
+print_info: model params     = 7.62 B
+print_info: general.name     = Qwen2.5 Coder 7B Instruct
+print_info: vocab type       = BPE
+print_info: n_vocab          = 152064
+print_info: n_merges         = 151387
+print_info: BOS token        = 151643 '<|endoftext|>'
+print_info: EOS token        = 151645 '<|im_end|>'
+print_info: EOT token        = 151645 '<|im_end|>'
+print_info: PAD token        = 151643 '<|endoftext|>'
+print_info: LF token         = 198 'Ċ'
+print_info: FIM PRE token    = 151659 '<|fim_prefix|>'
+print_info: FIM SUF token    = 151661 '<|fim_suffix|>'
+print_info: FIM MID token    = 151660 '<|fim_middle|>'
+print_info: FIM PAD token    = 151662 '<|fim_pad|>'
+print_info: FIM REP token    = 151663 '<|repo_name|>'
+print_info: FIM SEP token    = 151664 '<|file_sep|>'
+print_info: EOG token        = 151643 '<|endoftext|>'
+print_info: EOG token        = 151645 '<|im_end|>'
+print_info: EOG token        = 151662 '<|fim_pad|>'
+print_info: EOG token        = 151663 '<|repo_name|>'
+print_info: EOG token        = 151664 '<|file_sep|>'
+print_info: max token length = 256
+load_tensors: loading model tensors, this can take a while... (mmap = true)
+load_tensors: offloading 28 repeating layers to GPU
+load_tensors: offloading output layer to GPU
+load_tensors: offloaded 29/29 layers to GPU
+load_tensors:        CUDA0 model buffer size =  4168.09 MiB
+load_tensors:   CPU_Mapped model buffer size =   292.36 MiB
+llama_context: constructing llama_context
+llama_context: n_seq_max     = 6
+llama_context: n_ctx         = 98304
+llama_context: n_ctx_per_seq = 16384
+llama_context: n_batch       = 3072
+llama_context: n_ubatch      = 512
+llama_context: causal_attn   = 1
+llama_context: flash_attn    = disabled
+llama_context: kv_unified    = false
+llama_context: freq_base     = 1000000.0
+llama_context: freq_scale    = 1
+llama_context: n_ctx_per_seq (16384) < n_ctx_train (32768) -- the full capacity of the model will not be utilized
+llama_context:  CUDA_Host  output buffer size =     3.56 MiB
+llama_kv_cache:      CUDA0 KV buffer size =  5376.00 MiB
+llama_kv_cache: size = 5376.00 MiB ( 16384 cells,  28 layers,  6/6 seqs), K (f16): 2688.00 MiB, V (f16): 2688.00 MiB
+llama_context:      CUDA0 compute buffer size =   981.24 MiB
+llama_context:  CUDA_Host compute buffer size =    57.08 MiB
+llama_context: graph nodes  = 1126
+llama_context: graph splits = 2
+time=2026-11-06T09:02:05.336Z level=INFO source=server.go:1310 msg="llama runner started in 4.18 seconds"
+time=2026-11-06T09:02:05.336Z level=INFO source=sched.go:482 msg="loaded runners" count=1
+time=2026-11-06T09:02:05.336Z level=INFO source=server.go:1272 msg="waiting for llama runner to start responding"
+time=2026-11-06T09:02:05.336Z level=INFO source=server.go:1310 msg="llama runner started in 4.18 seconds"
+[GIN] 2026/11/06 - 09:02:05 | 200 |  6.815702642s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:02:27 | 200 | 19.985544074s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:02:28 | 200 | 20.918616563s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:02:29 | 200 | 22.309623347s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:02:31 | 200 | 23.687069817s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:02:31 | 200 | 24.065443931s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:02:31 | 200 | 24.095530293s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:02:50 | 200 | 21.702550606s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:02:55 | 200 | 26.308664882s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:02:56 | 200 | 25.778136988s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:02:59 | 200 | 26.311720822s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:03:03 | 200 | 30.865584101s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:03:04 | 200 | 31.421687312s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:03:22 | 200 | 25.884255884s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:03:23 | 200 | 31.673177145s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:03:24 | 200 | 18.784002367s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:03:29 | 200 | 31.913320137s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:03:33 | 200 | 33.284883439s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:03:37 | 200 | 32.628869435s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:03:40 | 200 | 16.577029073s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:03:55 | 200 | 30.591775108s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:03:59 | 200 | 28.766898372s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:04:02 | 200 | 24.676702571s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:04:02 | 200 | 37.700939338s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:04:09 | 200 | 27.752258619s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:04:09 | 200 | 35.132035206s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:04:24 | 200 | 24.049801387s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:04:39 | 200 | 29.080039215s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:04:48 | 200 | 51.688199321s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:04:49 | 200 | 45.275338532s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:05:03 | 200 | 54.000317339s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:05:05 | 200 |          1m1s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:05:17 | 200 | 49.123604244s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:05:35 | 200 | 53.271589723s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:05:36 | 200 | 28.645720545s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:05:42 | 200 | 51.548611438s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:05:45 | 200 | 55.988555243s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:05:59 | 200 | 53.444659207s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:06:04 | 200 | 44.664170328s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:06:23 | 200 | 40.646236112s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:06:24 | 200 | 47.022298302s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:06:28 | 200 | 41.207275101s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:06:33 | 200 | 57.429363225s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:06:44 | 200 | 44.265452495s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:06:44 | 200 | 38.956236811s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:06:51 | 200 | 26.403010612s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:07:08 | 200 | 33.397498683s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:07:14 | 200 | 28.994819255s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:07:14 | 200 | 49.107818283s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:07:21 | 200 | 52.207356968s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:07:26 | 200 | 40.794342161s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:07:47 | 200 | 55.560304229s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:07:48 | 200 | 38.759374701s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:08:05 | 200 | 49.265253783s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:08:06 | 200 |   44.3779013s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:08:11 | 200 | 56.374046272s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:08:20 | 200 | 30.246861683s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:08:40 | 200 |          1m9s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:08:41 | 200 | 51.308351096s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:08:49 | 200 | 41.536043288s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:09:00 | 200 | 47.730811478s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:09:05 | 200 | 58.897441847s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:09:14 | 200 | 52.837099448s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:09:29 | 200 | 47.443607834s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:09:32 | 200 | 50.996270688s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:09:43 | 200 | 53.348334925s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:09:45 | 200 | 44.469214382s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:09:54 | 200 | 48.357312132s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:10:08 | 200 | 53.504740956s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:10:25 | 200 |  52.39120019s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:10:26 | 200 |  55.49261799s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:10:39 | 200 | 52.531923009s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:10:41 | 200 | 56.105921046s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:10:59 | 200 |          1m4s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:11:04 | 200 | 54.616326692s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:11:16 | 200 |  48.81540622s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:11:26 | 200 | 59.794485427s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:11:26 | 200 | 44.454881889s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:11:34 | 200 | 53.671310636s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:11:49 | 200 | 48.893610224s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:11:58 | 200 | 52.970956585s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:12:10 | 200 | 42.588055212s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:12:17 | 200 | 59.930058773s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:12:17 | 200 | 49.761712817s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:12:29 | 200 | 54.026283268s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:12:46 | 200 | 35.628053342s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:12:46 | 200 | 28.384697226s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:12:55 | 200 |          1m4s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:13:01 | 200 |          1m1s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:13:01 | 200 | 42.897075721s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:13:19 | 200 | 48.889131921s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:13:38 | 200 |  50.78134176s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:13:47 | 200 |  59.52439486s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:13:51 | 200 | 49.398089677s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:14:03 | 200 |          1m0s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:14:05 | 200 |          1m8s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:14:08 | 200 |  48.10429606s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:14:29 | 200 | 49.964826622s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:14:41 | 200 |  52.81162339s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:14:48 | 200 |   39.5121635s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:14:49 | 200 | 56.964105707s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:14:54 | 200 | 48.107869669s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:15:06 | 200 |          1m2s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:15:16 | 200 | 25.651141491s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:15:18 | 200 | 48.165244491s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:15:22 | 200 | 40.408687618s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:15:40 | 200 |  50.51732735s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:15:45 | 200 | 49.688720943s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:15:51 | 200 | 44.517874052s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:16:04 | 200 | 44.316032169s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:16:07 | 200 | 49.440483192s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:16:11 | 200 | 48.342048917s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:16:30 | 200 | 25.257406155s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:16:30 | 200 | 37.871256824s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:16:31 | 200 | 45.395242707s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:16:35 | 200 | 54.551458615s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:16:53 | 200 | 45.540592742s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:17:02 | 200 | 25.997503532s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:17:03 | 200 | 50.141448524s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:17:15 | 200 | 42.337278998s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:17:29 | 200 | 57.910314726s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:17:33 | 200 |          1m1s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:17:40 | 200 | 47.415047912s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:17:55 | 200 | 51.751702666s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:18:01 | 200 | 57.470383164s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:18:10 | 200 | 54.024706504s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:18:16 | 200 | 45.654125083s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:18:22 | 200 | 47.833010434s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:18:26 | 200 |  44.34600769s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:18:39 | 200 |  42.43951356s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:18:44 | 200 | 42.411186249s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:18:56 | 200 | 29.390896893s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:18:59 | 200 | 48.278879767s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:19:06 | 200 | 43.532854433s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:19:22 | 200 |          1m4s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:19:32 | 200 | 46.901953315s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:19:38 | 200 | 57.633285514s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:19:46 | 200 |  45.80135833s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:19:55 | 200 | 57.802755116s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:20:07 | 200 | 59.287406029s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:20:12 | 200 | 49.251074049s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:20:18 | 200 | 44.613629877s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:20:23 | 200 | 44.961103937s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:20:34 | 200 | 47.223207528s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:20:41 | 200 |  44.50554993s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:20:53 | 200 | 40.366282359s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:20:54 | 200 | 46.873082966s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:21:07 | 200 | 42.659296723s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:21:07 | 200 | 48.480628562s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:21:23 | 200 | 27.608465111s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:21:28 | 200 | 53.078843691s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:21:32 | 200 |  49.86441321s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:21:52 | 200 | 57.615890532s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:21:57 | 200 | 48.859014145s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:22:05 | 200 | 56.755254372s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:22:09 | 200 | 44.669284157s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:22:22 | 200 | 49.658607036s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:22:26 | 200 | 56.969650833s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:22:36 | 200 | 42.887311352s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:22:48 | 200 | 49.426149361s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:22:56 | 200 | 50.179574347s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:23:06 | 200 | 56.033806897s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:23:13 | 200 | 49.351324641s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:23:22 | 200 | 54.716587619s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:23:23 | 200 | 46.121617679s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:23:39 | 200 | 50.008580269s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:23:42 | 200 |   44.8498761s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:23:43 | 200 |  29.31510695s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:23:48 | 200 | 41.557673526s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:24:14 | 200 |  50.84868257s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:24:23 | 200 | 43.332958383s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:24:24 | 200 | 59.771844998s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:24:37 | 200 | 52.832551396s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:24:38 | 200 | 48.836890983s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:24:42 | 200 | 58.633988785s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:24:57 | 200 | 42.085824234s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:25:12 | 200 | 47.866945262s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:25:16 | 200 | 50.946421409s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:25:24 | 200 | 44.374580188s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:25:35 | 200 | 57.346372191s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:25:41 | 200 | 57.968412337s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:25:51 | 200 | 53.242232912s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:26:08 | 200 | 51.324953108s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:26:08 | 200 | 55.778152495s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:26:09 | 200 | 44.669635727s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:26:23 | 200 | 47.032235149s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:26:30 | 200 | 37.375378057s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:26:34 | 200 | 52.251968429s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:26:55 | 200 | 45.281530359s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:27:02 | 200 | 51.288916395s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:27:08 | 200 | 43.806663929s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:27:14 | 200 |          1m4s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:27:24 | 200 | 48.789334389s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:27:34 | 200 |          1m3s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:27:45 | 200 | 30.503973876s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:27:54 | 200 | 51.330713013s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:27:56 | 200 |          1m0s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:28:04 | 200 | 38.640654924s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:28:13 | 200 |          1m4s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:28:24 | 200 | 48.814949681s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:28:38 | 200 | 51.840802034s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:28:43 | 200 | 45.447931411s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:28:43 | 200 | 48.280370486s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:29:01 | 200 | 55.618890005s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:29:05 | 200 | 50.551449187s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:29:09 | 200 | 43.844905473s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:29:24 | 200 | 44.831785391s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:29:33 | 200 | 49.079509752s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:29:42 | 200 | 58.293465441s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:29:52 | 200 | 46.504766811s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:30:00 | 200 | 58.232176059s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:30:05 | 200 | 54.558700987s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:30:14 | 200 | 49.000224239s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:30:19 | 200 | 44.291487798s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:30:33 | 200 | 49.975366122s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:30:48 | 200 | 54.715850019s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:30:54 | 200 | 53.082015422s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:30:57 | 200 | 37.277451624s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:31:04 | 200 | 58.123053696s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:31:10 | 200 | 54.947564422s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:31:23 | 200 | 48.496929016s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:31:38 | 200 | 48.931371332s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:31:41 | 200 | 45.839519148s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:31:52 | 200 | 53.559261763s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:32:02 | 200 | 57.179113756s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:32:05 | 200 |  53.73658521s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:32:23 | 200 | 58.845697116s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:32:31 | 200 | 49.854914906s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:32:41 | 200 |          1m1s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:32:45 | 200 | 52.013375084s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:33:03 | 200 | 59.768609408s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:33:09 | 200 |          1m3s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:33:15 | 200 | 51.509570548s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:33:20 | 200 | 38.466266992s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:33:24 | 200 | 53.006255429s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:33:40 | 200 | 54.039182375s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:33:54 | 200 | 43.998058473s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:33:58 | 200 | 54.482600221s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:34:14 | 200 | 58.909109164s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:34:16 | 200 | 50.810785502s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:34:19 | 200 | 57.591307928s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:34:36 | 200 | 55.781837898s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:34:42 | 200 | 47.157457232s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:34:53 | 200 | 54.133363285s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:35:11 | 200 | 51.477688576s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:35:12 | 200 |  55.08523268s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:35:19 | 200 |          1m4s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:35:32 | 200 | 54.558852515s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:35:38 | 200 |  54.64887721s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:35:44 | 200 | 50.204911049s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:35:49 | 200 | 36.048556306s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:36:07 | 200 | 54.538190402s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:36:08 | 200 | 48.816025764s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:36:26 | 200 | 46.956736904s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:36:32 | 200 |  58.53808682s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:36:32 | 200 | 42.210865934s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:36:42 | 200 | 56.442764873s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:37:04 | 200 | 54.952890358s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:37:05 | 200 | 57.185822217s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:37:16 | 200 | 42.758010863s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:37:27 | 200 | 59.325862735s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:37:30 | 200 | 57.430900698s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:37:30 | 200 | 47.566255243s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:37:51 | 200 | 45.486550744s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:38:04 | 200 | 57.358294713s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:38:16 | 200 | 59.549479766s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:38:24 | 200 | 52.071249279s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:38:25 | 200 | 57.104440531s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:38:47 | 200 |         1m15s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:38:55 | 200 |          1m3s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:39:15 | 200 |         1m10s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:39:16 | 200 | 59.201573759s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:39:25 | 200 | 58.867762063s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:39:30 | 200 |          1m5s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:39:53 | 200 | 57.221403275s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:39:58 | 200 |          1m9s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:40:13 | 200 | 42.310684721s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:40:19 | 200 |  53.76002715s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:40:21 | 200 |          1m4s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:40:28 | 200 |         1m10s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:40:54 | 200 | 59.801988441s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:40:54 | 200 | 55.221703173s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:41:13 | 200 | 59.469892472s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:41:17 | 200 | 56.642949587s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:41:18 | 200 | 55.633196895s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:41:34 | 200 |          1m4s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:41:38 | 200 | 42.904127273s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:41:58 | 200 |          1m2s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:42:05 | 200 | 51.492635735s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:42:17 | 200 | 58.183013684s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:42:18 | 200 |          1m0s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:42:29 | 200 | 54.388226816s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:42:40 | 200 |          1m0s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:43:04 | 200 |          1m4s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:43:10 | 200 |          1m3s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:43:15 | 200 | 56.133984767s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:43:23 | 200 | 53.480671998s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:43:26 | 200 |          1m8s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:43:31 | 200 |  51.40433506s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:43:43 | 200 | 32.336790838s |       127.0.0.1 | POST     "/v1/chat/completions"
+[GIN] 2026/11/06 - 09:43:44 | 200 | 38.727058948s |       127.0.0.1 | POST     "/v1/chat/completions"

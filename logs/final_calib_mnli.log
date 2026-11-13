@@ -1,0 +1,10 @@
+sanity: runner vs trace final-exit agreement 1.0000
+{'B': 1, 'full_ms_per_batch': 8.24510171514703, 'heads_ms_per_batch': 10.176239360589534}
+{'B': 2, 'full_ms_per_batch': 7.8572158818133175, 'heads_ms_per_batch': 9.73338810581481}
+{'B': 4, 'full_ms_per_batch': 7.86058405356016, 'heads_ms_per_batch': 9.611855799448676}
+{'B': 8, 'full_ms_per_batch': 8.29611726658186, 'heads_ms_per_batch': 10.185101898969151}
+{'B': 16, 'full_ms_per_batch': 8.231401487137191, 'heads_ms_per_batch': 10.115176468389109}
+{'B': 32, 'full_ms_per_batch': 11.134023981867358, 'heads_ms_per_batch': 12.307163997320458}
+{'B': 64, 'full_ms_per_batch': 20.276958355680108, 'heads_ms_per_batch': 21.041953412350267}
+{'B': 128, 'full_ms_per_batch': 37.41070127580315, 'heads_ms_per_batch': 38.173249224200845}
+end-to-end fit: a=0.5167 ms b=0.01951 ms/sample head=0.3627 ms rho64=0.41

@@ -1,0 +1,21 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+[transformers] Calling `crop` with a positive value is deprecated and will be removed in version 5.18. Please use a negative integer to remove that number of tokens from the cache instead.
+ctx=256 n=   1 step 24.772 ms  per-layer 0.8847 ms
+ctx=256 n=   2 step 24.816 ms  per-layer 0.8863 ms
+ctx=256 n=   4 step 25.021 ms  per-layer 0.8936 ms
+ctx=256 n=   8 step 25.491 ms  per-layer 0.9104 ms
+ctx=256 n=  16 step 25.333 ms  per-layer 0.9047 ms
+ctx=256 n=  32 step 26.055 ms  per-layer 0.9305 ms
+ctx=256 n=  64 step 25.475 ms  per-layer 0.9098 ms
+ctx=256 n= 128 step 25.485 ms  per-layer 0.9102 ms
+ctx=1024 n=   1 step 25.023 ms  per-layer 0.8937 ms
+ctx=1024 n=   2 step 25.077 ms  per-layer 0.8956 ms
+ctx=1024 n=   4 step 25.129 ms  per-layer 0.8975 ms
+ctx=1024 n=   8 step 25.604 ms  per-layer 0.9144 ms
+ctx=1024 n=  16 step 25.683 ms  per-layer 0.9173 ms
+ctx=1024 n=  32 step 26.080 ms  per-layer 0.9314 ms
+ctx=1024 n=  64 step 25.776 ms  per-layer 0.9206 ms
+ctx=1024 n= 128 step 32.478 ms  per-layer 1.1599 ms
+ context   a_ms   b_ms     r2    n_star  rho_at_64
+     256 0.8991 0.0001 0.1871 6064.4205    94.7566
+    1024 0.8822 0.0019 0.8432  475.9148     7.4362

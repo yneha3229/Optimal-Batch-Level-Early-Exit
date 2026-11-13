@@ -1,0 +1,123 @@
+2026-11-06_09:57:18 final run started (pid 2390397)
+2026-11-06_10:04:19 START dec_calib
+2026-11-06_10:04:54 OK    dec_calib
+2026-11-06_10:04:54 START dec_sim
+2026-11-06_10:07:51 OK    dec_sim
+2026-11-06_10:07:51 START dec_gpu
+2026-11-06_10:15:52 FAIL  dec_gpu (exit 0)
+2026-11-06_10:15:52 START dec_robust
+2026-11-06_10:16:11 OK    dec_robust
+2026-11-06_10:16:11 START dec_bandit
+2026-11-06_10:16:45 OK    dec_bandit
+2026-11-06_10:16:45 START calib_mnli
+2026-11-06_10:18:18 OK    calib_mnli
+2026-11-06_10:18:18 START sim_mnli
+2026-11-06_10:22:02 OK    sim_mnli
+2026-11-06_10:22:02 START gpu_mnli
+2026-11-06_10:24:11 FAIL  gpu_mnli (exit 0)
+2026-11-06_10:24:11 START robust_mnli
+2026-11-06_10:24:28 OK    robust_mnli
+2026-11-06_10:24:28 START calib_qqp
+2026-11-06_10:25:55 OK    calib_qqp
+2026-11-06_10:25:55 START sim_qqp
+2026-11-06_10:29:26 OK    sim_qqp
+2026-11-06_10:29:26 START gpu_qqp
+2026-11-06_10:36:10 FAIL  gpu_qqp (exit 0)
+2026-11-06_10:36:10 START robust_qqp
+2026-11-06_10:36:25 OK    robust_qqp
+2026-11-06_10:36:25 START calib_cifar100
+2026-11-06_10:37:51 OK    calib_cifar100
+2026-11-06_10:37:51 START sim_cifar100
+2026-11-06_10:43:14 OK    sim_cifar100
+2026-11-06_10:43:14 START gpu_cifar100
+2026-11-06_10:45:34 FAIL  gpu_cifar100 (exit 0)
+2026-11-06_10:45:34 START robust_cifar100
+2026-11-06_10:45:57 OK    robust_cifar100
+2026-11-06_10:45:57 START bandit_qqp_dec
+2026-11-06_10:46:25 OK    bandit_qqp_dec
+2026-11-06_10:46:25 START bandit_cifar100_dec
+2026-11-06_10:47:02 OK    bandit_cifar100_dec
+2026-11-06_10:47:02 START bandit_mnli_dec
+2026-11-06_10:47:34 OK    bandit_mnli_dec
+2026-11-06_10:47:34 START bandit_mnli_enc
+2026-11-06_10:48:06 OK    bandit_mnli_enc
+2026-11-06_10:48:06 START figs_wikitext
+2026-11-06_10:48:09 FAIL  figs_wikitext (exit 0)
+2026-11-06_10:48:09 START figs_mnli
+2026-11-06_10:48:13 OK    figs_mnli
+2026-11-06_10:48:13 START figs_qqp
+2026-11-06_10:48:17 OK    figs_qqp
+2026-11-06_10:48:17 START figs_cifar100
+2026-11-06_10:48:21 OK    figs_cifar100
+2026-11-06_10:48:21 START tests
+2026-11-06_10:48:24 OK    tests
+2026-11-06_10:48:24 final run finished
+2026-11-06_12:50:20 gpu redo started (pid 2463711)
+2026-11-06_12:50:20 START dec_gpu
+2026-11-06_12:57:29 parallel run started (pid 2466092)
+2026-11-06_12:57:29 START llama_train
+2026-11-06_12:57:29 START gpu_mnli
+2026-11-06_12:57:29 FAIL  llama_train (exit 0)
+2026-11-06_12:57:29 START llama_calib
+2026-11-06_12:57:31 FAIL  llama_calib (exit 0)
+2026-11-06_12:57:31 START llama_sim
+2026-11-06_12:57:35 FAIL  llama_sim (exit 0)
+2026-11-06_12:57:35 START llama_gpu16
+2026-11-06_12:57:35 START llama_gpu64
+2026-11-06_12:57:37 FAIL  llama_gpu64 (exit 0)
+2026-11-06_12:57:37 FAIL  llama_gpu16 (exit 0)
+2026-11-06_12:57:37 START llama_merge
+2026-11-06_12:57:38 FAIL  llama_merge (exit 0)
+2026-11-06_12:57:38 START llama_robust
+2026-11-06_12:57:41 FAIL  llama_robust (exit 0)
+2026-11-06_12:57:41 START llama_bandit
+2026-11-06_12:57:44 FAIL  llama_bandit (exit 0)
+2026-11-06_12:58:18 lane4 (llama) restarted (pid 2467227)
+2026-11-06_12:58:18 START llama_train
+2026-11-06_13:02:26 OK    gpu_mnli
+2026-11-06_13:02:26 START gpu_qqp
+2026-11-06_13:14:11 OK    llama_train
+2026-11-06_13:14:11 START llama_calib
+2026-11-06_13:14:54 OK    llama_calib
+2026-11-06_13:14:54 START llama_sim
+2026-11-06_13:15:01 OK    dec_gpu (finished in place)
+2026-11-06_13:15:01 START gpu8_mnli
+2026-11-06_13:18:25 OK    llama_sim
+2026-11-06_13:18:25 START llama_gpu16
+2026-11-06_13:18:34 OK    gpu_qqp
+2026-11-06_13:18:34 START gpu_cifar100
+2026-11-06_13:19:58 OK    gpu8_mnli
+2026-11-06_13:19:58 START gpu8_qqp
+2026-11-06_13:25:53 OK    gpu_cifar100
+2026-11-06_13:25:56 START llama_gpu64
+2026-11-06_13:33:54 OK    llama_gpu64
+2026-11-06_13:36:41 OK    gpu8_qqp
+2026-11-06_13:36:41 START gpu8_cifar100
+2026-11-06_13:37:56 OK    llama_gpu16
+2026-11-06_13:37:56 START llama_merge
+2026-11-06_13:37:57 OK    llama_merge
+2026-11-06_13:37:57 START llama_robust
+2026-11-06_13:38:19 OK    llama_robust
+2026-11-06_13:38:19 START llama_bandit
+2026-11-06_13:39:02 OK    llama_bandit
+2026-11-06_13:39:02 START figs_wikitext_llama
+2026-11-06_13:39:04 FAIL  figs_wikitext_llama (exit 0)
+2026-11-06_13:39:04 lane4 (llama) finished
+2026-11-06_13:41:39 OK    gpu8_cifar100
+2026-11-06_13:41:39 START merge_mnli
+2026-11-06_13:41:39 OK    merge_mnli
+2026-11-06_13:41:39 START merge_qqp
+2026-11-06_13:41:39 OK    merge_qqp
+2026-11-06_13:41:39 START merge_cifar100
+2026-11-06_13:41:40 OK    merge_cifar100
+2026-11-06_13:41:40 START figs_wikitext
+2026-11-06_13:41:42 FAIL  figs_wikitext (exit 0)
+2026-11-06_13:41:42 START figs_wikitext_llama
+2026-11-06_13:41:44 FAIL  figs_wikitext_llama (exit 0)
+2026-11-06_13:41:44 START figs_mnli
+2026-11-06_13:41:45 FAIL  figs_mnli (exit 0)
+2026-11-06_13:41:45 START figs_qqp
+2026-11-06_13:41:46 FAIL  figs_qqp (exit 0)
+2026-11-06_13:41:46 START figs_cifar100
+2026-11-06_13:41:48 FAIL  figs_cifar100 (exit 0)
+2026-11-06_13:41:48 parallel run finished

@@ -1,0 +1,37 @@
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 23885.29it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: textattack/roberta-base-MNLI
+Key                         | Status     |  | 
+----------------------------+------------+--+-
+roberta.pooler.dense.weight | UNEXPECTED |  | 
+roberta.pooler.dense.bias   | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+model ok textattack/roberta-base-MNLI
+Generating train split:   0%|          | 0/392702 [00:00<?, ? examples/s]Generating train split:   0%|          | 1000/392702 [00:00<00:44, 8886.95 examples/s]Generating train split:  18%|█▊        | 69000/392702 [00:00<00:00, 369842.25 examples/s]Generating train split:  32%|███▏      | 126000/392702 [00:00<00:00, 453445.18 examples/s]Generating train split:  46%|████▌     | 181000/392702 [00:00<00:00, 488347.75 examples/s]Generating train split:  59%|█████▉    | 233000/392702 [00:00<00:00, 495029.76 examples/s]Generating train split:  79%|███████▊  | 309000/392702 [00:00<00:00, 496988.23 examples/s]Generating train split:  93%|█████████▎| 365000/392702 [00:00<00:00, 511778.32 examples/s]Generating train split: 100%|██████████| 392702/392702 [00:00<00:00, 470098.96 examples/s]
+Generating validation_matched split:   0%|          | 0/9815 [00:00<?, ? examples/s]Generating validation_matched split: 100%|██████████| 9815/9815 [00:00<00:00, 441593.30 examples/s]
+Generating validation_mismatched split:   0%|          | 0/9832 [00:00<?, ? examples/s]Generating validation_mismatched split: 100%|██████████| 9832/9832 [00:00<00:00, 444364.91 examples/s]
+Generating test_matched split:   0%|          | 0/9796 [00:00<?, ? examples/s]Generating test_matched split: 100%|██████████| 9796/9796 [00:00<00:00, 450608.69 examples/s]
+Generating test_mismatched split:   0%|          | 0/9847 [00:00<?, ? examples/s]Generating test_mismatched split: 100%|██████████| 9847/9847 [00:00<00:00, 446380.02 examples/s]
+DatasetDict({
+    train: Dataset({
+        features: ['premise', 'hypothesis', 'label', 'idx'],
+        num_rows: 392702
+    })
+    validation_matched: Dataset({
+        features: ['premise', 'hypothesis', 'label', 'idx'],
+        num_rows: 9815
+    })
+    validation_mismatched: Dataset({
+        features: ['premise', 'hypothesis', 'label', 'idx'],
+        num_rows: 9832
+    })
+    test_matched: Dataset({
+        features: ['premise', 'hypothesis', 'label', 'idx'],
+        num_rows: 9796
+    })
+    test_mismatched: Dataset({
+        features: ['premise', 'hypothesis', 'label', 'idx'],
+        num_rows: 9847
+    })
+})

@@ -1,0 +1,44 @@
+# OpenEvolve config: local qwen2.5-coder:7b on a private Ollama instance pinned to GPU 3 (port 11500).
+max_iterations: 300
+checkpoint_interval: 50
+random_seed: 42
+log_level: INFO
+diff_based_evolution: false   # full rewrites: the 7B model failed 82% of exact SEARCH/REPLACE diffs
+max_code_length: 8000
+llm:
+  api_base: http://127.0.0.1:11500/v1
+  api_key: ollama
+  models:
+    - name: qwen2.5-coder:7b
+      weight: 1.0
+  temperature: 0.8
+  max_tokens: 2048
+  timeout: 180
+  retries: 2
+prompt:
+  num_top_programs: 3
+  num_diverse_programs: 2
+  system_message: |
+    You are improving an early-exit policy for batched GPU inference of a 12-layer transformer classifier.
+    A batch of B inputs runs layer by layer; exits (classifier heads) sit after layers 2, 4, 6, 8, 10, 12.
+    One layer on n still-active inputs costs a + b*n milliseconds (a = fixed cost, b = per-input cost); every exit
+    point evaluated also costs a small fixed overhead. All inputs in a batch are answered when the batch finishes,
+    so one input that never gets confident keeps everyone waiting (a straggler).
+    decide() runs at every exit and may (1) let individual inputs leave (saves only b per layer each) and/or
+    (2) stop the whole batch (saves a + b*n per remaining layer, but remaining inputs get their current, less
+    accurate prediction). Score = wall-clock speedup at accuracy within 1 point of the full model, geometric mean
+    over two cost regimes (rho = a/(b*n) small: per-input cost dominates; rho large: fixed cost dominates) and batch
+    sizes 16 and 64. Good policies adapt to a, b, n_active, batch_size and layers_left.
+    Rules: use only numpy and math; no file access, no other imports; keep decide()'s signature and return types;
+    it must be fast (it is called thousands of times).
+database:
+  population_size: 200
+  archive_size: 50
+  num_islands: 3
+  elite_selection_ratio: 0.1
+  exploration_ratio: 0.3
+  exploitation_ratio: 0.6
+evaluator:
+  timeout: 150
+  cascade_evaluation: false
+  parallel_evaluations: 6

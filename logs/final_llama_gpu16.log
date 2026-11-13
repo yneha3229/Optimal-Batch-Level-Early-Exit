@@ -1,0 +1,35 @@
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights: 100%|██████████| 291/291 [00:00<00:00, 3892.15it/s]
+sanity: own decode loop vs HF forward, final-exit token agreement 0.9873
+B= 16 full                     60.46s acc 0.5440 fid 1.0000 layers 1.000
+B= 16 heads_only               67.28s acc 0.5440 fid 1.0000 layers 1.000
+B= 16 bandit                   69.18s acc 0.5440 fid 1.0000 layers 1.000
+B= 16 bandit_t3pct             69.28s acc 0.5440 fid 1.0000 layers 1.000
+B= 16 consensus                65.37s acc 0.5330 fid 0.8963 layers 0.956
+B= 16 greedy                   66.99s acc 0.5386 fid 0.9527 layers 0.983
+B= 16 majority                 65.93s acc 0.5341 fid 0.9073 layers 0.958
+B= 16 random_collective        68.05s acc 0.5440 fid 1.0000 layers 1.000
+B= 16 theory                   68.39s acc 0.5416 fid 0.9696 layers 0.991
+B= 16 theory_hist              68.39s acc 0.5396 fid 0.9421 layers 0.980
+B= 16 theory_indiv_only        68.68s acc 0.5440 fid 1.0000 layers 1.000
+B= 16 theory_robust            68.30s acc 0.5415 fid 0.9613 layers 0.988
+B= 16 theory_robust8           68.06s acc 0.5413 fid 0.9588 layers 0.986
+B= 16 threshold                67.73s acc 0.5440 fid 1.0000 layers 1.000
+B= 16 threshold_nocompact      67.72s acc 0.5440 fid 1.0000 layers 1.000
+B= 16 unified                  66.97s acc 0.5440 fid 1.0000 layers 1.000
+ B              family  accuracy  acc_drop_pts  fidelity  real_speedup  sim_speedup
+16                full     0.544         0.000     1.000         1.000        1.000
+16          heads_only     0.544         0.000     1.000         0.899          NaN
+16              bandit     0.544         0.000     1.000         0.874        0.945
+16        bandit_t3pct     0.544         0.000     1.000         0.873        0.945
+16           consensus     0.533         1.102     0.896         0.925        0.984
+16              greedy     0.539         0.540     0.953         0.903        0.967
+16            majority     0.534         0.992     0.907         0.917        0.984
+16   random_collective     0.544         0.000     1.000         0.889        0.944
+16              theory     0.542         0.244     0.970         0.884        0.952
+16         theory_hist     0.540         0.446     0.942         0.884        0.944
+16   theory_indiv_only     0.544         0.000     1.000         0.880        0.945
+16       theory_robust     0.542         0.250     0.961         0.885        0.955
+16      theory_robust8     0.541         0.272     0.959         0.888        0.955
+16           threshold     0.544         0.000     1.000         0.893        0.939
+16 threshold_nocompact     0.544         0.000     1.000         0.893        0.939
+16             unified     0.544         0.000     1.000         0.903        0.945

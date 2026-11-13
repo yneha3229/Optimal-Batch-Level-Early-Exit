@@ -1,0 +1,4 @@
+sanity: runner vs trace final-exit agreement 1.0000
+B=  16 full                     2.214s acc 0.8777
+B=  16 heads_only               2.705s acc 0.8777
+B=  16 bandit                   2.755s acc 0.8760

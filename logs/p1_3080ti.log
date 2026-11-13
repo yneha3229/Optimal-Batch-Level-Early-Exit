@@ -1,0 +1,76 @@
+device: NVIDIA GeForce RTX 3080 Ti  torch 2.14.0+cu130
+eager      float16 L=64 n=   1 layer 0.5591 ms
+cuda_graph float16 L=64 n=   1 layer 0.0758 ms
+eager      float16 L=64 n=   2 layer 0.5688 ms
+cuda_graph float16 L=64 n=   2 layer 0.1106 ms
+eager      float16 L=64 n=   4 layer 0.5386 ms
+cuda_graph float16 L=64 n=   4 layer 0.1178 ms
+eager      float16 L=64 n=   8 layer 0.5407 ms
+cuda_graph float16 L=64 n=   8 layer 0.2007 ms
+eager      float16 L=64 n=  12 layer 0.5217 ms
+cuda_graph float16 L=64 n=  12 layer 0.2309 ms
+eager      float16 L=64 n=  16 layer 0.6385 ms
+cuda_graph float16 L=64 n=  16 layer 0.4024 ms
+eager      float16 L=64 n=  24 layer 0.7260 ms
+cuda_graph float16 L=64 n=  24 layer 0.4842 ms
+eager      float16 L=64 n=  32 layer 0.8120 ms
+cuda_graph float16 L=64 n=  32 layer 0.7199 ms
+eager      float16 L=64 n=  48 layer 0.9513 ms
+cuda_graph float16 L=64 n=  48 layer 0.8806 ms
+eager      float16 L=64 n=  64 layer 1.2288 ms
+cuda_graph float16 L=64 n=  64 layer 1.1494 ms
+eager      float16 L=64 n=  96 layer 1.7306 ms
+cuda_graph float16 L=64 n=  96 layer 1.6532 ms
+eager      float16 L=64 n= 128 layer 2.3352 ms
+cuda_graph float16 L=64 n= 128 layer 2.2508 ms
+eager      float16 L=128 n=   1 layer 0.5745 ms
+cuda_graph float16 L=128 n=   1 layer 0.0932 ms
+eager      float16 L=128 n=   2 layer 0.5478 ms
+cuda_graph float16 L=128 n=   2 layer 0.1178 ms
+eager      float16 L=128 n=   4 layer 0.5412 ms
+cuda_graph float16 L=128 n=   4 layer 0.1976 ms
+eager      float16 L=128 n=   8 layer 0.6339 ms
+cuda_graph float16 L=128 n=   8 layer 0.3932 ms
+eager      float16 L=128 n=  12 layer 0.7239 ms
+cuda_graph float16 L=128 n=  12 layer 0.4699 ms
+eager      float16 L=128 n=  16 layer 0.8177 ms
+cuda_graph float16 L=128 n=  16 layer 0.7066 ms
+eager      float16 L=128 n=  24 layer 0.9477 ms
+cuda_graph float16 L=128 n=  24 layer 0.8602 ms
+eager      float16 L=128 n=  32 layer 1.2073 ms
+cuda_graph float16 L=128 n=  32 layer 1.1346 ms
+eager      float16 L=128 n=  48 layer 1.6927 ms
+cuda_graph float16 L=128 n=  48 layer 1.6230 ms
+eager      float16 L=128 n=  64 layer 2.3071 ms
+cuda_graph float16 L=128 n=  64 layer 2.2282 ms
+eager      float16 L=128 n=  96 layer 3.2840 ms
+cuda_graph float16 L=128 n=  96 layer 3.2389 ms
+eager      float16 L=128 n= 128 layer 4.2854 ms
+cuda_graph float16 L=128 n= 128 layer 4.2721 ms
+
+layer fits (linear c(n) = a + b*n; hinge c(n) = a + b*max(0, n-k)):
+      mode   dtype  seq_len   a_ms   b_ms     r2  n_star  hinge_a_ms  hinge_b_ms  hinge_knee_n  hinge_r2
+cuda_graph float16       64 0.0784 0.0169 0.9963  4.6500      0.0953      0.0169           1.0    0.9963
+cuda_graph float16      128 0.0894 0.0328 0.9991  2.7272      0.1222      0.0328           1.0    0.9991
+     eager float16       64 0.4282 0.0138 0.9761 30.9807      0.5532      0.0152          16.0    0.9916
+     eager float16      128 0.3789 0.0299 0.9937 12.6607      0.5465      0.0309           8.0    0.9977
+
+exit head median ms at n=64:
+      mode   dtype  seq_len  median_ms
+     eager float16       64     0.1608
+cuda_graph float16       64     0.0205
+     eager float16      128     0.1609
+cuda_graph float16      128     0.0205
+
+encoder_full / (12 x layer): {
+ "cuda_graph": {
+  "min": 0.9267665721152738,
+  "mean": 0.9856139815550385,
+  "max": 1.0152922026733044
+ },
+ "eager": {
+  "min": 0.743641863400426,
+  "mean": 0.9068255635388519,
+  "max": 0.993558315412978
+ }
+}

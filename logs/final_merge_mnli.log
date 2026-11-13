@@ -1,0 +1,1 @@
+merged ['main_mnli_real_mnli_gpu_B16-128.csv', 'main_mnli_real_mnli_gpu_B8.csv'] -> 80 rows, batch sizes [np.int64(8), np.int64(16), np.int64(64), np.int64(128)]

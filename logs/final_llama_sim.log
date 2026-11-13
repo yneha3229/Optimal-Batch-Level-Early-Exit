@@ -1,0 +1,72 @@
+regimes: {'dec_eager': (0.8991, 0.00015, 0.1495), 'real_wikitext_llama': (0.7769, 0.00235, 0.3072)}
+attack pool: hardest_2pct 2708 | funsearch program: False
+
+=== dec_eager: held-out speedup at matched accuracy (sim) ===
+B                     1     8     16    32    64    128
+family                                                 
+bandit               0.97  0.97  0.97  0.97  0.98  0.98
+bandit_t3pct         0.97  0.97  2.60  0.97  0.98  0.98
+consensus            1.08  1.03  1.02  0.99  0.98  0.98
+full                 1.00  1.00  1.00  1.00  1.00  1.00
+greedy               1.08  0.99  1.00  1.01   NaN   NaN
+majority             1.08  1.01  1.02  1.01  1.00  1.00
+random_collective    1.08  0.98  0.98  0.98  0.98  0.98
+theory               1.08  1.00  0.98  1.00  0.99  0.98
+theory_hist          1.10  1.02  0.99  1.01  1.00  0.98
+theory_indiv_only    0.97  0.97  0.98  0.98  0.98  0.98
+theory_robust        1.08  1.00  1.02  1.00  0.99  0.98
+theory_robust8       1.08  1.00  0.99  1.00  1.00  0.98
+threshold            1.08  0.97  0.97  0.97  0.98  0.98
+threshold_nocompact  1.08  0.97  0.97  0.97  0.98  0.98
+unified              0.97  0.97  0.97  0.97  0.98  0.98
+--- dec_eager, B=64 detail ---
+             family  heldout_acc  heldout_acc_drop  heldout_speedup  heldout_flops_frac  hard10_acc  victim_slowdown_k1
+             bandit       0.5299            0.0000           0.9751              1.0000      0.1089              1.0000
+       bandit_t3pct       0.5299            0.0000           0.9751              1.0000      0.1089              1.0000
+          consensus       0.5301           -0.0002           0.9817              0.9933      0.1089              1.0109
+               full       0.5299            0.0000           1.0000              1.0000      0.1089              1.0000
+           majority       0.5250            0.0049           1.0029              0.9725      0.1119              1.0039
+  random_collective       0.5197            0.0102           0.9770              0.8821      0.1079              1.0000
+             theory       0.5267            0.0032           0.9867              0.9883      0.1059              1.0019
+        theory_hist       0.5261            0.0038           1.0003              0.9723      0.1069              1.0084
+  theory_indiv_only       0.5192            0.0107           0.9763              0.8749      0.1089              1.0000
+      theory_robust       0.5268            0.0031           0.9901              0.9850      0.1109              1.0071
+     theory_robust8       0.5247            0.0052           1.0003              0.9750      0.1119              1.0084
+          threshold       0.5198            0.0101           0.9751              0.8831      0.1089              1.0000
+threshold_nocompact       0.5198            0.0101           0.9751              0.8831      0.1089                 NaN
+            unified       0.5299            0.0000           0.9751              1.0000      0.1089              1.0000
+
+=== real_wikitext_llama: held-out speedup at matched accuracy (sim) ===
+B                     1     8     16    32    64    128
+family                                                 
+bandit               0.94  0.94  0.94  0.95  0.95  0.96
+bandit_t3pct         0.94  0.94  0.94  2.48  0.95  0.96
+consensus            1.05  1.00  0.98  0.96  0.96  0.96
+full                 1.00  1.00  1.00  1.00  1.00  1.00
+greedy               1.05  0.95  0.97  0.98   NaN   NaN
+majority             1.05  0.97  0.98  0.98  0.98  0.98
+random_collective    1.05  0.94  0.94  0.95  0.95  0.95
+theory               1.05  0.97  0.95  0.95  0.95  0.96
+theory_hist          1.06  0.97  0.94  0.92  0.92  0.92
+theory_indiv_only    1.02  0.94  0.94  0.95  0.95  0.96
+theory_robust        1.05  0.97  0.96  0.95  0.95  0.96
+theory_robust8       1.05  0.97  0.96  0.95  0.95  0.96
+threshold            1.03  0.94  0.94  0.94  0.94  0.93
+threshold_nocompact  1.03  0.94  0.94  0.94  0.94  0.93
+unified              0.94  0.94  0.94  0.95  0.95  0.96
+--- real_wikitext_llama, B=64 detail ---
+             family  heldout_acc  heldout_acc_drop  heldout_speedup  heldout_flops_frac  hard10_acc  victim_slowdown_k1
+             bandit       0.5299            0.0000           0.9513              1.0000      0.1089              1.0000
+       bandit_t3pct       0.5299            0.0000           0.9513              1.0000      0.1089              1.0000
+          consensus       0.5301           -0.0002           0.9576              0.9933      0.1089              1.0106
+               full       0.5299            0.0000           1.0000              1.0000      0.1089              1.0000
+           majority       0.5250            0.0049           0.9779              0.9725      0.1119              1.0038
+  random_collective       0.5299            0.0000           0.9463              0.9997      0.1089              0.9998
+             theory       0.5299            0.0000           0.9513              1.0000      0.1089              1.0000
+        theory_hist       0.5309           -0.0010           0.9160              0.9964      0.1089              0.9972
+  theory_indiv_only       0.5299            0.0000           0.9513              1.0000      0.1089              1.0000
+      theory_robust       0.5299            0.0000           0.9513              1.0000      0.1089              1.0000
+     theory_robust8       0.5299            0.0000           0.9513              1.0000      0.1089              1.0000
+          threshold       0.5299            0.0000           0.9370              0.9990      0.1089              0.9956
+threshold_nocompact       0.5299            0.0000           0.9370              0.9990      0.1089                 NaN
+            unified       0.5299            0.0000           0.9513              1.0000      0.1089              1.0000

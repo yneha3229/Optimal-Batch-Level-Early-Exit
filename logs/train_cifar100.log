@@ -1,0 +1,37 @@
+Loading weights:   0%|          | 0/198 [00:00<?, ?it/s]Loading weights: 100%|██████████| 198/198 [00:00<00:00, 5086.65it/s]
+[transformers] [1mViTModel LOAD REPORT[0m from: google/vit-base-patch16-224-in21k
+Key                 | Status     |  | 
+--------------------+------------+--+-
+pooler.dense.bias   | UNEXPECTED |  | 
+pooler.dense.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+ep 0 step 100/1560 loss/exit [4.506 4.311 4.134 3.998 3.825 3.295] 0.7 min, eta 10.3 min
+ep 0 step 200/1560 loss/exit [4.221 3.634 3.225 2.919 2.62  2.263] 1.4 min, eta 9.6 min
+ep 0 step 300/1560 loss/exit [4.022 3.215 2.761 2.438 2.156 1.885] 2.1 min, eta 8.9 min
+epoch 0 done: mean loss per exit [3.8889 2.9808 2.5176 2.1969 1.9318 1.7025]
+ep 1 step 400/1560 loss/exit [3.351 2.052 1.571 1.273 1.079 0.989] 2.8 min, eta 8.2 min
+ep 1 step 500/1560 loss/exit [3.287 2.052 1.556 1.258 1.067 0.986] 3.5 min, eta 7.5 min
+ep 1 step 600/1560 loss/exit [3.238 2.034 1.544 1.251 1.066 0.986] 4.2 min, eta 6.7 min
+ep 1 step 700/1560 loss/exit [3.198 2.012 1.528 1.24  1.06  0.983] 5.1 min, eta 6.3 min
+epoch 1 done: mean loss per exit [3.1651 1.9894 1.5148 1.2327 1.0571 0.9807]
+ep 2 step 800/1560 loss/exit [2.969 1.8   1.338 1.099 0.946 0.89 ] 6.0 min, eta 5.7 min
+ep 2 step 900/1560 loss/exit [2.966 1.813 1.349 1.099 0.951 0.893] 6.7 min, eta 4.9 min
+ep 2 step 1000/1560 loss/exit [2.961 1.814 1.355 1.103 0.955 0.895] 7.4 min, eta 4.1 min
+ep 2 step 1100/1560 loss/exit [2.946 1.809 1.353 1.102 0.953 0.893] 8.1 min, eta 3.4 min
+epoch 2 done: mean loss per exit [2.937  1.804  1.3511 1.1004 0.9517 0.8924]
+ep 3 step 1200/1560 loss/exit [2.836 1.7   1.262 1.026 0.904 0.853] 8.8 min, eta 2.6 min
+ep 3 step 1300/1560 loss/exit [2.831 1.709 1.268 1.035 0.904 0.854] 9.5 min, eta 1.9 min
+ep 3 step 1400/1560 loss/exit [2.818 1.703 1.265 1.033 0.902 0.85 ] 10.2 min, eta 1.2 min
+ep 3 step 1500/1560 loss/exit [2.817 1.7   1.263 1.033 0.902 0.851] 11.1 min, eta 0.4 min
+epoch 3 done: mean loss per exit [2.8178 1.7004 1.2637 1.0334 0.9018 0.8511]
+training took 11.7 min
+ exit  layer split  accuracy  mean_conf
+    0      2   all    0.4126     0.2810
+    1      4   all    0.7044     0.5584
+    2      6   all    0.8182     0.6776
+    3      8   all    0.8880     0.7552
+    4     10   all    0.9198     0.8106
+    5     12   all    0.9331     0.8476
+oracle (any exit correct): 0.9651; final exit: 0.9331

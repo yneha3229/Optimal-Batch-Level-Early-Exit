@@ -1,0 +1,93 @@
+graphs captured: 76, GPU memory 1.4 GiB
+sanity: agreement with trace final exit: full graph 1.0000, segment graphs 1.0000
+{'B': 1, 'full_ms_per_batch': 1.2777408337569796, 'heads_ms_per_batch': 2.035344710748177}
+{'B': 2, 'full_ms_per_batch': 1.130363074480556, 'heads_ms_per_batch': 1.7568836774444208}
+{'B': 4, 'full_ms_per_batch': 1.7245578710571863, 'heads_ms_per_batch': 2.4232469586422667}
+{'B': 8, 'full_ms_per_batch': 3.0081545119173825, 'heads_ms_per_batch': 3.620796611357946}
+{'B': 16, 'full_ms_per_batch': 5.517389174201526, 'heads_ms_per_batch': 6.893546189530753}
+{'B': 32, 'full_ms_per_batch': 11.103225318947807, 'heads_ms_per_batch': 12.399929692037404}
+{'B': 64, 'full_ms_per_batch': 20.380079397000372, 'heads_ms_per_batch': 23.84700527181849}
+{'B': 128, 'full_ms_per_batch': 37.825313047505915, 'heads_ms_per_batch': 40.265162475407124}
+graph cost: a=0.0770 ms b=0.02437 ms/sample head=0.2054 ms rho8=0.40 rho64=0.049
+selection done
+B=   8 full                   1.854s acc 0.8779
+B=   8 heads_only             2.285s acc 0.8779
+B=   8 threshold              2.093s acc 0.8656
+B=   8 threshold_nocompact    2.388s acc 0.8656
+B=   8 majority               1.765s acc 0.8630
+B=   8 consensus              1.856s acc 0.8656
+B=   8 unified                1.714s acc 0.8693
+B=   8 random_collective      1.980s acc 0.8607
+B=   8 theory_indiv_only      2.259s acc 0.8599
+B=   8 theory                 2.151s acc 0.8583
+B=  16 full                   1.717s acc 0.8777
+B=  16 heads_only             1.971s acc 0.8777
+B=  16 threshold              1.733s acc 0.8654
+B=  16 threshold_nocompact    2.222s acc 0.8654
+B=  16 majority               1.443s acc 0.8605
+B=  16 consensus              1.555s acc 0.8629
+B=  16 unified                1.394s acc 0.8693
+B=  16 random_collective      1.516s acc 0.8589
+B=  16 theory_indiv_only      1.514s acc 0.8533
+B=  16 theory                 1.615s acc 0.8531
+B=  64 full                   1.565s acc 0.8777
+B=  64 heads_only             1.641s acc 0.8777
+B=  64 threshold              1.166s acc 0.8651
+B=  64 threshold_nocompact    1.722s acc 0.8651
+B=  64 majority               1.137s acc 0.8645
+B=  64 consensus              1.242s acc 0.8635
+B=  64 unified                1.203s acc 0.8692
+B=  64 random_collective      1.043s acc 0.8557
+B=  64 theory_indiv_only      1.100s acc 0.8598
+B=  64 theory                 1.111s acc 0.8598
+B= 128 full                   1.456s acc 0.8775
+B= 128 heads_only             1.483s acc 0.8775
+B= 128 threshold              0.970s acc 0.8651
+B= 128 threshold_nocompact    1.511s acc 0.8651
+B= 128 majority               1.001s acc 0.8662
+B= 128 consensus              1.011s acc 0.8620
+B= 128 unified                1.001s acc 0.8692
+B= 128 random_collective      0.907s acc 0.8635
+B= 128 theory_indiv_only      0.890s acc 0.8598
+B= 128 theory                 0.905s acc 0.8598
+  B              family  accuracy  acc_drop_pts  real_speedup  sim_speedup
+  8                full     0.878         0.000         1.000        1.000
+  8          heads_only     0.878         0.000         0.811          NaN
+  8           threshold     0.866         1.223         0.886        1.086
+  8 threshold_nocompact     0.866         1.223         0.777        0.884
+  8            majority     0.863         1.489         1.051        1.164
+  8           consensus     0.866         1.223         0.999        1.050
+  8             unified     0.869         0.856         1.081        1.157
+  8   random_collective     0.861         1.713         0.936        1.269
+  8   theory_indiv_only     0.860         1.794         0.821        1.305
+  8              theory     0.858         1.958         0.862        1.318
+ 16                full     0.878         0.000         1.000        1.000
+ 16          heads_only     0.878         0.000         0.871          NaN
+ 16           threshold     0.865         1.225         0.991        1.232
+ 16 threshold_nocompact     0.865         1.225         0.773        0.889
+ 16            majority     0.860         1.716         1.190        1.317
+ 16           consensus     0.863         1.471         1.104        1.200
+ 16             unified     0.869         0.837         1.232        1.275
+ 16   random_collective     0.859         1.879         1.133        1.455
+ 16   theory_indiv_only     0.853         2.431         1.134        1.523
+ 16              theory     0.853         2.451         1.063        1.527
+ 64                full     0.878         0.000         1.000        1.000
+ 64          heads_only     0.878         0.000         0.954          NaN
+ 64           threshold     0.865         1.254         1.343        1.562
+ 64 threshold_nocompact     0.865         1.254         0.909        0.951
+ 64            majority     0.865         1.316         1.377        1.443
+ 64           consensus     0.863         1.419         1.260        1.389
+ 64             unified     0.869         0.843         1.301        1.426
+ 64   random_collective     0.856         2.200         1.501        1.804
+ 64   theory_indiv_only     0.860         1.789         1.422        1.764
+ 64              theory     0.860         1.789         1.409        1.764
+128                full     0.877         0.000         1.000        1.000
+128          heads_only     0.877         0.000         0.982          NaN
+128           threshold     0.865         1.234         1.501        1.657
+128 threshold_nocompact     0.865         1.234         0.963        0.974
+128            majority     0.866         1.131         1.454        1.468
+128           consensus     0.862         1.542         1.439        1.414
+128             unified     0.869         0.822         1.454        1.461
+128   random_collective     0.863         1.398         1.605        1.790
+128   theory_indiv_only     0.860         1.768         1.636        1.827
+128              theory     0.860         1.768         1.609        1.827

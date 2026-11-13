@@ -1,0 +1,23 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 5371.42it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: textattack/roberta-base-MNLI
+Key                         | Status     |  | 
+----------------------------+------------+--+-
+roberta.pooler.dense.bias   | UNEXPECTED |  | 
+roberta.pooler.dense.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+features: train (100000, 6, 768) val (9815, 6, 768) in 103s
+epoch 0 loss 4.6425
+epoch 1 loss 4.2819
+epoch 2 loss 4.1679
+epoch 3 loss 4.1123
+ exit  layer split  accuracy  mean_conf
+    0      2   all    0.4254     0.3911
+    1      4   all    0.4921     0.4544
+    2      6   all    0.5733     0.5456
+    3      8   all    0.7063     0.6453
+    4     10   all    0.8747     0.9249
+    5     12   all    0.8788     0.9336
+oracle accuracy (any exit correct): 0.9633

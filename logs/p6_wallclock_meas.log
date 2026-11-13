@@ -1,0 +1,66 @@
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 5223.91it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: textattack/roberta-base-MNLI
+Key                         | Status     |  | 
+----------------------------+------------+--+-
+roberta.pooler.dense.bias   | UNEXPECTED |  | 
+roberta.pooler.dense.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+sanity: layer loop vs trace agreement on final exit = 1.0000
+B=  16 full                 2.605s acc 0.8768
+B=  16 heads_only           3.858s acc 0.8768
+B=  16 threshold            3.945s acc 0.8658
+B=  16 threshold_nocompact  4.032s acc 0.8658
+B=  16 consensus            3.444s acc 0.8660
+B=  16 majority             3.450s acc 0.8732
+B=  16 random_collective    3.460s acc 0.8697
+B=  16 theory_indiv_only    3.799s acc 0.8707
+B=  16 theory               3.564s acc 0.8711
+B=  64 full                 1.571s acc 0.8764
+B=  64 heads_only           1.794s acc 0.8764
+B=  64 threshold            1.613s acc 0.8655
+B=  64 threshold_nocompact  1.862s acc 0.8742
+B=  64 consensus            1.592s acc 0.8723
+B=  64 majority             1.551s acc 0.8725
+B=  64 random_collective    1.523s acc 0.8684
+B=  64 theory_indiv_only    1.626s acc 0.8649
+B=  64 theory               1.573s acc 0.8723
+B= 128 full                 1.448s acc 0.8762
+B= 128 heads_only           1.563s acc 0.8762
+B= 128 threshold            1.340s acc 0.8657
+B= 128 threshold_nocompact  1.588s acc 0.8657
+B= 128 consensus            1.393s acc 0.8721
+B= 128 majority             1.325s acc 0.8713
+B= 128 random_collective    1.301s acc 0.8668
+B= 128 theory_indiv_only    1.341s acc 0.8614
+B= 128 theory               1.329s acc 0.8705
+per-exit overhead ms (by B): {16: np.float64(0.819249620381134), 64: np.float64(0.585769680573752), 128: np.float64(0.6054324146948362)}
+  B              family  accuracy  acc_drop_pct  real_speedup  sim_speedup
+ 16                full     0.877         0.000         1.000        1.000
+ 16          heads_only     0.877         0.000         0.675        1.000
+ 16           threshold     0.866         1.103         0.660        0.847
+ 16 threshold_nocompact     0.866         1.103         0.646        0.798
+ 16           consensus     0.866         1.083         0.756        0.936
+ 16            majority     0.873         0.368         0.755        0.950
+ 16   random_collective     0.870         0.715         0.753        0.952
+ 16   theory_indiv_only     0.871         0.613         0.686        0.887
+ 16              theory     0.871         0.572         0.731        0.952
+ 64                full     0.876         0.000         1.000        1.000
+ 64          heads_only     0.876         0.000         0.876        1.000
+ 64           threshold     0.866         1.090         0.974        1.020
+ 64 threshold_nocompact     0.874         0.226         0.844        0.897
+ 64           consensus     0.872         0.411         0.987        1.043
+ 64            majority     0.873         0.391         1.013        1.083
+ 64   random_collective     0.868         0.802         1.032        1.094
+ 64   theory_indiv_only     0.865         1.151         0.966        1.036
+ 64              theory     0.872         0.411         0.999        1.083
+128                full     0.876         0.000         1.000        1.000
+128          heads_only     0.876         0.000         0.926        1.000
+128           threshold     0.866         1.049         1.080        1.098
+128 threshold_nocompact     0.866         1.049         0.912        0.939
+128           consensus     0.872         0.411         1.039        1.069
+128            majority     0.871         0.493         1.092        1.127
+128   random_collective     0.867         0.946         1.113        1.153
+128   theory_indiv_only     0.861         1.480         1.080        1.124
+128              theory     0.870         0.576         1.089        1.143

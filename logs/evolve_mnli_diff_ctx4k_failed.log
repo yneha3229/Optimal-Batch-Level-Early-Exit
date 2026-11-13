@@ -1,0 +1,486 @@
+2026-11-06 08:23:40,665 - INFO - Logging to evolve/runs/mnli/logs/openevolve_20261106_082340.log
+2026-11-06 08:23:40,672 - INFO - Set random seed to 42 for reproducibility
+2026-11-06 08:23:40,765 - INFO - Initialized OpenAI LLM with model: qwen2.5-coder:7b
+2026-11-06 08:23:40,765 - INFO - Initialized LLM ensemble with models: qwen2.5-coder:7b (weight: 1.00)
+2026-11-06 08:23:40,793 - INFO - Initialized prompt sampler
+2026-11-06 08:23:40,794 - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-11-06 08:23:40,794 - INFO - Initialized program database with 0 programs
+2026-11-06 08:23:40,795 - INFO - Successfully loaded evaluation function from evolve/evaluator.py
+2026-11-06 08:23:40,795 - INFO - Initialized evaluator with evolve/evaluator.py
+2026-11-06 08:23:40,795 - INFO - Initialized OpenEvolve with evolve/initial_program.py
+2026-11-06 08:23:40,795 - INFO - Adding initial program to database
+2026-11-06 08:23:41,840 - INFO - Evaluated program 2117a8f5-a97d-45eb-adf1-8eea5539c624 in 1.04s: enc_eager_meas_B16_speedup=0.9658, enc_eager_meas_B16_acc_drop=0.0078, enc_eager_meas_B16_score=0.9658, enc_eager_meas_B64_speedup=1.2545, enc_eager_meas_B64_acc_drop=0.0035, enc_eager_meas_B64_score=1.2545, dec_eager_B16_speedup=0.9864, dec_eager_B16_acc_drop=0.0078, dec_eager_B16_score=0.9864, dec_eager_B64_speedup=0.9404, dec_eager_B64_acc_drop=0.0035, dec_eager_B64_score=0.9404, combined_score=1.0296
+2026-11-06 08:23:41,840 - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 5, 'diversity': 0}
+2026-11-06 08:23:41,841 - INFO - Initialized process parallel controller with 6 workers
+2026-11-06 08:23:41,841 - INFO - Set max None tasks per child
+2026-11-06 08:23:41,842 - INFO - Started process pool with 6 processes
+2026-11-06 08:23:41,842 - INFO - Using island-based evolution with 3 islands
+2026-11-06 08:23:41,842 - INFO - Island Status:
+2026-11-06 08:23:41,842 - INFO -  * Island 0: 1 programs, best=1.0296, avg=1.0296, diversity=0.00, gen=0 (best: 2117a8f5-a97d-45eb-adf1-8eea5539c624)
+2026-11-06 08:23:41,842 - INFO -    Island 1: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-11-06 08:23:41,842 - INFO -    Island 2: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-11-06 08:23:41,842 - INFO - Starting process-based evolution from iteration 1 for 300 iterations (total: 301)
+2026-11-06 08:23:41,855 - INFO - Early stopping disabled
+2026-11-06 08:23:41,916 - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-11-06 08:23:41,916 - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-11-06 08:23:41,916 - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-11-06 08:23:41,916 - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-11-06 08:23:41,916 - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-11-06 08:23:41,916 - INFO - Successfully loaded evaluation function from evolve/evaluator.py
+2026-11-06 08:23:41,916 - INFO - Successfully loaded evaluation function from evolve/evaluator.py
+2026-11-06 08:23:41,916 - INFO - Successfully loaded evaluation function from evolve/evaluator.py
+2026-11-06 08:23:41,916 - INFO - Successfully loaded evaluation function from evolve/evaluator.py
+2026-11-06 08:23:41,917 - INFO - Initialized evaluator with evolve/evaluator.py
+2026-11-06 08:23:41,917 - INFO - Initialized evaluator with evolve/evaluator.py
+2026-11-06 08:23:41,917 - INFO - Initialized evaluator with evolve/evaluator.py
+2026-11-06 08:23:41,917 - INFO - Initialized evaluator with evolve/evaluator.py
+2026-11-06 08:23:41,917 - INFO - Successfully loaded evaluation function from evolve/evaluator.py
+2026-11-06 08:23:41,917 - INFO - Initialized evaluator with evolve/evaluator.py
+2026-11-06 08:23:41,918 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:23:41,918 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:23:41,918 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:23:41,918 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:23:41,918 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:23:41,920 - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-11-06 08:23:41,921 - INFO - Successfully loaded evaluation function from evolve/evaluator.py
+2026-11-06 08:23:41,921 - INFO - Initialized evaluator with evolve/evaluator.py
+2026-11-06 08:23:41,922 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:23:52,441 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:23:52,503 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=1646, completion_tokens=788, total_tokens=2434
+2026-11-06 08:23:54,599 - INFO - Evaluated program fef42e60-0daf-4cab-81e4-1415641056ab in 2.08s: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:23:54,600 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:23:54,610 - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 9, 'diversity': 5}
+2026-11-06 08:23:54,610 - INFO - Iteration 3: Program fef42e60-0daf-4cab-81e4-1415641056ab (parent: 2117a8f5-a97d-45eb-adf1-8eea5539c624) completed in 12.68s | tokens: 2434 (prompt: 1646, completion: 788)
+2026-11-06 08:23:54,611 - INFO - Metrics: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:24:03,307 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:24:03,356 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=1646, completion_tokens=776, total_tokens=2422
+2026-11-06 08:24:03,367 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:24:03,377 - WARNING - Iteration 6 error [diff]: No valid diffs found in response | tokens: 2422 (prompt: 1646, completion: 776)
+2026-11-06 08:24:14,079 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:24:14,150 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=1646, completion_tokens=667, total_tokens=2313
+2026-11-06 08:24:14,156 - WARNING - Iteration 1 error [diff]: No valid diffs found in response | tokens: 2313 (prompt: 1646, completion: 667)
+2026-11-06 08:24:14,157 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:24:27,152 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:24:27,164 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=1646, completion_tokens=813, total_tokens=2459
+2026-11-06 08:24:27,165 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:24:27,177 - WARNING - Iteration 4 error [diff]: No valid diffs found in response | tokens: 2459 (prompt: 1646, completion: 813)
+2026-11-06 08:24:40,132 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:24:40,227 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=1646, completion_tokens=639, total_tokens=2285
+2026-11-06 08:24:40,229 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:24:40,230 - WARNING - Iteration 2 error [diff]: No valid diffs found in response | tokens: 2285 (prompt: 1646, completion: 639)
+2026-11-06 08:25:01,054 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:25:01,102 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=1646, completion_tokens=700, total_tokens=2346
+2026-11-06 08:25:01,109 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:25:01,119 - WARNING - Iteration 5 error [diff]: No valid diffs found in response | tokens: 2346 (prompt: 1646, completion: 700)
+2026-11-06 08:25:24,067 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:25:24,071 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=1646, completion_tokens=758, total_tokens=2404
+2026-11-06 08:25:24,073 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:25:24,078 - WARNING - Iteration 7 error [diff]: No valid diffs found in response | tokens: 2404 (prompt: 1646, completion: 758)
+2026-11-06 08:25:47,879 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:25:47,880 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=1646, completion_tokens=695, total_tokens=2341
+2026-11-06 08:25:47,886 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:25:47,889 - WARNING - Iteration 8 error [diff]: No valid diffs found in response | tokens: 2341 (prompt: 1646, completion: 695)
+2026-11-06 08:26:09,429 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:26:09,431 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=1646, completion_tokens=691, total_tokens=2337
+2026-11-06 08:26:09,432 - WARNING - Iteration 9 error [diff]: No valid diffs found in response | tokens: 2337 (prompt: 1646, completion: 691)
+2026-11-06 08:26:09,435 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:26:33,601 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:26:33,603 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=1646, completion_tokens=715, total_tokens=2361
+2026-11-06 08:26:33,610 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:26:33,612 - WARNING - Iteration 10 error [diff]: No valid diffs found in response | tokens: 2361 (prompt: 1646, completion: 715)
+2026-11-06 08:27:00,118 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:27:00,120 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=1646, completion_tokens=817, total_tokens=2463
+2026-11-06 08:27:00,123 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:27:00,129 - WARNING - Iteration 11 error [diff]: No valid diffs found in response | tokens: 2463 (prompt: 1646, completion: 817)
+2026-11-06 08:27:14,899 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:27:14,904 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=1646, completion_tokens=691, total_tokens=2337
+2026-11-06 08:27:14,905 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:27:14,907 - WARNING - Iteration 12 error [diff]: No valid diffs found in response | tokens: 2337 (prompt: 1646, completion: 691)
+2026-11-06 08:27:40,528 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:27:40,530 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=741, total_tokens=3741
+2026-11-06 08:27:40,534 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:27:40,537 - WARNING - Iteration 13 error [diff]: No valid diffs found in response | tokens: 3741 (prompt: 3000, completion: 741)
+2026-11-06 08:28:09,015 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:28:09,017 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=844, total_tokens=3844
+2026-11-06 08:28:10,934 - INFO - Evaluated program 9fa9dc63-d923-4aa5-ab88-0d0d8eee3113 in 1.92s: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:28:10,935 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:28:10,945 - INFO - New MAP-Elites cell occupied in island 1: {'complexity': 9, 'diversity': 9}
+2026-11-06 08:28:10,946 - INFO - Iteration 14: Program 9fa9dc63-d923-4aa5-ab88-0d0d8eee3113 (parent: 2117a8f5-a97d-45eb-adf1-8eea5539c624) completed in 143.05s | tokens: 3844 (prompt: 3000, completion: 844)
+2026-11-06 08:28:10,946 - INFO - Metrics: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:28:28,441 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:28:28,443 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=637, total_tokens=3637
+2026-11-06 08:28:28,446 - WARNING - Iteration 15 error [diff]: No valid diffs found in response | tokens: 3637 (prompt: 3000, completion: 637)
+2026-11-06 08:28:28,447 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:28:51,740 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:28:51,741 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=667, total_tokens=3667
+2026-11-06 08:28:51,742 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:28:51,743 - WARNING - Iteration 16 error [diff]: No valid diffs found in response | tokens: 3667 (prompt: 3000, completion: 667)
+2026-11-06 08:29:17,550 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:29:17,551 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3067, completion_tokens=691, total_tokens=3758
+2026-11-06 08:29:17,552 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:29:17,560 - WARNING - Iteration 17 error [diff]: No valid diffs found in response | tokens: 3758 (prompt: 3067, completion: 691)
+2026-11-06 08:30:15,007 - WARNING - Timeout on attempt 1/3. Retrying...
+2026-11-06 08:30:40,636 - WARNING - Timeout on attempt 1/3. Retrying...
+2026-11-06 08:30:57,716 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:30:57,717 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=549, total_tokens=3549
+2026-11-06 08:30:57,719 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:30:57,723 - WARNING - Iteration 20 error [diff]: No valid diffs found in response | tokens: 3549 (prompt: 3000, completion: 549)
+2026-11-06 08:31:20,893 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:31:20,894 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=671, total_tokens=3671
+2026-11-06 08:31:20,895 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:31:20,897 - WARNING - Iteration 21 error [diff]: No valid diffs found in response | tokens: 3671 (prompt: 3000, completion: 671)
+2026-11-06 08:31:49,840 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:31:49,842 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3067, completion_tokens=786, total_tokens=3853
+2026-11-06 08:31:49,843 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:31:49,844 - WARNING - Iteration 22 error [diff]: No valid diffs found in response | tokens: 3853 (prompt: 3067, completion: 786)
+2026-11-06 08:32:13,031 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:32:13,033 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3067, completion_tokens=668, total_tokens=3735
+2026-11-06 08:32:13,034 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:32:13,036 - WARNING - Iteration 23 error [diff]: No valid diffs found in response | tokens: 3735 (prompt: 3067, completion: 668)
+2026-11-06 08:32:30,760 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:32:30,762 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=531, total_tokens=3531
+2026-11-06 08:32:31,990 - INFO - Evaluated program e80827b1-b107-4b86-89e1-cbc4202ba709 in 1.23s: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:32:31,991 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:32:31,998 - INFO - New MAP-Elites cell occupied in island 1: {'complexity': 9, 'diversity': 0}
+2026-11-06 08:32:31,998 - INFO - Iteration 18: Program e80827b1-b107-4b86-89e1-cbc4202ba709 (parent: 2117a8f5-a97d-45eb-adf1-8eea5539c624) completed in 317.08s | tokens: 3531 (prompt: 3000, completion: 531)
+2026-11-06 08:32:31,999 - INFO - Metrics: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:33:00,370 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:33:00,374 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=861, total_tokens=3861
+2026-11-06 08:33:01,441 - INFO - Evaluated program 776fbdf3-97e4-42d7-aa39-27c4e9964164 in 1.07s: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:33:01,442 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:33:01,448 - INFO - New MAP-Elites cell occupied in island 1: {'complexity': 7, 'diversity': 3}
+2026-11-06 08:33:01,448 - INFO - Iteration 19: Program 776fbdf3-97e4-42d7-aa39-27c4e9964164 (parent: 2117a8f5-a97d-45eb-adf1-8eea5539c624) completed in 320.91s | tokens: 3861 (prompt: 3000, completion: 861)
+2026-11-06 08:33:01,448 - INFO - Metrics: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:33:17,412 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:33:17,414 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=488, total_tokens=3488
+2026-11-06 08:33:17,416 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:33:17,421 - WARNING - Iteration 24 error [diff]: No valid diffs found in response | tokens: 3488 (prompt: 3000, completion: 488)
+2026-11-06 08:33:49,307 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:33:49,309 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3067, completion_tokens=865, total_tokens=3932
+2026-11-06 08:33:49,310 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:33:49,319 - WARNING - Iteration 25 error [diff]: No valid diffs found in response | tokens: 3932 (prompt: 3067, completion: 865)
+2026-11-06 08:34:17,869 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:34:17,870 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=2351, completion_tokens=784, total_tokens=3135
+2026-11-06 08:34:17,871 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:34:17,878 - WARNING - Iteration 26 error [diff]: No valid diffs found in response | tokens: 3135 (prompt: 2351, completion: 784)
+2026-11-06 08:34:27,194 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:34:27,196 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3067, completion_tokens=224, total_tokens=3291
+2026-11-06 08:34:27,197 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:34:27,206 - WARNING - Iteration 27 error [diff]: No valid diffs found in response | tokens: 3291 (prompt: 3067, completion: 224)
+2026-11-06 08:34:54,427 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:34:54,430 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=735, total_tokens=3735
+2026-11-06 08:34:54,432 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:34:54,434 - WARNING - Iteration 28 error [diff]: No valid diffs found in response | tokens: 3735 (prompt: 3000, completion: 735)
+2026-11-06 08:35:23,237 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:35:23,240 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3067, completion_tokens=778, total_tokens=3845
+2026-11-06 08:35:23,242 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:35:23,243 - WARNING - Iteration 29 error [diff]: No valid diffs found in response | tokens: 3845 (prompt: 3067, completion: 778)
+2026-11-06 08:36:00,251 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:36:00,255 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=2351, completion_tokens=1026, total_tokens=3377
+2026-11-06 08:36:00,257 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:36:00,264 - WARNING - Iteration 30 error [diff]: No valid diffs found in response | tokens: 3377 (prompt: 2351, completion: 1026)
+2026-11-06 08:36:27,862 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:36:27,864 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=747, total_tokens=3747
+2026-11-06 08:36:27,866 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:36:27,874 - WARNING - Iteration 31 error [diff]: No valid diffs found in response | tokens: 3747 (prompt: 3000, completion: 747)
+2026-11-06 08:36:51,249 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:36:51,252 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=668, total_tokens=3668
+2026-11-06 08:36:51,254 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:36:51,261 - WARNING - Iteration 32 error [diff]: No valid diffs found in response | tokens: 3668 (prompt: 3000, completion: 668)
+2026-11-06 08:37:12,894 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:37:12,896 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=617, total_tokens=3617
+2026-11-06 08:37:12,898 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:37:12,899 - WARNING - Iteration 33 error [diff]: No valid diffs found in response | tokens: 3617 (prompt: 3000, completion: 617)
+2026-11-06 08:37:39,280 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:37:39,283 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3334, completion_tokens=700, total_tokens=4034
+2026-11-06 08:37:39,285 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:37:39,287 - WARNING - Iteration 34 error [diff]: No valid diffs found in response | tokens: 4034 (prompt: 3334, completion: 700)
+2026-11-06 08:38:07,530 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:38:07,533 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=735, total_tokens=4831
+2026-11-06 08:38:07,535 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:38:07,537 - WARNING - Iteration 35 error [diff]: No valid diffs found in response | tokens: 4831 (prompt: 4096, completion: 735)
+2026-11-06 08:38:36,904 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:38:36,907 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3067, completion_tokens=790, total_tokens=3857
+2026-11-06 08:38:36,909 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:38:36,915 - WARNING - Iteration 36 error [diff]: No valid diffs found in response | tokens: 3857 (prompt: 3067, completion: 790)
+2026-11-06 08:39:00,547 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:39:00,549 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3067, completion_tokens=674, total_tokens=3741
+2026-11-06 08:39:00,551 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:39:00,556 - WARNING - Iteration 37 error [diff]: No valid diffs found in response | tokens: 3741 (prompt: 3067, completion: 674)
+2026-11-06 08:39:34,177 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:39:34,180 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=891, total_tokens=4987
+2026-11-06 08:39:34,182 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:39:34,183 - WARNING - Iteration 38 error [diff]: None of the 1 SEARCH block(s) matched the parent program | tokens: 4987 (prompt: 4096, completion: 891)
+2026-11-06 08:40:07,508 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:40:07,511 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3067, completion_tokens=904, total_tokens=3971
+2026-11-06 08:40:08,525 - INFO - Evaluated program 8a87d6ac-7984-4a0f-8446-669f7cdb8e2a in 1.01s: combined_score=0.0000, error=NameError: name 'exit_mask' is not defined
+2026-11-06 08:40:08,526 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:40:08,530 - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 6, 'diversity': 0}
+2026-11-06 08:40:08,530 - INFO - Iteration 39: Program 8a87d6ac-7984-4a0f-8446-669f7cdb8e2a (parent: fef42e60-0daf-4cab-81e4-1415641056ab) completed in 175.63s | tokens: 3971 (prompt: 3067, completion: 904)
+2026-11-06 08:40:08,530 - INFO - Metrics: combined_score=0.0000, error=NameError: name 'exit_mask' is not defined
+2026-11-06 08:40:31,777 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:40:31,780 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=652, total_tokens=3652
+2026-11-06 08:40:31,782 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:40:31,783 - WARNING - Iteration 40 error [diff]: No valid diffs found in response | tokens: 3652 (prompt: 3000, completion: 652)
+2026-11-06 08:40:40,688 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:40:40,690 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3067, completion_tokens=212, total_tokens=3279
+2026-11-06 08:40:41,736 - INFO - Evaluated program 6dfd01b4-9e06-49a2-93bd-ae2698fdf2e5 in 1.04s: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:40:41,737 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:40:41,742 - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 9, 'diversity': 4}
+2026-11-06 08:40:41,742 - INFO - Iteration 41: Program 6dfd01b4-9e06-49a2-93bd-ae2698fdf2e5 (parent: fef42e60-0daf-4cab-81e4-1415641056ab) completed in 154.20s | tokens: 3279 (prompt: 3067, completion: 212)
+2026-11-06 08:40:41,742 - INFO - Metrics: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:41:08,990 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:41:08,992 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=739, total_tokens=4835
+2026-11-06 08:41:08,993 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:41:08,997 - WARNING - Iteration 42 error [diff]: None of the 4 SEARCH block(s) matched the parent program | tokens: 4835 (prompt: 4096, completion: 739)
+2026-11-06 08:41:34,409 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:41:34,412 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=655, total_tokens=4751
+2026-11-06 08:41:34,414 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:41:34,424 - WARNING - Iteration 43 error [diff]: None of the 4 SEARCH block(s) matched the parent program | tokens: 4751 (prompt: 4096, completion: 655)
+2026-11-06 08:42:15,157 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:42:15,160 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3067, completion_tokens=1114, total_tokens=4181
+2026-11-06 08:42:16,213 - INFO - Evaluated program 0b969705-d8df-49be-a565-687470dffd91 in 1.05s: enc_eager_meas_B16_speedup=4.7305, enc_eager_meas_B16_acc_drop=0.3711, enc_eager_meas_B16_score=0.0000, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.1271, dec_eager_B16_acc_drop=0.0031, dec_eager_B16_score=1.1271, dec_eager_B64_speedup=0.9898, dec_eager_B64_acc_drop=-0.0008, dec_eager_B64_score=0.9898, combined_score=0.0010
+2026-11-06 08:42:16,214 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:42:16,221 - INFO - New MAP-Elites cell occupied in island 2: {'complexity': 9, 'diversity': 9}
+2026-11-06 08:42:16,221 - INFO - Iteration 44: Program 0b969705-d8df-49be-a565-687470dffd91 (parent: fef42e60-0daf-4cab-81e4-1415641056ab) completed in 162.03s | tokens: 4181 (prompt: 3067, completion: 1114)
+2026-11-06 08:42:16,222 - INFO - Metrics: enc_eager_meas_B16_speedup=4.7305, enc_eager_meas_B16_acc_drop=0.3711, enc_eager_meas_B16_score=0.0000, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.1271, dec_eager_B16_acc_drop=0.0031, dec_eager_B16_score=1.1271, dec_eager_B64_speedup=0.9898, dec_eager_B64_acc_drop=-0.0008, dec_eager_B64_score=0.9898, combined_score=0.0010
+2026-11-06 08:42:41,464 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:42:41,467 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3067, completion_tokens=701, total_tokens=3768
+2026-11-06 08:42:41,469 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:42:41,478 - WARNING - Iteration 45 error [diff]: None of the 1 SEARCH block(s) matched the parent program | tokens: 3768 (prompt: 3067, completion: 701)
+2026-11-06 08:43:16,563 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:43:16,567 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=926, total_tokens=5022
+2026-11-06 08:43:17,616 - INFO - Evaluated program bfc4aaf4-aabd-46d6-ad49-f38acf94251b in 1.05s: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:43:17,617 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:43:17,627 - INFO - New MAP-Elites cell occupied in island 1: {'complexity': 5, 'diversity': 1}
+2026-11-06 08:43:17,628 - INFO - Iteration 46: Program bfc4aaf4-aabd-46d6-ad49-f38acf94251b (parent: 9fa9dc63-d923-4aa5-ab88-0d0d8eee3113) completed in 165.83s | tokens: 5022 (prompt: 4096, completion: 926)
+2026-11-06 08:43:17,628 - INFO - Metrics: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:43:41,748 - WARNING - Timeout on attempt 1/3. Retrying...
+2026-11-06 08:44:06,883 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:44:06,886 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=667, total_tokens=3667
+2026-11-06 08:44:06,887 - WARNING - Iteration 48 error [diff]: No valid diffs found in response | tokens: 3667 (prompt: 3000, completion: 667)
+2026-11-06 08:44:06,888 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:44:31,755 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:44:31,758 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3000, completion_tokens=709, total_tokens=3709
+2026-11-06 08:44:31,761 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:44:31,766 - WARNING - Iteration 49 error [diff]: No valid diffs found in response | tokens: 3709 (prompt: 3000, completion: 709)
+2026-11-06 08:44:54,115 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:44:54,118 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=568, total_tokens=4664
+2026-11-06 08:44:54,120 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:44:54,124 - WARNING - Iteration 50 error [diff]: None of the 1 SEARCH block(s) matched the parent program | tokens: 4664 (prompt: 4096, completion: 568)
+2026-11-06 08:45:27,059 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:45:27,062 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4007, completion_tokens=872, total_tokens=4879
+2026-11-06 08:45:28,096 - INFO - Evaluated program bdd00b10-8921-4594-b7e4-bcb6600082af in 1.03s: enc_eager_meas_B16_speedup=1.2581, enc_eager_meas_B16_acc_drop=0.0031, enc_eager_meas_B16_score=1.2581, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.4049, dec_eager_B16_acc_drop=0.0031, dec_eager_B16_score=1.4049, dec_eager_B64_speedup=5.6199, dec_eager_B64_acc_drop=0.3533, dec_eager_B64_score=0.0000, combined_score=0.0012
+2026-11-06 08:45:28,097 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:45:28,102 - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 4, 'diversity': 0}
+2026-11-06 08:45:28,102 - INFO - Iteration 51: Program bdd00b10-8921-4594-b7e4-bcb6600082af (parent: 2117a8f5-a97d-45eb-adf1-8eea5539c624) completed in 166.63s | tokens: 4879 (prompt: 4007, completion: 872)
+2026-11-06 08:45:28,102 - INFO - Metrics: enc_eager_meas_B16_speedup=1.2581, enc_eager_meas_B16_acc_drop=0.0031, enc_eager_meas_B16_score=1.2581, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.4049, dec_eager_B16_acc_drop=0.0031, dec_eager_B16_score=1.4049, dec_eager_B64_speedup=5.6199, dec_eager_B64_acc_drop=0.3533, dec_eager_B64_score=0.0000, combined_score=0.0012
+2026-11-06 08:45:51,059 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:45:51,062 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4082, completion_tokens=614, total_tokens=4696
+2026-11-06 08:45:51,064 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:45:51,070 - WARNING - Iteration 52 error [diff]: No valid diffs found in response | tokens: 4696 (prompt: 4082, completion: 614)
+2026-11-06 08:46:08,091 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:46:08,092 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=417, total_tokens=4513
+2026-11-06 08:46:09,142 - INFO - Evaluated program e6f50899-5dc2-46b7-afad-1cb50d2631b7 in 1.05s: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:46:09,143 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:46:09,143 - INFO - New MAP-Elites cell occupied in island 1: {'complexity': 7, 'diversity': 4}
+2026-11-06 08:46:09,143 - INFO - Iteration 47: Program e6f50899-5dc2-46b7-afad-1cb50d2631b7 (parent: e80827b1-b107-4b86-89e1-cbc4202ba709) completed in 327.41s | tokens: 4513 (prompt: 4096, completion: 417)
+2026-11-06 08:46:09,144 - INFO - Metrics: enc_eager_meas_B16_speedup=1.0363, enc_eager_meas_B16_acc_drop=0.0086, enc_eager_meas_B16_score=1.0363, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.0658, dec_eager_B16_acc_drop=0.0086, dec_eager_B16_score=1.0658, dec_eager_B64_speedup=0.9446, dec_eager_B64_acc_drop=0.0027, dec_eager_B64_score=0.9446, combined_score=0.0320
+2026-11-06 08:46:37,563 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:46:37,564 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=772, total_tokens=4868
+2026-11-06 08:46:37,565 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:46:37,568 - WARNING - Iteration 53 error [diff]: None of the 1 SEARCH block(s) matched the parent program | tokens: 4868 (prompt: 4096, completion: 772)
+2026-11-06 08:47:00,323 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:47:00,326 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=582, total_tokens=4678
+2026-11-06 08:47:00,329 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:47:00,333 - WARNING - Iteration 54 error [diff]: None of the 3 SEARCH block(s) matched the parent program | tokens: 4678 (prompt: 4096, completion: 582)
+2026-11-06 08:47:10,284 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:47:10,287 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=217, total_tokens=4313
+2026-11-06 08:47:10,290 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:47:10,297 - WARNING - Iteration 55 error [diff]: None of the 1 SEARCH block(s) matched the parent program | tokens: 4313 (prompt: 4096, completion: 217)
+2026-11-06 08:47:50,528 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:47:50,531 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=2316, completion_tokens=1114, total_tokens=3430
+2026-11-06 08:47:50,534 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:47:50,539 - WARNING - Iteration 56 error [diff]: None of the 2 SEARCH block(s) matched the parent program | tokens: 3430 (prompt: 2316, completion: 1114)
+2026-11-06 08:48:17,810 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:48:17,814 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=2316, completion_tokens=1189, total_tokens=3505
+2026-11-06 08:48:18,840 - INFO - Evaluated program 025788c8-d004-4b30-bc76-e5644f818fc9 in 1.03s: enc_eager_meas_B16_speedup=4.7305, enc_eager_meas_B16_acc_drop=0.3711, enc_eager_meas_B16_score=0.0000, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.2025, dec_eager_B16_acc_drop=0.0242, dec_eager_B16_score=0.2901, dec_eager_B64_speedup=1.1659, dec_eager_B64_acc_drop=0.0139, dec_eager_B64_score=0.7920, combined_score=0.0007
+2026-11-06 08:48:18,841 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:48:18,842 - INFO - Iteration 57: Program 025788c8-d004-4b30-bc76-e5644f818fc9 (parent: 0b969705-d8df-49be-a565-687470dffd91) completed in 147.78s | tokens: 3505 (prompt: 2316, completion: 1189)
+2026-11-06 08:48:18,842 - INFO - Metrics: enc_eager_meas_B16_speedup=4.7305, enc_eager_meas_B16_acc_drop=0.3711, enc_eager_meas_B16_score=0.0000, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.2025, dec_eager_B16_acc_drop=0.0242, dec_eager_B16_score=0.2901, dec_eager_B64_speedup=1.1659, dec_eager_B64_acc_drop=0.0139, dec_eager_B64_score=0.7920, combined_score=0.0007
+2026-11-06 08:48:26,762 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:48:26,765 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=679, total_tokens=4775
+2026-11-06 08:48:27,787 - INFO - Evaluated program 1ba01cc8-6944-4d70-85ea-b66e849e97b3 in 1.02s: combined_score=0.0000, error=ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-11-06 08:48:27,788 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:48:27,796 - INFO - New MAP-Elites cell occupied in island 1: {'complexity': 4, 'diversity': 1}
+2026-11-06 08:48:27,797 - INFO - Iteration 58: Program 1ba01cc8-6944-4d70-85ea-b66e849e97b3 (parent: bfc4aaf4-aabd-46d6-ad49-f38acf94251b) completed in 138.64s | tokens: 4775 (prompt: 4096, completion: 679)
+2026-11-06 08:48:27,797 - INFO - Metrics: combined_score=0.0000, error=ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+2026-11-06 08:48:36,576 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:48:36,578 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=2316, completion_tokens=820, total_tokens=3136
+2026-11-06 08:48:36,580 - WARNING - Iteration 59 error [diff]: No valid diffs found in response | tokens: 3136 (prompt: 2316, completion: 820)
+2026-11-06 08:48:36,581 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:48:58,210 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:48:58,213 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=815, total_tokens=4911
+2026-11-06 08:48:58,216 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:48:58,220 - WARNING - Iteration 60 error [diff]: No valid diffs found in response | tokens: 4911 (prompt: 4096, completion: 815)
+2026-11-06 08:49:33,368 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:49:33,371 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=914, total_tokens=5010
+2026-11-06 08:49:33,373 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:49:33,382 - WARNING - Iteration 61 error [diff]: None of the 4 SEARCH block(s) matched the parent program | tokens: 5010 (prompt: 4096, completion: 914)
+2026-11-06 08:50:06,697 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:50:06,698 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=862, total_tokens=4958
+2026-11-06 08:50:07,659 - INFO - Evaluated program d7e27ae0-7700-4c0c-919d-f5845074baca in 0.96s: combined_score=0.0000, error=NameError: name 'exit_mask' is not defined
+2026-11-06 08:50:07,660 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:50:07,663 - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 3, 'diversity': 1}
+2026-11-06 08:50:07,663 - INFO - Iteration 62: Program d7e27ae0-7700-4c0c-919d-f5845074baca (parent: 2117a8f5-a97d-45eb-adf1-8eea5539c624) completed in 137.13s | tokens: 4958 (prompt: 4096, completion: 862)
+2026-11-06 08:50:07,663 - INFO - Metrics: combined_score=0.0000, error=NameError: name 'exit_mask' is not defined
+2026-11-06 08:50:32,878 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:50:32,880 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=661, total_tokens=4757
+2026-11-06 08:50:32,883 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:50:32,887 - WARNING - Iteration 63 error [diff]: None of the 3 SEARCH block(s) matched the parent program | tokens: 4757 (prompt: 4096, completion: 661)
+2026-11-06 08:50:58,696 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:50:58,699 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=652, total_tokens=4748
+2026-11-06 08:50:58,702 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:50:58,705 - WARNING - Iteration 64 error [diff]: No valid diffs found in response | tokens: 4748 (prompt: 4096, completion: 652)
+2026-11-06 08:51:32,689 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:51:32,692 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=879, total_tokens=4975
+2026-11-06 08:51:32,695 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:51:32,697 - WARNING - Iteration 65 error [diff]: No valid diffs found in response | tokens: 4975 (prompt: 4096, completion: 879)
+2026-11-06 08:51:55,790 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:51:55,793 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=576, total_tokens=4672
+2026-11-06 08:51:56,831 - INFO - Evaluated program 93483b1d-3f47-4096-8019-274f040d08bc in 1.04s: enc_eager_meas_B16_speedup=1.2823, enc_eager_meas_B16_acc_drop=0.0094, enc_eager_meas_B16_score=1.2823, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.4050, dec_eager_B16_acc_drop=0.0094, dec_eager_B16_score=1.4050, dec_eager_B64_speedup=5.6199, dec_eager_B64_acc_drop=0.3533, dec_eager_B64_score=0.0000, combined_score=0.0012
+2026-11-06 08:51:56,832 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:51:56,836 - INFO - New MAP-Elites cell occupied in island 1: {'complexity': 3, 'diversity': 1}
+2026-11-06 08:51:56,836 - INFO - Iteration 66: Program 93483b1d-3f47-4096-8019-274f040d08bc (parent: 776fbdf3-97e4-42d7-aa39-27c4e9964164) completed in 178.62s | tokens: 4672 (prompt: 4096, completion: 576)
+2026-11-06 08:51:56,836 - INFO - Metrics: enc_eager_meas_B16_speedup=1.2823, enc_eager_meas_B16_acc_drop=0.0094, enc_eager_meas_B16_score=1.2823, enc_eager_meas_B64_speedup=5.3844, enc_eager_meas_B64_acc_drop=0.3533, enc_eager_meas_B64_score=0.0000, dec_eager_B16_speedup=1.4050, dec_eager_B16_acc_drop=0.0094, dec_eager_B16_score=1.4050, dec_eager_B64_speedup=5.6199, dec_eager_B64_acc_drop=0.3533, dec_eager_B64_score=0.0000, combined_score=0.0012
+2026-11-06 08:52:08,853 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:52:08,856 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=2316, completion_tokens=334, total_tokens=2650
+2026-11-06 08:52:08,859 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:52:08,863 - WARNING - Iteration 67 error [diff]: None of the 1 SEARCH block(s) matched the parent program | tokens: 2650 (prompt: 2316, completion: 334)
+2026-11-06 08:52:40,971 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:52:40,974 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=2316, completion_tokens=904, total_tokens=3220
+2026-11-06 08:52:40,977 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:52:40,982 - WARNING - Iteration 68 error [diff]: No valid diffs found in response | tokens: 3220 (prompt: 2316, completion: 904)
+2026-11-06 08:53:03,503 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:53:03,506 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3915, completion_tokens=563, total_tokens=4478
+2026-11-06 08:53:04,053 - INFO - Evaluated program b7bdca91-8f9e-4624-95a8-2b22890441c7 in 0.55s: combined_score=0.0000, error=SyntaxError: 'return' outside function
+2026-11-06 08:53:04,055 - INFO - New MAP-Elites cell occupied in island 2: {'complexity': 8, 'diversity': 8}
+2026-11-06 08:53:04,056 - INFO - Iteration 69: Program b7bdca91-8f9e-4624-95a8-2b22890441c7 (parent: 025788c8-d004-4b30-bc76-e5644f818fc9) completed in 151.17s | tokens: 4478 (prompt: 3915, completion: 563)
+2026-11-06 08:53:04,056 - INFO - Metrics: combined_score=0.0000, error=SyntaxError: 'return' outside function
+2026-11-06 08:53:04,056 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:53:26,042 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:53:26,045 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=450, total_tokens=4546
+2026-11-06 08:53:26,048 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:53:26,055 - WARNING - Iteration 70 error [diff]: None of the 3 SEARCH block(s) matched the parent program | tokens: 4546 (prompt: 4096, completion: 450)
+2026-11-06 08:54:08,078 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:54:08,081 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3915, completion_tokens=830, total_tokens=4745
+2026-11-06 08:54:08,084 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:54:08,086 - WARNING - Iteration 71 error [diff]: None of the 2 SEARCH block(s) matched the parent program | tokens: 4745 (prompt: 3915, completion: 830)
+2026-11-06 08:54:47,165 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:54:47,166 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=931, total_tokens=5027
+2026-11-06 08:54:47,168 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:54:47,173 - WARNING - Iteration 72 error [diff]: None of the 1 SEARCH block(s) matched the parent program | tokens: 5027 (prompt: 4096, completion: 931)
+2026-11-06 08:55:08,906 - WARNING - Timeout on attempt 1/3. Retrying...
+2026-11-06 08:55:30,845 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:55:30,848 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=540, total_tokens=4636
+2026-11-06 08:55:30,850 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:55:30,851 - WARNING - Iteration 74 error [diff]: None of the 2 SEARCH block(s) matched the parent program | tokens: 4636 (prompt: 4096, completion: 540)
+2026-11-06 08:56:02,106 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:56:02,109 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=804, total_tokens=4900
+2026-11-06 08:56:02,112 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:56:02,113 - WARNING - Iteration 75 error [diff]: None of the 2 SEARCH block(s) matched the parent program | tokens: 4900 (prompt: 4096, completion: 804)
+2026-11-06 08:56:25,998 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:56:25,999 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=593, total_tokens=4689
+2026-11-06 08:56:26,001 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:56:26,008 - WARNING - Iteration 76 error [diff]: None of the 1 SEARCH block(s) matched the parent program | tokens: 4689 (prompt: 4096, completion: 593)
+2026-11-06 08:56:45,034 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:56:45,036 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=456, total_tokens=4552
+2026-11-06 08:56:45,038 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:56:45,044 - WARNING - Iteration 77 error [diff]: None of the 2 SEARCH block(s) matched the parent program | tokens: 4552 (prompt: 4096, completion: 456)
+2026-11-06 08:57:14,247 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:57:14,248 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=738, total_tokens=4834
+2026-11-06 08:57:14,249 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:57:14,258 - WARNING - Iteration 78 error [diff]: None of the 1 SEARCH block(s) matched the parent program | tokens: 4834 (prompt: 4096, completion: 738)
+2026-11-06 08:57:40,693 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:57:40,696 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=668, total_tokens=4764
+2026-11-06 08:57:40,700 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:57:40,701 - WARNING - Iteration 73 error [diff]: No valid diffs found in response | tokens: 4764 (prompt: 4096, completion: 668)
+2026-11-06 08:58:09,651 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:58:09,654 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3887, completion_tokens=743, total_tokens=4630
+2026-11-06 08:58:09,657 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:58:09,658 - WARNING - Iteration 79 error [diff]: None of the 2 SEARCH block(s) matched the parent program | tokens: 4630 (prompt: 3887, completion: 743)
+2026-11-06 08:58:44,840 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:58:44,843 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=3915, completion_tokens=913, total_tokens=4828
+2026-11-06 08:58:44,846 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:58:44,853 - WARNING - Iteration 80 error [diff]: No valid diffs found in response | tokens: 4828 (prompt: 3915, completion: 913)
+2026-11-06 08:59:13,007 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 08:59:13,010 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=676, total_tokens=4772
+2026-11-06 08:59:13,013 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 08:59:13,018 - WARNING - Iteration 81 error [diff]: No valid diffs found in response | tokens: 4772 (prompt: 4096, completion: 676)
+2026-11-06 08:59:45,055 - WARNING - Timeout on attempt 1/3. Retrying...
+2026-11-06 09:00:10,790 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 09:00:10,793 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=459, total_tokens=4555
+2026-11-06 09:00:10,796 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 09:00:10,802 - WARNING - Iteration 83 error [diff]: No valid diffs found in response | tokens: 4555 (prompt: 4096, completion: 459)
+2026-11-06 09:00:35,389 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 09:00:35,391 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=809, total_tokens=4905
+2026-11-06 09:00:35,393 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 09:00:35,394 - WARNING - Iteration 84 error [diff]: None of the 1 SEARCH block(s) matched the parent program | tokens: 4905 (prompt: 4096, completion: 809)
+2026-11-06 09:00:51,969 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 09:00:51,971 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=1168, total_tokens=5264
+2026-11-06 09:00:51,974 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 09:00:51,979 - WARNING - Iteration 85 error [diff]: None of the 3 SEARCH block(s) matched the parent program | tokens: 5264 (prompt: 4096, completion: 1168)
+2026-11-06 09:01:11,667 - INFO - HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-06 09:01:11,669 - INFO - LLM Token Usage (qwen2.5-coder:7b): prompt_tokens=4096, completion_tokens=727, total_tokens=4823
+2026-11-06 09:01:11,671 - INFO - Sampled model: qwen2.5-coder:7b
+2026-11-06 09:01:11,671 - WARNING - Iteration 86 error [diff]: None of the 1 SEARCH block(s) matched the parent program | tokens: 4823 (prompt: 4096, completion: 727)
+2026-11-06 09:01:22,364 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,364 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,364 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,364 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:22,364 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:22,364 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,364 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:22,364 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,364 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,364 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,364 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:22,364 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:22,365 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:22,365 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:22,365 - INFO - Shutdown requested, canceling remaining evaluations...
+2026-11-06 09:01:22,365 - INFO - ✅ Evolution completed - Shutdown requested
+2026-11-06 09:01:22,366 - INFO - 📊 Total LLM Token Usage (85 calls): total_tokens=335775 (prompt_tokens=274869, completion_tokens=60906)
+2026-11-06 09:01:22,366 - INFO - Evolution stopped due to shutdown request
+2026-11-06 09:01:22,366 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,366 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,366 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:22,366 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:22,366 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,367 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:22,367 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,367 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,367 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:22,367 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:22,367 - INFO - Received signal 15, initiating graceful shutdown...
+2026-11-06 09:01:22,367 - INFO - Graceful shutdown requested...
+2026-11-06 09:01:23,383 - INFO - Stopped process pool
+2026-11-06 09:01:23,385 - INFO - Using tracked best program: 2117a8f5-a97d-45eb-adf1-8eea5539c624
+2026-11-06 09:01:23,385 - INFO - Evolution complete. Best program has metrics: enc_eager_meas_B16_speedup=0.9658, enc_eager_meas_B16_acc_drop=0.0078, enc_eager_meas_B16_score=0.9658, enc_eager_meas_B64_speedup=1.2545, enc_eager_meas_B64_acc_drop=0.0035, enc_eager_meas_B64_score=1.2545, dec_eager_B16_speedup=0.9864, dec_eager_B16_acc_drop=0.0078, dec_eager_B16_score=0.9864, dec_eager_B64_speedup=0.9404, dec_eager_B64_acc_drop=0.0035, dec_eager_B64_score=0.9404, combined_score=1.0296
+2026-11-06 09:01:23,386 - INFO - Saved best program to evolve/runs/mnli/best/best_program.py with program info to evolve/runs/mnli/best/best_program_info.json
+
+Evolution complete!
+Best program metrics:
+  enc_eager_meas_B16_speedup: 0.9658
+  enc_eager_meas_B16_acc_drop: 0.0078
+  enc_eager_meas_B16_score: 0.9658
+  enc_eager_meas_B64_speedup: 1.2545
+  enc_eager_meas_B64_acc_drop: 0.0035
+  enc_eager_meas_B64_score: 1.2545
+  dec_eager_B16_speedup: 0.9864
+  dec_eager_B16_acc_drop: 0.0078
+  dec_eager_B16_score: 0.9864
+  dec_eager_B64_speedup: 0.9404
+  dec_eager_B64_acc_drop: 0.0035
+  dec_eager_B64_score: 0.9404
+  combined_score: 1.0296

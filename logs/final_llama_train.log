@@ -1,0 +1,26 @@
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:  16%|█▌        | 47/291 [00:00<00:00, 369.64it/s]Loading weights:  29%|██▉       | 84/291 [00:00<00:00, 220.22it/s]Loading weights:  37%|███▋      | 109/291 [00:00<00:01, 171.22it/s]Loading weights:  45%|████▌     | 131/291 [00:00<00:00, 170.05it/s]Loading weights:  52%|█████▏    | 150/291 [00:00<00:00, 166.15it/s]Loading weights:  58%|█████▊    | 168/291 [00:00<00:00, 159.61it/s]Loading weights:  64%|██████▎   | 185/291 [00:01<00:00, 139.46it/s]Loading weights:  70%|███████   | 205/291 [00:01<00:00, 147.51it/s]Loading weights:  78%|███████▊  | 226/291 [00:01<00:00, 142.74it/s]Loading weights:  84%|████████▍ | 245/291 [00:01<00:00, 145.91it/s]Loading weights:  92%|█████████▏| 267/291 [00:01<00:00, 152.93it/s]Loading weights:  97%|█████████▋| 283/291 [00:01<00:00, 140.21it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 163.36it/s]
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (26495302 > 131072). Running this sequence through the model will result in indexing errors
+train windows 103497, eval windows 2115
+step 0/1500 kl/agree per exit [(10.89, 0.001), (9.43, 0.017), (7.12, 0.084), (5.4, 0.225), (3.35, 0.38)] 0.0 min eta 54.1 min
+step 100/1500 kl/agree per exit [(3.01, 0.358), (2.88, 0.365), (2.39, 0.484), (2.14, 0.506), (1.42, 0.591)] 0.7 min eta 9.5 min
+step 200/1500 kl/agree per exit [(2.67, 0.346), (2.22, 0.425), (1.9, 0.504), (1.5, 0.563), (1.13, 0.614)] 1.3 min eta 8.6 min
+step 300/1500 kl/agree per exit [(3.11, 0.397), (2.61, 0.438), (2.17, 0.517), (1.86, 0.534), (1.19, 0.646)] 2.0 min eta 7.9 min
+step 400/1500 kl/agree per exit [(2.51, 0.364), (2.12, 0.414), (1.6, 0.524), (1.44, 0.606), (1.07, 0.662)] 2.7 min eta 7.3 min
+step 500/1500 kl/agree per exit [(2.53, 0.382), (2.05, 0.435), (1.76, 0.493), (1.53, 0.557), (1.08, 0.624)] 3.3 min eta 6.6 min
+step 600/1500 kl/agree per exit [(2.02, 0.455), (1.68, 0.514), (1.37, 0.58), (1.12, 0.631), (0.88, 0.69)] 4.0 min eta 6.0 min
+step 700/1500 kl/agree per exit [(2.35, 0.425), (1.79, 0.495), (1.42, 0.573), (1.12, 0.616), (0.74, 0.688)] 4.6 min eta 5.3 min
+step 800/1500 kl/agree per exit [(2.75, 0.367), (2.18, 0.454), (1.68, 0.531), (1.36, 0.586), (0.89, 0.659)] 5.3 min eta 4.6 min
+step 900/1500 kl/agree per exit [(2.41, 0.428), (1.87, 0.491), (1.43, 0.568), (1.08, 0.628), (0.65, 0.716)] 6.0 min eta 4.0 min
+step 1000/1500 kl/agree per exit [(2.33, 0.421), (1.78, 0.482), (1.34, 0.568), (1.0, 0.624), (0.65, 0.688)] 6.6 min eta 3.3 min
+step 1100/1500 kl/agree per exit [(2.09, 0.442), (1.62, 0.523), (1.19, 0.596), (0.87, 0.662), (0.55, 0.73)] 7.3 min eta 2.6 min
+step 1200/1500 kl/agree per exit [(1.8, 0.472), (1.35, 0.54), (0.99, 0.624), (0.75, 0.665), (0.46, 0.736)] 8.0 min eta 2.0 min
+step 1300/1500 kl/agree per exit [(1.97, 0.452), (1.52, 0.535), (1.13, 0.623), (0.85, 0.676), (0.51, 0.743)] 8.6 min eta 1.3 min
+step 1400/1500 kl/agree per exit [(2.1, 0.455), (1.66, 0.531), (1.23, 0.596), (0.9, 0.666), (0.51, 0.731)] 9.3 min eta 0.7 min
+step 1499/1500 kl/agree per exit [(2.04, 0.448), (1.52, 0.507), (1.08, 0.594), (0.82, 0.653), (0.51, 0.713)] 9.9 min eta 0.0 min
+ exit  layer split  accuracy  fidelity  mean_conf
+    0     12   all    0.3326    0.4476     0.4557
+    1     16   all    0.3751    0.5204     0.5270
+    2     20   all    0.4213    0.6028     0.6097
+    3     24   all    0.4539    0.6678     0.6743
+    4     28   all    0.4987    0.7450     0.7475
+    5     32   all    0.5356    1.0000     0.5493
