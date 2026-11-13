@@ -26,101 +26,129 @@ tr.ours td { background: #eef4fc; }
 .refs p { font-size: 8.3pt; margin: 0 0 2pt; padding-left: 16pt; text-indent: -16pt; text-align: left; }
 code { font: 8.2pt 'DejaVu Sans Mono', monospace; }
 i.v { font-style: italic; }
-</style><title>IE624 progress report, revision 2</title></head><body>
+</style><title>IE624 progress report</title></head><body>
 <h1>When Should a Batch Stop?</h1>
-<p class='sub'>Optimal Batch-Level Early Exit, Robust to Slowdown Attacks</p>
-<p class='sub2'>IE624 Course Project: Progress Report and Plan (revision 2)</p>
+<p class='sub'>Cost-Derived Batch-Level Early Exit, with Bounded Damage from Slowdown Inputs</p>
+<p class='sub2'>IE624 Course Project: Progress Report and Plan</p>
 <p class='auth'>Divyanshu Gupta (23B0306) &nbsp;&nbsp; Kushagra Gupta (23B3956) &nbsp;&nbsp; Neha Yadav (23B1807)</p>
 <p class='inst'>Course instructor: Prof. Manjesh K. Hanawal, IIT Bombay<br>13 November 2026</p>
 
 <div class='abs'><b class='t'>Abstract</b>
 Early-exit networks answer easy inputs at intermediate layers, but under batched GPU inference one hard input keeps
 the whole batch running, so most of the promised speedup disappears. We measure the per-layer cost <i class='v'>c</i>(<i class='v'>n</i>)
-of running <i class='v'>n</i> active inputs, derive a batch-stopping rule from it, learn the rule online without labels with a
-partial-feedback bandit, and give it a certified bound on the damage done by slowdown inputs. This revision corrects
-three claims of the first report and adds three results. Corrections: the rule is not the fastest in every setting,
-the simulator matches the GPU only at large batches, and the earlier headline speedups were not accuracy-matched.
-New: (i) on a second GPU the cost is a floor followed by a linear part, not <i class='v'>a</i> + <i class='v'>b n</i>; (ii) letting the
-rule choose which exits to evaluate narrows its small-batch gap; (iii) parameters are now chosen with a
-statistical test on the accuracy drop. In 18 measured settings on a GTX 1650 (two text tasks, three
-sequence lengths, three batch sizes, real wall-clock), the rule with an exit plan is at most
-7.5% behind the fastest method, while every baseline is at least
-15% behind in some setting. On QQP it stays within the one-point budget everywhere; on
-MNLI most methods, ours included, exceed it on the fixed held-out half, although on 30 random re-splits the certified rule stays within it in 93–100% of cases. The report states what
-holds, what does not, and the work planned until 26 November.</div>
+of running <i class='v'>n</i> active inputs and derive from it a rule that decides when single inputs leave, when the whole
+batch stops, and which exits are evaluated at all. Its parameters are chosen with a statistical test on the
+accuracy drop. Evidence so far comes in three parts. On an RTX A6000 with trained RoBERTa and ViT checkpoints, no
+existing rule is fastest across batch sizes and execution modes, and early exit that waits for the whole batch is
+slower than no early exit. On a GTX 1650 the measured cost is a floor followed by a linear part, not
+<i class='v'>a</i> + <i class='v'>b n</i>. In wall-clock runs on that GPU (two text tasks, three batch sizes, sequence length varied as
+a timing knob, decisions replayed from the trained models) the rule is at most 7.5%
+behind the fastest method, but the methods are not at equal accuracy there. Compared at a matched held-out drop of
+at most one point, using the measured cost table, the rule is 2–17% faster than the best baseline on
+QQP; on MNLI it is within 2% of the best baseline in four of six settings and 6.5–8.5% slower in the
+other two. The rule is not shown to be optimal. No result yet combines trained weights, matched accuracy and a
+serving GPU in one run; that run is the main planned work. A label-free bandit and a bound on the damage from
+slowdown inputs are secondary. Section 4.1 lists the claims of our first report that we corrected.</div>
 
 <h2>1. Problem statement</h2>
 <p>Early-exit networks attach small classifiers (exits) after some layers, so an easy input can stop after a few
 layers instead of all of them [1, 2]. On a GPU, inputs are served in batches and a batch runs layer by layer for all
 its members together. A single hard input, a <i>straggler</i>, keeps the batch running to the last layer, so early
 exits save compute (FLOPs) but little wall-clock time. DREX, GEEP and Miao et al. report the same effect for batched
-BERT and LLM inference [3, 5, 4].</p>
-<p><b>Cost model.</b> One layer run on the <i class='v'>n</i> inputs still active costs <i class='v'>c</i>(<i class='v'>n</i>). With exits after layers
-<i class='v'>l</i><sub>1</sub> &lt; … &lt; <i class='v'>l</i><sub>E</sub> = <i class='v'>L</i>, a set <i class='v'>S</i> of exits that are actually evaluated, and a cost
-<i class='v'>h</i> per evaluated exit, the latency of a batch is</p>
-<p class='eq'><i class='v'>T</i><sub>batch</sub> = Σ<sub>e ∈ S</sub> (<i class='v'>l</i><sub>e</sub> − <i class='v'>l</i><sub>e−1</sub>) · <i class='v'>c</i>(<i class='v'>n</i><sub>e</sub>) + <i class='v'>h</i> · |<i class='v'>S</i>|. &nbsp;&nbsp;&nbsp; (1)</p>
+BERT and LLM inference [3, 4, 5].</p>
+<p><b>Cost model.</b> One layer run on the <i class='v'>n</i> inputs still active costs <i class='v'>c</i>(<i class='v'>n</i>). Exits sit after layers
+<i class='v'>l</i><sub>1</sub> &lt; … &lt; <i class='v'>l</i><sub>E</sub> = <i class='v'>L</i>. Only a subset is evaluated, the <i>exit plan</i>
+<i class='v'>S</i> = {<i class='v'>s</i><sub>1</sub> &lt; … &lt; <i class='v'>s</i><sub>m</sub> = <i class='v'>E</i>}, and each evaluated exit costs <i class='v'>h</i>. Write
+<i class='v'>d</i><sub>i</sub> for the layer of the <i class='v'>i</i>-th evaluated exit (<i class='v'>d</i><sub>0</sub> = 0) and <i class='v'>n</i><sub>i</sub> for
+the number of inputs active on the layers between evaluated exits <i class='v'>i</i>−1 and <i class='v'>i</i>. If the batch ends at its
+<i class='v'>k</i>-th evaluated exit, its latency is</p>
+<p class='eq'><i class='v'>T</i><sub>batch</sub> = Σ<sub>i = 1…k</sub> [ (<i class='v'>d</i><sub>i</sub> − <i class='v'>d</i><sub>i−1</sub>) · <i class='v'>c</i>(<i class='v'>n</i><sub>i</sub>) + <i class='v'>h</i> ]. &nbsp;&nbsp;&nbsp; (1)</p>
+<p>Every layer up to the stopping depth is paid for, including layers whose exits are not in the plan; <i class='v'>h</i> is
+paid only for exits that are evaluated.</p>
 <p>The first report assumed <i class='v'>c</i>(<i class='v'>n</i>) = <i class='v'>a</i> + <i class='v'>b n</i> and described the regime by ρ = <i class='v'>a</i>/(<i class='v'>b n</i>).
 When ρ is small (compute-bound), removing an exited input saves real time, so per-input exits work. When ρ is large
 (fixed-cost-bound), removing one input saves almost nothing and only stopping the whole batch saves time. That
 picture stands, but Section 4.3 shows the affine form is a poor fit on a second GPU, so the method now takes the
 measured <i class='v'>c</i>(<i class='v'>n</i>) directly.</p>
 <p><b>Gap.</b> Existing batch-level rules are heuristics: Consensus waits until every input is confident, and
-Majority and Greedy stop when half or one of them is [3, 4]. None is derived from the cost. Apparate chooses which
+Majority and Greedy stop when half or one of them is [3, 5]. None is derived from the cost. Apparate chooses which
 exits to keep by their saving minus their overhead, but all inputs still run to the end of the model and accuracy
 is monitored without a guarantee [6]. Risk-controlled early exit gives a guarantee, but for per-input exits with no
-batch coupling [29].</p>
-<p><b>Security coupling.</b> A slowdown attacker crafts inputs that never become confident [8, 9, 10]. In a
+batch coupling [7].</p>
+<p><b>Setting, and what we do not compare against.</b> A batch is formed once, runs, and all its answers are returned;
+the quantity of interest is the latency of that batch. The other way to deal with stragglers is to rebatch: DREX
+regroups the inputs that continue past an exit into new batches with other requests waiting at that depth, and E3
+splits the model at its exits so that each part runs at a constant batch size [3, 8]. Rebatching needs other
+requests to regroup with, so it applies under sustained load;
+it does not apply to a fixed offline batch, at low load, or when a batch has a latency deadline. The two are
+complementary, and this report has no rebatching baseline, which is a limitation. Stopping a batch also has a
+cost that rebatching does not: the inputs forced out are the hard ones, so the accuracy loss is not spread evenly.
+Section 4.5 reports the loss on hard inputs separately.</p>
+<p><b>Security coupling.</b> A slowdown attacker crafts inputs that never become confident [9, 10, 11]. In a
 synchronous batch, such an input delays every co-batched user, not only itself.</p>
 <p><b>Research questions.</b> Given the measured <i class='v'>c</i>(<i class='v'>n</i>): (1) when should a batch stop, and which exits are
 worth evaluating; (2) can the rule's parameters be set with a guarantee on accuracy, and learned online without
 labels; (3) can the damage from slowdown inputs be bounded without detecting them?</p>
 
 <h2>2. Approach</h2>
-<p><b>(a) Batch-stopping rule for a measured cost.</b> Let <i class='v'>g</i><sub>j</sub>(<i class='v'>e</i>→<i class='v'>e′</i>) be the expected accuracy gain
+<p><b>(a) Batch-stopping rule for a measured cost.</b> The objective for one batch is its mean accuracy minus
+λ · <i class='v'>T</i><sub>batch</sub> / <i class='v'>F</i>, with <i class='v'>F</i> the latency of the full model at the same batch size. λ has no
+unit: it is the accuracy we are willing to give up to save one full-model latency. Let <i class='v'>g</i><sub>j</sub>(<i class='v'>e</i>→<i class='v'>e′</i>) be the expected accuracy gain
 of carrying input <i class='v'>j</i> from exit <i class='v'>e</i> to a later exit <i class='v'>e′</i>, estimated from a calibration table of
-P(correct at <i class='v'>e′</i> | confidence at <i class='v'>e</i>). With <i class='v'>F</i> the full model's latency and λ the price of latency,
-input <i class='v'>j</i> leaves alone if</p>
+P(correct at <i class='v'>e′</i> | confidence at <i class='v'>e</i>). One input contributes 1/<i class='v'>B</i> of the batch's mean accuracy,
+which is why its gain is divided by <i class='v'>B</i>. Input <i class='v'>j</i> leaves alone if</p>
 <p class='eq'><i class='v'>g</i><sub>j</sub>(<i class='v'>e</i>→<i class='v'>E</i>) / <i class='v'>B</i> &lt; λ · [<i class='v'>c</i>(<i class='v'>n</i>) − <i class='v'>c</i>(<i class='v'>n</i>−1)] · (<i class='v'>L</i> − <i class='v'>l</i><sub>e</sub>) / <i class='v'>F</i>, &nbsp;&nbsp;&nbsp; (2)</p>
 <p>and the remaining inputs <i class='v'>R</i> stop together if no later evaluated exit is worth reaching:</p>
-<p class='eq'>∀ <i class='v'>e′</i> ∈ <i class='v'>S</i>, <i class='v'>e′</i> &gt; <i class='v'>e</i>: &nbsp; (1/<i class='v'>B</i>) Σ<sub>j ∈ R</sub> <i class='v'>g</i><sub>j</sub>(<i class='v'>e</i>→<i class='v'>e′</i>) &lt; λ · [(<i class='v'>l</i><sub>e′</sub> − <i class='v'>l</i><sub>e</sub>) · <i class='v'>c</i>(|<i class='v'>R</i>|) + (<i class='v'>e′</i> − <i class='v'>e</i>) · <i class='v'>h</i>] / <i class='v'>F</i>. &nbsp;&nbsp;&nbsp; (3)</p>
-<p>An individual exit saves only the marginal cost <i class='v'>c</i>(<i class='v'>n</i>) − <i class='v'>c</i>(<i class='v'>n</i>−1); a collective stop saves all of
+<p class='eq'>∀ <i class='v'>e′</i> ∈ <i class='v'>S</i>, <i class='v'>e′</i> &gt; <i class='v'>e</i>: &nbsp; (1/<i class='v'>B</i>) Σ<sub>j ∈ R</sub> <i class='v'>g</i><sub>j</sub>(<i class='v'>e</i>→<i class='v'>e′</i>) &lt; λ · [(<i class='v'>l</i><sub>e′</sub> − <i class='v'>l</i><sub>e</sub>) · <i class='v'>c</i>(|<i class='v'>R</i>|) + <i class='v'>m</i>(<i class='v'>e</i>, <i class='v'>e′</i>) · <i class='v'>h</i>] / <i class='v'>F</i>, &nbsp;&nbsp;&nbsp; (3)</p>
+<p>where <i class='v'>m</i>(<i class='v'>e</i>, <i class='v'>e′</i>) counts the evaluated exits after <i class='v'>e</i> up to and including <i class='v'>e′</i>.
+An individual exit saves only the marginal cost <i class='v'>c</i>(<i class='v'>n</i>) − <i class='v'>c</i>(<i class='v'>n</i>−1); a collective stop saves all of
 <i class='v'>c</i>(|<i class='v'>R</i>|). For the affine cost these are <i class='v'>b</i> and <i class='v'>a</i> + <i class='v'>b</i>|<i class='v'>R</i>|, which recovers the rule of
 the first report and its threshold ratio of about 1/(1 + ρ). For a cost with a floor the marginal cost is zero below
 the knee, so the rule switches from per-input exits to whole-batch stopping <i>inside a batch</i> as it drains.</p>
-<p><b>(b) Exit plan (new).</b> The first rule evaluated every exit and paid <i class='v'>h</i> for each. The plan <i class='v'>S</i> is now a
+<p>Two approximations are built in. Rule (2) prices the saving as if the input would otherwise run to layer <i class='v'>L</i>
+at today's marginal cost; when the batch later stops early the true saving is smaller, so (2) overestimates it.
+Rule (3) looks ahead to each later exit separately and uses only the current confidences. Lookahead rules of this
+kind are optimal in the monotone case of optimal stopping [12], which needs, among other conditions, gains that
+diminish with depth and a cost that is linear in <i class='v'>n</i>. We have not shown these conditions for a measured
+<i class='v'>c</i>(<i class='v'>n</i>), and the floor-shaped cost of Section 4.3 violates the linear one. We therefore do not claim that
+the rule is optimal; Section 5.8 states what we plan to prove.</p>
+<p><b>(b) Exit plan.</b> The first rule evaluated every exit and paid <i class='v'>h</i> for each. The plan <i class='v'>S</i> is now a
 choice: any subset of the intermediate exits, with the rule (2)–(3) run on that subset. With one exit kept the plan
 behaves like a unified exit; with all exits kept it is the earlier rule. The plan and λ are chosen together by
 replaying calibration traces under the measured <i class='v'>c</i>(<i class='v'>n</i>) and <i class='v'>h</i>; this needs no GPU time.</p>
-<p><b>(c) Certified selection (new).</b> The first report chose the fastest setting whose accuracy on the tuning
+<p><b>(c) Certified selection.</b> The first report chose the fastest setting whose accuracy on the tuning
 split was within one point of the full model, and it then lost 0.8–2.4 points on held-out data. We now split the
 tuning data in two. On the first part each method's candidates are reduced to a path ordered from safest to
 fastest. On the second part the path is tested in order: for candidate θ, the drop in accuracy against the full
 model is computed per batch on <i class='v'>K</i> disjoint batches, <i class='v'>Z</i><sub>1</sub>, …, <i class='v'>Z</i><sub>K</sub>, and θ is certified
 if a one-sided <i class='v'>t</i>-test rejects "mean drop &gt; α" at level δ. Testing stops at the first candidate that fails
-(fixed-sequence testing, as in Learn-then-Test [30]); the fastest certified candidate is used. We use α = 1 point
-and δ = 10%. Batches, not inputs, are the unit, because a batch-level rule couples the inputs of a batch. The
-<i class='v'>t</i>-test is valid for large <i class='v'>K</i>; a finite-sample bound is planned (Section 5.2). The certificate holds for the
+(fixed-sequence testing, as in Learn-then-Test [13]); the fastest certified candidate is used. We use α = 1 point
+and δ = 10%. Batches, not inputs, are the unit, because a batch-level rule couples the inputs of a batch. The test
+treats the <i class='v'>K</i> batch drops as independent draws from one distribution. That holds here because the batches are
+disjoint random groups from one split, and it means the guarantee covers inputs from the same distribution only.
+The <i class='v'>t</i>-test is also valid only for large <i class='v'>K</i>; a finite-sample bound is planned (Section 5.2). The certificate holds for the
 batch size and cost it was computed for, and recomputing it for a new deployment is a replay on the CPU.</p>
-<p><b>(d) Label-free, partial-feedback bandit.</b> Unchanged. The bandit replaces "correct" with "agrees with the full
+<p><b>(d) Label-free, partial-feedback bandit (secondary).</b> The bandit replaces "correct" with "agrees with the full
 model", which upper-bounds the accuracy loss. Feedback is censored: once a batch stops, its deeper exits are never
 seen. Probe batches run to full depth with probability <i class='v'>c t</i><sup>−1/3</sup>, the partial-monitoring rate for a
-revealing action [12]. Prior bandits for early exit tune per-input thresholds [13, 14].</p>
-<p><b>(e) Certified robustness.</b> Unchanged. The robust rule leaves the <i class='v'>m</i> largest gains out of the collective
-sum in (3). For <i class='v'>k</i> ≤ <i class='v'>m</i> slowdown inputs <i class='v'>K</i> among clean inputs <i class='v'>C</i>,
+revealing action [14]. Prior bandits for early exit tune per-input thresholds [15, 16].</p>
+<p><b>(e) Bounded damage from slowdown inputs.</b> The robust rule leaves the <i class='v'>m</i> largest gains out of the collective
+sum in (3). A trimmed sum is monotone, so for <i class='v'>k</i> ≤ <i class='v'>m</i> slowdown inputs <i class='v'>K</i> among clean inputs <i class='v'>C</i>,
 TS<sub>m</sub>(<i class='v'>C</i>) ≤ TS<sub>m</sub>(<i class='v'>C</i> ∪ <i class='v'>K</i>) ≤ TS<sub>m−k</sub>(<i class='v'>C</i>), hence
-depth(<i class='v'>C</i> ∪ <i class='v'>K</i>; <i class='v'>m</i>) ≤ depth(<i class='v'>C</i>; <i class='v'>m</i> − <i class='v'>k</i>) for every batch.</p>
+depth(<i class='v'>C</i> ∪ <i class='v'>K</i>; <i class='v'>m</i>) ≤ depth(<i class='v'>C</i>; <i class='v'>m</i> − <i class='v'>k</i>) for every batch. The property is simple, and
+it bounds the damage without removing it: the batch can still run deeper as <i class='v'>k</i> grows.</p>
 
 <h2>3. Experimental setup</h2>
 <table><tr><th>Model</th><th>Task</th><th>Exits after layer</th><th>Full-model acc.</th><th>Used in</th></tr>
-<tr><td>RoBERTa-base [21]</td><td>MNLI [22]</td><td>2, 4, …, 12</td><td>87.8%</td><td>server and local</td></tr>
-<tr><td>RoBERTa-base</td><td>QQP [23]</td><td>2, 4, …, 12</td><td>91.1%</td><td>server and local</td></tr>
-<tr><td>ViT-B/16 [24]</td><td>CIFAR-100 [25]</td><td>2, 4, …, 12</td><td>93.3%</td><td>server</td></tr>
-<tr><td>Qwen2.5-1.5B, Llama-3.1-8B (frozen) [26, 27]</td><td>WikiText-103 [28]</td><td>6 exits</td><td>49.9%, 53.6%</td><td>server (negative result)</td></tr></table>
+<tr><td>RoBERTa-base [17]</td><td>MNLI [18]</td><td>2, 4, …, 12</td><td>87.8%</td><td>server and local</td></tr>
+<tr><td>RoBERTa-base</td><td>QQP [19]</td><td>2, 4, …, 12</td><td>91.1%</td><td>server and local</td></tr>
+<tr><td>ViT-B/16 [20]</td><td>CIFAR-100 [21]</td><td>2, 4, …, 12</td><td>93.3%</td><td>server</td></tr>
+<tr><td>Qwen2.5-1.5B, Llama-3.1-8B (frozen) [22, 23]</td><td>WikiText-103 [24]</td><td>6 exits</td><td>49.9%, 53.6%</td><td>server (negative result)</td></tr></table>
 <p class='cap'><b>Table 1:</b> Models and tasks. Encoder backbones were fine-tuned jointly with their six exits.</p>
 <ul>
 <li><b>Server.</b> One RTX A6000, fp16. Two execution modes: eager PyTorch and CUDA graphs (a compiled stack). All
 server numbers come from trained checkpoints running on real inputs.</li>
-<li><b>Local (new).</b> One GTX 1650 (4 GB), fp32 (fp16 is about four times slower on this card). The trained checkpoints
+<li><b>Local.</b> One GTX 1650 (4 GB), fp32 (fp16 is about four times slower on this card). The trained checkpoints
 are not on this machine. The timed network has the trained model's architecture and tensor shapes with random
 weights; every layer, exit head, host synchronisation, batch compaction and policy call is executed and timed, and
 the exit decisions and predictions are those recorded for the trained model on the same inputs. Accuracy is
@@ -131,23 +159,23 @@ claim about truncated inputs.</li>
 selection (Section 2c; 40% for tables and candidate paths, 60% for the test) and reported on the held-out half.
 Local timing runs 1,920 held-out inputs per pass at lengths 16 and 32 (5 rounds) and 768 at length 128 (3 rounds),
 with policies interleaved within a round; we report the median over rounds of the paired speedup and its range.</li>
-<li><b>Baselines.</b> Per-sample threshold (DeeBERT-style), unified exit (SkipDecode-style [20], one head evaluated),
+<li><b>Baselines.</b> Per-sample threshold (DeeBERT-style), unified exit (SkipDecode-style [25], one head evaluated),
 Majority (as in DREX), a 150-trial random search over a 3-parameter collective rule, and the per-sample threshold
 given the same exit-plan search as our rule (an Apparate-style selection of exits [6]).</li>
 </ul>
 
 <h2>4. Current status</h2>
 <h3>4.1 Corrections to the first report</h3>
-<table><tr><th>First report said</th><th>What the evidence shows</th><th>Source</th></tr>
-<tr><td>The rule matches or beats the best heuristic in every cell</td><td>With CUDA graphs it is never the single fastest rule: unified exit wins at B ≤ 16 on text, a random search ties or wins at B ≥ 64. At B = 8 on MNLI it was the slowest rule (0.86×)</td><td><code>results/graph_*_gpu.csv</code></td></tr>
-<tr><td>1.41×, 2.10×, 1.46× at B = 64 within one accuracy point</td><td>Those were simulated and selected on the held-out split. The real-GPU runs lost 0.8–2.4 points on held-out data</td><td><code>docs/RESULTS.md</code></td></tr>
-<tr><td>The simulator tracks the GPU within about 5%</td><td>Only at B ≥ 64 in eager mode; 15–32% off at B ≤ 16, and it overestimates in graph mode</td><td><code>docs/RESULTS.md</code></td></tr>
-<tr><td>Every collective rule beats per-sample exits at B ≤ 16</td><td>True on MNLI and QQP, not on CIFAR-100</td><td><code>results/main_cifar100_*</code></td></tr>
-<tr><td>Robustness costs no clean speedup</td><td>True at high ρ. At low ρ on CIFAR-100 the robust rule reaches 1.12× against 1.46×</td><td><code>results/robust_*</code></td></tr>
-<tr><td>Tuned parameters carry over between deployments (assumed)</td><td>Tested and false for every method: in simulation the rule broke the one-point budget in 29–31% of transfers</td><td><code>results/transfer_summary.csv</code></td></tr></table>
+<table><tr><th>First report said</th><th>What the evidence shows</th><th>Measured on</th></tr>
+<tr><td>The rule matches or beats the best heuristic in every cell</td><td>With CUDA graphs it is never the single fastest rule: unified exit wins at B ≤ 16 on text, a random search ties or wins at B ≥ 64. At B = 8 on MNLI it was the slowest rule (0.86×)</td><td>Server, CUDA graphs</td></tr>
+<tr><td>1.41×, 2.10×, 1.46× at B = 64 within one accuracy point</td><td>Those were simulated and selected on the held-out split. The real-GPU runs lost 0.8–2.4 points on held-out data</td><td>Server, eager</td></tr>
+<tr><td>The simulator tracks the GPU within about 5%</td><td>Only at B ≥ 64 in eager mode; 15–32% off at B ≤ 16, and it overestimates in graph mode</td><td>Server, both modes</td></tr>
+<tr><td>Every collective rule beats per-sample exits at B ≤ 16</td><td>True on MNLI and QQP, not on CIFAR-100</td><td>Server, ViT</td></tr>
+<tr><td>Robustness costs no clean speedup</td><td>True at high ρ. At low ρ on CIFAR-100 the robust rule reaches 1.12× against 1.46×</td><td>Server, ViT</td></tr>
+<tr><td>Tuned parameters carry over between deployments (assumed)</td><td>Tested and false for every method: in simulation the rule broke the one-point budget in 29–31% of transfers</td><td>Simulation, 3 tasks</td></tr></table>
 <p class='cap'><b>Table 2:</b> Claims of the first report that were narrowed or withdrawn.</p>
 
-<h3>4.2 Claim 1: no rule wins everywhere, and the winner flips with the deployment (server)</h3>
+<h3>4.2 No rule wins everywhere, and the winner flips with the deployment (server)</h3>
 <div class='fig'><img src='../figures/report2_server_speedups.png'></div><p class='cap'><b>Figure 1:</b> Real wall-clock speedup against the full model on an RTX A6000, held-out split. Left: eager PyTorch. Right: CUDA graphs. These runs used the old selection protocol and are not accuracy-matched (on MNLI the cost rule lost 1.8–2.5 points, unified exit 0.8–0.9); Section 5.1 reruns them with certified selection.</p>
 <p>Figure 1 shows the server measurements. Three statements hold in both execution modes. Wait-for-all early exit,
 which keeps exited inputs in the batch, is slower than no early exit (0.78–0.97×). Per-sample exits fall below 1× at
@@ -155,10 +183,10 @@ small batches on text (0.77–0.90× eager, 0.89× on MNLI with CUDA graphs). An
 B = 8 and B = 128. Compiling cuts the fixed per-layer cost about six-fold, and the cause of the small-batch loss
 changes with it: under CUDA graphs it is the exit heads, which alone cost 19% of the runtime at B = 8.</p>
 
-<h3>4.3 New: the cost is a floor followed by a linear part (GTX 1650)</h3>
+<h3>4.3 The cost is a floor followed by a linear part (GTX 1650)</h3>
 <div class='fig'><img src='../figures/report2_cost_gtx1650.png'></div><p class='cap'><b>Figure 2:</b> Measured time of one RoBERTa-base layer on a GTX 1650 (fp32) against the number of active inputs, at three sequence lengths, with the affine fit of the first report. Both axes are logarithmic.</p>
 <table class='num'><tr><th>Sequence length</th><th>c(1) ms</th><th>c(8) ms</th><th>c(64) ms</th><th>h ms</th><th>ρ at n=8</th><th>ρ at n=64</th><th>Affine fit, largest error</th></tr><tr><td>16</td><td>2.32</td><td>1.92</td><td>12.48</td><td>0.42</td><td>1.02</td><td>0.127</td><td>41%</td></tr><tr><td>32</td><td>1.97</td><td>3.46</td><td>24.00</td><td>0.42</td><td>0.46</td><td>0.058</td><td>31%</td></tr><tr><td>128</td><td>1.76</td><td>12.35</td><td>97.23</td><td>0.52</td><td>0.03</td><td>0.003</td><td>10%</td></tr></table>
-<p class='cap'><b>Table 3:</b> Per-layer cost and exit-head cost on the GTX 1650 (<code>results/local_cost_cuda_T*.json</code>).</p>
+<p class='cap'><b>Table 3:</b> Per-layer cost and exit-head cost on the GTX 1650.</p>
 <p>A layer costs about 1.8 ms however few inputs are active, and then grows in proportion to the number of tokens in
 the batch. The knee is near 128 tokens: one input at length 128, four at length 32, eight at length 16. The affine
 model is off by up to 41% at short sequences. One GPU therefore covers both regimes: at length 128 it is
@@ -168,23 +196,25 @@ errors partly cancel: over the 126 policy runs timed in Section 4.4 the table's 
 (largest 17%), against 2.2% (largest 15%) for the affine fit applied to the
 same decisions. The floor matters for the rule's decisions more than for the prediction.</p>
 
-<h3>4.4 New: exit plan and certified selection, real wall-clock (GTX 1650)</h3>
+<h3>4.4 Exit plan and certified selection, real wall-clock (GTX 1650)</h3>
 <div class='fig'><img src='../figures/report2_local_speedups.png'></div><p class='cap'><b>Figure 3:</b> Real wall-clock speedup on the GTX 1650 of the certified policy of each method, held-out inputs. Markers are the median over rounds; vertical bars are the range. Dashed blue: the cost rule with all exits; solid blue: with an exit plan.</p>
 <table class='num'><tr><th rowspan=2>Policy</th><th colspan=3>sequence length 16</th><th colspan=3>sequence length 32</th><th colspan=3>sequence length 128</th></tr><tr><th>B=8</th><th>B=16</th><th>B=64</th><th>B=8</th><th>B=16</th><th>B=64</th><th>B=8</th><th>B=16</th><th>B=64</th></tr><tr class=''><td>All heads, no exits</td><td>0.93</td><td>0.96</td><td>0.99</td><td>0.96</td><td>0.97</td><td>0.99</td><td>0.99</td><td>0.99</td><td>1.00</td></tr><tr class=''><td>Per-sample threshold</td><td>1.27</td><td>1.73</td><td>2.13</td><td>1.87</td><td>1.83</td><td>2.20</td><td>2.26</td><td>2.20</td><td>2.28</td></tr><tr class=''><td>Threshold + exit plan</td><td>1.86*</td><td>1.92*</td><td>2.15</td><td>1.93*</td><td>1.90</td><td>2.19</td><td>2.27</td><td>2.20</td><td>2.30</td></tr><tr class=''><td>Unified exit</td><td><b>1.91</b>*</td><td>1.95*</td><td>1.97*</td><td>1.94*</td><td>1.94*</td><td>1.97*</td><td>1.98*</td><td>2.00*</td><td>2.00*</td></tr><tr class=''><td>Majority vote</td><td>1.30</td><td>1.38</td><td>1.80</td><td>1.35</td><td>1.42</td><td>1.80</td><td>1.39</td><td>1.42</td><td>1.88</td></tr><tr class=''><td>Random search (150 rules)</td><td>1.63</td><td>1.92</td><td>2.14</td><td>1.97</td><td>1.94</td><td>2.14</td><td>2.28</td><td>2.25</td><td>2.33</td></tr><tr class='ours'><td>Cost rule, all exits (ours)</td><td>1.79</td><td>2.00</td><td><b>2.52</b></td><td><b>2.12</b></td><td>2.24</td><td>2.51</td><td><b>2.46</b></td><td><b>2.50</b></td><td><b>2.56</b></td></tr><tr class='ours'><td>Cost rule + exit plan (ours)</td><td>1.85</td><td><b>2.04</b></td><td>2.44</td><td>2.11</td><td><b>2.24</b></td><td><b>2.53</b></td><td>2.39</td><td>2.46</td><td>2.55</td></tr></table>
 <p class='cap'><b>Table 4:</b> QQP, GTX 1650, measured speedup of each method's certified policy. Bold: fastest in the column. * held-out accuracy drop above one point.</p>
 <table class='num'><tr><th rowspan=2>Policy</th><th colspan=3>sequence length 16</th><th colspan=3>sequence length 32</th><th colspan=3>sequence length 128</th></tr><tr><th>B=8</th><th>B=16</th><th>B=64</th><th>B=8</th><th>B=16</th><th>B=64</th><th>B=8</th><th>B=16</th><th>B=64</th></tr><tr class=''><td>All heads, no exits</td><td>0.93</td><td>0.96</td><td>0.98</td><td>0.95</td><td>0.98</td><td>0.99</td><td>0.98</td><td>0.98</td><td>1.00</td></tr><tr class=''><td>Per-sample threshold</td><td>1.24*</td><td>1.44*</td><td>1.72*</td><td>1.30*</td><td>1.57*</td><td>1.71*</td><td><b>1.75</b>*</td><td><b>1.80</b>*</td><td>1.81*</td></tr><tr class=''><td>Threshold + exit plan</td><td>1.46</td><td>1.45</td><td>1.63</td><td>1.47</td><td>1.48</td><td>1.68</td><td>1.67</td><td>1.72</td><td>1.77</td></tr><tr class=''><td>Unified exit</td><td><b>1.48</b></td><td>1.46</td><td>1.49</td><td>1.44</td><td>1.50</td><td>1.50</td><td>1.48</td><td>1.49</td><td>1.50</td></tr><tr class=''><td>Majority vote</td><td>1.26*</td><td>1.36</td><td>1.47</td><td>1.33*</td><td>1.43</td><td>1.48</td><td>1.39*</td><td>1.47</td><td>1.49</td></tr><tr class=''><td>Random search (150 rules)</td><td>1.37</td><td>1.60*</td><td><b>1.86</b>*</td><td>1.48</td><td><b>1.68</b>*</td><td><b>1.84</b>*</td><td>1.70</td><td>1.74</td><td><b>1.91</b>*</td></tr><tr class='ours'><td>Cost rule, all exits (ours)</td><td>1.37*</td><td>1.60*</td><td>1.70*</td><td>1.60*</td><td>1.56*</td><td>1.70*</td><td>1.73*</td><td>1.73*</td><td>1.78</td></tr><tr class='ours'><td>Cost rule + exit plan (ours)</td><td>1.41</td><td><b>1.63</b>*</td><td>1.72*</td><td><b>1.60</b>*</td><td>1.62*</td><td>1.72*</td><td>1.73*</td><td>1.74*</td><td>1.77</td></tr></table>
 <p class='cap'><b>Table 5:</b> MNLI, same layout.</p>
 <table class='num'><tr><th>Policy</th><th>Mean speed relative to the cell's best</th><th>Worst cell</th><th>Cells within 3% of the best</th><th>Cells over the 1-pt budget (held-out)</th><th>Largest held-out drop (pts)</th></tr><tr class=''><td>Per-sample threshold</td><td>0.884</td><td>0.664</td><td>2 / 18</td><td>9 / 18</td><td>1.23</td></tr><tr class=''><td>Threshold + exit plan</td><td>0.912</td><td>0.848</td><td>2 / 18</td><td>3 / 18</td><td>1.05</td></tr><tr class=''><td>Unified exit</td><td>0.859</td><td>0.779</td><td>2 / 18</td><td>9 / 18</td><td>1.05</td></tr><tr class=''><td>Majority vote</td><td>0.738</td><td>0.566</td><td>0 / 18</td><td>3 / 18</td><td>1.20</td></tr><tr class=''><td>Random search (150 rules)</td><td>0.934</td><td>0.848</td><td>5 / 18</td><td>5 / 18</td><td>1.44</td></tr><tr class='ours'><td>Cost rule, all exits (ours)</td><td>0.970</td><td>0.917</td><td>11 / 18</td><td>8 / 18</td><td>1.31</td></tr><tr class='ours'><td>Cost rule + exit plan (ours)</td><td>0.975</td><td>0.925</td><td>11 / 18</td><td>7 / 18</td><td>1.28</td></tr></table>
-<p class='cap'><b>Table 6:</b> Summary over the 18 measured settings (2 tasks × 3 sequence lengths × 3 batch sizes). Speed is relative to the fastest method of each setting.</p>
+<p class='cap'><b>Table 6:</b> Summary over 2 tasks × 3 batch sizes × 3 sequence lengths (18 timed cells; lengths 16 and 32 change the timing only, Section 3). Speed is relative to the fastest method of each cell. The methods are not at the same accuracy here: the fifth column differs by method, so this table is not a ranking. Section 4.5 compares speed at matched accuracy.</p>
 <p>Tables 4–6 and Figure 3 give the measurements. What they show:</p>
 <ul>
 <li><b>The regime flip reproduces on this GPU.</b> On QQP at sequence length 16 and B = 8, the per-sample threshold
 reaches 1.27× and a unified exit 1.91×; at B = 64 the threshold reaches 2.13× and the unified exit 1.97×. At sequence
 length 128, where the GPU is compute-bound at every batch size, the threshold is ahead of the unified exit throughout.</li>
-<li><b>The cost rule is close to the fastest method in every setting.</b> With an exit plan it is at most 7.5% behind
+<li><b>The cost rule is close to the fastest method in every timed cell, but not at equal accuracy.</b> With an exit plan it is at most 7.5% behind
 (MNLI, B = 64, behind the random search) and within 3% of the fastest in 11 of 18 settings. The best baselines by
 this measure, the random search and the threshold with an exit plan, are 15% behind in their worst setting; the
-unified exit 22%; the per-sample threshold 34%; majority vote 43%.</li>
+unified exit 22%; the per-sample threshold 34%; majority vote 43%. These policies do not sit at the same held-out accuracy: the rule is over one point in 7 of 18
+cells, majority vote and the threshold with a plan in 3. The numbers in this item are therefore not a ranking; Section 4.5
+compares the methods at matched accuracy.</li>
 <li><b>On QQP one of the rule's two variants is the fastest in eight of nine settings</b> (2.52× against 2.14× for
 the next method at length 16 and B = 64, with ranges that do not overlap) and 3% behind the unified exit in the
 ninth. Its held-out drop with a plan is 0.52–0.82 points.</li>
@@ -197,13 +227,48 @@ of the runtime. The plan's real test is the server under CUDA graphs, where they
 half, yet on the held-out half the rule with a plan loses 0.88–1.28 points (7 of 9 MNLI settings above one point), the
 per-sample threshold 1.21–1.23 in all nine, and the random search up to 1.44. On QQP the unified exit lands at 1.05
 points in all nine settings. Every method shifts by a similar amount on MNLI, which suggests the two 4,900-example
-halves differ, but this is not established; Section 4.5 tests the procedure on random re-splits.</li>
+halves differ, but this is not established; Section 4.6 tests the procedure on random re-splits.</li>
 <li><b>Limits of this experiment.</b> Decisions are replayed from recorded traces on a randomly initialised network
-(Section 3); one GPU; two tasks; three to five timing rounds per setting, so a range is shown and not a confidence
+(Section 3); 12 of the 18 cells are the same recorded decisions timed at a shorter sequence length, so the
+independent workloads are 2 tasks × 3 batch sizes; one GPU; three to five timing rounds per setting, so a range is shown and not a confidence
 interval. At B = 16 and length 16 one noisy round widens the ranges and the top four methods are tied there.</li>
 </ul>
-<h3>4.5 New: does the certificate hold?</h3>
-<table class='num'><tr><th>Task</th><th>B</th><th>Policy</th><th>Over budget, old protocol</th><th>Over budget, certified</th><th>Mean drop, old (pts)</th><th>Mean drop, certified (pts)</th><th>Speedup, old</th><th>Speedup, certified</th><th>Re-splits</th></tr><tr><td>MNLI</td><td>8</td><td>Majority vote</td><td>33%</td><td>10%</td><td>0.87</td><td>0.43</td><td>1.36×</td><td>1.23×</td><td>30</td></tr><tr><td>MNLI</td><td>8</td><td>Cost rule, all exits</td><td>40%</td><td>7%</td><td>0.83</td><td>0.35</td><td>1.45×</td><td>1.33×</td><td>30</td></tr><tr><td>MNLI</td><td>8</td><td>Per-sample threshold</td><td>40%</td><td>7%</td><td>0.90</td><td>0.59</td><td>1.06×</td><td>1.04×</td><td>30</td></tr><tr><td>MNLI</td><td>64</td><td>Majority vote</td><td>40%</td><td>13%</td><td>0.88</td><td>0.43</td><td>1.52×</td><td>1.29×</td><td>30</td></tr><tr><td>MNLI</td><td>64</td><td>Cost rule, all exits</td><td>37%</td><td>0%</td><td>0.99</td><td>0.33</td><td>1.80×</td><td>1.59×</td><td>30</td></tr><tr><td>MNLI</td><td>64</td><td>Per-sample threshold</td><td>43%</td><td>10%</td><td>0.88</td><td>0.56</td><td>1.69×</td><td>1.64×</td><td>30</td></tr><tr><td>QQP</td><td>8</td><td>Majority vote</td><td>27%</td><td>7%</td><td>0.76</td><td>0.62</td><td>1.42×</td><td>1.33×</td><td>30</td></tr><tr><td>QQP</td><td>8</td><td>Cost rule, all exits</td><td>13%</td><td>0%</td><td>0.84</td><td>0.62</td><td>1.88×</td><td>1.80×</td><td>30</td></tr><tr><td>QQP</td><td>8</td><td>Per-sample threshold</td><td>3%</td><td>0%</td><td>0.85</td><td>0.72</td><td>1.09×</td><td>1.07×</td><td>30</td></tr><tr><td>QQP</td><td>64</td><td>Majority vote</td><td>3%</td><td>3%</td><td>0.74</td><td>0.56</td><td>1.75×</td><td>1.56×</td><td>30</td></tr><tr><td>QQP</td><td>64</td><td>Cost rule, all exits</td><td>13%</td><td>3%</td><td>0.73</td><td>0.64</td><td>2.60×</td><td>2.54×</td><td>30</td></tr><tr><td>QQP</td><td>64</td><td>Per-sample threshold</td><td>3%</td><td>0%</td><td>0.85</td><td>0.72</td><td>2.26×</td><td>2.20×</td><td>30</td></tr></table><p class='cap'><b>Table 7:</b> Share of 30 random re-splits (20% tables and paths, 30% certification, 50% test) whose test-half accuracy drop exceeds one point, sequence length 16. Speedups here are from the cost model, not from GPU timing.</p>
+<h3>4.5 Speed at matched accuracy, and where the accuracy loss lands (cost table, GTX 1650)</h3>
+<div class='fig'><img src='../figures/report2_front.png'></div><p class='cap'><b>Figure 4:</b> Held-out accuracy drop against speedup. Each point is the policy that certified selection returns for one accuracy target between 0.25 and 3 points, scored once on the held-out half. Up and to the left is better. The dotted line is the one-point budget. Speedups are computed from the measured cost table, not timed.</p>
+<table class='num'><tr><th rowspan=2>Policy</th><th colspan=3>sequence length 16</th><th colspan=3>sequence length 128</th></tr><tr><th>B=8</th><th>B=16</th><th>B=64</th><th>B=8</th><th>B=16</th><th>B=64</th></tr><tr class=''><td>Per-sample threshold</td><td>1.08</td><td>1.48</td><td>2.26</td><td>2.30</td><td>2.32</td><td>2.44</td></tr><tr class=''><td>Threshold + exit plan</td><td>1.88</td><td>1.89</td><td>2.16</td><td>2.26</td><td>2.29</td><td>2.35</td></tr><tr class=''><td>Unified exit</td><td>1.49</td><td>1.49</td><td>1.50</td><td>1.50</td><td>1.50</td><td>1.50</td></tr><tr class=''><td>Majority vote</td><td>1.34</td><td>1.45</td><td>1.72</td><td>1.43</td><td>1.51</td><td>1.74</td></tr><tr class=''><td>Random search (150 rules)</td><td>1.48</td><td>1.89</td><td>2.14</td><td>2.32</td><td>2.36</td><td>2.29</td></tr><tr class='ours'><td>Cost rule, all exits (ours)</td><td>1.78</td><td><b>2.13</b></td><td><b>2.63</b></td><td><b>2.55</b></td><td><b>2.48</b></td><td><b>2.67</b></td></tr><tr class='ours'><td>Cost rule + exit plan (ours)</td><td><b>1.91</b></td><td>2.08</td><td><b>2.63</b></td><td><b>2.55</b></td><td><b>2.48</b></td><td><b>2.67</b></td></tr></table>
+<p class='cap'><b>Table 7:</b> QQP. Speedup of each method's fastest policy whose held-out drop is at most one point (cost table). Bold: best in the column. –: no such policy.</p>
+<table class='num'><tr><th rowspan=2>Policy</th><th colspan=3>sequence length 16</th><th colspan=3>sequence length 128</th></tr><tr><th>B=8</th><th>B=16</th><th>B=64</th><th>B=8</th><th>B=16</th><th>B=64</th></tr><tr class=''><td>Per-sample threshold</td><td>1.05</td><td>1.30</td><td><b>1.66</b></td><td><b>1.68</b></td><td>1.68</td><td>1.74</td></tr><tr class=''><td>Threshold + exit plan</td><td><b>1.48</b></td><td>1.49</td><td>1.63</td><td>1.67</td><td>1.68</td><td>1.72</td></tr><tr class=''><td>Unified exit</td><td><b>1.49</b></td><td>1.49</td><td>1.50</td><td>1.50</td><td>1.50</td><td>1.50</td></tr><tr class=''><td>Majority vote</td><td>1.20</td><td>1.41</td><td>1.48</td><td>1.28</td><td>1.47</td><td>1.50</td></tr><tr class=''><td>Random search (150 rules)</td><td>1.27</td><td>1.38</td><td>–</td><td><b>1.68</b></td><td><b>1.69</b></td><td>–</td></tr><tr class='ours'><td>Cost rule, all exits (ours)</td><td>1.23</td><td>1.48</td><td>1.51</td><td>1.55</td><td>1.58</td><td><b>1.76</b></td></tr><tr class='ours'><td>Cost rule + exit plan (ours)</td><td><b>1.49</b></td><td><b>1.52</b></td><td>1.52</td><td>1.65</td><td>–</td><td><b>1.76</b></td></tr></table>
+<p class='cap'><b>Table 8:</b> MNLI, same layout.</p>
+<table class='num'><tr><th rowspan=2>Policy</th><th colspan=3>QQP, length 16</th><th colspan=3>QQP, length 128</th><th colspan=3>MNLI, length 16</th><th colspan=3>MNLI, length 128</th></tr><tr><th>all</th><th>hard 25%</th><th>other 75%</th><th>all</th><th>hard 25%</th><th>other 75%</th><th>all</th><th>hard 25%</th><th>other 75%</th><th>all</th><th>hard 25%</th><th>other 75%</th></tr><tr class=''><td>Per-sample threshold</td><td>0.61</td><td>1.03</td><td>0.47</td><td>0.61</td><td>1.03</td><td>0.47</td><td>1.22</td><td>0.57</td><td>1.44</td><td>1.22</td><td>0.57</td><td>1.44</td></tr><tr class=''><td>Threshold + exit plan</td><td>0.90</td><td>3.06</td><td>0.18</td><td>0.61</td><td>1.03</td><td>0.47</td><td>0.89</td><td>2.07</td><td>0.50</td><td>0.97</td><td>0.57</td><td>1.10</td></tr><tr class=''><td>Unified exit</td><td>1.05</td><td>4.08</td><td>0.04</td><td>1.05</td><td>4.08</td><td>0.04</td><td>0.87</td><td>2.75</td><td>0.24</td><td>0.87</td><td>2.75</td><td>0.24</td></tr><tr class=''><td>Majority vote</td><td>0.78</td><td>2.73</td><td>0.13</td><td>0.78</td><td>2.73</td><td>0.13</td><td>1.01</td><td>2.86</td><td>0.39</td><td>1.01</td><td>2.86</td><td>0.39</td></tr><tr class=''><td>Random search (150 rules)</td><td>0.70</td><td>1.85</td><td>0.31</td><td>0.66</td><td>1.23</td><td>0.46</td><td>1.15</td><td>1.69</td><td>0.97</td><td>1.08</td><td>1.28</td><td>1.01</td></tr><tr class='ours'><td>Cost rule, all exits (ours)</td><td>0.61</td><td>1.58</td><td>0.28</td><td>0.58</td><td>1.29</td><td>0.35</td><td>1.23</td><td>2.70</td><td>0.75</td><td>1.12</td><td>2.01</td><td>0.83</td></tr><tr class='ours'><td>Cost rule + exit plan (ours)</td><td>0.74</td><td>2.04</td><td>0.31</td><td>0.57</td><td>1.27</td><td>0.33</td><td>1.12</td><td>2.59</td><td>0.63</td><td>1.12</td><td>2.01</td><td>0.83</td></tr></table>
+<p class='cap'><b>Table 9:</b> Held-out accuracy drop in points at the one-point target, mean over B = 8, 16, 64: all inputs, the hard quarter (lowest mean confidence over the five intermediate exits), and the rest.</p>
+<p>Tables 4–6 compare one policy per method, and those policies differ in accuracy. Here each method is run through
+certified selection at eight accuracy targets, which traces its accuracy–speed front on held-out data (Figure 4).
+Tables 7 and 8 read each front at a held-out drop of at most one point. Speedups in this section come from the
+measured cost table; over the timed runs of Section 4.4 the table's median error was 1.3% and its largest 17%.</p>
+<ul>
+<li><b>QQP: the rule is ahead in all six settings</b>, by 2–17% over the best baseline (2.63× against 2.26× at length
+16 and B = 64; 2.55× against 2.32× at length 128 and B = 8).</li>
+<li><b>MNLI: no advantage.</b> The rule is within 2% of the best baseline in four of six settings and behind in two:
+8.5% behind the per-sample threshold at length 16 and B = 64, and 6.5% behind the random search at length 128 and
+B = 16. At length 128, where the GPU is compute-bound, the per-sample threshold is as fast as any batch-level rule.</li>
+<li><b>The exit plan matters at small batches on the cost floor.</b> At length 16 and B = 8 the rule without a plan
+reaches 1.23× on MNLI and 1.78× on QQP; with a plan, 1.49× and 1.91×. The threshold gains as much from the same plan
+search (1.05× to 1.48× on MNLI).</li>
+<li><b>What the derivation buys, and what it does not.</b> The rule without a plan has one parameter and 40
+candidates; the random search has three parameters and 150 candidates. With the plan search the rule has 620
+candidates, more than any baseline except the threshold with a plan (558). So the rule's QQP lead is not bought with
+a larger search, but its plan variant is not a cheaper search either. It does not buy transfer between deployments
+(Table 2). Whether it needs less calibration data is untested (Section 5.2).</li>
+<li><b>The accuracy loss lands on hard inputs (Table 9).</b> At the one-point target the rule loses 2.0–2.7 points on
+the hard quarter of MNLI and 1.3–2.0 on QQP, against 0.6 and 1.0 for the per-sample threshold, which takes its loss
+from the easier inputs. A unified exit is the most uneven (2.8 and 4.1 points). This is a cost of any rule that
+stops a batch, ours included, and the one-point average hides it.</li>
+<li><b>Limits.</b> Speedups are from the cost table, not timed. Each front has at most eight points, and reading it at
+"at most one point" picks among them on held-out data, the same way for every method. MNLI's held-out half is
+4,900 examples, so a difference of a few percent between two methods there is within noise we have not measured.</li>
+</ul>
+<h3>4.6 Does the certificate hold on re-splits?</h3>
+<table class='num'><tr><th>Task</th><th>B</th><th>Policy</th><th>Over budget, old protocol</th><th>Over budget, certified</th><th>Mean drop, old (pts)</th><th>Mean drop, certified (pts)</th><th>Speedup, old (cost model)</th><th>Speedup, certified (cost model)</th><th>Re-splits</th></tr><tr><td>MNLI</td><td>8</td><td>Majority vote</td><td>33%</td><td>10%</td><td>0.87</td><td>0.43</td><td>1.36×</td><td>1.23×</td><td>30</td></tr><tr><td>MNLI</td><td>8</td><td>Cost rule, all exits</td><td>40%</td><td>7%</td><td>0.83</td><td>0.35</td><td>1.45×</td><td>1.33×</td><td>30</td></tr><tr><td>MNLI</td><td>8</td><td>Per-sample threshold</td><td>40%</td><td>7%</td><td>0.90</td><td>0.59</td><td>1.06×</td><td>1.04×</td><td>30</td></tr><tr><td>MNLI</td><td>64</td><td>Majority vote</td><td>40%</td><td>13%</td><td>0.88</td><td>0.43</td><td>1.52×</td><td>1.29×</td><td>30</td></tr><tr><td>MNLI</td><td>64</td><td>Cost rule, all exits</td><td>37%</td><td>0%</td><td>0.99</td><td>0.33</td><td>1.80×</td><td>1.59×</td><td>30</td></tr><tr><td>MNLI</td><td>64</td><td>Per-sample threshold</td><td>43%</td><td>10%</td><td>0.88</td><td>0.56</td><td>1.69×</td><td>1.64×</td><td>30</td></tr><tr><td>QQP</td><td>8</td><td>Majority vote</td><td>27%</td><td>7%</td><td>0.76</td><td>0.62</td><td>1.42×</td><td>1.33×</td><td>30</td></tr><tr><td>QQP</td><td>8</td><td>Cost rule, all exits</td><td>13%</td><td>0%</td><td>0.84</td><td>0.62</td><td>1.88×</td><td>1.80×</td><td>30</td></tr><tr><td>QQP</td><td>8</td><td>Per-sample threshold</td><td>3%</td><td>0%</td><td>0.85</td><td>0.72</td><td>1.09×</td><td>1.07×</td><td>30</td></tr><tr><td>QQP</td><td>64</td><td>Majority vote</td><td>3%</td><td>3%</td><td>0.74</td><td>0.56</td><td>1.75×</td><td>1.56×</td><td>30</td></tr><tr><td>QQP</td><td>64</td><td>Cost rule, all exits</td><td>13%</td><td>3%</td><td>0.73</td><td>0.64</td><td>2.60×</td><td>2.54×</td><td>30</td></tr><tr><td>QQP</td><td>64</td><td>Per-sample threshold</td><td>3%</td><td>0%</td><td>0.85</td><td>0.72</td><td>2.26×</td><td>2.20×</td><td>30</td></tr></table><p class='cap'><b>Table 10:</b> Share of 30 random re-splits (20% tables and paths, 30% certification, 50% test) whose test-half accuracy drop exceeds one point, sequence length 16. Speedups here are from the cost model, not from GPU timing.</p>
 <p>On random re-splits the certified procedure keeps the budget. For the cost rule the test half is over one point in
 0–7% of re-splits, against 13–40% for the old protocol; the mean drop is 0.33–0.64 points. Eleven of the twelve rows
 are at or below the 10% target; majority vote on MNLI at B = 64 is at 13% (4 of 30), which 30 re-splits cannot
@@ -213,24 +278,24 @@ for the 0.8–2.4 points lost in the first report. This also bears on Section 4.
 most certified policies exceeded one point, behaves like one of the unlucky splits and not like the average one. That
 reading is consistent with these numbers but is not proved by them, and a 30-re-split estimate of a 10% rate is
 coarse.</p>
-<h3>4.6 Claim 2: the label-free bandit learns the rule (unchanged, server)</h3>
+<h3>4.7 Secondary: the label-free bandit (server, single seeds)</h3>
 <p>Against an oracle that knows the true tables, cumulative regret over 3,000 batches of 64 grows with log–log slope
 0.49–0.65 on MNLI and QQP, while a CeeBERT-style per-input bandit's regret grows linearly. On the GPU the bandit uses
 no labels, costs 0.2–0.3 accuracy points, and reaches 1.26–1.77× at B = 64–128. Two cautions that the first report
 did not state: these are single runs fitted on a few points, and a slope below 2/3 does not "confirm" the
 <i class='v'>T</i><sup>2/3</sup> rate, which is a worst-case bound. Section 5.4 replaces them with ten seeds.</p>
-<h3>4.7 Claim 3: certified, detection-free robustness (unchanged, server)</h3>
+<h3>4.8 Bounded damage from slowdown inputs (server)</h3>
 <p>The bound depth(<i class='v'>C</i> ∪ <i class='v'>K</i>; <i class='v'>m</i>) ≤ depth(<i class='v'>C</i>; <i class='v'>m</i> − <i class='v'>k</i>) held in all 10,500 batches tested
 across five tasks, including real DeepSloth inputs on the ViT; the property test passes on the local machine as
 well (19 of 19 unit tests). Consensus loses its whole speedup to a single attacker. Victims' latency under our rule
 still rises with <i class='v'>k</i>, and the robust rule has a clean-speed cost in the low-ρ regime (Table 2).</p>
-<h3>4.8 What did not work</h3>
+<h3>4.9 What did not work</h3>
 <ul>
 <li><b>A faster rule at a fixed setting.</b> Random search, program search (FunSearch-style, 300 programs),
 trajectory-aware calibration and a hindsight-best batch depth all tie the rule. A hidden-state probe adds at most
 0.026 AUROC over confidence. The limit is the exit signal, not the stopping rule.</li>
 <li><b>Decoders.</b> The cost model holds on Qwen2.5-1.5B and Llama-3.1-8B, but exits are too weak: frozen heads and
-public LayerSkip checkpoints are both about 5 points short at 75% depth, and no rule beats the full model within
+public LayerSkip checkpoints [26] are both about 5 points short at 75% depth, and no rule beats the full model within
 one point.</li>
 <li><b>Transfer of tuned parameters.</b> See Table 2. This is why selection is now redone per deployment with a
 certificate, which costs a CPU replay.</li>
@@ -241,14 +306,17 @@ certificate, which costs a CPU replay.</li>
 <p>Each item lists what we will do, what we expect, and the fallback.</p>
 <h3>5.1 Accuracy-matched server tables with the exit plan (16–18 Nov)</h3>
 <p>Rerun the 24 server settings (3 tasks × 4 batch sizes × eager and CUDA graphs) with the exit plan, the measured
-cost table and certified selection, on trained checkpoints. This is the main evidence still missing.</p>
-<p class='fb'><i class='l'>Expected:</i> the rule with a plan within 8% of the fastest method in every setting, as on the
-GTX 1650, with no setting over the accuracy budget beyond the 10% allowed.<br>
+cost table and certified selection, on trained checkpoints, and report each as a timed accuracy–speed front like
+Figure 4. This is the main evidence still missing: trained weights, matched accuracy and a serving GPU in one run.</p>
+<p class='fb'><i class='l'>Expected:</i> at a matched drop of one point, the rule ahead on QQP and within 10% of the best
+baseline elsewhere, as in Section 4.5.<br>
 <i class='l'>Fallback:</i> if it is more than 10% behind at B ≤ 16 under CUDA graphs, report the plan as a partial fix and
 state the settings where a unified exit should be used.</p>
 <h3>5.2 Tighten the certificate (14–16 Nov)</h3>
 <p>Replace the <i class='v'>t</i>-test with a finite-sample bound for bounded batch losses (Hoeffding–Bentkus), add the
-label-free version that controls disagreement with the full model, and repeat the re-split check on CIFAR-100.</p>
+label-free version that controls disagreement with the full model, and repeat the re-split check on CIFAR-100. In
+the same runs, repeat the selection with 10%, 25% and 50% of the calibration data for the cost rule and for the
+random search, to test whether a rule with one parameter needs less data than a searched rule with three.</p>
 <p class='fb'><i class='l'>Expected:</i> the same violation rates with a speed cost of a few percent.<br>
 <i class='l'>Fallback:</i> keep the <i class='v'>t</i>-test and state it as an asymptotic guarantee with the measured violation rate.</p>
 <h3>5.3 Fluctuating load (19–21 Nov)</h3>
@@ -277,41 +345,54 @@ input, so that the short-sequence settings are measured on real short inputs.</p
 same fault the encoders had before joint training), LayerSkip checkpoints are trained for drafting and not for
 returning the early answer, the test was run only at batch sizes 16 and 64, and the budget was one point of
 next-token accuracy on free text. The second attempt trains LoRA adapters and exit heads together with
-self-distillation from the final layer on Qwen2.5-1.5B (<code>decoder/train_exit_lora.py</code>), keeps a frozen
-baseline at the same budget, and sweeps batch sizes from 2 to 64. The runbook with commands and pass and kill
-conditions for each step is <code>docs/PLAN_LLM.md</code>; the driver is <code>scripts/run_llm_v2.sh</code>. Nothing in this
-track has been run, including the functional test of the new training script.</p>
+self-distillation from the final layer on Qwen2.5-1.5B, keeps a frozen baseline at the same budget, and sweeps
+batch sizes from 2 to 64. The training script and a runbook with pass and kill conditions for each step are
+written. Nothing in this track has been run, including the functional test of the training script.</p>
+<p><b>Key–value cache.</b> A token that exits at layer <i class='v'>l</i> leaves the layers above it without keys and values,
+which later tokens attend to. Our decoding loop already handles this the way CALM does [27]: the exit hidden state
+is projected into the keys and values of every skipped layer. In the first attempt this cost about 2% of a layer
+per skipped layer. It is an approximation, and its effect on accuracy is part of what the exit accuracy measures.</p>
+<p><b>Alternative considered.</b> Instead of returning the early answer, the exits can be used as drafts that the
+remaining layers verify, as in LayerSkip's self-speculative decoding [26]. The output then equals the full model's
+greedy output, so weak exits cost speed and not accuracy. Batched speculation has the same straggler problem,
+because sequences in a batch accept different numbers of draft tokens, and the draft depth and length could be
+chosen per batch from the measured <i class='v'>c</i>(<i class='v'>n</i>). We have not started this. If the first step of the second
+attempt fails its exit-quality check, this is the direction we would take, with agreement with the full model's
+greedy output as the metric.</p>
 <p class='fb'><i class='l'>Expected:</i> the 75%-depth exit within about 2 points of the full model (5.6 with a frozen
 backbone), and a speedup at small batch sizes. This is a forecast.<br>
 <i class='l'>Fallback:</i> if the exit stays more than 4 points short, the LLM track ends as a negative result with its
 cause.</p>
 <h3>5.8 Theory and write-up (24–26 Nov)</h3>
-<p>Write the optimality statement for a general non-decreasing <i class='v'>c</i>(<i class='v'>n</i>) under the stated assumptions, the
-regime switch at the knee of a floor-shaped cost, and the regret sketch.</p>
-<p class='fb'><i class='l'>Fallback:</i> clearly labelled proof sketches.</p>
+<p>State and prove when the lookahead rule is optimal: the monotone case [12] for an affine cost with gains that
+diminish with depth. For a general non-decreasing <i class='v'>c</i>(<i class='v'>n</i>) we aim only at the regime switch at the knee of a
+floor-shaped cost, and at a bound on what rule (2) loses by overestimating its saving.</p>
+<p class='fb'><i class='l'>Expected:</i> a proof for the affine case and a counterexample or a bound for the floor case.<br>
+<i class='l'>Fallback:</i> clearly labelled proof sketches. The word "optimal" stays out of the title unless the proof is complete.</p>
 <h3>5.9 Timeline</h3>
 <table><tr><th>Dates</th><th>Work</th></tr>
-<tr><td>13–15 Nov</td><td>Local timing (done, Section 4.4); re-split check (Section 4.5); finite-sample certificate; label-free certificate</td></tr>
+<tr><td>13–15 Nov</td><td>Local timing, matched-accuracy fronts and re-split check (done, Sections 4.4–4.6); finite-sample certificate; label-free certificate</td></tr>
 <tr><td>16–18 Nov</td><td>Server rerun of all 24 settings with the exit plan and certified selection</td></tr>
 <tr><td>19–21 Nov</td><td>Fluctuating-load experiment</td></tr>
 <tr><td>22–23 Nov</td><td>Bandit with ten seeds; robustness at low ρ</td></tr>
 <tr><td>24–26 Nov</td><td>Theory write-up, final figures, presentation</td></tr>
-<tr><td>When a server GPU is free</td><td>LLM second attempt, steps 0–2 of <code>docs/PLAN_LLM.md</code> (about 4 GPU-hours, estimate)</td></tr></table>
+<tr><td>When a server GPU is free</td><td>LLM second attempt, first three steps of the runbook (about 4 GPU-hours, estimate). It does not take time from the server rerun</td></tr></table>
 <h3>5.10 Claims and their status</h3>
 <table><tr><th>Claim</th><th>Status</th><th>Evidence still required</th></tr>
 <tr><td>Which rule is fastest flips with batch size, execution mode and sequence length</td><td><span class='tag'>HOLDS</span> on two GPUs</td><td>Accuracy-matched server rerun (5.1)</td></tr>
 <tr><td>The per-layer cost is a floor plus a linear part, not affine</td><td><span class='tag'>HOLDS</span> on the GTX 1650</td><td>The same profile on the A6000; whether it changes realised speed, not only the fit</td></tr>
-<tr><td>The rule is never far from the fastest method (within 8% in 18 settings; baselines 15–43%)</td><td><span class='tag'>HOLDS</span> locally, replayed decisions</td><td>Trained checkpoints on the server (5.1), CIFAR-100</td></tr>
-<tr><td>The exit plan fixes the small-batch weakness</td><td><span class='tag'>PARTLY</span> small effect locally</td><td>Server run under CUDA graphs, where heads cost 19% (5.1)</td></tr>
+<tr><td>At matched accuracy the rule is at least as fast as every baseline</td><td><span class='tag'>PARTLY</span> yes on QQP, no on MNLI (cost table)</td><td>Timed, trained checkpoints on the server (5.1), CIFAR-100</td></tr>
+<tr><td>Stopping a batch spreads the accuracy loss evenly</td><td><span class='tag'>FALSE</span> loss lands on hard inputs</td><td>A per-input floor on the loss; not planned before 26 Nov</td></tr>
+<tr><td>The exit plan fixes the small-batch weakness</td><td><span class='tag'>PARTLY</span> +7% and +21% at B = 8 on the cost floor (cost table); the threshold gains as much from the same search</td><td>Server run under CUDA graphs, where heads cost 19% (5.1)</td></tr>
 <tr><td>Certified selection keeps the accuracy budget</td><td><span class='tag'>HOLDS</span> on re-splits (t-test); fixed MNLI half over budget</td><td>Finite-sample bound (5.2)</td></tr>
-<tr><td>The label-free bandit learns the rule</td><td><span class='tag'>PARTLY</span> single seeds</td><td>Ten seeds (5.4)</td></tr>
-<tr><td>Certified robustness</td><td><span class='tag'>HOLDS</span> theorem, 0 violations</td><td>Low-ρ cost, adaptive attacker (5.5)</td></tr>
+<tr><td>The label-free bandit learns the rule (secondary)</td><td><span class='tag'>PARTLY</span> single seeds</td><td>Ten seeds (5.4)</td></tr>
+<tr><td>Bounded damage from slowdown inputs</td><td><span class='tag'>HOLDS</span> 0 violations</td><td>Low-ρ cost, adaptive attacker (5.5)</td></tr>
 <tr><td>Benefit on LLM decoders</td><td><span class='tag'>FAILED</span> first attempt</td><td>Second attempt with jointly trained exits (5.7), not started</td></tr></table>
 
 <h2>6. Expected outcome</h2>
-<p>By 26 November we expect an accuracy-matched demonstration on two GPUs that each existing rule is far from the
-best in some deployment while the cost-derived rule with an exit plan is not; a selection procedure with a stated
-guarantee on the accuracy drop; a label-free bandit with error bars; and the certified robustness result. We do not
+<p>By 26 November we expect a timed, accuracy-matched comparison on two GPUs showing where the cost-derived rule
+is ahead of existing rules and where it is not; a selection procedure with a stated
+guarantee on the accuracy drop; and, as secondary results, a label-free bandit with error bars and the bounded-damage property. We do not
 expect a rule that is fastest everywhere. A positive result on LLM decoders depends on the second attempt (5.7) and is not assumed. For a conference submission the
 evidence would still need more models, trained checkpoints timed on both GPUs, and the load experiment; with those,
 the work fits a systems-leaning venue.</p>
@@ -320,28 +401,28 @@ the work fits a systems-leaning venue.</p>
 <p>[1] J. Xin, R. Tang, J. Lee, Y. Yu, J. Lin. DeeBERT: Dynamic Early Exiting for Accelerating BERT Inference. ACL 2020.</p>
 <p>[2] W. Zhou, C. Xu, T. Ge, J. McAuley, K. Xu, F. Wei. BERT Loses Patience: Fast and Robust Inference with Early Exit. NeurIPS 2020.</p>
 <p>[3] X. Liu et al. Dynamic Rebatching for Efficient Early-Exit Inference with DREX. arXiv:2512.15705, 2025.</p>
-<p>[4] R. Miao, Y. Yan, X. Yao, T. Yang. An Efficient Inference Framework for Early-exit Large Language Models. arXiv:2407.20272, 2024.</p>
-<p>[5] L. Li et al. Accelerating BERT Inference with GPU-Efficient Exit Prediction. Frontiers of Computer Science 18(3), 2024.</p>
+<p>[4] L. Li et al. Accelerating BERT Inference with GPU-Efficient Exit Prediction. Frontiers of Computer Science 18(3), 2024.</p>
+<p>[5] R. Miao, Y. Yan, X. Yao, T. Yang. An Efficient Inference Framework for Early-exit Large Language Models. arXiv:2407.20272, 2024.</p>
 <p>[6] Y. Dai, R. Pan, A. Iyer, K. Li, R. Netravali. Apparate: Rethinking Early Exits to Tame Latency-Throughput Tensions in ML Serving. SOSP 2024.</p>
-<p>[7] A. Iyer et al. Improving DNN Inference Throughput Using Practical, Per-Input Compute Adaptation (E3). SOSP 2024.</p>
-<p>[8] S. Hong, Y. Kaya, I.-V. Modoranu, T. Dumitraş. A Panda? No, It's a Sloth: Slowdown Attacks on Adaptive Multi-Exit Neural Network Inference. ICLR 2021.</p>
-<p>[9] Z. Coalson, G. Ritter, R. Bobba, S. Hong. BERT Lost Patience Won't Be Robust to Adversarial Slowdown. NeurIPS 2023.</p>
-<p>[10] Y. Chen et al. Dynamic Transformers Provide a False Sense of Efficiency. ACL 2023.</p>
-<p>[11] Y. S. Chow, H. Robbins, D. Siegmund. Great Expectations: The Theory of Optimal Stopping. Houghton Mifflin, 1971.</p>
-<p>[12] N. Cesa-Bianchi, G. Lugosi, G. Stoltz. Minimizing Regret with Label Efficient Prediction. IEEE Trans. Information Theory 51(6), 2005.</p>
-<p>[13] D. J. Bajpai, M. K. Hanawal. CeeBERT: Cross-Domain Inference in Early Exit BERT. Findings of ACL 2024.</p>
-<p>[14] R. G. Pacheco et al. UCBEE: A Multi-Armed Bandit Approach for Early-Exit in Neural Networks. IEEE Trans. Network and Service Management, 2024.</p>
-<p>[18] M. Elhoushi et al. LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding. ACL 2024.</p>
-<p>[20] L. Del Corro et al. SkipDecode: Autoregressive Skip Decoding with Batching and Caching for Efficient LLM Inference. arXiv:2307.02628, 2023.</p>
-<p>[21] Y. Liu et al. RoBERTa: A Robustly Optimized BERT Pretraining Approach. arXiv:1907.11692, 2019.</p>
-<p>[22] A. Williams, N. Nangia, S. Bowman. A Broad-Coverage Challenge Corpus for Sentence Understanding through Inference. NAACL 2018.</p>
-<p>[23] A. Wang et al. GLUE: A Multi-Task Benchmark and Analysis Platform for Natural Language Understanding. ICLR 2019.</p>
-<p>[24] A. Dosovitskiy et al. An Image Is Worth 16x16 Words: Transformers for Image Recognition at Scale. ICLR 2021.</p>
-<p>[25] A. Krizhevsky. Learning Multiple Layers of Features from Tiny Images. Tech. report, University of Toronto, 2009.</p>
-<p>[26] Qwen Team. Qwen2.5 Technical Report. arXiv:2412.15115, 2024.</p>
-<p>[27] Llama Team, Meta AI. The Llama 3 Herd of Models. arXiv:2407.21783, 2024.</p>
-<p>[28] S. Merity, C. Xiong, J. Bradbury, R. Socher. Pointer Sentinel Mixture Models. ICLR 2017.</p>
-<p>[29] M. Jazbec, A. Timans, et al. Fast yet Safe: Early-Exiting with Risk Control. NeurIPS 2024.</p>
-<p>[30] A. N. Angelopoulos, S. Bates, E. J. Candès, M. I. Jordan, L. Lei. Learn then Test: Calibrating Predictive Algorithms to Achieve Risk Control. arXiv:2110.01052, 2021.</p>
-<p>Reference numbers follow the first report; [15]–[17] and [19] (program search, CALM) are not cited in this revision.</p>
+<p>[7] M. Jazbec, A. Timans, et al. Fast yet Safe: Early-Exiting with Risk Control. NeurIPS 2024.</p>
+<p>[8] A. Iyer et al. Improving DNN Inference Throughput Using Practical, Per-Input Compute Adaptation (E3). SOSP 2024.</p>
+<p>[9] S. Hong, Y. Kaya, I.-V. Modoranu, T. Dumitraş. A Panda? No, It's a Sloth: Slowdown Attacks on Adaptive Multi-Exit Neural Network Inference. ICLR 2021.</p>
+<p>[10] Z. Coalson, G. Ritter, R. Bobba, S. Hong. BERT Lost Patience Won't Be Robust to Adversarial Slowdown. NeurIPS 2023.</p>
+<p>[11] Y. Chen et al. Dynamic Transformers Provide a False Sense of Efficiency. ACL 2023.</p>
+<p>[12] Y. S. Chow, H. Robbins, D. Siegmund. Great Expectations: The Theory of Optimal Stopping. Houghton Mifflin, 1971.</p>
+<p>[13] A. N. Angelopoulos, S. Bates, E. J. Candès, M. I. Jordan, L. Lei. Learn then Test: Calibrating Predictive Algorithms to Achieve Risk Control. arXiv:2110.01052, 2021.</p>
+<p>[14] N. Cesa-Bianchi, G. Lugosi, G. Stoltz. Minimizing Regret with Label Efficient Prediction. IEEE Trans. Information Theory 51(6), 2005.</p>
+<p>[15] D. J. Bajpai, M. K. Hanawal. CeeBERT: Cross-Domain Inference in Early Exit BERT. Findings of ACL 2024.</p>
+<p>[16] R. G. Pacheco et al. UCBEE: A Multi-Armed Bandit Approach for Early-Exit in Neural Networks. IEEE Trans. Network and Service Management, 2024.</p>
+<p>[17] Y. Liu et al. RoBERTa: A Robustly Optimized BERT Pretraining Approach. arXiv:1907.11692, 2019.</p>
+<p>[18] A. Williams, N. Nangia, S. Bowman. A Broad-Coverage Challenge Corpus for Sentence Understanding through Inference. NAACL 2018.</p>
+<p>[19] A. Wang et al. GLUE: A Multi-Task Benchmark and Analysis Platform for Natural Language Understanding. ICLR 2019.</p>
+<p>[20] A. Dosovitskiy et al. An Image Is Worth 16x16 Words: Transformers for Image Recognition at Scale. ICLR 2021.</p>
+<p>[21] A. Krizhevsky. Learning Multiple Layers of Features from Tiny Images. Tech. report, University of Toronto, 2009.</p>
+<p>[22] Qwen Team. Qwen2.5 Technical Report. arXiv:2412.15115, 2024.</p>
+<p>[23] Llama Team, Meta AI. The Llama 3 Herd of Models. arXiv:2407.21783, 2024.</p>
+<p>[24] S. Merity, C. Xiong, J. Bradbury, R. Socher. Pointer Sentinel Mixture Models. ICLR 2017.</p>
+<p>[25] L. Del Corro et al. SkipDecode: Autoregressive Skip Decoding with Batching and Caching for Efficient LLM Inference. arXiv:2307.02628, 2023.</p>
+<p>[26] M. Elhoushi et al. LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding. ACL 2024.</p>
+<p>[27] T. Schuster et al. Confident Adaptive Language Modeling. NeurIPS 2022.</p>
 </div></body></html>

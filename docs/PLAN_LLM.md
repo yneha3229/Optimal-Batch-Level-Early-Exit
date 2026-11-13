@@ -20,6 +20,28 @@ Related: `docs/PLAN_PAPER.md` (first attempt, stopped), `docs/RESULTS.md` (froze
 Problems 1 and 3 are the ones that decide whether there is a result. Problem 1 is about the model; problem 3 is about
 where the method can help at all.
 
+### Points raised in review of the progress report (2026-11-13)
+
+1. **KV cache.** A token that exits at layer `l` leaves layers `l+1..L` without keys and values, and later tokens
+   attend to them. `decoder/decode_runner.py` already handles this with CALM-style state propagation
+   (`propagate_from`: the exit hidden state is projected into the K/V of every skipped layer; about 2% of a layer
+   per skipped layer in the first attempt). It is an approximation. Two consequences for this plan:
+   - `decoder/train_exit_lora.py` trains and scores exits with teacher forcing on full-depth states, so its
+     accuracy table does **not** include the error from propagated K/V. The number that includes it is the
+     runner's, in step 3. Compare the two; a gap of more than 1 point means propagation, not the exit, is the limit.
+   - State this in any write-up before being asked.
+2. **Metric.** One point of next-token accuracy on free text is a weak target. The primary metric from step 1 on
+   is agreement with the full model's greedy output (`fidelity` in the CSV); accuracy against the reference token
+   is reported next to it.
+3. **Alternative direction: exits as drafts (self-speculative decoding).** If exits stay too weak to be returned
+   as answers, use them as drafts that the remaining layers verify, as LayerSkip does. The output then equals the
+   full model's greedy output, so a weak exit costs speed and not accuracy. Batched speculation has the same
+   straggler problem (sequences in a batch accept different numbers of draft tokens), and the draft depth and
+   length can be chosen per batch from the measured `c(n)`. This is the fallback of step 1 (see there). Nothing
+   is written for it yet.
+4. **Priority.** This track must not take time from the accuracy-matched server rerun (report section 5.1).
+   Run it only on a GPU that the rerun is not using.
+
 ## 2. What we expect, stated before running
 
 - **Step 1 (exit quality).** Joint training should bring the 75%-depth exit to within about 2 points of the full
@@ -74,7 +96,8 @@ Read `results/train_wikitext_qlora_exit_accuracy.csv` (rows with `split == all`)
 | `qlora` vs `qfrozen` at layer 20 | at least 1.5 points closer to the full model | no difference |
 
 Fallback if the kill row triggers: one rerun with `--rank 64 --steps 12000 --positions 128`. If that also fails, stop
-the LLM track and record the numbers in section 7; the diagnosis in section 1 row 1 is then wrong or incomplete.
+the early-answer track and record the numbers in section 7; the diagnosis in section 1 row 1 is then wrong or
+incomplete. The next thing to try is then step 6 (exits as drafts), not more training.
 
 ### Step 2. Is there anything for a batch-level rule to adapt to? (CPU, 2 minutes)
 
@@ -131,6 +154,19 @@ Teacher-forced next-token accuracy is a proxy. A paper needs free-running genera
 (summarisation with ROUGE-L, or extractive QA with exact match), with the same batch sizes and baselines plus
 SkipDecode's position schedule. This needs a generation loop in `decoder/decode_runner.py` (feed back the produced
 token instead of the true one) and is not scripted yet.
+
+### Step 6. Fallback direction: exits as drafts (not scripted)
+
+Only if step 1 hits its kill row twice. Needs a draft-then-verify loop in `decoder/decode_runner.py`: draft `d`
+tokens at exit layer `l` for the whole batch, verify them with the remaining layers in one pass, keep the accepted
+prefix of each sequence. Choices to make per batch from `c(n)`: the draft layer `l` and the draft length `d`.
+
+| Check | Pass | Kill |
+|---|---|---|
+| Output equals the full model's greedy output | 100% of tokens (by construction; this is the correctness test) | any mismatch: bug |
+| Mean accepted draft tokens per round at the layer-20 exit | 2 or more | below 1.2: drafts are too weak to pay for verification |
+| Wall-clock against the full model at B ≤ 8 | above 1.1× | at or below 1.0× at every B |
+| Per-batch choice of `(l, d)` against the best fixed `(l, d)` | faster at some B | no gain: report the fixed choice |
 
 ## 5. Evidence for problem 3, from traces already in the repository
 

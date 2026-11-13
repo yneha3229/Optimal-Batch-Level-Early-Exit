@@ -155,10 +155,42 @@ def fig_resplit() -> None:
     plt.close(fig)
 
 
+def fig_front() -> None:
+    """Held-out accuracy drop against cost-model speedup of the certified policy at each accuracy target."""
+    fs = sorted(ROOT.glob("results/local_front_*_cuda_T*.csv"))
+    if not fs:
+        return
+    d = pd.concat([pd.read_csv(f) for f in fs], ignore_index=True)
+    d["T"] = d.device.str.extract(r"T(\d+)").astype(int)
+    fams = ["threshold", "unified", "majority", "random_collective", "theory", "theory+plan"]
+    cols = [(T, B) for T in (16, 128) for B in (8, 64)]
+    tasks = [t for t in ("qqp", "mnli") if t in set(d.task)]
+    fig, axs = plt.subplots(len(tasks), 4, figsize=(7.2, 2.1 * len(tasks) + 0.3), sharex=True, sharey="row", squeeze=False)
+    for i, task in enumerate(tasks):
+        for j, (T, B) in enumerate(cols):
+            ax = axs[i, j]
+            ax.axvline(1, color=INK2, lw=0.8, ls=":")
+            for f in fams:
+                g = d[(d.task == task) & (d["T"] == T) & (d.B == B) & (d.family == f)]
+                g = g.drop_duplicates("params").sort_values("ho_drop_pts")
+                g = g[g.ho_speedup >= g.ho_speedup.cummax() - 1e-9]         # keep the front
+                line(ax, g.ho_drop_pts, g.ho_speedup, f)
+            ax.set_xlim(-0.1, 2.05)
+            ax.set_title(f"{task.upper()}, length {T}, B={B}", fontsize=8, loc="left")
+            if j == 0:
+                ax.set_ylabel("speedup (cost model)")
+    h, l = axs[0, 0].get_legend_handles_labels()
+    fig.legend(h, l, loc="upper center", ncol=3, fontsize=7.5, bbox_to_anchor=(0.5, 1.0 + 0.09 / len(tasks) * 2))
+    fig.supxlabel("held-out accuracy drop (points)", fontsize=8.5, color=INK2, y=0.0)
+    fig.savefig(ROOT / "figures/report2_front.png")
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     fig_cost()
     fig_server()
     if list(ROOT.glob("results/local_time_*_cuda_T*.csv")):
         fig_local()
     fig_resplit()
+    fig_front()
     print("figures written")

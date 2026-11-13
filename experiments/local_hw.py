@@ -15,6 +15,7 @@ Subcommands
             choice by fixed-sequence testing), using the cost measured by `profile`.
   time      execute the selected policies on held-out batches on the device; report real speedup.
   resplit   validity check of the certified selection against the naive protocol over random re-splits.
+  front     speed at matched held-out accuracy: certified selection at several accuracy targets (CPU replay).
 
 Usage
   python3 experiments/local_hw.py profile --device cuda
@@ -43,6 +44,7 @@ from simulator.simulator import Cost, Traces, load_traces  # noqa: E402
 
 LAYERS = [2, 4, 6, 8, 10, 12]
 NUM_LABELS = {"mnli": 3, "qqp": 2}
+FRONT_ALPHAS = [0.0025, 0.005, 0.0075, 0.01, 0.0125, 0.015, 0.02, 0.03]
 ALPHA, DELTA = 0.01, 0.10          # accuracy budget (drop vs full model) and failure probability
 G: dict = {}
 
@@ -515,10 +517,66 @@ def cmd_resplit(args) -> None:
     print(g.round(4).to_string())
 
 
+def _front_job(a):
+    """Accuracy-speed front of one family at one batch size. Candidates and their order come from the fit part,
+    the certified choice at each target alpha from the cert part; each choice is then scored once on held-out."""
+    fam, B = a
+    fit, cert, ho, cost = G["fit"], G["cert"], G["ho"], G["cost"]
+    cands = grid(fam)
+    fb = disjoint_batches(len(fit), B, B)
+    cb = disjoint_batches(len(cert), B, B + 1)
+    hb = disjoint_batches(len(ho), B, 100 + B)
+    fr = [evaluate(fam, p, fit, fit, fb, cost) for p in cands]
+    path = pareto_path(fr)
+    cr = [evaluate(fam, cands[i], fit, cert, cb, cost) for i in path]
+    rows_h = np.stack(hb)
+    hard = G["hard"][rows_h]
+    full_ok = ho.pred[rows_h, -1] == ho.label[rows_h]
+    out, seen = [], {}
+    for alpha in FRONT_ALPHAS:
+        best = None
+        for i, r in zip(path, cr):
+            if not certified(r, "drop", alpha):
+                break
+            if best is None or r["speedup"] > best[1]["speedup"]:
+                best = (i, r)
+        if best is None:
+            continue
+        i = best[0]
+        if i not in seen:
+            plan, decide = make(fam, cands[i], fit, cost)
+            lat, pred = replay(decide, sub_traces(ho, plan), hb, cost)
+            ok = pred == ho.label[rows_h]
+            seen[i] = {"ho_drop_pts": 100 * float(full_ok.mean() - ok.mean()),
+                       "ho_speedup": float(full_ms(cost, B) / lat.mean()),
+                       "hard_drop_pts": 100 * float(full_ok[hard].mean() - ok[hard].mean()),
+                       "easy_drop_pts": 100 * float(full_ok[~hard].mean() - ok[~hard].mean())}
+        out.append({"task": G["task"], "device": G["tag"], "B": B, "family": fam, "alpha_pts": 100 * alpha,
+                    "n_cands": len(cands), "params": json.dumps(cands[i]), **seen[i]})
+    return out
+
+
+def cmd_front(args) -> None:
+    """Speed at matched held-out accuracy: certified selection at a range of accuracy targets, scored on held-out.
+    Speedups are from the measured cost table (CPU replay), not timed."""
+    ev = load_traces(ROOT / f"traces/{args.task}_val.parquet", "evolve")
+    G["ho"] = load_traces(ROOT / f"traces/{args.task}_val.parquet", "heldout")
+    G["fit"], G["cert"] = split_evolve(ev, 0)
+    G["cost"], G["task"], G["tag"] = load_cost(args), args.task, tag(args)
+    m = G["ho"].conf[:, :-1].mean(1)                       # hard inputs: lowest quartile of mean intermediate confidence
+    G["hard"] = m <= np.quantile(m, 0.25)
+    jobs = [(f, B) for B in args.batch_sizes for f in FAMILIES]
+    with Pool(args.workers) as pool:
+        res = pool.map(_front_job, jobs, chunksize=1)
+    df = pd.DataFrame([r for rs in res for r in rs])
+    df.to_csv(ROOT / f"results/local_front_{args.task}_{tag(args)}.csv", index=False)
+    print(df[df.alpha_pts == 1.0][["B", "family", "ho_speedup", "ho_drop_pts", "hard_drop_pts"]].round(3).to_string(index=False))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("profile", "select", "time", "resplit"):
+    for name in ("profile", "select", "time", "resplit", "front"):
         s = sub.add_parser(name)
         s.add_argument("--device", default="cuda")
         s.add_argument("--task", default="qqp")
@@ -532,7 +590,7 @@ def main() -> None:
         s.add_argument("--cost-model", default="table", choices=["table", "affine"])
         s.add_argument("--families", nargs="+", default=["threshold", "majority", "theory"])
     args = ap.parse_args()
-    {"profile": cmd_profile, "select": cmd_select, "time": cmd_time, "resplit": cmd_resplit}[args.cmd](args)
+    {"profile": cmd_profile, "select": cmd_select, "time": cmd_time, "resplit": cmd_resplit, "front": cmd_front}[args.cmd](args)
 
 
 if __name__ == "__main__":
