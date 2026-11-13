@@ -3,7 +3,7 @@
 This is the current direction of the project. It keeps the original idea (batch-level early exit derived from the
 cost model `c(n) = a + b·n`) and changes the claim.
 
-Status: **documented; step 1 (transfer test) running.** Results will be added in section 7.
+Status: **step 1 (transfer test) done: fails its pass criterion (section 7).** Steps 2–3 not started.
 
 ## 1. What changed and why
 
@@ -107,7 +107,37 @@ tuned at one batch size and against heuristics re-tuned per batch size (the uppe
 
 ## 7. Results
 
-(to be filled as steps complete)
+### Step 1: transfer test (2026-11-13). **Fails the pass criterion.**
+
+`experiments/transfer_test.py`, simulator only. Outputs: `results/transfer_summary.csv`, `results/transfer_pairs.csv`,
+`results/transfer_<task>_all.csv`, log `logs/transfer_test.log`. Setup: 3 tasks × 8 settings (B ∈ {8, 16, 64, 128} ×
+{eager, CUDA-graph} cost), 6 methods; parameters selected on evolve and scored on held-out (3 seeds).
+
+Relative score = speedup ÷ best in-domain speedup at the target. A held-out accuracy drop above 1 point scores 1.0×.
+Selection margin 0.5 pt, all tasks pooled:
+
+| Method | Mean, other batch size | Mean, other mode | Worst, other batch size | Worst, other mode | Violation rate (transfer) |
+|---|---|---|---|---|---|
+| Theory rule | **0.93** | **0.93** | 0.45 | 0.39 | 29–31% |
+| Random search (3 params) | 0.89 | 0.89 | 0.48 | 0.48 | 27–28% |
+| Per-sample threshold | 0.88 | 0.88 | **0.64** | **0.64** | **0%** |
+| Majority vote | 0.78 | 0.77 | 0.41 | 0.41 | 11–13% |
+| Unified exit | 0.76 | 0.76 | 0.41 | 0.39 | 17% |
+| Consensus | 0.67 | 0.69 | 0.38 | 0.38 | 33–42% |
+
+- **Against the criterion:** the theory rule's worst-case loss is 55–61%, the threshold's is 36%. The rule is
+  worse in the worst case, not 5 points better. Kill condition met.
+- **Mean:** the theory rule has the best mean transfer score (0.93), 4–5 points above threshold and random search.
+  This is below the 5-point bar and does not count as a pass.
+- **Cause of the worst cases:** accuracy, not speed. The rule's worst pairs are QQP real B=64 → graph B=64 / real
+  B=128 (drops of 1.01–1.04 pts, just over the 1-pt budget, while speedup is 2.35–2.61×) and MNLI B=16/64 → B=128
+  (drop 1.71 pts). The threshold rule never violated the budget in transfer.
+- **Margin 1.0 pt** (also in the summary): violation rates of 42–88% for every method, so that margin is too loose
+  for the 1-pt budget; worst cases collapse to about 0.37 for all methods.
+- Per task (transfer pairs, mean / worst): theory 1.00 / 0.96 on CIFAR-100, 0.81 / 0.62 on MNLI, 0.98 / 0.39 on QQP.
+
+Status after step 1: per section 5, the transfer claim as stated does not hold in simulation. Steps 2–3 have not
+been started.
 
 ## 8. Honest scope
 

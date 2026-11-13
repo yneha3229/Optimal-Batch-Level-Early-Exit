@@ -17,7 +17,7 @@ near the best method across deployments. See `docs/DIRECTION.md`.
 | Results up to Nov 6 (eager PyTorch, simulator and real GPU) | Done, with corrections noted at the top | `docs/RESULTS.md` |
 | CUDA-graph timings, headroom bound, hidden-state probe, LayerSkip exits (Nov 12) | Done | `docs/PLAN_PAPER.md` §7 |
 | Theory: rule, regime switch, robustness bound | Done | `theory/THEORY.md` |
-| Transfer test (step 1 of the direction) | Running | `experiments/transfer_test.py` |
+| Transfer test (step 1 of the direction) | Done: fails pass criterion (best mean transfer, worst worst-case) | `docs/DIRECTION.md` §7 |
 | Exit plan (which exits to evaluate), load-trace experiment | Not started | `docs/DIRECTION.md` §5 |
 
 Findings that hold so far:
