@@ -301,7 +301,7 @@ choice: any subset of the intermediate exits, with the rule (2)–(3) run on tha
 behaves like a unified exit; with all exits kept it is the earlier rule. The plan and λ are chosen together by
 replaying calibration traces under the measured {v('c')}({v('n')}) and {v('h')}; this needs no GPU time.</p>
 <p><b>(c) Certified selection.</b> The first report chose the fastest setting whose accuracy on the tuning
-split was within one point of the full model, and it then lost 0.8–2.4 points on held-out data. We now split the
+split was within one point of the full model, and it then lost 0.8–2.5 points on held-out data. We now split the
 tuning data in two. On the first part each method's candidates are reduced to a path ordered from safest to
 fastest. On the second part the path is tested in order: for candidate θ, the drop in accuracy against the full
 model is computed per batch on {v('K')} disjoint batches, {v('Z')}<sub>1</sub>, …, {v('Z')}<sub>K</sub>, and θ is certified
@@ -352,7 +352,7 @@ given the same exit-plan search as our rule (an Apparate-style selection of exit
 <h3>4.1 Corrections to the first report</h3>
 <table><tr><th>First report said</th><th>What the evidence shows</th><th>Measured on</th></tr>
 <tr><td>The rule matches or beats the best heuristic in every cell</td><td>With CUDA graphs it is never the single fastest rule: unified exit wins at B ≤ 16 on text, a random search ties or wins at B ≥ 64. At B = 8 on MNLI it was the slowest rule (0.86×)</td><td>Server, CUDA graphs</td></tr>
-<tr><td>1.41×, 2.10×, 1.46× at B = 64 within one accuracy point</td><td>Those were simulated and selected on the held-out split. The real-GPU runs lost 0.8–2.4 points on held-out data</td><td>Server, eager</td></tr>
+<tr><td>1.41×, 2.10×, 1.46× at B = 64 within one accuracy point</td><td>Those were simulated and selected on the held-out split. The real-GPU runs lost 0.8–2.5 points on held-out data</td><td>Server, eager</td></tr>
 <tr><td>The simulator tracks the GPU within about 5%</td><td>Only at B ≥ 64 in eager mode; 15–32% off at B ≤ 16, and it overestimates in graph mode</td><td>Server, both modes</td></tr>
 <tr><td>Every collective rule beats per-sample exits at B ≤ 16</td><td>True on MNLI and QQP, not on CIFAR-100</td><td>Server, ViT</td></tr>
 <tr><td>Robustness costs no clean speedup</td><td>True at high ρ. At low ρ on CIFAR-100 the robust rule reaches 1.12× against 1.46×</td><td>Server, ViT</td></tr>
@@ -396,7 +396,7 @@ RESULTS_TEXT
 {front_table(fd, 'mnli')}
 <p class='cap'><b>Table 8:</b> MNLI, same layout.</p>
 {hard_table(fd)}
-<p class='cap'><b>Table 9:</b> Held-out accuracy drop in points at the one-point target, mean over B = 8, 16, 64: all inputs, the hard quarter (lowest mean confidence over the five intermediate exits), and the rest.</p>
+<p class='cap'><b>Table 9:</b> Held-out accuracy drop in points at the one-point target, mean over B = 8, 16, 64: all inputs, the hard quarter (lowest mean confidence over the five intermediate exits), and the rest. The rows of the threshold, the unified exit and majority vote are the same at both lengths because their certified parameters do not change with the cost table.</p>
 FRONT_TEXT
 <h3>4.6 Does the certificate hold on re-splits?</h3>
 RESPLIT_TEXT
@@ -434,7 +434,7 @@ Figure 4. This is the main evidence still missing: trained weights, matched accu
 baseline elsewhere, as in Section 4.5.<br>
 <i class='l'>Fallback:</i> if it is more than 10% behind at B ≤ 16 under CUDA graphs, report the plan as a partial fix and
 state the settings where a unified exit should be used.</p>
-<h3>5.2 Tighten the certificate (14–16 Nov)</h3>
+<h3>5.2 Tighten the certificate (13–15 Nov)</h3>
 <p>Replace the {v('t')}-test with a finite-sample bound for bounded batch losses (Hoeffding–Bentkus), add the
 label-free version that controls disagreement with the full model, and repeat the re-split check on CIFAR-100. In
 the same runs, repeat the selection with 10%, 25% and 50% of the calibration data for the cost rule and for the
