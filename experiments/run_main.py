@@ -44,6 +44,11 @@ from simulator.simulator import Cost, Traces, load_traces, run_batch, simulate, 
 ACC_TOL = 0.01
 TASK_EXITS = {"wikitext": [8, 12, 16, 20, 24, 28], "wikitext_llama": [12, 16, 20, 24, 28, 32]}
 DECODER_TASKS = {"wikitext", "wikitext_llama"}      # batched token decoding: per-sample exits stay in the batch (no rebatching)
+for _m in ROOT.glob("traces/*_val.meta.json"):   # decoder tasks written by decoder/train_exit_lora.py
+    _d = json.loads(_m.read_text())
+    TASK_EXITS[_m.name[: -len("_val.meta.json")]] = _d["exit_layers"]
+    if _d.get("decoder"):
+        DECODER_TASKS.add(_m.name[: -len("_val.meta.json")])
 LABEL_FREE = {"bandit", "bandit+rescue_conf", "bandit_t3pct"}
 G: dict = {}   # per-worker globals
 

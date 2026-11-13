@@ -1,0 +1,8 @@
+              naive_viol  cert_viol  naive_drop  cert_drop  naive_speedup  cert_speedup
+B  family                                                                              
+8  majority       0.2667     0.0667      0.0076     0.0062         1.4163        1.3314
+   theory         0.1333     0.0000      0.0084     0.0062         1.8792        1.7984
+   threshold      0.0333     0.0000      0.0085     0.0072         1.0899        1.0705
+64 majority       0.0333     0.0333      0.0074     0.0056         1.7545        1.5645
+   theory         0.1333     0.0333      0.0073     0.0064         2.6043        2.5423
+   threshold      0.0333     0.0000      0.0085     0.0072         2.2604        2.2042
