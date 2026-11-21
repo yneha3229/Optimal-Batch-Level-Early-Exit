@@ -1,7 +1,9 @@
 """Aggregate every result into two tables and figures.
 
 Inputs (all optional except the benchmark index; missing files are skipped with a note):
-  minrank/results/baselines.csv      sweep rows (run_baselines.py; evolved programs append rows with method "evolved:<id>")
+  minrank/results/baselines.csv      sweep rows (run_baselines.py)
+  minrank/results/evolved.csv        evolved programs (evolve/eval_heldout.py), method "evolved:<id>"; failed runs
+                                     have an empty rank and verified=False and only count in failure_rate
   minrank/results/lower_bounds.csv   certified lower bounds (run_baselines.py --lower-only)
   minrank/results/exact.csv          Option B driver output (proven optima)
   minrank/certificates/<graph>.json  best matrices; every one is re-verified here
@@ -73,7 +75,15 @@ def summarize(results_dir: Path, graph_dir: Path, cert_dir: Path) -> tuple[pd.Da
     graphs = index.rename(columns={"name": "graph"})[["graph", "split", "family", "n"]].copy()
     graphs["group"] = graphs["family"].map(family_group)
 
-    base = _read(results_dir / "baselines.csv")
+    parts = [d for d in (_read(results_dir / "baselines.csv"), _read(results_dir / "evolved.csv")) if d is not None]
+    base = pd.concat(parts, ignore_index=True) if parts else None
+    if base is not None:
+        # eval_heldout writes failed runs (matrix did not fit / crash) with an empty rank and verified=False.
+        ok = base["rank"].notna() & base["verified"].astype(str).str.lower().eq("true")
+        n_fail = int((~ok).sum())
+        if n_fail:
+            print(f"note: {n_fail} unverified/failed runs excluded from ranks (counted in failure_rate)")
+        base["failed"] = ~ok
     lbs = _read(results_dir / "lower_bounds.csv")
     exact = _read(results_dir / "exact.csv")
     certs = verified_certificates(cert_dir, graph_dir, index)
@@ -84,6 +94,11 @@ def summarize(results_dir: Path, graph_dir: Path, cert_dir: Path) -> tuple[pd.Da
     else:
         graphs["lb"], graphs["lb_proven"] = pd.NA, pd.NA
 
+    fails = None
+    if base is not None and len(base):
+        fails = base.groupby(["method", "budget"])["failed"].mean().rename("failure_rate").reset_index()
+        base = base[~base["failed"]].copy()
+        base["rank"] = base["rank"].astype(int)
     if base is not None and len(base):
         best = base.sort_values(["rank", "seconds"]).groupby("graph").first()[["rank", "method", "budget"]]
         best = best.rename(columns={"rank": "best_run_rank", "method": "best_method", "budget": "best_budget"})
@@ -115,6 +130,7 @@ def summarize(results_dir: Path, graph_dir: Path, cert_dir: Path) -> tuple[pd.Da
                         mean_ratio_to_best=("ratio", "mean"), share_matches_best=("matches_best", "mean"),
                         mean_seconds=("seconds", "mean"))
                    .reset_index().sort_values(["group", "budget", "mean_ratio_to_best"]))
+        methods = methods.merge(fails, on=["method", "budget"], how="left")
     else:
         methods = pd.DataFrame()
     return graphs, methods

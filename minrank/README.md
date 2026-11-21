@@ -38,7 +38,7 @@ bash scripts/minrank/09_aggregate.sh                          # tables + figures
 | `04b_separations.sh` | Option B: search for explicit separations (gap to clique cover, F_2 vs F_3) | `minrank/results/separations.csv` |
 | `05_vllm_serve.sh` | start the vLLM server for OpenEvolve | |
 | `06_evolve.sh` | Option A: OpenEvolve run (writes evaluation traces) | `minrank/evolve/runs/` |
-| `07_eval_heldout.sh` | evaluate the best evolved program like a baseline | rows in `baselines.csv` (method `evolved:<id>`) |
+| `07_eval_heldout.sh` | evaluate the best evolved program like a baseline | `minrank/results/evolved.csv` (method `evolved:<id>`) |
 | `08_cascade_replay.sh` | Option D: replay early-exit policies on the traces | `minrank/results/cascade/` |
 | `09_aggregate.sh` | summary tables, figures; fails if a certificate does not verify | `minrank/results/summary_*.csv`, `figures/` |
 | `run_cpu_all.sh` | 00, 03, 02, 04, 09 in order | |

@@ -14,3 +14,5 @@ docs/papers/
 
 # minrank: OpenEvolve run directories and raw traces (large)
 minrank/evolve/runs/
+minrank/evolve/reference.json.lock
+minrank/evolve/*.tmp*

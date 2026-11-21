@@ -66,3 +66,15 @@ def test_cli_fails_loudly_on_bad_certificate(mini):
                        cwd=ROOT, capture_output=True, text=True)
     assert r.returncode != 0 and "do not verify" in (r.stdout + r.stderr)
     assert pd.read_csv(mini / "res" / "summary_graphs.csv").shape[0] == 2
+
+
+def test_evolved_rows_and_failures_are_merged(mini):
+    ev = mini / "res" / "evolved.csv"
+    ev.write_text("graph,split,family,n,density,method,budget,seed,rank,seconds,verified\n"
+                  "cycle_5,test,cycle,5,0.5,evolved:abc,1.0,0,3,0.5,True\n"
+                  "orth_5,test,orthogonality,16,0.5,evolved:abc,1.0,0,,0.5,False\n")
+    graphs, methods = summarize(mini / "res", mini / "graphs", mini / "certs")
+    row = methods[methods["method"] == "evolved:abc"]
+    assert set(row["group"]) == {"structured"}  # the failed orth_5 run contributes no rank
+    assert float(row["failure_rate"].iloc[0]) == 0.5
+    assert graphs.set_index("graph").loc["orth_5", "best_ub"] == 5  # unaffected by the failed run
