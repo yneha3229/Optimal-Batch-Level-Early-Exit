@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import fcntl
 import json
+import multiprocessing as mp
 import os
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
@@ -78,7 +79,7 @@ def ensure_reference(index_rows: list[dict], graph_dir: Path = GRAPH_DIR, path: 
             name, e = compute_entry(str(graph_dir / r["path"]), r["split"], cover_time, lb_time)
             new[name] = e
     else:
-        with ProcessPoolExecutor(workers) as ex:
+        with ProcessPoolExecutor(workers, mp_context=mp.get_context("spawn")) as ex:
             futs = [ex.submit(compute_entry, str(graph_dir / r["path"]), r["split"], cover_time, lb_time) for r in todo]
             for fu in as_completed(futs):
                 name, e = fu.result()

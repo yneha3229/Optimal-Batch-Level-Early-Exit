@@ -24,7 +24,7 @@ Method (the fixed skeleton, outside the EVOLVE block)
 Only the code between the EVOLVE-BLOCK markers is rewritten by the LLM. Allowed imports: numpy, math, random,
 itertools, collections, heapq, time. No file or network access.
 """
-import math
+import math  # noqa: F401  (available to evolved code)
 import random
 import time
 

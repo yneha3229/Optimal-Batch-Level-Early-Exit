@@ -9,7 +9,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import numpy as np
 import pytest
 
 from minrank.baselines.clique_cover import conflict_graph, dsatur, num_colors

@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import multiprocessing as mp
 import os
 import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
@@ -31,7 +32,12 @@ from .exact.lower import mais
 from .exact.sat import sat_descend
 
 ROOT = Path(__file__).resolve().parent
-METHODS = ("dsatur", "random_greedy", "tabucol", "factor_tabu", "factor_anneal", "alt_isd", "sat")
+METHODS = ("dsatur", "random_greedy", "tabucol", "factor_tabu", "factor_anneal", "alt_isd", "sat", "ldg",
+           "partial_cover")
+OPTIONAL_METHODS = ("sdp",)  # needs cvxpy; run only when named with --methods
+# Pool workers are spawned, never forked: a forked worker would inherit a SAT forkserver started by its parent
+# and fail on its next SAT call (ChildProcessError).
+SPAWN = mp.get_context("spawn")
 RESULT_FIELDS = ["graph", "split", "family", "n", "density", "method", "budget", "seed", "rank", "seconds", "verified"]
 
 
@@ -47,6 +53,15 @@ def run_method(g: Graph, method: str, budget: float, seed: int) -> list[int]:
         return sat_descend(g, budget, rng)
     if method == "alt_isd":
         return alt_search(g, budget, rng).rows
+    if method == "ldg":
+        from .baselines.ldg import ldg_rows
+        return ldg_rows(g)
+    if method == "partial_cover":
+        from .baselines.partial_cover import partial_cover_rows
+        return partial_cover_rows(g, budget, rng)
+    if method == "sdp":
+        from .baselines.sdp import sdp_rows
+        return sdp_rows(g, budget, rng)
     raise ValueError(f"unknown method {method}")
 
 
@@ -120,7 +135,7 @@ def main() -> None:
     ap.add_argument("--split", nargs="+", default=["train", "val", "test"])
     ap.add_argument("--family", nargs="*", default=None, help="restrict to these families")
     ap.add_argument("--max-n", type=int, default=10 ** 9)
-    ap.add_argument("--methods", nargs="+", default=list(METHODS), choices=METHODS)
+    ap.add_argument("--methods", nargs="+", default=list(METHODS), choices=METHODS + OPTIONAL_METHODS)
     ap.add_argument("--budgets", nargs="+", type=float, default=[1.0, 10.0])
     ap.add_argument("--seeds", nargs="+", type=int, default=[0, 1, 2])
     ap.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) - 1))
@@ -137,7 +152,7 @@ def main() -> None:
     if a.lower_only:
         out = a.out.parent / "lower_bounds.csv"
         out.parent.mkdir(parents=True, exist_ok=True)
-        with out.open("w", newline="") as f, ProcessPoolExecutor(a.workers) as ex:
+        with out.open("w", newline="") as f, ProcessPoolExecutor(a.workers, mp_context=SPAWN) as ex:
             w = csv.DictWriter(f, ["graph", "lb", "proven_max", "mais_upper", "seconds"])
             w.writeheader()
             futs = [ex.submit(_lb_job, str(a.graphs / r["path"]), r["name"], a.lb_time) for r in idx]
@@ -151,7 +166,7 @@ def main() -> None:
     done = existing_keys(a.out)
     new = not done and (not a.out.exists() or a.out.stat().st_size == 0)
     graphs = {r["name"]: Graph.load(a.graphs / r["path"]) for r in idx}
-    with a.out.open("a", newline="") as f, ProcessPoolExecutor(a.workers) as ex:
+    with a.out.open("a", newline="") as f, ProcessPoolExecutor(a.workers, mp_context=SPAWN) as ex:
         w = csv.DictWriter(f, RESULT_FIELDS)
         if new:
             w.writeheader()
@@ -161,8 +176,8 @@ def main() -> None:
             meta = {"graph": r["name"], "split": r["split"], "family": r["family"], "n": int(r["n"]),
                     "density": float(r["density"])}
             for m in a.methods:
-                budgets = [0.0] if m == "dsatur" else a.budgets
-                seeds = [0] if m == "dsatur" else a.seeds
+                budgets = [0.0] if m in ("dsatur", "ldg") else a.budgets  # deterministic, budget-free
+                seeds = [0] if m in ("dsatur", "ldg") else a.seeds
                 for b in budgets:
                     for s in seeds:
                         if job_key(r["name"], m, b, s) in done:

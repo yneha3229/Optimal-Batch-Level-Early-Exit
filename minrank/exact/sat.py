@@ -121,8 +121,10 @@ def rank_at_most(g: Graph, r: int, time_limit: float | None = None, solver: str 
         ctx = _context()
         parent, child = ctx.Pipe(duplex=False)
         p = ctx.Process(target=_solve_child, args=(child, g, r, solver), daemon=True)
+        started = False
         try:
             p.start()
+            started = True
             child.close()
             left = max(0.0, time_limit - (time.perf_counter() - t0))
             if not parent.poll(left):
@@ -138,7 +140,8 @@ def rank_at_most(g: Graph, r: int, time_limit: float | None = None, solver: str 
             model_list = payload
         finally:
             parent.close()
-            p.join()
+            if started:  # joining an unstarted process would mask the real start-up error
+                p.join()
     if model_list is None:
         return False
     model = set(x for x in model_list if x > 0)

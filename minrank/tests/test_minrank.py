@@ -360,3 +360,24 @@ def test_existing_keys_rejects_foreign_header(tmp_path):
     p.write_text("a,b\n1,2\n")
     with pytest.raises(SystemExit):
         existing_keys(p)
+
+
+def test_sweep_pool_survives_a_running_sat_forkserver(tmp_path):
+    """Regression: start the SAT forkserver in the parent, then run SAT jobs in the sweep's worker pool."""
+    from minrank.bench.instances import Instance, materialize
+    g = gen.planted(20, 4, 0.0, 2, directed=True)
+    materialize(tmp_path / "graphs", [Instance(g.name, "val", lambda: g)])
+    script = (
+        "import sys\n"
+        "from minrank.bench import generators as gen\n"
+        "from minrank.exact.sat import rank_at_most\n"
+        "assert rank_at_most(gen.cycle(5), 3, time_limit=30)  # starts the forkserver in this process\n"
+        "from minrank import run_baselines\n"
+        f"sys.argv = ['x', '--graphs', r'{tmp_path / 'graphs'}', '--split', 'val', '--out', r'{tmp_path / 'r.csv'}',"
+        f" '--certs', r'{tmp_path / 'c'}', '--methods', 'sat', '--budgets', '3', '--seeds', '0', '1', '--workers', '2']\n"
+        "run_baselines.main()\n")
+    r = subprocess.run([sys.executable, "-c", script], cwd=ROOT, capture_output=True, text=True, timeout=300)
+    assert r.returncode == 0, r.stderr[-2000:]
+    import pandas as pd
+    d = pd.read_csv(tmp_path / "r.csv")
+    assert len(d) == 2 and d["verified"].all() and (d["rank"] <= 4).all()
