@@ -58,6 +58,15 @@ def instances(sizes: tuple[int, ...] = SIZES, densities: tuple[float, ...] = DEN
         ("circ_41_1-5-8", lambda: gen.circulant(41, (1, 5, 8))), ("circ_61_1-3-11", lambda: gen.circulant(61, (1, 3, 11))),
     ]
     out += [Instance(name, "test", b) for name, b in structured]
+    # Planted-rank families: the true minrank is <= the planted rank (known optimum when it meets the lower bound).
+    # Same seed split as G(n, p): seeds 0-3 train, 4 val, 5-7 test.
+    for n, r in ((30, 6), (50, 8), (100, 10)):
+        for d in (False, True):
+            kind = "planted_d" if d else "planted"
+            for seed, split in SPLIT_OF_SEED.items():
+                out.append(Instance(f"{kind}_n{n}_r{r}_e0.0_s{seed}", split,
+                                    lambda n=n, r=r, d=d, s=seed: gen.planted(n, r, 0.0, s, directed=d)))
+    out += [Instance(f"orth_{k}", "test", lambda k=k: gen.orthogonality(k)) for k in (5, 6, 7)]
     return out
 
 

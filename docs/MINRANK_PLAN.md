@@ -446,6 +446,24 @@ successive-halving baselines). The schedule below only orders the work. Claude w
 | 6 | figures, results table | tables | tables | ablations |
 | 7 | write-up (everyone) | | | |
 
+### 8.6 Day-1 findings (21 November 2026, CPU container, single runs; treat as preliminary)
+
+1. **No gap on small graphs.** On about 900 random graphs with 8–12 vertices, and on 26 structured graphs with
+   7–15 vertices (Kneser, Paley, Mycielski, cycle complements, cycle powers, circulants and their complements),
+   `minrk_2` found by SAT equals the clique cover (TabuCol) in every case. Random `G(n, p)` alone is therefore a weak
+   benchmark: at these sizes the clique cover is already optimal.
+2. **Planted families have certified gaps.** Two generators were added: `orthogonality(k)` (odd vectors of `F_2^k`,
+   `minrk_2 ≤ k`) and `planted(n, r)` (random factors of rank `r`). Examples: `orth_6` has minrank 6 (= lower bound)
+   against clique cover 8; directed planted `n = 100, r = 10` has minrank 10 (= lower bound) against clique cover 23.
+3. **Generic local search fails there.** Bit-flip tabu (B6), annealing (B7) and alternating information-set decoding
+   (B5) never get one rank below the clique cover on planted graphs, even when started at rank 12 with a planted
+   rank of 8. (B5 first collapsed to the trivial state `v_j = 0`; fixed by making the diagonal a hard pivot.)
+4. **SAT recovers planted ranks in seconds** (`orth_6`, `orth_7`, planted `n ≤ 50`: 0–4 s) but times out on
+   `G(20, 0.5)` at `r = 6` after 120 s. SAT (B9, `sat_descend`) is the baseline to beat on planted instances.
+
+Consequence for Option A: score evolved heuristics on planted and structured families (known optima, real gaps), not
+on random graphs alone; compare against SAT at equal wall-clock, not only against local search.
+
 ## 9. Risks
 
 | Risk | Effect | Mitigation |

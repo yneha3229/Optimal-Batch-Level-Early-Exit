@@ -80,3 +80,50 @@ def mycielski(k: int) -> Graph:
 def cycle(n: int) -> Graph:
     g = circulant(n, (1,))
     return Graph(g.n, g.out, False, f"cycle_{n}", "cycle", {})
+
+
+def orthogonality(k: int) -> Graph:
+    """Odd-weight vectors of F_2^k; i knows j iff <v_i, v_j> = 1 (mod 2).
+
+    A[i, j] = <v_i, v_j> fits by construction (diagonal 1, zero exactly on non-edges), so minrk_2 <= k with
+    n = 2^(k-1) vertices; clique covers are typically much larger.
+    """
+    if not 2 <= k <= 12:
+        raise ValueError("k in [2, 12]")
+    vecs = np.array([[(x >> b) & 1 for b in range(k)] for x in range(1, 1 << k) if bin(x).count("1") % 2],
+                    dtype=np.int64)  # (n, k)
+    gram = (vecs @ vecs.T) & 1  # (n, n)
+    adj = gram.astype(bool)
+    np.fill_diagonal(adj, False)
+    return Graph.from_adjacency(adj, False, f"orth_{k}", "orthogonality", {"k": k, "planted_rank": k})
+
+
+def planted(n: int, r: int, extra_p: float, seed: int, directed: bool = True) -> Graph:
+    """Graph with a planted fitting matrix of rank <= r.
+
+    Draw u_i, v_i in F_2^r with <u_i, v_i> = 1 (resample until true). Side information S_i = {j : <u_i, v_j> = 1}
+    plus each other pair independently with probability extra_p (extra edges only add free entries, so the planted
+    matrix still fits). Undirected: u_i = v_i and the support is symmetrised (still fits since <u_i,u_j> is symmetric).
+    """
+    if not 1 <= r <= n:
+        raise ValueError("need 1 <= r <= n")
+    rng = np.random.default_rng(seed)
+    U = np.zeros((n, r), dtype=np.int64)
+    V = np.zeros((n, r), dtype=np.int64)
+    for i in range(n):
+        while True:
+            u = rng.integers(0, 2, r)
+            v = u.copy() if not directed else rng.integers(0, 2, r)
+            if int(u @ v) % 2 == 1:
+                U[i], V[i] = u, v
+                break
+    adj = ((U @ V.T) & 1).astype(bool)  # (n, n): A[i, j] = <u_i, v_j>
+    extra = rng.random((n, n)) < extra_p
+    if not directed:
+        extra = np.triu(extra, 1)
+        extra = extra | extra.T
+    adj = adj | extra
+    np.fill_diagonal(adj, False)
+    kind = "planted_d" if directed else "planted"
+    return Graph.from_adjacency(adj, directed, f"{kind}_n{n}_r{r}_e{extra_p}_s{seed}", kind,
+                                {"planted_rank": r, "extra_p": extra_p, "seed": seed})

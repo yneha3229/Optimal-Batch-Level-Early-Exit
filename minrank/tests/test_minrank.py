@@ -198,3 +198,51 @@ def test_directed_pipeline():
     res = factor_search(g, 1.0, np.random.default_rng(0))
     assert verify(g, res.rows) == res.rank
     assert mais(g, 5).value <= res.rank
+
+
+# ---- planted families and B5 ---------------------------------------------------------------------------------------
+@pytest.mark.parametrize("directed", [False, True])
+def test_planted_rank_is_an_upper_bound(directed):
+    g = gen.planted(30, 5, 0.1, 3, directed=directed)
+    rows = rank_at_most(g, 5, time_limit=60)
+    assert rows and verify(g, rows) <= 5
+    assert mais(g, 5).value <= 5
+
+
+def test_orthogonality_graph():
+    g = gen.orthogonality(5)
+    assert g.n == 16
+    assert mais(g, 5).value <= 5
+    rows = rank_at_most(g, 5, time_limit=60)
+    assert rows and verify(g, rows) <= 5
+
+
+def test_solve_subset_satisfies_pivots():
+    from minrank.baselines.alt_f2 import solve_subset
+    rng = np.random.default_rng(0)
+    for _ in range(50):
+        m, r = int(rng.integers(1, 20)), int(rng.integers(1, 8))
+        x_true = rng.integers(0, 2, r)
+        A = rng.integers(0, 2, (m, r))
+        b = (A @ x_true) & 1  # consistent system
+        x = solve_subset(A, b, rng.permutation(m), rng)
+        assert (((A @ x) & 1) == b).all()
+
+
+def test_decode_never_drops_the_diagonal():
+    from minrank.baselines.alt_f2 import best_decode
+    rng = np.random.default_rng(1)
+    A = rng.integers(0, 2, (12, 4))
+    A[0] = [1, 0, 0, 0]
+    b = np.zeros(12, dtype=np.int64)
+    b[0] = 1
+    x, _ = best_decode(A, b, np.zeros(4, dtype=np.int64), 16, rng, hard=0)
+    assert ((A[0] @ x) & 1) == 1
+
+
+def test_alt_search_valid():
+    from minrank.baselines.alt_f2 import alt_search
+    g = gen.gnp(25, 0.5, 9)
+    res = alt_search(g, 1.5, np.random.default_rng(0))
+    assert verify(g, res.rows) == res.rank
+    assert mais(g, 5).value <= res.rank <= num_colors(dsatur(conflict_graph(g)))

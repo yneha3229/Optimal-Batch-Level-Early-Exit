@@ -132,3 +132,24 @@ def minrank_bruteforce(g: Graph) -> int:
                 rows[i] |= 1 << j
         best = min(best, rank_f2(rows))
     return best
+
+
+def sat_descend(g: Graph, time_limit: float, rng: np.random.Generator, cover_fraction: float = 0.1) -> list[int]:
+    """B9 anytime: clique cover (TabuCol) for `cover_fraction` of the budget, then SAT for rank r-1, r-2, ... until the
+    budget is spent or UNSAT (then the result is proven optimal). Returns the best verified rows."""
+    import time
+
+    from ..baselines.clique_cover import clique_cover_rows
+
+    deadline = time.perf_counter() + time_limit
+    rows = clique_cover_rows(g, "tabucol", time_limit * cover_fraction, rng)
+    best = verify(g, rows)
+    while best > 1:
+        left = deadline - time.perf_counter()
+        if left <= 0.05:
+            break
+        res = rank_at_most(g, best - 1, time_limit=left)
+        if res is None or res is False:
+            break
+        rows, best = res, verify(g, res)
+    return rows

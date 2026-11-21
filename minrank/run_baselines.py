@@ -21,15 +21,17 @@ from pathlib import Path
 
 import numpy as np
 
+from .baselines.alt_f2 import alt_search
 from .baselines.clique_cover import clique_cover_rows
 from .baselines.factor_search import factor_search
 from .bench.instances import load_index
 from .core.graph import Graph
 from .core.verify import load_certificate, save_certificate, verify
 from .exact.lower import mais
+from .exact.sat import sat_descend
 
 ROOT = Path(__file__).resolve().parent
-METHODS = ("dsatur", "random_greedy", "tabucol", "factor_tabu", "factor_anneal")
+METHODS = ("dsatur", "random_greedy", "tabucol", "factor_tabu", "factor_anneal", "alt_isd", "sat")
 RESULT_FIELDS = ["graph", "split", "family", "n", "density", "method", "budget", "seed", "rank", "seconds", "verified"]
 
 
@@ -41,6 +43,10 @@ def run_method(g: Graph, method: str, budget: float, seed: int) -> list[int]:
         return factor_search(g, budget, rng, mode="tabu").rows
     if method == "factor_anneal":
         return factor_search(g, budget, rng, mode="anneal").rows
+    if method == "sat":
+        return sat_descend(g, budget, rng)
+    if method == "alt_isd":
+        return alt_search(g, budget, rng).rows
     raise ValueError(f"unknown method {method}")
 
 
