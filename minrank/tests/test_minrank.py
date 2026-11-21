@@ -246,3 +246,117 @@ def test_alt_search_valid():
     res = alt_search(g, 1.5, np.random.default_rng(0))
     assert verify(g, res.rows) == res.rank
     assert mais(g, 5).value <= res.rank <= num_colors(dsatur(conflict_graph(g)))
+
+
+# ---- review fixes: budgets, child errors, certificates, CSV dedup, descent -----------------------------------------
+import subprocess  # noqa: E402
+import sys  # noqa: E402
+import time  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[2]
+SLACK = 0.75  # seconds allowed past a budget for process kill / final verification
+
+
+def test_rank_at_most_time_limit_includes_encoding():
+    g = gen.gnp(100, 0.3, 0)  # ~7,000 constrained pairs; encoding alone takes ~1 s at r = 40
+    t = time.perf_counter()
+    res = rank_at_most(g, 40, time_limit=0.5)
+    assert time.perf_counter() - t < 0.5 + 0.3  # before the fix: 0.5 s + full encoding time
+    assert res is None or res is False or verify(g, res) <= 40
+
+
+def test_sat_descend_respects_budget():
+    from minrank.exact.sat import sat_descend
+    g = gen.gnp(100, 0.3, 0)
+    t = time.perf_counter()
+    rows = sat_descend(g, 1.5, np.random.default_rng(0))
+    assert time.perf_counter() - t < 1.5 + SLACK
+    verify(g, rows)
+
+
+def test_alt_search_respects_budget():
+    from minrank.baselines.alt_f2 import alt_search
+    g = gen.planted(100, 10, 0.0, 0, directed=True)
+    t = time.perf_counter()
+    res = alt_search(g, 1.0, np.random.default_rng(0), trials=32)  # one full sweep takes ~0.5-0.9 s here
+    assert time.perf_counter() - t < 1.0 + 0.25  # before the fix the deadline was only checked between sweeps
+    assert verify(g, res.rows) == res.rank
+
+
+def test_sat_child_error_is_reported():
+    with pytest.raises(RuntimeError, match="SAT child failed"):
+        rank_at_most(gen.cycle(5), 3, time_limit=30, solver="no-such-solver")
+
+
+def test_sat_after_threaded_cpsat_in_same_process():
+    g = gen.planted(30, 5, 0.0, 1, directed=False)
+    assert mais(g, 2, workers=4).value <= 5  # leaves CP-SAT worker threads behind in this process
+    rows = rank_at_most(g, 5, time_limit=60)
+    assert rows and verify(g, rows) <= 5
+
+
+def test_sat_descend_reaches_orthogonality_optimum():
+    from minrank.exact.sat import sat_descend
+    g = gen.orthogonality(6)  # minrk = 6 (lower bound 6, planted 6); clique cover 8
+    assert verify(g, sat_descend(g, 20, np.random.default_rng(0))) == 6
+
+
+def test_factor_search_descends_below_its_start():
+    g = gen.gnp(20, 0.5, 4)  # DSatur gives 7; 6 is reachable
+    assert num_colors(dsatur(conflict_graph(g))) == 7
+    res = factor_search(g, 3, np.random.default_rng(0), cover_fraction=0.0)  # start = DSatur, no TabuCol
+    assert res.history[0][1] == 7 and res.rank <= 6 and len(res.history) >= 2
+
+
+@pytest.mark.xfail(strict=False, reason="target for Option A: local search does not yet find planted gaps (day-1)")
+@pytest.mark.parametrize("method", ["tabu", "anneal", "alt"])
+def test_local_search_finds_orthogonality_gap(method):
+    from minrank.baselines.alt_f2 import alt_search
+    g = gen.orthogonality(6)
+    rng = np.random.default_rng(0)
+    res = alt_search(g, 5, rng) if method == "alt" else factor_search(g, 5, rng, mode=method)
+    assert res.rank <= 7  # clique cover is 8
+
+
+def test_keep_best_rejects_foreign_and_stale_certificates(tmp_path):
+    from minrank.run_baselines import keep_best
+    a = gen.gnp(20, 0.5, 1)
+    b = Graph(a.n, gen.gnp(20, 0.5, 2).out, False, a.name, a.family)  # same name, different graph
+    assert a.digest() != b.digest()
+    rows_a = clique_cover_rows(a, "tabucol", 0.3, np.random.default_rng(0))
+    rows_b = [1 << i for i in range(b.n)]  # identity: rank 20, worse than any clique cover
+    assert keep_best(tmp_path, a, rows_a, "a")
+    assert keep_best(tmp_path, b, rows_b, "b")  # foreign certificate must not block b
+    assert load_certificate(tmp_path / f"{a.name}.json")["digest"] == b.digest()
+    assert not keep_best(tmp_path, b, rows_b, "b-again")  # equal rank: keep existing
+    rows_b2 = clique_cover_rows(b, "tabucol", 0.3, np.random.default_rng(0))
+    assert keep_best(tmp_path, b, rows_b2, "better")  # strictly better replaces
+    # corrupt the stored rows (same digest): must be treated as absent
+    import json
+    p = tmp_path / f"{b.name}.json"
+    d = json.loads(p.read_text())
+    d["rows"] = ["0"] * b.n
+    p.write_text(json.dumps(d))
+    assert keep_best(tmp_path, b, rows_b, "after-corruption")
+
+
+def test_sweep_rerun_adds_no_duplicate_rows(tmp_path):
+    from minrank.bench.instances import Instance, materialize
+    g = gen.gnp(20, 0.5, 3)
+    materialize(tmp_path / "graphs", [Instance(g.name, "val", lambda: g)])
+    cmd = [sys.executable, "-m", "minrank.run_baselines", "--graphs", str(tmp_path / "graphs"), "--split", "val",
+           "--out", str(tmp_path / "res.csv"), "--certs", str(tmp_path / "certs"), "--methods", "dsatur",
+           "random_greedy", "--budgets", "0.2", "0.2", "--seeds", "0", "--workers", "1"]
+    for _ in range(2):
+        subprocess.run(cmd, cwd=ROOT, check=True, capture_output=True, text=True)
+    lines = (tmp_path / "res.csv").read_text().strip().splitlines()
+    assert len(lines) == 1 + 2  # header + dsatur + one random_greedy row (repeated budget deduplicated too)
+
+
+def test_existing_keys_rejects_foreign_header(tmp_path):
+    from minrank.run_baselines import existing_keys
+    p = tmp_path / "x.csv"
+    p.write_text("a,b\n1,2\n")
+    with pytest.raises(SystemExit):
+        existing_keys(p)

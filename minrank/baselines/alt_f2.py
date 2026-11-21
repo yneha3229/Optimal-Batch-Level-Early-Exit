@@ -10,8 +10,12 @@ constrained mask M. With U fixed the constraints on column v_j are LINEAR:
 so updating v_j is a decoding problem: minimise the number of violated equations (Hamming distance between
 U[C_j] v_j and t_j). Exact minimum-distance decoding is NP-hard; we use Prange-style information-set decoding: pick
 a random order of the equations, take the first r linearly independent ones, solve them exactly (free variables
-random), count violations of all equations, keep the best of `trials` attempts and of the current v_j. The update is
-therefore monotone: the total cost never increases. Rows u_i are updated symmetrically with V fixed.
+random), count violations of all equations, keep the best of `trials` attempts and of the current v_j. The
+diagonal equation <u_j, v_j> = 1 is a hard constraint: it is always the first pivot and carries weight m + 1 in the
+per-column cost. Each column/row update therefore never increases its own *weighted* cost, but the unweighted total
+(number of violated constraints) can rise when a diagonal violation is traded for several off-diagonal ones;
+`search_fixed_rank_alt` keeps the best state seen, so the returned state is the best found. Rows u_i are updated
+symmetrically with V fixed.
 
 Rank reduction is as in factor_search: start from a clique cover, drop the cheapest column, sweep until cost 0 or a
 stall, then restart from a perturbation; on success go one rank lower.
@@ -105,15 +109,24 @@ def total_cost(M: np.ndarray, U: np.ndarray, V: np.ndarray) -> int:
     return int((M & (P != np.eye(M.shape[0], dtype=np.int64))).sum())
 
 
-def sweep(M: np.ndarray, U: np.ndarray, V: np.ndarray, trials: int, rng: np.random.Generator) -> int:
-    """One pass over all columns of V then all rows of U, in random order. In place. Returns the new cost."""
+def sweep(M: np.ndarray, U: np.ndarray, V: np.ndarray, trials: int, rng: np.random.Generator,
+          deadline: float | None = None) -> int:
+    """One pass over all columns of V then all rows of U, in random order. In place. Returns the new total cost.
+
+    If `deadline` passes mid-sweep the pass stops early; the state is still consistent (every update is a complete
+    column or row replacement), so the returned cost is exact.
+    """
     n = M.shape[0]
     for j in rng.permutation(n):  # v_j with U fixed: equations over C_j = {i : M[i, j]}
+        if deadline is not None and time.perf_counter() > deadline:
+            return total_cost(M, U, V)
         C = np.flatnonzero(M[:, j])
         b = (C == j).astype(np.int64)
         V[j], _ = best_decode(U[C].astype(np.int64), b, V[j].astype(np.int64), trials, rng,
                               hard=int(np.flatnonzero(C == j)[0]))
     for i in rng.permutation(n):  # u_i with V fixed: equations over {j : M[i, j]}
+        if deadline is not None and time.perf_counter() > deadline:
+            return total_cost(M, U, V)
         C = np.flatnonzero(M[i])
         b = (C == i).astype(np.int64)
         U[i], _ = best_decode(V[C].astype(np.int64), b, U[i].astype(np.int64), trials, rng,
@@ -133,7 +146,7 @@ def search_fixed_rank_alt(M: np.ndarray, U0: np.ndarray, V0: np.ndarray, deadlin
     while best_c > 0:
         if time.perf_counter() > deadline:
             return None
-        c = sweep(M, U, V, trials, rng)
+        c = sweep(M, U, V, trials, rng, deadline)
         if c < best_c:
             best_c, best, stall = c, (U.copy(), V.copy()), 0
         else:

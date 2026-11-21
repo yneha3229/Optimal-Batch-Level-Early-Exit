@@ -11,6 +11,7 @@ Entries on edges are unconstrained and get no clauses.
 from __future__ import annotations
 
 import multiprocessing as mp
+import time
 from itertools import product
 
 import numpy as np
@@ -37,6 +38,7 @@ def encode(g: Graph, r: int) -> tuple[list[list[int]], list[list[int]], list[lis
     pool = _Pool()
     u = [[pool.new() for _ in range(r)] for _ in range(g.n)]
     v = [[pool.new() for _ in range(r)] for _ in range(g.n)]
+    assert u[-1][-1] == _var_u(g.n, r, g.n - 1, r - 1) and v[-1][-1] == _var_v(g.n, r, g.n - 1, r - 1)
     cnf: list[list[int]] = []
     for i in range(g.n):
         for j in [i] + list(iter_bits(g.forbidden(i))):
@@ -57,44 +59,92 @@ def encode(g: Graph, r: int) -> tuple[list[list[int]], list[list[int]], list[lis
     return cnf, u, v
 
 
-def _solve(cnf: list[list[int]], solver: str) -> list[int] | None:
+def _var_u(n: int, r: int, i: int, k: int) -> int:
+    """Index of u[i][k] in `encode` (u vars are allocated first, row-major)."""
+    return 1 + i * r + k
+
+
+def _var_v(n: int, r: int, j: int, k: int) -> int:
+    """Index of v[j][k] in `encode` (v vars follow the n*r u vars, row-major)."""
+    return 1 + n * r + j * r + k
+
+
+def _encode_and_solve(g: Graph, r: int, solver: str) -> list[int] | None:
     """Model (list of literals) if SAT, None if UNSAT."""
+    cnf, _, _ = encode(g, r)
     with Solver(name=solver, bootstrap_with=cnf) as s:
         return s.get_model() if s.solve() else None
 
 
-def _solve_child(conn, cnf: list[list[int]], solver: str) -> None:
-    conn.send(_solve(cnf, solver))
-    conn.close()
+def _solve_child(conn, g: Graph, r: int, solver: str) -> None:
+    """Child entry point: encode + solve, send ("ok", model) or ("err", traceback text)."""
+    import traceback
+
+    try:
+        msg = ("ok", _encode_and_solve(g, r, solver))
+    except BaseException:  # report everything, including MemoryError, to the parent
+        msg = ("err", traceback.format_exc())
+    try:
+        conn.send(msg)
+    finally:
+        conn.close()
+
+
+_CTX = None
+
+
+def _context():
+    """forkserver context: children fork from a clean single-threaded server, never from a caller that may hold
+    native threads (CP-SAT, BLAS). The server preloads this module so each child starts fast."""
+    global _CTX
+    if _CTX is None:
+        _CTX = mp.get_context("forkserver")
+        _CTX.set_forkserver_preload(["minrank.exact.sat"])
+    return _CTX
 
 
 def rank_at_most(g: Graph, r: int, time_limit: float | None = None, solver: str = "cadical153"
                  ) -> list[int] | bool | None:
     """Fitting rows of rank <= r if SAT; False if UNSAT (proof minrk > r); None if the time limit hit.
 
-    With a time limit the solver runs in a forked child that is killed at the deadline: pysat's solve_limited does
-    not release the GIL, so an in-process timer thread can never fire.
+    With a time limit, encoding and solving both run in a child process that is killed when `time_limit` seconds
+    (measured from entry to this function, so process start-up and encoding count) have passed. pysat's
+    solve_limited does not release the GIL, so an in-process timer cannot interrupt the solver. Errors in the child
+    are re-raised here with the child's traceback.
     """
-    cnf, u, v = encode(g, r)
+    if not 1 <= r <= g.n:
+        raise ValueError(f"need 1 <= r <= n, got r={r}, n={g.n}")
+    t0 = time.perf_counter()
     if time_limit is None:
-        model_list = _solve(cnf, solver)
+        model_list = _encode_and_solve(g, r, solver)
     else:
-        ctx = mp.get_context("fork")
+        ctx = _context()
         parent, child = ctx.Pipe(duplex=False)
-        p = ctx.Process(target=_solve_child, args=(child, cnf, solver), daemon=True)
-        p.start()
-        child.close()
-        if not parent.poll(time_limit):
-            p.kill()
+        p = ctx.Process(target=_solve_child, args=(child, g, r, solver), daemon=True)
+        try:
+            p.start()
+            child.close()
+            left = max(0.0, time_limit - (time.perf_counter() - t0))
+            if not parent.poll(left):
+                p.kill()
+                return None
+            try:
+                status, payload = parent.recv()
+            except EOFError:
+                p.join()
+                raise RuntimeError(f"SAT child exited without a result (exit code {p.exitcode})") from None
+            if status == "err":
+                raise RuntimeError(f"SAT child failed:\n{payload}")
+            model_list = payload
+        finally:
+            parent.close()
             p.join()
-            return None
-        model_list = parent.recv()
-        p.join()
     if model_list is None:
         return False
     model = set(x for x in model_list if x > 0)
-    U = np.array([[1 if u[i][k] in model else 0 for k in range(r)] for i in range(g.n)], dtype=np.uint8)
-    V = np.array([[1 if v[i][k] in model else 0 for k in range(r)] for i in range(g.n)], dtype=np.uint8)
+    n = g.n
+    U = np.array([[1 if _var_u(n, r, i, k) in model else 0 for k in range(r)] for i in range(n)], dtype=np.uint8)
+    V = np.array([[1 if _var_v(n, r, i, k) in model else 0 for k in range(r)] for i in range(n)], dtype=np.uint8)
     rows = rows_from_factors(U, V)
     rk = verify(g, rows)
     if rk > r:
@@ -136,9 +186,8 @@ def minrank_bruteforce(g: Graph) -> int:
 
 def sat_descend(g: Graph, time_limit: float, rng: np.random.Generator, cover_fraction: float = 0.1) -> list[int]:
     """B9 anytime: clique cover (TabuCol) for `cover_fraction` of the budget, then SAT for rank r-1, r-2, ... until the
-    budget is spent or UNSAT (then the result is proven optimal). Returns the best verified rows."""
-    import time
-
+    budget is spent or UNSAT (then the result is proven optimal). Returns the best verified rows.
+    Total wall-clock stays within `time_limit` plus process-kill latency: every SAT call gets only what is left."""
     from ..baselines.clique_cover import clique_cover_rows
 
     deadline = time.perf_counter() + time_limit
