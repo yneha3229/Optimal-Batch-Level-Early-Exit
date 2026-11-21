@@ -428,6 +428,24 @@ its simulator on synthetic traces in week 2 and switch to real traces when WS3 p
 
 ---
 
+### 8.5 Compressed 7-day schedule (adopted 21 November 2026; full scope kept)
+
+Everything in this document is in scope: Options A, B, C and D, all baselines B1–B10 and L1, directed graphs, the
+reading list, and the early-exit integration (replay simulator, cost-derived rule, certified selection, bandit /
+successive-halving baselines). The schedule below only orders the work. Claude writes code alongside the team.
+
+| Day | Claude (code) | Kushagra: baselines | Neha: exact + Option B | Divyanshu: evolution + early exit |
+|---|---|---|---|---|
+| 1 | `minrank/` core, benchmark, B1/B2/B6/B7/B8, L1, SAT, tests | read Tier 1–2 | read Tier 1–2 | OpenEvolve + vLLM on the A6000 |
+| 2 | B3 LDG, B5 alternating projections, B4, evolve evaluator with trace logging | full baseline sweep (server CPUs) | SAT vs brute force; L1 on all graphs | evolution smoke run with B6 seed |
+| 3 | Option D replay simulator and policies (cost rule, certified, SH, Hyperband, cascade) | 60 s sweep; tables | Option B: exact values (Kneser, Paley, Mycielski) | first real evolution runs (train split) |
+| **G1** | | | | |
+| 4 | online cascade in the live evaluator; B10 SDP; Option C prototype | directed benchmark | Option B: separations, `minrk_2` vs `minrk_3` | held-out runs at equal compute |
+| 5 | fixes, ablations | directed sweep | certify Option B results | cascade savings; Option C if A shows structure |
+| **G2** | | | | |
+| 6 | figures, results table | tables | tables | ablations |
+| 7 | write-up (everyone) | | | |
+
 ## 9. Risks
 
 | Risk | Effect | Mitigation |
