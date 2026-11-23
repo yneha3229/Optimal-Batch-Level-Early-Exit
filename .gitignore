@@ -19,3 +19,4 @@ minrank/evolve/*.tmp*
 
 # raw per-step bandit traces (about 25 MB each); summaries are results/bandit_slopes_*.csv
 results/bandit_*_10seeds.csv
+/minrank/results/unsat_cnf/families/kneser_9_4_r56_indep.cnf.gz

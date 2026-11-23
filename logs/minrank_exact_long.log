@@ -15,3 +15,12 @@ planted_n50_r8_e0.0_s4: lb=7 best=8 proven=False (call_timeout, 3600.32s)
 planted_n50_r8_e0.0_s5: lb=7 best=8 proven=False (call_timeout, 3600.33s)
 planted_n50_r8_e0.0_s1: lb=6 best=8 proven=False (call_timeout, 3600.4s)
 planted_n50_r8_e0.0_s2: lb=7 best=8 proven=False (call_timeout, 4959.15s)
+planted_d_n50_r8_e0.0_s1: lb=8 best=14 proven=False (call_timeout, 3601.26s)
+planted_d_n50_r8_e0.0_s0: lb=8 best=14 proven=False (call_timeout, 3601.46s)
+planted_d_n50_r8_e0.0_s3: lb=8 best=15 proven=False (call_timeout, 3601.81s)
+planted_d_n50_r8_e0.0_s7: lb=8 best=14 proven=False (call_timeout, 3601.81s)
+planted_d_n50_r8_e0.0_s5: lb=8 best=15 proven=False (call_timeout, 3601.91s)
+planted_d_n50_r8_e0.0_s2: lb=8 best=14 proven=False (call_timeout, 3602.05s)
+planted_d_n50_r8_e0.0_s4: lb=8 best=15 proven=False (call_timeout, 3602.09s)
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 5 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
