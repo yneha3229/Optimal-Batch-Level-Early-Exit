@@ -1,0 +1,57 @@
+B=8 round 0: full=3.37s heads_only=3.54s threshold=2.32s threshold+plan=1.78s majority=2.56s unified=1.77s random_collective=1.94s theory=1.85s theory+plan=1.74s
+B=8 round 1: full=3.39s heads_only=3.56s threshold=2.30s threshold+plan=1.79s majority=2.56s unified=1.78s random_collective=1.93s theory=1.87s theory+plan=1.75s
+B=8 round 2: full=3.44s heads_only=3.59s threshold=2.32s threshold+plan=1.81s majority=2.59s unified=1.80s random_collective=1.94s theory=1.87s theory+plan=1.76s
+B=8 round 3: full=3.48s heads_only=3.64s threshold=2.32s threshold+plan=1.83s majority=2.63s unified=1.82s random_collective=1.96s theory=1.89s theory+plan=1.78s
+B=8 round 4: full=3.52s heads_only=3.69s threshold=2.35s threshold+plan=1.85s majority=2.64s unified=1.83s random_collective=1.97s theory=1.89s theory+plan=1.79s
+B=16 round 0: full=3.30s heads_only=3.38s threshold=1.81s threshold+plan=1.79s majority=2.38s unified=1.69s random_collective=1.68s theory=1.53s theory+plan=1.51s
+B=16 round 1: full=3.33s heads_only=3.42s threshold=1.87s threshold+plan=1.82s majority=2.38s unified=1.70s random_collective=1.67s theory=1.51s theory+plan=1.51s
+B=16 round 2: full=3.34s heads_only=3.41s threshold=1.86s threshold+plan=1.81s majority=2.39s unified=1.70s random_collective=1.69s theory=1.53s theory+plan=1.53s
+B=16 round 3: full=3.35s heads_only=3.43s threshold=1.87s threshold+plan=1.83s majority=2.40s unified=1.70s random_collective=1.69s theory=1.52s theory+plan=1.52s
+B=16 round 4: full=3.35s heads_only=3.42s threshold=1.86s threshold+plan=1.83s majority=2.40s unified=1.70s random_collective=1.68s theory=1.52s theory+plan=1.52s
+B=64 round 0: full=3.04s heads_only=3.07s threshold=1.44s threshold+plan=1.41s majority=1.69s unified=1.53s random_collective=1.45s theory=1.24s theory+plan=1.24s
+B=64 round 1: full=3.05s heads_only=3.07s threshold=1.44s threshold+plan=1.41s majority=1.69s unified=1.53s random_collective=1.45s theory=1.24s theory+plan=1.24s
+B=64 round 2: full=3.05s heads_only=3.07s threshold=1.44s threshold+plan=1.42s majority=1.69s unified=1.54s random_collective=1.45s theory=1.24s theory+plan=1.24s
+B=64 round 3: full=3.05s heads_only=3.07s threshold=1.44s threshold+plan=1.42s majority=1.69s unified=1.54s random_collective=1.45s theory=1.24s theory+plan=1.24s
+B=64 round 4: full=3.05s heads_only=3.08s threshold=1.44s threshold+plan=1.42s majority=1.69s unified=1.54s random_collective=1.45s theory=1.25s theory+plan=1.24s
+B=128 round 0: full=3.00s heads_only=3.01s threshold=1.40s threshold+plan=1.40s majority=1.61s unified=1.51s random_collective=1.33s theory=1.25s theory+plan=1.23s
+B=128 round 1: full=3.00s heads_only=3.01s threshold=1.40s threshold+plan=1.40s majority=1.61s unified=1.51s random_collective=1.33s theory=1.26s theory+plan=1.23s
+B=128 round 2: full=3.00s heads_only=3.01s threshold=1.40s threshold+plan=1.40s majority=1.61s unified=1.51s random_collective=1.33s theory=1.25s theory+plan=1.23s
+B=128 round 3: full=3.00s heads_only=3.01s threshold=1.40s threshold+plan=1.40s majority=1.61s unified=1.51s random_collective=1.33s theory=1.26s theory+plan=1.23s
+B=128 round 4: full=3.00s heads_only=3.01s threshold=1.41s threshold+plan=1.40s majority=1.61s unified=1.51s random_collective=1.32s theory=1.26s theory+plan=1.23s
+  B            family  real_speedup  real_lo  real_hi  model_speedup  ho_drop_pts
+  8              full         1.000    1.000    1.000          1.000        0.000
+  8        heads_only         0.953    0.950    0.958          0.945        0.000
+  8         threshold         1.482    1.452    1.500          1.540        0.614
+  8    threshold+plan         1.902    1.891    1.907          1.977        1.049
+  8          majority         1.326    1.317    1.332          1.353        0.782
+  8           unified         1.911    1.902    1.920          1.977        1.049
+  8 random_collective         1.768    1.738    1.784          1.842        0.861
+  8            theory         1.837    1.817    1.863          2.016        0.604
+  8       theory+plan         1.955    1.940    1.965          2.079        0.663
+ 16              full         1.000    1.000    1.000          1.000        0.000
+ 16        heads_only         0.978    0.972    0.979          0.969        0.000
+ 16         threshold         1.795    1.780    1.822          1.811        0.614
+ 16    threshold+plan         1.831    1.824    1.844          1.829        0.614
+ 16          majority         1.396    1.386    1.399          1.407        0.683
+ 16           unified         1.964    1.952    1.968          1.987        1.049
+ 16 random_collective         1.986    1.966    1.988          2.019        0.628
+ 16            theory         2.196    2.165    2.207          2.309        0.614
+ 16       theory+plan         2.201    2.186    2.203          2.309        0.614
+ 64              full         1.000    1.000    1.000          1.000        0.000
+ 64        heads_only         0.993    0.992    0.993          0.991        0.000
+ 64         threshold         2.114    2.114    2.115          2.111        0.610
+ 64    threshold+plan         2.154    2.152    2.156          2.156        0.650
+ 64          majority         1.803    1.801    1.805          1.813        0.868
+ 64           unified         1.986    1.985    1.988          1.997        1.052
+ 64 random_collective         2.109    2.105    2.110          2.109        0.600
+ 64            theory         2.454    2.450    2.455          2.481        0.620
+ 64       theory+plan         2.456    2.455    2.460          2.482        0.620
+128              full         1.000    1.000    1.000          1.000        0.000
+128        heads_only         0.996    0.996    0.997          0.996        0.000
+128         threshold         2.134    2.132    2.136          2.146        0.602
+128    threshold+plan         2.135    2.133    2.136          2.146        0.602
+128          majority         1.865    1.864    1.868          1.874        0.707
+128           unified         1.989    1.988    1.990          1.998        1.050
+128 random_collective         2.260    2.260    2.263          2.276        0.577
+128            theory         2.388    2.385    2.391          2.416        0.567
+128       theory+plan         2.438    2.436    2.443          2.466        0.597

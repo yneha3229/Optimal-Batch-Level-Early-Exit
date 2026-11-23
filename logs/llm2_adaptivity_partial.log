@@ -1,0 +1,49 @@
+
+wikitext_qlora: full acc 0.4947; agreement with the full model per exit [0.506, 0.548, 0.582, 0.658, 0.742]
+
+wikitext: full acc 0.4998; agreement with the full model per exit [0.424, 0.462, 0.489, 0.581, 0.703]
+
+wikitext_llama: full acc 0.5368; agreement with the full model per exit [0.449, 0.522, 0.604, 0.67, 0.747]
+          task   metric  budget_pts  B  static_depth  static_drop_pts  adaptive_depth  adaptive_drop_pts   tau  static_speedup  adaptive_speedup  gain_over_static_pct  batch_mean_conf_sd
+wikitext_qlora accuracy         1.0  1         0.940            1.035           0.839              1.808 0.830           1.064             1.192                12.090               0.214
+wikitext_qlora accuracy         1.0  2         0.940            1.035           0.882              1.551 0.800           1.064             1.134                 6.602               0.152
+wikitext_qlora accuracy         1.0  4         0.940            1.035           0.909              1.067 0.775           1.064             1.100                 3.456               0.107
+wikitext_qlora accuracy         1.0  8         0.940            1.035           0.918              1.091 0.755           1.064             1.090                 2.449               0.076
+wikitext_qlora accuracy         1.0 16         0.940            1.035           0.930              0.981 0.750           1.064             1.076                 1.139               0.054
+wikitext_qlora accuracy         1.0 32         0.940            1.035           0.933              0.969 0.745           1.064             1.071                 0.731               0.038
+wikitext_qlora accuracy         1.0 64         0.940            1.035           0.939              0.868 0.745           1.064             1.065                 0.182               0.027
+wikitext_qlora accuracy         3.0  1         0.831            3.083           0.716              3.473 0.710           1.204             1.396                15.971               0.214
+wikitext_qlora accuracy         3.0  2         0.831            3.083           0.754              3.691 0.700           1.204             1.326                10.137               0.152
+wikitext_qlora accuracy         3.0  4         0.831            3.083           0.792              3.099 0.695           1.204             1.263                 4.891               0.107
+wikitext_qlora accuracy         3.0  8         0.831            3.083           0.812              3.032 0.690           1.204             1.232                 2.349               0.076
+wikitext_qlora accuracy         3.0 16         0.831            3.083           0.826              3.002 0.690           1.204             1.211                 0.592               0.054
+wikitext_qlora accuracy         3.0 32         0.831            3.083           0.830              3.009 0.690           1.204             1.205                 0.102               0.038
+wikitext_qlora accuracy         3.0 64         0.831            3.083           0.836              2.959 0.690           1.204             1.196                -0.628               0.027
+      wikitext accuracy         1.0  1         0.968            0.957           0.879              1.738 0.815           1.033             1.138                10.160               0.218
+      wikitext accuracy         1.0  2         0.968            0.957           0.916              1.275 0.780           1.033             1.091                 5.613               0.155
+      wikitext accuracy         1.0  4         0.968            0.957           0.943              1.153 0.765           1.033             1.060                 2.621               0.109
+      wikitext accuracy         1.0  8         0.968            0.957           0.955              0.911 0.750           1.033             1.047                 1.373               0.077
+      wikitext accuracy         1.0 16         0.968            0.957           0.962              0.807 0.740           1.033             1.039                 0.599               0.055
+      wikitext accuracy         1.0 32         0.968            0.957           0.963              0.965 0.730           1.033             1.038                 0.497               0.038
+      wikitext accuracy         1.0 64         0.968            0.957           0.967              0.793 0.725           1.033             1.034                 0.114               0.027
+      wikitext accuracy         3.0  1         0.903            2.871           0.777              3.713 0.695           1.107             1.286                16.220               0.218
+      wikitext accuracy         3.0  2         0.903            2.871           0.838              3.025 0.695           1.107             1.194                 7.852               0.155
+      wikitext accuracy         3.0  4         0.903            2.871           0.868              3.087 0.685           1.107             1.153                 4.138               0.109
+      wikitext accuracy         3.0  8         0.903            2.871           0.888              2.785 0.685           1.107             1.126                 1.713               0.077
+      wikitext accuracy         3.0 16         0.903            2.871           0.894              2.764 0.685           1.107             1.119                 1.107               0.055
+      wikitext accuracy         3.0 32         0.903            2.871           0.899              2.787 0.690           1.107             1.112                 0.454               0.038
+      wikitext accuracy         3.0 64         0.903            2.871           0.901              2.705 0.695           1.107             1.110                 0.309               0.027
+wikitext_llama accuracy         1.0  1         0.967            0.977           0.878              1.505 0.855           1.035             1.139                10.087               0.220
+wikitext_llama accuracy         1.0  2         0.967            0.977           0.921              1.315 0.825           1.035             1.086                 4.960               0.155
+wikitext_llama accuracy         1.0  4         0.967            0.977           0.929              1.350 0.790           1.035             1.077                 4.085               0.111
+wikitext_llama accuracy         1.0  8         0.967            0.977           0.958              0.837 0.790           1.035             1.044                 0.930               0.079
+wikitext_llama accuracy         1.0 16         0.967            0.977           0.961              0.893 0.775           1.035             1.041                 0.613               0.055
+wikitext_llama accuracy         1.0 32         0.967            0.977           0.960              0.919 0.765           1.035             1.041                 0.652               0.039
+wikitext_llama accuracy         1.0 64         0.967            0.977           0.962              0.953 0.760           1.035             1.039                 0.426               0.027
+wikitext_llama accuracy         3.0  1         0.900            2.930           0.782              3.500 0.755           1.111             1.279                15.122               0.220
+wikitext_llama accuracy         3.0  2         0.900            2.930           0.831              3.295 0.740           1.111             1.203                 8.243               0.155
+wikitext_llama accuracy         3.0  4         0.900            2.930           0.856              3.077 0.730           1.111             1.169                 5.165               0.111
+wikitext_llama accuracy         3.0  8         0.900            2.930           0.873              3.059 0.725           1.111             1.145                 3.029               0.079
+wikitext_llama accuracy         3.0 16         0.900            2.930           0.897              2.782 0.730           1.111             1.115                 0.305               0.055
+wikitext_llama accuracy         3.0 32         0.900            2.930           0.893              2.959 0.725           1.111             1.119                 0.720               0.039
+wikitext_llama accuracy         3.0 64         0.900            2.930           0.899              2.798 0.730           1.111             1.112                 0.094               0.027

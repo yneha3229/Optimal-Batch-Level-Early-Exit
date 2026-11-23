@@ -1,0 +1,12 @@
+2026-11-15_21:18:41 START smoke_train
+2026-11-15_21:20:24 OK    smoke_train
+2026-11-15_21:20:24 START smoke_decode
+2026-11-15_21:21:01 OK    smoke_decode
+2026-11-15_21:21:01 OK    sanity smoke_decode = 0.9883
+2026-11-15_21:21:01 START train_qlora
+2026-11-15_22:20:14 OK    train_qlora
+2026-11-15_22:20:14 START train_qfrozen
+2026-11-15_22:46:59 OK    train_qfrozen
+2026-11-15_22:46:59 STAGE train DONE
+2026-11-15_22:47:57 START train_qlora64
+2026-11-16_01:04:02 OK    train_qlora64

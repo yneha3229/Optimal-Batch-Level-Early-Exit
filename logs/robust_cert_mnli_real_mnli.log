@@ -1,0 +1,9 @@
+mnli_real_mnli_B64_cert, attack inputs: hardest_2pct; victims' latency / full-model latency for k attackers
+    policy   m   lam  clean_speedup  clean_acc_drop    k0    k1    k2    k4    k8   k16   k32
+theory m=0 0.0 0.112          1.530           0.015 0.653 0.654 0.655 0.657 0.661 0.670 0.687
+theory m=4 4.0 0.112          1.530           0.015 0.653 0.654 0.655 0.657 0.661 0.670 0.687
+theory m=8 8.0 0.089          1.519           0.015 0.657 0.659 0.660 0.662 0.666 0.674 0.690
+  majority NaN 0.964          1.384           0.011 0.722 0.723 0.722 0.725 0.730 0.815 1.084
+ consensus NaN 0.510          1.169           0.005 0.788 0.848 0.895 0.976 1.042 1.079 1.084
+ threshold NaN 0.873          1.284           0.012 0.772 0.778 0.781 0.791 0.811 0.849 0.927
+pathwise bound check: [{'m': 4, 'k': 1, 'batches': 300, 'violations': 0}, {'m': 4, 'k': 2, 'batches': 300, 'violations': 0}, {'m': 4, 'k': 4, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 1, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 2, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 4, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 8, 'batches': 300, 'violations': 0}]

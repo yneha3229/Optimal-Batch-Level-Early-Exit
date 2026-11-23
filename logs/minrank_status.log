@@ -1,0 +1,10 @@
+2026-11-22_20:25:46 START 03_lower_bounds
+2026-11-22_20:26:52 OK    03_lower_bounds
+2026-11-22_20:26:52 START 02_baselines
+2026-11-23_00:45:09 OK    02_baselines
+2026-11-23_00:45:09 START 04_exact
+2026-11-23_01:05:12 OK    04_exact
+2026-11-23_01:05:12 START 04b_separations
+2026-11-23_01:11:48 OK    04b_separations
+2026-11-23_01:11:48 START 09_aggregate
+2026-11-23_01:11:51 OK    09_aggregate

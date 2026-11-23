@@ -1,0 +1,20 @@
+done wikitext_qloractx128
+done wikitext_qloractx2048
+held-out speedup, budget 3 pt on evolve, costs: graph on RTX3080Ti (SIMULATED)
+         majority  theory  theory_indiv_only  threshold  threshold_nocompact  unified    rho
+T    B                                                                                      
+192  4      1.157   1.112              0.951      0.957                0.956    1.127  10.34
+     16     1.091   0.971              0.921      0.927                0.925    0.968   7.65
+     64     1.113   0.901              0.901      0.855                0.852    1.127   2.63
+3072 4      1.145   1.060              0.969      0.955                0.949    1.130   3.10
+     16     1.102   0.973              0.973      0.920                0.913    0.973   1.75
+     64     1.181   0.989              0.988      1.017                0.908    1.151   0.36
+held-out accuracy drop (points)
+family   majority  theory  theory_indiv_only  threshold  threshold_nocompact  unified
+T    B                                                                               
+192  4       2.14    0.95               0.01       0.00                 0.00     1.75
+     16      1.98    0.41               0.01       0.01                 0.01     0.00
+     64      1.86    0.01               0.01       0.01                 0.01     1.86
+3072 4       2.66    1.51               0.00       0.14                 0.14     3.28
+     16      2.55    0.00               0.00       0.04                 0.04     0.00
+     64      3.36    2.05               2.04       3.67                 0.05     3.03

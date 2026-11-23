@@ -1,0 +1,61 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 4215.21it/s]
+Using the latest cached version of the dataset since nyu-mll/glue couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'qqp' at /home/neha/.cache/huggingface/datasets/nyu-mll___glue/qqp/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c (last modified on Fri Nov  6 08:23:06 2026).
+device vs traces: {'pred_agreement_per_exit': [0.9922, 0.9961, 0.9922, 1.0, 0.9961, 0.9961, 0.9727], 'mean_abs_conf_diff_per_exit': [0.0089, 0.0065, 0.0052, 0.003, 0.0028, 0.0028, 0.0353]}
+B=8 round 0: full=10.00s heads_only=10.61s threshold=6.89s threshold+plan=5.12s majority=7.04s unified=5.93s random_collective=5.13s theory=4.82s theory+plan=4.73s
+B=8 round 1: full=10.31s heads_only=10.86s threshold=6.88s threshold+plan=5.19s majority=7.12s unified=5.99s random_collective=5.17s theory=4.81s theory+plan=4.73s
+B=8 round 2: full=10.35s heads_only=10.87s threshold=6.80s threshold+plan=5.17s majority=7.11s unified=6.00s random_collective=5.12s theory=4.81s theory+plan=4.71s
+B=8 round 3: full=10.35s heads_only=10.89s threshold=6.81s threshold+plan=5.18s majority=7.12s unified=5.99s random_collective=5.14s theory=4.80s theory+plan=4.71s
+B=8 round 4: full=10.35s heads_only=10.86s threshold=6.82s threshold+plan=5.17s majority=7.11s unified=5.99s random_collective=5.12s theory=4.80s theory+plan=4.75s
+B=16 round 0: full=9.67s heads_only=9.77s threshold=4.92s threshold+plan=4.84s majority=6.03s unified=5.56s random_collective=4.00s theory=3.84s theory+plan=3.83s
+B=16 round 1: full=9.68s heads_only=9.78s threshold=4.93s threshold+plan=4.82s majority=6.03s unified=5.56s random_collective=4.01s theory=3.84s theory+plan=3.83s
+B=16 round 2: full=9.68s heads_only=9.78s threshold=4.92s threshold+plan=4.85s majority=6.03s unified=5.56s random_collective=4.01s theory=3.84s theory+plan=3.84s
+B=16 round 3: full=9.67s heads_only=9.77s threshold=4.90s threshold+plan=4.84s majority=6.03s unified=5.56s random_collective=4.04s theory=3.89s theory+plan=3.86s
+B=16 round 4: full=9.68s heads_only=9.78s threshold=4.94s threshold+plan=4.85s majority=6.03s unified=5.57s random_collective=4.01s theory=3.84s theory+plan=3.83s
+B=64 round 0: full=8.86s heads_only=8.89s threshold=3.49s threshold+plan=3.47s majority=4.65s unified=5.07s random_collective=3.46s theory=2.99s theory+plan=3.00s
+B=64 round 1: full=8.87s heads_only=8.90s threshold=3.49s threshold+plan=3.47s majority=4.66s unified=5.08s random_collective=3.46s theory=2.99s theory+plan=3.00s
+B=64 round 2: full=8.87s heads_only=8.90s threshold=3.49s threshold+plan=3.47s majority=4.66s unified=5.08s random_collective=3.46s theory=3.00s theory+plan=3.00s
+B=64 round 3: full=8.87s heads_only=8.90s threshold=3.49s threshold+plan=3.47s majority=4.66s unified=5.08s random_collective=3.46s theory=3.00s theory+plan=3.00s
+B=64 round 4: full=8.87s heads_only=8.90s threshold=3.48s threshold+plan=3.47s majority=4.66s unified=5.07s random_collective=3.46s theory=2.99s theory+plan=3.00s
+B=128 round 0: full=8.86s heads_only=8.87s threshold=3.44s threshold+plan=3.44s majority=4.76s unified=5.06s random_collective=3.40s theory=2.93s theory+plan=2.94s
+B=128 round 1: full=8.86s heads_only=8.87s threshold=3.44s threshold+plan=3.43s majority=4.76s unified=5.06s random_collective=3.40s theory=2.93s theory+plan=2.94s
+B=128 round 2: full=8.86s heads_only=8.88s threshold=3.44s threshold+plan=3.44s majority=4.76s unified=5.07s random_collective=3.40s theory=2.93s theory+plan=2.94s
+B=128 round 3: full=8.86s heads_only=8.88s threshold=3.44s threshold+plan=3.44s majority=4.76s unified=5.07s random_collective=3.41s theory=2.93s theory+plan=2.94s
+B=128 round 4: full=8.86s heads_only=8.88s threshold=3.44s threshold+plan=3.44s majority=4.76s unified=5.07s random_collective=3.40s theory=2.93s theory+plan=2.94s
+  B            family  real_speedup  real_lo  real_hi  model_speedup  ho_drop_pts
+  8              full         1.000    1.000    1.000          1.000        0.000
+  8        heads_only         0.951    0.943    0.953          0.948        0.000
+  8         threshold         1.517    1.453    1.521          1.534        0.633
+  8    threshold+plan         1.999    1.955    2.002          2.003        0.807
+  8          majority         1.453    1.420    1.455          1.471        0.901
+  8           unified         1.725    1.686    1.727          1.738        0.228
+  8 random_collective         2.015    1.950    2.022          2.079        1.148
+  8            theory         2.151    2.077    2.158          2.242        0.638
+  8       theory+plan         2.180    2.114    2.199          2.285        0.703
+ 16              full         1.000    1.000    1.000          1.000        0.000
+ 16        heads_only         0.990    0.989    0.990          0.971        0.000
+ 16         threshold         1.966    1.961    1.973          1.971        0.633
+ 16    threshold+plan         1.999    1.996    2.008          1.995        0.633
+ 16          majority         1.605    1.603    1.607          1.588        0.960
+ 16           unified         1.739    1.739    1.741          1.744        0.228
+ 16 random_collective         2.414    2.397    2.416          2.430        0.915
+ 16            theory         2.520    2.487    2.522          2.564        0.604
+ 16       theory+plan         2.524    2.503    2.528          2.554        0.718
+ 64              full         1.000    1.000    1.000          1.000        0.000
+ 64        heads_only         0.997    0.997    0.997          0.992        0.000
+ 64         threshold         2.545    2.541    2.547          2.527        0.635
+ 64    threshold+plan         2.555    2.554    2.556          2.535        0.635
+ 64          majority         1.905    1.904    1.906          1.899        0.699
+ 64           unified         1.748    1.747    1.749          1.748        0.228
+ 64 random_collective         2.562    2.561    2.563          2.543        0.640
+ 64            theory         2.961    2.959    2.963          2.962        0.551
+ 64       theory+plan         2.958    2.954    2.960          2.959        0.551
+128              full         1.000    1.000    1.000          1.000        0.000
+128        heads_only         0.999    0.998    0.999          0.996        0.000
+128         threshold         2.577    2.576    2.577          2.581        0.617
+128    threshold+plan         2.578    2.577    2.579          2.584        0.617
+128          majority         1.862    1.861    1.863          1.859        0.856
+128           unified         1.749    1.749    1.750          1.749        0.229
+128 random_collective         2.603    2.602    2.604          2.605        0.498
+128            theory         3.023    3.022    3.024          3.033        0.542
+128       theory+plan         3.011    3.009    3.013          3.021        0.542

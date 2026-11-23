@@ -1,0 +1,9 @@
+mnli_enc_graph_B64_lowrho, attack inputs: hardest_2pct; victims' latency / full-model latency for k attackers
+    policy   m   lam  clean_speedup  clean_acc_drop    k0    k1    k2    k4    k8   k16   k32
+theory m=0 0.0 0.070          1.875           0.019 0.531 0.534 0.535 0.540 0.548 0.565 0.601
+theory m=4 4.0 0.070          1.875           0.019 0.531 0.534 0.535 0.540 0.548 0.565 0.601
+theory m=8 8.0 0.070          1.875           0.019 0.531 0.534 0.535 0.540 0.548 0.565 0.601
+  majority NaN 0.949          1.517           0.013 0.663 0.665 0.663 0.666 0.671 0.703 1.006
+ consensus NaN 0.486          1.434           0.015 0.657 0.701 0.743 0.789 0.882 0.950 1.000
+ threshold NaN 0.873          1.722           0.012 0.572 0.580 0.585 0.599 0.626 0.678 0.787
+pathwise bound check: [{'m': 4, 'k': 1, 'batches': 300, 'violations': 0}, {'m': 4, 'k': 2, 'batches': 300, 'violations': 0}, {'m': 4, 'k': 4, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 1, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 2, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 4, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 8, 'batches': 300, 'violations': 0}]

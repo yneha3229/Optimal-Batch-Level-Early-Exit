@@ -1,0 +1,134 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  35%|███▌      | 119/338 [00:00<00:00, 1186.38it/s]Loading weights:  70%|███████   | 238/338 [00:00<00:00, 1120.07it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 998.50it/s] 
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (27419773 > 131072). Running this sequence through the model will result in indexing errors
+train windows 107108, eval windows 2191, LoRA tensors 392, trainable 85.7 M
+step 0/12000 anchor 0.000 agreement per exit [0.035, 0.041, 0.058, 0.159, 0.384] 0.1 min eta 617.7 min
+step 100/12000 anchor 0.129 agreement per exit [0.264, 0.305, 0.352, 0.434, 0.541] 1.1 min eta 133.8 min
+step 200/12000 anchor 0.194 agreement per exit [0.395, 0.42, 0.457, 0.541, 0.646] 2.2 min eta 131.3 min
+step 300/12000 anchor 0.217 agreement per exit [0.388, 0.425, 0.449, 0.525, 0.634] 3.3 min eta 129.7 min
+step 400/12000 anchor 0.216 agreement per exit [0.416, 0.465, 0.498, 0.584, 0.663] 4.4 min eta 128.3 min
+step 500/12000 anchor 0.176 agreement per exit [0.408, 0.479, 0.488, 0.587, 0.665] 5.5 min eta 126.9 min
+step 600/12000 anchor 0.182 agreement per exit [0.396, 0.43, 0.457, 0.53, 0.603] 6.6 min eta 125.7 min
+step 700/12000 anchor 0.151 agreement per exit [0.451, 0.485, 0.519, 0.599, 0.679] 7.7 min eta 124.6 min
+step 800/12000 anchor 0.180 agreement per exit [0.435, 0.448, 0.499, 0.587, 0.641] 8.9 min eta 123.8 min
+step 900/12000 anchor 0.184 agreement per exit [0.402, 0.447, 0.472, 0.555, 0.636] 10.0 min eta 122.7 min
+step 1000/12000 anchor 0.187 agreement per exit [0.451, 0.477, 0.53, 0.623, 0.68] 11.1 min eta 121.6 min
+step 1100/12000 anchor 0.209 agreement per exit [0.433, 0.475, 0.507, 0.558, 0.668] 12.2 min eta 120.4 min
+step 1200/12000 anchor 0.173 agreement per exit [0.444, 0.501, 0.52, 0.58, 0.648] 13.3 min eta 119.2 min
+step 1300/12000 anchor 0.179 agreement per exit [0.472, 0.519, 0.544, 0.615, 0.697] 14.4 min eta 118.1 min
+step 1400/12000 anchor 0.193 agreement per exit [0.432, 0.481, 0.504, 0.576, 0.669] 15.5 min eta 116.9 min
+step 1500/12000 anchor 0.187 agreement per exit [0.428, 0.49, 0.513, 0.62, 0.691] 16.6 min eta 115.8 min
+step 1600/12000 anchor 0.193 agreement per exit [0.486, 0.523, 0.549, 0.615, 0.689] 17.7 min eta 114.7 min
+step 1700/12000 anchor 0.169 agreement per exit [0.458, 0.503, 0.543, 0.612, 0.689] 18.8 min eta 113.5 min
+step 1800/12000 anchor 0.188 agreement per exit [0.463, 0.519, 0.534, 0.608, 0.692] 19.9 min eta 112.4 min
+step 1900/12000 anchor 0.166 agreement per exit [0.456, 0.494, 0.52, 0.59, 0.678] 21.0 min eta 111.3 min
+step 2000/12000 anchor 0.203 agreement per exit [0.458, 0.526, 0.556, 0.619, 0.693] 22.0 min eta 110.2 min
+step 2100/12000 anchor 0.163 agreement per exit [0.494, 0.549, 0.582, 0.658, 0.732] 23.1 min eta 109.1 min
+step 2200/12000 anchor 0.157 agreement per exit [0.526, 0.568, 0.593, 0.658, 0.714] 24.2 min eta 108.0 min
+step 2300/12000 anchor 0.157 agreement per exit [0.449, 0.499, 0.523, 0.604, 0.705] 25.4 min eta 106.9 min
+step 2400/12000 anchor 0.196 agreement per exit [0.428, 0.48, 0.515, 0.591, 0.662] 26.5 min eta 105.8 min
+step 2500/12000 anchor 0.205 agreement per exit [0.496, 0.538, 0.568, 0.637, 0.7] 27.6 min eta 104.7 min
+step 2600/12000 anchor 0.150 agreement per exit [0.481, 0.535, 0.553, 0.621, 0.716] 28.7 min eta 103.5 min
+step 2700/12000 anchor 0.157 agreement per exit [0.535, 0.572, 0.598, 0.644, 0.698] 29.8 min eta 102.4 min
+step 2800/12000 anchor 0.200 agreement per exit [0.454, 0.508, 0.535, 0.594, 0.68] 30.8 min eta 101.3 min
+step 2900/12000 anchor 0.175 agreement per exit [0.486, 0.536, 0.584, 0.634, 0.689] 31.9 min eta 100.2 min
+step 3000/12000 anchor 0.169 agreement per exit [0.506, 0.543, 0.58, 0.635, 0.718] 33.0 min eta 99.1 min
+step 3100/12000 anchor 0.197 agreement per exit [0.487, 0.549, 0.58, 0.634, 0.694] 34.1 min eta 97.9 min
+step 3200/12000 anchor 0.174 agreement per exit [0.483, 0.514, 0.549, 0.612, 0.671] 35.2 min eta 96.8 min
+step 3300/12000 anchor 0.205 agreement per exit [0.493, 0.538, 0.565, 0.643, 0.703] 36.3 min eta 95.7 min
+step 3400/12000 anchor 0.188 agreement per exit [0.482, 0.524, 0.558, 0.602, 0.682] 37.4 min eta 94.5 min
+step 3500/12000 anchor 0.181 agreement per exit [0.491, 0.544, 0.58, 0.61, 0.704] 38.5 min eta 93.4 min
+step 3600/12000 anchor 0.170 agreement per exit [0.557, 0.603, 0.618, 0.674, 0.738] 39.6 min eta 92.3 min
+step 3700/12000 anchor 0.178 agreement per exit [0.534, 0.575, 0.604, 0.651, 0.722] 40.7 min eta 91.2 min
+step 3800/12000 anchor 0.196 agreement per exit [0.484, 0.523, 0.548, 0.613, 0.684] 41.8 min eta 90.1 min
+step 3900/12000 anchor 0.181 agreement per exit [0.49, 0.531, 0.568, 0.634, 0.731] 42.8 min eta 89.0 min
+step 4000/12000 anchor 0.190 agreement per exit [0.489, 0.532, 0.568, 0.632, 0.697] 43.9 min eta 87.8 min
+step 4100/12000 anchor 0.194 agreement per exit [0.535, 0.581, 0.605, 0.652, 0.733] 45.0 min eta 86.7 min
+step 4200/12000 anchor 0.207 agreement per exit [0.476, 0.517, 0.552, 0.622, 0.686] 46.1 min eta 85.6 min
+step 4300/12000 anchor 0.176 agreement per exit [0.526, 0.561, 0.594, 0.643, 0.705] 47.2 min eta 84.5 min
+step 4400/12000 anchor 0.187 agreement per exit [0.494, 0.552, 0.578, 0.616, 0.673] 48.3 min eta 83.4 min
+step 4500/12000 anchor 0.194 agreement per exit [0.488, 0.54, 0.581, 0.639, 0.716] 49.4 min eta 82.3 min
+step 4600/12000 anchor 0.203 agreement per exit [0.489, 0.543, 0.578, 0.646, 0.694] 50.5 min eta 81.2 min
+step 4700/12000 anchor 0.209 agreement per exit [0.475, 0.525, 0.534, 0.632, 0.708] 51.6 min eta 80.1 min
+step 4800/12000 anchor 0.186 agreement per exit [0.51, 0.54, 0.59, 0.626, 0.718] 52.7 min eta 79.0 min
+step 4900/12000 anchor 0.189 agreement per exit [0.476, 0.52, 0.54, 0.61, 0.686] 53.8 min eta 77.9 min
+step 5000/12000 anchor 0.184 agreement per exit [0.507, 0.54, 0.576, 0.649, 0.715] 54.8 min eta 76.8 min
+step 5100/12000 anchor 0.171 agreement per exit [0.521, 0.572, 0.617, 0.673, 0.742] 55.9 min eta 75.7 min
+step 5200/12000 anchor 0.214 agreement per exit [0.487, 0.528, 0.579, 0.64, 0.733] 57.0 min eta 74.6 min
+step 5300/12000 anchor 0.196 agreement per exit [0.479, 0.524, 0.574, 0.637, 0.724] 58.1 min eta 73.4 min
+step 5400/12000 anchor 0.180 agreement per exit [0.512, 0.566, 0.606, 0.663, 0.729] 59.2 min eta 72.3 min
+step 5500/12000 anchor 0.187 agreement per exit [0.504, 0.528, 0.552, 0.607, 0.693] 60.3 min eta 71.2 min
+step 5600/12000 anchor 0.169 agreement per exit [0.5, 0.565, 0.59, 0.655, 0.746] 61.4 min eta 70.1 min
+step 5700/12000 anchor 0.204 agreement per exit [0.489, 0.549, 0.582, 0.647, 0.724] 62.5 min eta 69.0 min
+step 5800/12000 anchor 0.205 agreement per exit [0.51, 0.562, 0.591, 0.643, 0.699] 63.6 min eta 67.9 min
+step 5900/12000 anchor 0.172 agreement per exit [0.533, 0.568, 0.611, 0.675, 0.743] 64.7 min eta 66.8 min
+step 6000/12000 anchor 0.245 agreement per exit [0.508, 0.577, 0.592, 0.666, 0.745] 65.8 min eta 65.7 min
+step 6100/12000 anchor 0.272 agreement per exit [0.56, 0.579, 0.594, 0.642, 0.71] 66.8 min eta 64.6 min
+step 6200/12000 anchor 0.161 agreement per exit [0.509, 0.553, 0.604, 0.657, 0.721] 67.9 min eta 63.5 min
+step 6300/12000 anchor 0.204 agreement per exit [0.519, 0.57, 0.595, 0.672, 0.732] 69.0 min eta 62.5 min
+step 6400/12000 anchor 0.188 agreement per exit [0.535, 0.574, 0.621, 0.659, 0.719] 70.1 min eta 61.4 min
+step 6500/12000 anchor 0.183 agreement per exit [0.532, 0.557, 0.59, 0.645, 0.698] 71.2 min eta 60.3 min
+step 6600/12000 anchor 0.186 agreement per exit [0.508, 0.55, 0.579, 0.63, 0.69] 72.4 min eta 59.2 min
+step 6700/12000 anchor 0.179 agreement per exit [0.528, 0.58, 0.611, 0.675, 0.737] 73.5 min eta 58.1 min
+step 6800/12000 anchor 0.203 agreement per exit [0.522, 0.553, 0.595, 0.645, 0.707] 74.6 min eta 57.0 min
+step 6900/12000 anchor 0.200 agreement per exit [0.526, 0.559, 0.592, 0.649, 0.729] 75.7 min eta 55.9 min
+step 7000/12000 anchor 0.189 agreement per exit [0.512, 0.547, 0.587, 0.659, 0.734] 76.7 min eta 54.8 min
+step 7100/12000 anchor 0.202 agreement per exit [0.521, 0.56, 0.592, 0.657, 0.734] 77.8 min eta 53.7 min
+step 7200/12000 anchor 0.154 agreement per exit [0.547, 0.591, 0.631, 0.693, 0.765] 78.9 min eta 52.6 min
+step 7300/12000 anchor 0.158 agreement per exit [0.525, 0.55, 0.597, 0.642, 0.71] 80.0 min eta 51.5 min
+step 7400/12000 anchor 0.207 agreement per exit [0.488, 0.537, 0.565, 0.638, 0.693] 81.2 min eta 50.4 min
+step 7500/12000 anchor 0.187 agreement per exit [0.498, 0.555, 0.559, 0.635, 0.721] 82.3 min eta 49.3 min
+step 7600/12000 anchor 0.167 agreement per exit [0.513, 0.551, 0.59, 0.661, 0.73] 83.4 min eta 48.2 min
+step 7700/12000 anchor 0.184 agreement per exit [0.554, 0.597, 0.623, 0.686, 0.756] 84.5 min eta 47.1 min
+step 7800/12000 anchor 0.167 agreement per exit [0.519, 0.567, 0.585, 0.641, 0.721] 85.6 min eta 46.0 min
+step 7900/12000 anchor 0.191 agreement per exit [0.567, 0.637, 0.652, 0.699, 0.752] 86.7 min eta 45.0 min
+step 8000/12000 anchor 0.183 agreement per exit [0.511, 0.564, 0.592, 0.669, 0.701] 87.8 min eta 43.9 min
+step 8100/12000 anchor 0.175 agreement per exit [0.521, 0.57, 0.616, 0.668, 0.755] 88.9 min eta 42.8 min
+step 8200/12000 anchor 0.178 agreement per exit [0.558, 0.597, 0.634, 0.676, 0.742] 90.0 min eta 41.7 min
+step 8300/12000 anchor 0.188 agreement per exit [0.54, 0.589, 0.617, 0.653, 0.725] 91.1 min eta 40.6 min
+step 8400/12000 anchor 0.198 agreement per exit [0.511, 0.568, 0.589, 0.634, 0.704] 92.2 min eta 39.5 min
+step 8500/12000 anchor 0.172 agreement per exit [0.562, 0.618, 0.653, 0.699, 0.793] 93.3 min eta 38.4 min
+step 8600/12000 anchor 0.195 agreement per exit [0.522, 0.567, 0.59, 0.65, 0.726] 94.4 min eta 37.3 min
+step 8700/12000 anchor 0.180 agreement per exit [0.562, 0.6, 0.626, 0.673, 0.755] 95.5 min eta 36.2 min
+step 8800/12000 anchor 0.181 agreement per exit [0.522, 0.566, 0.607, 0.684, 0.744] 96.6 min eta 35.1 min
+step 8900/12000 anchor 0.173 agreement per exit [0.533, 0.57, 0.61, 0.667, 0.716] 97.7 min eta 34.0 min
+step 9000/12000 anchor 0.196 agreement per exit [0.538, 0.579, 0.61, 0.67, 0.744] 98.8 min eta 32.9 min
+step 9100/12000 anchor 0.168 agreement per exit [0.556, 0.59, 0.629, 0.675, 0.76] 99.9 min eta 31.8 min
+step 9200/12000 anchor 0.149 agreement per exit [0.562, 0.603, 0.637, 0.713, 0.77] 101.0 min eta 30.7 min
+step 9300/12000 anchor 0.168 agreement per exit [0.548, 0.614, 0.651, 0.708, 0.756] 102.1 min eta 29.6 min
+step 9400/12000 anchor 0.189 agreement per exit [0.538, 0.613, 0.625, 0.669, 0.749] 103.2 min eta 28.5 min
+step 9500/12000 anchor 0.151 agreement per exit [0.542, 0.593, 0.637, 0.682, 0.75] 104.3 min eta 27.4 min
+step 9600/12000 anchor 0.166 agreement per exit [0.506, 0.569, 0.611, 0.672, 0.755] 105.3 min eta 26.3 min
+step 9700/12000 anchor 0.178 agreement per exit [0.541, 0.569, 0.604, 0.66, 0.755] 106.4 min eta 25.2 min
+step 9800/12000 anchor 0.172 agreement per exit [0.555, 0.6, 0.63, 0.69, 0.765] 107.5 min eta 24.1 min
+step 9900/12000 anchor 0.203 agreement per exit [0.507, 0.583, 0.619, 0.668, 0.741] 108.6 min eta 23.0 min
+step 10000/12000 anchor 0.178 agreement per exit [0.559, 0.586, 0.615, 0.659, 0.726] 109.7 min eta 21.9 min
+step 10100/12000 anchor 0.193 agreement per exit [0.505, 0.561, 0.584, 0.666, 0.759] 110.8 min eta 20.8 min
+step 10200/12000 anchor 0.172 agreement per exit [0.537, 0.583, 0.615, 0.68, 0.753] 111.9 min eta 19.7 min
+step 10300/12000 anchor 0.208 agreement per exit [0.557, 0.602, 0.623, 0.67, 0.74] 113.0 min eta 18.6 min
+step 10400/12000 anchor 0.173 agreement per exit [0.509, 0.565, 0.595, 0.661, 0.75] 114.1 min eta 17.5 min
+step 10500/12000 anchor 0.180 agreement per exit [0.568, 0.604, 0.634, 0.679, 0.734] 115.2 min eta 16.4 min
+step 10600/12000 anchor 0.226 agreement per exit [0.487, 0.557, 0.582, 0.644, 0.72] 116.3 min eta 15.3 min
+step 10700/12000 anchor 0.149 agreement per exit [0.563, 0.601, 0.649, 0.691, 0.788] 117.4 min eta 14.2 min
+step 10800/12000 anchor 0.172 agreement per exit [0.536, 0.588, 0.619, 0.675, 0.745] 118.5 min eta 13.2 min
+step 10900/12000 anchor 0.185 agreement per exit [0.513, 0.574, 0.584, 0.656, 0.738] 119.6 min eta 12.1 min
+step 11000/12000 anchor 0.163 agreement per exit [0.549, 0.579, 0.633, 0.682, 0.753] 120.7 min eta 11.0 min
+step 11100/12000 anchor 0.167 agreement per exit [0.566, 0.604, 0.644, 0.703, 0.739] 121.7 min eta 9.9 min
+step 11200/12000 anchor 0.148 agreement per exit [0.536, 0.596, 0.618, 0.689, 0.741] 122.8 min eta 8.8 min
+step 11300/12000 anchor 0.178 agreement per exit [0.521, 0.582, 0.6, 0.66, 0.741] 123.9 min eta 7.7 min
+step 11400/12000 anchor 0.190 agreement per exit [0.556, 0.592, 0.631, 0.688, 0.764] 125.0 min eta 6.6 min
+step 11500/12000 anchor 0.208 agreement per exit [0.559, 0.598, 0.614, 0.675, 0.734] 126.1 min eta 5.5 min
+step 11600/12000 anchor 0.150 agreement per exit [0.587, 0.63, 0.651, 0.706, 0.774] 127.2 min eta 4.4 min
+step 11700/12000 anchor 0.162 agreement per exit [0.531, 0.579, 0.613, 0.686, 0.75] 128.3 min eta 3.3 min
+step 11800/12000 anchor 0.185 agreement per exit [0.541, 0.582, 0.63, 0.666, 0.744] 129.4 min eta 2.2 min
+step 11900/12000 anchor 0.153 agreement per exit [0.538, 0.607, 0.613, 0.685, 0.758] 130.5 min eta 1.1 min
+step 11999/12000 anchor 0.183 agreement per exit [0.533, 0.562, 0.6, 0.634, 0.716] 131.6 min eta 0.0 min
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:03<00:00,  3.21s/it]Writing model shards: 100%|██████████| 1/1 [00:03<00:00,  3.21s/it]
+ exit  layer split  accuracy  fidelity  mean_conf  original_model_accuracy
+    0      8   all    0.3854    0.5472     0.5571                   0.4994
+    1     12   all    0.4085    0.5913     0.6026                   0.4994
+    2     16   all    0.4277    0.6275     0.6383                   0.4994
+    3     20   all    0.4532    0.6898     0.6978                   0.4994
+    4     24   all    0.4782    0.7618     0.7689                   0.4994
+    5     28   all    0.4918    1.0000     0.4873                   0.4994
+original model accuracy 0.4994; fine-tuned full model 0.4918
+points below the full model per exit: [10.64, 8.33, 6.41, 3.86, 1.36, 0.0]

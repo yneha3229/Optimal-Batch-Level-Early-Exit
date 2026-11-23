@@ -1,0 +1,95 @@
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights: 100%|██████████| 291/291 [00:00<00:00, 4585.21it/s]
+Using the latest cached version of the dataset since nyu-mll/glue couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'qqp' at /home/neha/.cache/huggingface/datasets/nyu-mll___glue/qqp/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c (last modified on Fri Nov  6 08:23:06 2026).
+qqp_llama: train 128000, eval 40430, mean prompt length 50.1 tokens, exits [8, 12, 16, 20, 24, 28, 32], trainable 42.0 M
+step 100/8000 loss 0.456 train acc per exit [0.649, 0.722, 0.752, 0.725, 0.75, 0.775, 0.748] 0.9 min eta 72.7 min
+step 200/8000 loss 0.736 train acc per exit [0.746, 0.813, 0.829, 0.822, 0.838, 0.836, 0.834] 1.9 min eta 72.9 min
+step 300/8000 loss 0.563 train acc per exit [0.768, 0.806, 0.807, 0.819, 0.821, 0.815, 0.79] 2.8 min eta 71.8 min
+step 400/8000 loss 0.589 train acc per exit [0.747, 0.796, 0.818, 0.828, 0.839, 0.848, 0.78] 3.7 min eta 70.4 min
+step 500/8000 loss 0.438 train acc per exit [0.781, 0.829, 0.84, 0.835, 0.836, 0.837, 0.827] 4.6 min eta 69.5 min
+step 600/8000 loss 0.647 train acc per exit [0.779, 0.826, 0.83, 0.839, 0.842, 0.851, 0.819] 5.5 min eta 68.3 min
+step 700/8000 loss 0.480 train acc per exit [0.801, 0.82, 0.838, 0.843, 0.846, 0.848, 0.834] 6.5 min eta 67.3 min
+step 800/8000 loss 0.790 train acc per exit [0.781, 0.814, 0.827, 0.838, 0.839, 0.841, 0.824] 7.4 min eta 66.2 min
+step 900/8000 loss 0.366 train acc per exit [0.821, 0.846, 0.838, 0.854, 0.852, 0.847, 0.847] 8.3 min eta 65.1 min
+step 1000/8000 loss 0.235 train acc per exit [0.783, 0.838, 0.842, 0.854, 0.856, 0.849, 0.818] 9.2 min eta 64.4 min
+step 1100/8000 loss 0.444 train acc per exit [0.819, 0.846, 0.853, 0.859, 0.859, 0.862, 0.846] 10.1 min eta 63.4 min
+step 1200/8000 loss 0.223 train acc per exit [0.818, 0.86, 0.856, 0.86, 0.861, 0.864, 0.846] 11.0 min eta 62.5 min
+step 1300/8000 loss 0.114 train acc per exit [0.804, 0.836, 0.849, 0.859, 0.859, 0.855, 0.846] 11.9 min eta 61.6 min
+step 1400/8000 loss 0.767 train acc per exit [0.787, 0.822, 0.827, 0.844, 0.844, 0.84, 0.849] 12.9 min eta 60.7 min
+step 1500/8000 loss 0.412 train acc per exit [0.824, 0.855, 0.854, 0.867, 0.869, 0.867, 0.862] 13.8 min eta 59.7 min
+step 1600/8000 loss 0.267 train acc per exit [0.821, 0.849, 0.868, 0.869, 0.87, 0.872, 0.872] 14.7 min eta 58.9 min
+step 1700/8000 loss 0.270 train acc per exit [0.836, 0.868, 0.864, 0.881, 0.878, 0.873, 0.871] 15.6 min eta 58.0 min
+step 1800/8000 loss 0.281 train acc per exit [0.829, 0.861, 0.861, 0.858, 0.858, 0.857, 0.86] 16.6 min eta 57.0 min
+step 1900/8000 loss 0.193 train acc per exit [0.839, 0.862, 0.864, 0.87, 0.871, 0.868, 0.868] 17.5 min eta 56.1 min
+step 2000/8000 loss 0.192 train acc per exit [0.836, 0.862, 0.87, 0.874, 0.877, 0.878, 0.872] 18.4 min eta 55.1 min
+step 2100/8000 loss 0.201 train acc per exit [0.826, 0.864, 0.861, 0.874, 0.877, 0.871, 0.866] 19.2 min eta 54.1 min
+step 2200/8000 loss 0.199 train acc per exit [0.838, 0.855, 0.863, 0.862, 0.862, 0.867, 0.869] 20.2 min eta 53.1 min
+step 2300/8000 loss 0.204 train acc per exit [0.828, 0.863, 0.866, 0.873, 0.873, 0.874, 0.866] 21.1 min eta 52.2 min
+step 2400/8000 loss 0.914 train acc per exit [0.839, 0.852, 0.876, 0.88, 0.882, 0.882, 0.871] 22.0 min eta 51.3 min
+step 2500/8000 loss 0.668 train acc per exit [0.837, 0.872, 0.873, 0.872, 0.873, 0.872, 0.864] 22.9 min eta 50.4 min
+step 2600/8000 loss 0.429 train acc per exit [0.832, 0.871, 0.875, 0.875, 0.876, 0.876, 0.875] 23.8 min eta 49.5 min
+step 2700/8000 loss 0.693 train acc per exit [0.829, 0.862, 0.876, 0.881, 0.879, 0.882, 0.884] 24.7 min eta 48.6 min
+step 2800/8000 loss 0.245 train acc per exit [0.81, 0.84, 0.839, 0.851, 0.854, 0.853, 0.847] 25.7 min eta 47.7 min
+step 2900/8000 loss 0.242 train acc per exit [0.829, 0.862, 0.862, 0.867, 0.87, 0.869, 0.861] 26.6 min eta 46.7 min
+step 3000/8000 loss 0.671 train acc per exit [0.834, 0.866, 0.876, 0.876, 0.877, 0.876, 0.874] 27.5 min eta 45.8 min
+step 3100/8000 loss 0.289 train acc per exit [0.835, 0.872, 0.878, 0.878, 0.881, 0.878, 0.88] 28.4 min eta 44.9 min
+step 3200/8000 loss 0.423 train acc per exit [0.821, 0.852, 0.858, 0.868, 0.87, 0.868, 0.863] 29.3 min eta 44.0 min
+step 3300/8000 loss 0.314 train acc per exit [0.864, 0.888, 0.902, 0.901, 0.902, 0.901, 0.898] 30.2 min eta 43.0 min
+step 3400/8000 loss 0.689 train acc per exit [0.858, 0.876, 0.889, 0.887, 0.888, 0.888, 0.889] 31.1 min eta 42.1 min
+step 3500/8000 loss 0.309 train acc per exit [0.852, 0.871, 0.887, 0.887, 0.889, 0.889, 0.884] 32.0 min eta 41.2 min
+step 3600/8000 loss 0.081 train acc per exit [0.852, 0.877, 0.883, 0.884, 0.884, 0.884, 0.881] 32.9 min eta 40.2 min
+step 3700/8000 loss 0.409 train acc per exit [0.859, 0.88, 0.878, 0.881, 0.88, 0.883, 0.884] 33.8 min eta 39.3 min
+step 3800/8000 loss 0.074 train acc per exit [0.856, 0.88, 0.889, 0.891, 0.889, 0.889, 0.889] 34.7 min eta 38.4 min
+step 3900/8000 loss 0.151 train acc per exit [0.864, 0.88, 0.889, 0.889, 0.89, 0.893, 0.892] 35.6 min eta 37.4 min
+step 4000/8000 loss 0.285 train acc per exit [0.859, 0.885, 0.889, 0.888, 0.889, 0.889, 0.881] 36.5 min eta 36.5 min
+step 4100/8000 loss 0.066 train acc per exit [0.871, 0.89, 0.899, 0.898, 0.898, 0.898, 0.901] 37.5 min eta 35.6 min
+step 4200/8000 loss 0.234 train acc per exit [0.841, 0.867, 0.872, 0.881, 0.884, 0.881, 0.885] 38.4 min eta 34.7 min
+step 4300/8000 loss 0.083 train acc per exit [0.874, 0.889, 0.89, 0.892, 0.892, 0.892, 0.891] 39.3 min eta 33.8 min
+step 4400/8000 loss 0.456 train acc per exit [0.859, 0.896, 0.894, 0.894, 0.893, 0.896, 0.896] 40.2 min eta 32.9 min
+step 4500/8000 loss 0.165 train acc per exit [0.859, 0.878, 0.89, 0.888, 0.889, 0.889, 0.887] 41.1 min eta 32.0 min
+step 4600/8000 loss 0.259 train acc per exit [0.864, 0.884, 0.893, 0.899, 0.899, 0.896, 0.892] 42.1 min eta 31.1 min
+step 4700/8000 loss 0.375 train acc per exit [0.847, 0.883, 0.882, 0.882, 0.882, 0.882, 0.883] 43.0 min eta 30.2 min
+step 4800/8000 loss 0.372 train acc per exit [0.861, 0.871, 0.881, 0.888, 0.888, 0.886, 0.887] 43.9 min eta 29.3 min
+step 4900/8000 loss 0.157 train acc per exit [0.871, 0.891, 0.894, 0.892, 0.892, 0.891, 0.891] 44.8 min eta 28.3 min
+step 5000/8000 loss 0.057 train acc per exit [0.854, 0.883, 0.889, 0.89, 0.89, 0.889, 0.889] 45.7 min eta 27.4 min
+step 5100/8000 loss 0.412 train acc per exit [0.877, 0.899, 0.899, 0.9, 0.901, 0.902, 0.902] 46.7 min eta 26.5 min
+step 5200/8000 loss 0.024 train acc per exit [0.873, 0.884, 0.885, 0.886, 0.886, 0.885, 0.885] 47.6 min eta 25.6 min
+step 5300/8000 loss 0.094 train acc per exit [0.873, 0.892, 0.898, 0.901, 0.901, 0.899, 0.9] 48.5 min eta 24.7 min
+step 5400/8000 loss 0.421 train acc per exit [0.876, 0.896, 0.899, 0.901, 0.902, 0.901, 0.901] 49.4 min eta 23.8 min
+step 5500/8000 loss 0.339 train acc per exit [0.888, 0.901, 0.904, 0.904, 0.906, 0.906, 0.905] 50.3 min eta 22.9 min
+step 5600/8000 loss 0.183 train acc per exit [0.869, 0.888, 0.891, 0.893, 0.892, 0.892, 0.897] 51.2 min eta 21.9 min
+step 5700/8000 loss 0.166 train acc per exit [0.869, 0.886, 0.898, 0.9, 0.899, 0.899, 0.902] 52.1 min eta 21.0 min
+step 5800/8000 loss 0.214 train acc per exit [0.888, 0.909, 0.912, 0.914, 0.914, 0.912, 0.909] 53.0 min eta 20.1 min
+step 5900/8000 loss 0.120 train acc per exit [0.882, 0.901, 0.902, 0.903, 0.904, 0.903, 0.904] 53.9 min eta 19.2 min
+step 6000/8000 loss 0.197 train acc per exit [0.889, 0.909, 0.913, 0.915, 0.914, 0.915, 0.913] 54.8 min eta 18.3 min
+step 6100/8000 loss 0.063 train acc per exit [0.883, 0.906, 0.912, 0.912, 0.912, 0.91, 0.911] 55.7 min eta 17.4 min
+step 6200/8000 loss 0.104 train acc per exit [0.892, 0.911, 0.912, 0.912, 0.912, 0.912, 0.911] 56.7 min eta 16.5 min
+step 6300/8000 loss 0.252 train acc per exit [0.888, 0.902, 0.901, 0.902, 0.902, 0.902, 0.903] 57.6 min eta 15.5 min
+step 6400/8000 loss 0.157 train acc per exit [0.891, 0.909, 0.908, 0.909, 0.909, 0.909, 0.913] 58.5 min eta 14.6 min
+step 6500/8000 loss 0.276 train acc per exit [0.889, 0.899, 0.905, 0.905, 0.907, 0.905, 0.906] 59.4 min eta 13.7 min
+step 6600/8000 loss 0.465 train acc per exit [0.874, 0.904, 0.911, 0.911, 0.911, 0.911, 0.911] 60.3 min eta 12.8 min
+step 6700/8000 loss 0.411 train acc per exit [0.881, 0.897, 0.902, 0.902, 0.902, 0.902, 0.904] 61.2 min eta 11.9 min
+step 6800/8000 loss 0.085 train acc per exit [0.883, 0.896, 0.904, 0.904, 0.904, 0.904, 0.904] 62.1 min eta 11.0 min
+step 6900/8000 loss 0.056 train acc per exit [0.897, 0.914, 0.918, 0.92, 0.919, 0.919, 0.917] 63.0 min eta 10.0 min
+step 7000/8000 loss 0.082 train acc per exit [0.888, 0.903, 0.907, 0.908, 0.909, 0.909, 0.908] 63.9 min eta 9.1 min
+step 7100/8000 loss 0.339 train acc per exit [0.899, 0.912, 0.907, 0.91, 0.909, 0.909, 0.909] 64.8 min eta 8.2 min
+step 7200/8000 loss 0.210 train acc per exit [0.886, 0.899, 0.904, 0.904, 0.904, 0.904, 0.902] 65.7 min eta 7.3 min
+step 7300/8000 loss 0.104 train acc per exit [0.888, 0.909, 0.909, 0.911, 0.911, 0.911, 0.908] 66.7 min eta 6.4 min
+step 7400/8000 loss 0.188 train acc per exit [0.891, 0.899, 0.899, 0.901, 0.902, 0.901, 0.903] 67.6 min eta 5.5 min
+step 7500/8000 loss 0.488 train acc per exit [0.884, 0.908, 0.913, 0.911, 0.912, 0.912, 0.911] 68.5 min eta 4.6 min
+step 7600/8000 loss 0.110 train acc per exit [0.9, 0.918, 0.916, 0.915, 0.916, 0.916, 0.916] 69.4 min eta 3.7 min
+step 7700/8000 loss 0.086 train acc per exit [0.876, 0.895, 0.905, 0.903, 0.903, 0.902, 0.901] 70.3 min eta 2.7 min
+step 7800/8000 loss 0.088 train acc per exit [0.887, 0.908, 0.908, 0.908, 0.909, 0.909, 0.909] 71.2 min eta 1.8 min
+step 7900/8000 loss 0.214 train acc per exit [0.886, 0.907, 0.916, 0.918, 0.917, 0.918, 0.918] 72.2 min eta 0.9 min
+step 8000/8000 loss 0.336 train acc per exit [0.884, 0.905, 0.906, 0.907, 0.906, 0.906, 0.904] 73.1 min eta 0.0 min
+[W1122 23:20:46.346016140 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 184549376 bytes (free: 63176704, total: 50897289216).
+[W1122 23:23:21.472315899 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 297795584 bytes (free: 38010880, total: 50897289216).
+ exit  layer split  accuracy  agree_full  mean_conf
+    0      8   all    0.8882      0.9404     0.9043
+    1     12   all    0.9060      0.9781     0.9227
+    2     16   all    0.9084      0.9951     0.9278
+    3     20   all    0.9088      0.9958     0.9274
+    4     24   all    0.9089      0.9964     0.9275
+    5     28   all    0.9092      0.9965     0.9277
+    6     32   all    0.9094      1.0000     0.9289
+wrote traces/qqp_llama_val.parquet checkpoints/qqp_llama_cls.pt

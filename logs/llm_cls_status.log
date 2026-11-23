@@ -1,0 +1,14 @@
+2026-11-16_01:30:11 OK select+front qwen qqp mnli
+2026-11-16_01:47:25 OK time qqp_qwen
+2026-11-16_02:08:01 OK time mnli_qwen
+2026-11-16_02:08:01 DONE qwen qqp mnli
+2026-11-22_20:53:03 START llama queue gpu=2
+2026-11-22_20:58:27 OK profile llama
+2026-11-22_20:59:24 OK select+front llama mnli
+2026-11-22_22:02:40 OK time mnli_llama
+2026-11-22_22:02:40 DONE llama mnli
+2026-11-22_23:23:47 OK train qqp_llama
+2026-11-22_23:25:33 OK select+front llama qqp
+2026-11-23_00:25:46 OK time qqp_llama
+2026-11-23_00:25:46 DONE llama qqp
+2026-11-23_00:25:46 DONE llama queue
