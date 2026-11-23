@@ -1,0 +1,84 @@
+mnli: 9815 rows, 1920 jobs
+ frac      key method            family   B  viol  drop_pts  drop_p90_pts  speedup  chose
+ 0.10     drop      t random_collective   8 0.000     0.075         0.306    1.073  0.233
+ 0.10     drop      t random_collective  16 0.000     0.112         0.357    1.112  0.267
+ 0.10     drop      t random_collective  64 0.100     0.214         0.313    1.163  0.333
+ 0.10     drop      t random_collective 128 0.033     0.138         0.150    1.130  0.267
+ 0.10     drop      t            theory   8 0.000     0.065         0.096    1.065  0.167
+ 0.10     drop      t            theory  16 0.033     0.080         0.149    1.096  0.200
+ 0.10     drop      t            theory  64 0.133     0.219         1.221    1.156  0.267
+ 0.10     drop      t            theory 128 0.033     0.097         0.249    1.128  0.267
+ 0.25     drop      t random_collective   8 0.000     0.135         0.491    1.187  0.567
+ 0.25     drop      t random_collective  16 0.000     0.146         0.466    1.198  0.433
+ 0.25     drop      t random_collective  64 0.067     0.222         0.473    1.262  0.467
+ 0.25     drop      t random_collective 128 0.033     0.204         0.518    1.246  0.467
+ 0.25     drop      t            theory   8 0.033     0.122         0.324    1.153  0.433
+ 0.25     drop      t            theory  16 0.000     0.120         0.509    1.188  0.400
+ 0.25     drop      t            theory  64 0.000     0.062         0.189    1.130  0.267
+ 0.25     drop      t            theory 128 0.067     0.151         0.685    1.156  0.233
+ 0.50     drop      t random_collective   8 0.067     0.248         0.636    1.258  0.800
+ 0.50     drop      t random_collective  16 0.033     0.283         0.598    1.379  0.833
+ 0.50     drop      t random_collective  64 0.033     0.244         0.722    1.363  0.667
+ 0.50     drop      t random_collective 128 0.067     0.242         0.685    1.328  0.567
+ 0.50     drop      t            theory   8 0.033     0.227         0.773    1.244  0.600
+ 0.50     drop      t            theory  16 0.033     0.191         0.656    1.315  0.667
+ 0.50     drop      t            theory  64 0.067     0.249         0.732    1.377  0.733
+ 0.50     drop      t            theory 128 0.033     0.206         0.528    1.358  0.633
+ 1.00 disagree      t random_collective   8 0.000     0.099         0.165    1.267  1.000
+ 1.00 disagree      t random_collective  16 0.000     0.166         0.306    1.378  1.000
+ 1.00 disagree      t random_collective  64 0.000     0.154         0.269    1.447  1.000
+ 1.00 disagree      t random_collective 128 0.000     0.153         0.288    1.474  1.000
+ 1.00 disagree      t            theory   8 0.000     0.004         0.063    1.092  0.367
+ 1.00 disagree      t            theory  16 0.000    -0.007         0.063    1.125  0.467
+ 1.00 disagree      t            theory  64 0.000    -0.003         0.066    1.127  0.333
+ 1.00 disagree      t            theory 128 0.000     0.006         0.012    1.087  0.200
+ 1.00 disagree      t       theory+plan   8 0.000     0.025         0.204    1.217  1.000
+ 1.00 disagree      t       theory+plan  16 0.000     0.040         0.227    1.250  1.000
+ 1.00 disagree      t       theory+plan  64 0.000     0.003         0.130    1.322  1.000
+ 1.00 disagree      t       theory+plan 128 0.000    -0.001         0.167    1.309  1.000
+ 1.00 disagree      t         threshold   8 0.000     0.188         0.288    1.219  1.000
+ 1.00 disagree      t         threshold  16 0.000     0.189         0.288    1.360  1.000
+ 1.00 disagree      t         threshold  64 0.000     0.189         0.290    1.458  1.000
+ 1.00 disagree      t         threshold 128 0.000     0.184         0.290    1.478  1.000
+ 1.00 disagree      t           unified   8 0.000     0.024         0.122    1.039  0.200
+ 1.00 disagree      t           unified  16 0.000     0.036         0.125    1.073  0.367
+ 1.00 disagree      t           unified  64 0.000     0.032         0.123    1.060  0.300
+ 1.00 disagree      t           unified 128 0.000     0.028         0.125    1.053  0.267
+ 1.00     drop      t random_collective   8 0.000     0.412         0.736    1.387  1.000
+ 1.00     drop      t random_collective  16 0.000     0.408         0.705    1.507  0.967
+ 1.00     drop      t random_collective  64 0.033     0.351         0.824    1.478  0.800
+ 1.00     drop      t random_collective 128 0.000     0.383         0.769    1.529  0.900
+ 1.00     drop      t            theory   8 0.033     0.304         0.693    1.371  0.833
+ 1.00     drop      t            theory  16 0.033     0.312         0.797    1.430  0.800
+ 1.00     drop      t            theory  64 0.033     0.250         0.666    1.492  0.833
+ 1.00     drop      t            theory 128 0.000     0.319         0.845    1.547  0.867
+ 1.00     drop      t       theory+plan   8 0.033     0.323         0.759    1.415  0.867
+ 1.00     drop      t       theory+plan  16 0.033     0.271         0.701    1.464  0.867
+ 1.00     drop      t       theory+plan  64 0.033     0.262         0.705    1.513  0.900
+ 1.00     drop      t       theory+plan 128 0.033     0.265         0.604    1.508  0.833
+ 1.00     drop      t         threshold   8 0.033     0.529         0.881    1.324  1.000
+ 1.00     drop      t         threshold  16 0.033     0.500         0.882    1.476  1.000
+ 1.00     drop      t         threshold  64 0.067     0.504         0.927    1.619  1.000
+ 1.00     drop      t         threshold 128 0.033     0.475         0.870    1.647  1.000
+ 1.00     drop      t           unified   8 0.000     0.270         0.626    1.315  0.900
+ 1.00     drop      t           unified  16 0.000     0.278         0.627    1.320  0.867
+ 1.00     drop      t           unified  64 0.000     0.252         0.650    1.296  0.833
+ 1.00     drop      t           unified 128 0.000     0.272         0.650    1.313  0.867
+
+violation rate (test drop > alpha), all B pooled; delta = 0.05
+method             t
+frac key            
+0.10 drop      0.042
+0.25 drop      0.025
+0.50 drop      0.046
+1.00 disagree  0.000
+     drop      0.022
+
+mean speedup, all B pooled
+method             t
+frac key            
+0.10 drop      1.115
+0.25 drop      1.190
+0.50 drop      1.328
+1.00 disagree  1.242
+     drop      1.447
