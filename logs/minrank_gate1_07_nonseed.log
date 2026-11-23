@@ -1,0 +1,20 @@
+minrank/evolve/runs/evo1/best_nonseed_program.py as evolved:06b3d73ed39e: 900 jobs on 16 workers
+50/900 done
+100/900 done
+150/900 done
+200/900 done
+250/900 done
+300/900 done
+350/900 done
+400/900 done
+450/900 done
+500/900 done
+550/900 done
+600/900 done
+650/900 done
+700/900 done
+750/900 done
+800/900 done
+850/900 done
+900/900 done
+wrote minrank/results/evolved.csv

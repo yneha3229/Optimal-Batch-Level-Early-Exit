@@ -1,0 +1,17 @@
+graph,n,family,lb,lb_proven,start_rank,best_rank,proven_optimal,seconds,mode,n_automorphisms,calls,status
+kneser_7_2,21,kneser,6,True,7,7,False,3600.16,cols,0,1,call_timeout
+kneser_8_3,56,kneser,21,True,28,28,False,3600.21,cols,0,1,call_timeout
+mycielski_5,23,mycielski,11,True,12,12,False,3600.19,cols,0,1,call_timeout
+paley_37,37,paley,4,True,10,10,False,3600.22,cols,0,1,call_timeout
+paley_29,29,paley,4,True,8,8,False,3600.23,cols,0,1,call_timeout
+paley_53,53,paley,5,True,11,11,False,3600.21,cols,0,1,call_timeout
+paley_41,41,paley,5,True,9,9,False,3600.22,cols,0,1,call_timeout
+cyclepow_31_3,31,cycle_power,7,True,8,8,False,3600.16,cols,0,1,call_timeout
+mycielski_6,47,mycielski,23,True,24,24,False,3600.22,cols,0,1,call_timeout
+planted_n50_r8_e0.0_s3,50,planted,7,True,8,8,False,3600.3,cols,0,1,call_timeout
+planted_n50_r8_e0.0_s6,50,planted,7,True,8,8,False,3600.24,cols,0,1,call_timeout
+circ_41_1-5-8,41,circulant,13,True,21,21,False,3600.36,cols,0,1,call_timeout
+planted_n50_r8_e0.0_s4,50,planted,7,True,8,8,False,3600.32,cols,0,1,call_timeout
+planted_n50_r8_e0.0_s5,50,planted,7,True,8,8,False,3600.33,cols,0,1,call_timeout
+planted_n50_r8_e0.0_s1,50,planted,6,True,8,8,False,3600.4,cols,0,1,call_timeout
+planted_n50_r8_e0.0_s2,50,planted,7,True,9,8,False,4959.15,cols,0,2,call_timeout

@@ -1,0 +1,14 @@
+33 batches, 262 candidates, 52 graphs
+full                         savings  -0.0%  speedup  1.00x  final -0.0075 (full -0.0075)  lost 0/1
+openevolve_cascade           savings  -0.0%  speedup  1.00x  final -0.0075 (full -0.0075)  lost 0/1
+successive_halving           savings  52.3%  speedup  2.10x  final -0.0075 (full -0.0075)  lost 0/1
+hyperband                    savings  39.0%  speedup  1.64x  final -0.0075 (full -0.0075)  lost 0/1
+hoeffding_race               savings  -0.0%  speedup  1.00x  final -0.0075 (full -0.0075)  lost 0/1
+cost_rule@0.001              savings  64.5%  speedup  2.82x  final -0.0075 (full -0.0075)  lost 0/1
+cost_rule@0.003              savings  68.0%  speedup  3.13x  final -0.0075 (full -0.0075)  lost 0/1
+cost_rule@0.01               savings  68.0%  speedup  3.13x  final -0.0075 (full -0.0075)  lost 0/1
+cost_rule@0.03               savings  68.0%  speedup  3.13x  final -0.0075 (full -0.0075)  lost 0/1
+cost_rule@0.1                savings  68.0%  speedup  3.13x  final -0.0075 (full -0.0075)  lost 0/1
+cost_rule_certified@a0.1     savings  -0.0%  speedup  1.00x  final -0.0075 (full -0.0075)  lost 0/1
+wrote minrank/results/cascade/anytime.png
+wrote minrank/results/cascade/summary.csv and minrank/results/cascade/per_batch.csv
