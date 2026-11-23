@@ -259,7 +259,7 @@ the `model.layers` / `model.norm` attribute names for the chosen backbone, memor
 
 ## 7. Results
 
-Run on 2026-11-15 and 2026-11-16. Steps 3–4 were not run (step 3 was held on the layer-24 fidelity result).
+Run on 2026-11-15 and 2026-11-16 (classifier timing added 2026-11-23). Steps 3–4 were not run (step 3 was held on the layer-24 fidelity result).
 
 ### Step 0 (functional test): pass
 Runner against trace, final exit: 0.9883 (bar 0.97). `logs/llm2_smoke_decode.log`.
@@ -331,9 +331,55 @@ intermediate exits (97.3% at the last exit in this run, caused by a missing fina
 | 64 | 2.55× | 1.75× | 2.56× | 2.96× | 2.96× | 0.55 |
 | 128 | 2.58× | 1.75× | 2.60× | 3.02× | 3.01× | 0.54 |
 
-The cost table predicted these within 4% (largest gap at B=8). The MNLI timed run
-(`logs/cls_time_mnli_qwen_a6000.log`) and Llama-3.1-8B (`logs/cls_mnli_llama.log`) were still running when this was
-written; add them here.
+The cost table predicted these within 4% (largest gap at B=8).
+
+### Timed results, all four classifier settings (added 2026-11-23)
+
+Same protocol (A6000, eager, bf16, prompts padded to 128 tokens, 2,048 held-out inputs per pass, 5 rounds, median
+paired speedup, certified selection at δ = 10%, one-point budget). Files: `results/local_time_{qqp,mnli}_{llama,qwen}_a6000_T128.csv`,
+logs `logs/cls_time_{qqp,mnli}_{llama,qwen}_a6000.log`. "Best baseline" = fastest of per-sample threshold, threshold +
+plan, unified exit, majority vote and random search whose held-out drop is at most one point.
+
+Llama-3.1-8B (LoRA + exit heads at layers 8–32; full model 90.9% on both tasks, layer 16 within 0.1 point of full on both, `results/train_{qqp,mnli}_llama_exit_accuracy.csv`). Cost is linear: 31 ms at B=1, 2,384 ms at B=128,
+ρ = 0.09 at B=8 (`results/local_cost_a6000_T128_llama.json`).
+
+| Task | B | Cost rule (best of all exits / plan) | Rule's drop (pts) | Best baseline | Its drop | Rule ahead by |
+|---|---|---|---|---|---|---|
+| QQP | 8 | 3.48× | 0.42 | 3.13× random search | 0.53 | 11% |
+| QQP | 16 | 3.52× | 0.42 | 3.11× random search | 0.53 | 13% |
+| QQP | 64 | 3.66× | 0.44 | 3.50× random search | 0.29 | 5% |
+| QQP | 128 | 3.62× | 0.42 | 3.43× random search | 0.23 | 5% |
+| MNLI | 8 | 2.97× | 0.73 | 2.56× threshold + plan | 0.77 | 16% |
+| MNLI | 16 | 3.05× | 0.74 | 2.66× random search | 0.76 | 14% |
+| MNLI | 64 | 3.12× | 0.70 | 2.66× random search | 0.53 | 17% |
+| MNLI | 128 | 3.14× | 0.72 | 2.66× random search | 0.45 | 18% |
+
+QQP B=128 is in the timing log and the CSV, so the B=128 rerun listed in `docs/NEXT_STEPS.md` task 5 is not needed.
+On Llama MNLI the unified exit is over budget (1.13–1.17 points) and majority vote is over budget at B ≥ 64 (1.34).
+
+Qwen2.5-1.5B MNLI (QQP is in the table above):
+
+| B | Cost rule, all exits | Cost rule + plan | Plan's drop (pts) | Best baseline | Its drop | Plan vs best baseline |
+|---|---|---|---|---|---|---|
+| 8 | 1.10× | 1.38× | 0.20 | 1.48× random search | 1.00 | −7% |
+| 16 | 1.16× | 1.41× | 0.20 | 1.40× unified exit | 0.02 | +1% |
+| 64 | 1.18× | 1.44× | 0.21 | 1.54× majority vote | 0.97 | −6% |
+| 128 | 1.19× | 1.48× | 0.21 | 1.40× unified exit | 0.02 | +5% |
+
+- The rule with all exits is the slowest certified policy on Qwen MNLI: the three exits below layer 16 are weak
+  (67–83% against 89.4% full) and each costs a head evaluation (0.36 ms) at a floor-dominated cost (ρ = 0.48 at B=8).
+  The plan drops them and the rule then sits at a 0.2-point drop, far inside the budget, so the certificate is
+  conservative here.
+- The per-sample threshold reaches 1.34–1.94× and the threshold + plan 1.70–1.73×, both over budget (1.21–1.46 points).
+- Majority vote and random search have no certified policy at some batch sizes (missing rows in the CSV).
+- Cost-table predictions are within 2% of the timed speedups on Llama and on Qwen MNLI, and within 5% on Qwen QQP.
+- The device's own predictions agree with the recorded traces on 97.3–100% of inputs at every exit
+  (`results/local_check_*_a6000_T128.json`; the 97.3% is Qwen QQP's last exit, from the missing final norm noted above).
+
+Verdict on the classifier direction: the cost rule is the fastest certified policy in 14 of the 16 (model, task,
+batch size) cells, by 1–18%. The exceptions are Qwen MNLI at B=8 and B=64, where it is 6–7% behind even with the
+exit plan (and without the plan it is the slowest certified policy at every batch size). This is the strongest evidence for the "near the best everywhere" claim, and Qwen MNLI is the case to show
+as the exception.
 
 ## 8. Files
 

@@ -3,7 +3,11 @@
 This is the current direction of the project. It keeps the original idea (batch-level early exit derived from the
 cost model `c(n) = a + b·n`) and changes the claim.
 
-Status: **step 1 (transfer test) done: fails its pass criterion (section 7).** Steps 2–3 not started.
+Status (2026-11-23): **step 1 (transfer test) fails its pass criterion.** Step 2 (exit plan, real GPU) run in eager
+mode only: passes on QQP and on the LLM classifiers, not on RoBERTa MNLI. Step 3 (load trace) passes on QQP, on
+CIFAR-100 only with the plan, and fails on MNLI. Details in section 7. Selection is now redone per deployment by
+certified selection (a CPU replay), so the claim tested in steps 2–3 is "re-certified per setting, near the best",
+not "tuned once for every deployment".
 
 ## 1. What changed and why
 
@@ -138,6 +142,72 @@ Selection margin 0.5 pt, all tasks pooled:
 
 Status after step 1: per section 5, the transfer claim as stated does not hold in simulation. Steps 2–3 have not
 been started.
+
+### Step 2: exit plan on the real GPU (2026-11-16 to 11-22, eager only). **Passes on QQP and the LLM classifiers; fails on RoBERTa MNLI.**
+
+RTX A6000, eager PyTorch, trained checkpoints, real inputs, certified selection (one-sided t-test, δ = 10%, α = 1 pt),
+2,048 held-out inputs per pass, 5 rounds, median paired speedup. Files: `results/local_time_{qqp,mnli}_a6000_T{128,32}.csv`
+(RoBERTa-base), `results/local_time_{qqp,mnli}_{llama,qwen}_a6000_T128.csv` (LLM classifiers, `docs/PLAN_LLM.md` §7);
+logs `logs/server_time_*_a6000_T*.log`, `logs/cls_time_*_a6000.log`. CUDA graphs and CIFAR-100 (ViT) are not run: both
+need changes to the timing device in `experiments/local_hw.py` (CUDA-graph device: `docs/PROMPT_CUDA_GRAPH_DEVICE.md`),
+which are being made on another branch.
+
+Fastest policy within the one-point budget (held-out), cost rule (best of all exits / with plan) against the best baseline:
+
+| Model, task, length | B=8 | B=16 | B=64 | B=128 | Rule's held-out drop |
+|---|---|---|---|---|---|
+| RoBERTa QQP, 128 | 1.95× vs 1.77× | 2.20× vs 1.99× | 2.46× vs 2.15× | 2.44× vs 2.26× | 0.60–0.66 |
+| RoBERTa QQP, 32 | 1.33× vs 1.09× | 1.31× vs 1.16× | 2.11× vs 1.86× | 2.37× vs 2.34× | 0.55–0.74 (plan: 1.05 at B ≤ 16) |
+| RoBERTa MNLI, 128 | over budget vs 1.46× | over vs 1.51× | over vs 1.66× | over vs 1.51× | 1.23–1.28 |
+| RoBERTa MNLI, 32 | 1.35× vs 1.42× | 1.40× vs 1.45× | over vs 1.48× | over vs 1.49× | 0.86–0.88 at B ≤ 16, 1.23–1.25 above |
+| Llama-3.1-8B QQP | 3.48× vs 3.13× | 3.52× vs 3.11× | 3.66× vs 3.50× | 3.62× vs 3.43× | 0.42–0.44 |
+| Llama-3.1-8B MNLI | 2.97× vs 2.56× | 3.05× vs 2.66× | 3.12× vs 2.66× | 3.14× vs 2.66× | 0.70–0.74 |
+| Qwen2.5-1.5B QQP | 2.18× vs 2.00× | 2.52× vs 2.41× | 2.96× vs 2.56× | 3.02× vs 2.60× | 0.54–0.72 |
+| Qwen2.5-1.5B MNLI | 1.38× vs 1.48× | 1.41× vs 1.40× | 1.44× vs 1.54× | 1.48× vs 1.40× | 0.20–0.21 (plan) |
+
+- Against the step-2 criterion (within 5% of the best method in every cell, accuracy matched): met in every QQP cell
+  and every Llama cell; on Qwen MNLI met at B=16 and 128 and missed at B=8 and 64 (6–7% behind, with the plan; without
+  it the rule is the slowest certified policy); missed on RoBERTa MNLI, where the rule is over budget at length 128.
+- RoBERTa MNLI is over budget for every tuned family on that fixed held-out half (threshold 1.21–1.25, random search
+  1.06–1.48 at B ≥ 16); only the unified exit, the threshold + plan and majority vote stay near the budget. See the
+  δ check below.
+- The plan matters where heads are expensive relative to the layer: Qwen MNLI (+22–25% over all exits) and QQP at
+  length 128, B=8 (1.95× vs 1.84×). At length 32, B ≤ 16 on QQP the plan's certified policy is just over budget
+  (1.05 points), as is the unified exit's.
+
+### Certificate (report item 5.2; `experiments/cert_check.py`, 30 random re-splits per task, cost-table speedups)
+
+`results/cert_check_{qqp,mnli,cifar100,mnli_d05}_summary.csv`, logs `logs/cert_check_*.log`.
+- One-sided t-test (asymptotic): share of (re-split, B) cases over the budget, mean over five methods, 1.3% QQP, 5.3%
+  MNLI, 8.5% CIFAR-100, all within δ = 10%; worst method 13.3% (threshold, CIFAR-100), within the sampling error of
+  120 cases.
+- Finite-sample bounds are too conservative at these sample sizes: Hoeffding–Bentkus certifies no policy for the
+  accuracy drop on any task; WSR certifies one in 49% of QQP cases (cost rule + plan 1.50× vs 2.31× with the t-test)
+  and never on MNLI or CIFAR-100.
+- Label-free (disagreement with the full model): no violations, slower (QQP 1.88× vs 2.31×).
+- 10% of the calibration data: cost rule 2.30× → 1.83× on QQP, random search 2.13× → 1.71×; no data-efficiency
+  advantage for the one-parameter rule.
+- MNLI δ check (`experiments/delta_check.py`, `results/delta_check_mnli.csv`): on the fixed split the cost rule
+  (1.23–1.28 pts), the threshold (1.21–1.25) and random search at B ≥ 16 (1.06–1.48) overshoot at δ = 10%; unified exit
+  and threshold + plan stay at 0.86–1.01. At δ = 2% the cost rule is within budget at B ≤ 64 (0.47–0.80 pts) for
+  10–13% less speed, not at B = 128 (1.25). On re-splits, δ = 5% lowers the cost rule's violation rate from 7.5% to
+  2.5% (with plan 6.7% → 3.3%, random search 4.2% → 0.8%) for about 3% less speed (1.51× → 1.46×). Reading: an unlucky
+  split, not a shift (the split is random); consistent with the data, not proved.
+
+### Step 3: fluctuating load (2026-11-22; `experiments/load_trace.py`, cost-table replay). **Passes on QQP, on CIFAR-100 only with the plan; fails on MNLI.**
+
+`results/load_trace_{qqp,mnli,mnli_d05,cifar100}_levels.csv`, logs `logs/load_trace_*.log`. Three arrival traces of
+3,000 batches, B from 1 to 128. Criterion: the rule tuned once (at B=64), within budget, within 5% of the best
+per-batch-size re-tuned baseline and ahead of every tuned-once baseline.
+
+| Task | Cost rule, tuned once (drop) | Rule + plan, tuned once (drop) | Best re-tuned baseline | Best tuned-once baseline | Result |
+|---|---|---|---|---|---|
+| QQP | 2.32× (0.61) | 2.31× (0.62) | 2.11× random search | 2.10× random search (once@8) | pass |
+| MNLI | 1.68× (1.48, over) | 1.67× (1.23, over) | 1.63× threshold + plan | 1.60× threshold + plan | fail (budget) |
+| MNLI, δ = 5% | 1.68× (1.48, over) | 1.67× (1.23, over) | 1.63× threshold + plan | 1.60× threshold + plan | fail (budget) |
+| CIFAR-100 | 1.24× (0.49) | 1.39× (0.75) | 1.38× threshold + plan | 1.33× threshold (once@8) | pass with the plan only |
+
+At δ = 5% the rule tuned at B=8 is within budget on MNLI (1.46×, 0.60 pts) but 10% behind the best re-tuned baseline.
 
 ## 8. Honest scope
 

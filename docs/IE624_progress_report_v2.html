@@ -31,7 +31,7 @@ i.v { font-style: italic; }
 <p class='sub'>Cost-Derived Batch-Level Early Exit, with Bounded Damage from Slowdown Inputs</p>
 <p class='sub2'>IE624 Course Project: Progress Report and Plan</p>
 <p class='auth'>Divyanshu Gupta (23B0306) &nbsp;&nbsp; Kushagra Gupta (23B3956) &nbsp;&nbsp; Neha Yadav (23B1807)</p>
-<p class='inst'>Course instructor: Prof. Manjesh K. Hanawal, IIT Bombay<br>13 November 2026</p>
+<p class='inst'>Course instructor: Prof. Manjesh K. Hanawal, IIT Bombay<br>13 November 2026; results in Section 5 updated 23 November 2026</p>
 
 <div class='abs'><b class='t'>Abstract</b>
 Early-exit networks answer easy inputs at intermediate layers, but under batched GPU inference one hard input keeps
@@ -46,8 +46,11 @@ a timing knob, decisions replayed from the trained models) the rule is at most 7
 behind the fastest method, but the methods are not at equal accuracy there. Compared at a matched held-out drop of
 at most one point, using the measured cost table, the rule is 2–17% faster than the best baseline on
 QQP; on MNLI it is within 2% of the best baseline in four of six settings and 6.5–8.5% slower in the
-other two. The rule is not shown to be optimal. No result yet combines trained weights, matched accuracy and a
-serving GPU in one run; that run is the main planned work. A label-free bandit and a bound on the damage from
+other two. The rule is not shown to be optimal. Section 5 adds the results obtained since (23 November): timed,
+certified runs of trained checkpoints on an RTX A6000 (RoBERTa, and Llama-3.1-8B and Qwen2.5-1.5B used as batched
+classifiers), where the rule is the fastest policy within budget on QQP and on Llama MNLI and not on RoBERTa or Qwen
+MNLI; a certificate that keeps the budget on re-splits but only asymptotically; and the load, bandit and robustness
+checks. A label-free bandit and a bound on the damage from
 slowdown inputs are secondary. Section 4.1 lists the claims of our first report that we corrected.</div>
 
 <h2>1. Problem statement</h2>
@@ -310,8 +313,9 @@ certificate, which costs a CPU replay.</li>
 <li><b>Straggler rescue</b> brought no measurable gain.</li>
 </ul>
 
-<h2>5. Planned work until 26 November</h2>
-<p>Each item lists what we will do, what we expect, and the fallback.</p>
+<h2>5. Planned work until 26 November, and results so far</h2>
+<p>Each item lists what we planned, what we expected and the fallback, as written on 13 November, followed by the
+result obtained by 23 November. All numbers are on held-out data with a one-point accuracy budget.</p>
 <h3>5.1 Accuracy-matched server tables with the exit plan (16–18 Nov)</h3>
 <p>Rerun the 24 server settings (3 tasks × 4 batch sizes × eager and CUDA graphs) with the exit plan, the measured
 cost table and certified selection, on trained checkpoints, and report each as a timed accuracy–speed front like
@@ -320,6 +324,18 @@ Figure 4. This is the main evidence still missing: trained weights, matched accu
 baseline elsewhere, as in Section 4.5.<br>
 <i class='l'>Fallback:</i> if it is more than 10% behind at B ≤ 16 under CUDA graphs, report the plan as a partial fix and
 state the settings where a unified exit should be used.</p>
+<p class='fb'><i class='l'>Result (16–22 Nov, eager only):</i> run for QQP and MNLI at sequence
+lengths 128 and 32 (Tables 11–12). CUDA graphs and CIFAR-100 (ViT) are not run yet: both need changes to the timing
+device that are being made separately. On QQP at length 128 the cost rule with the exit plan is the fastest policy within budget at every
+batch size, 1.95–2.46× at a held-out drop of 0.60–0.66 points, 8–14% ahead of
+the best baseline within budget. At length 32 and B ≤ 16 the plan's policy is 0.05 points over
+budget (so is the unified exit's), and the rule with all exits is the fastest policy within budget (1.30–1.33×). On MNLI
+at length 128 the cost rule is over budget at every batch size (held-out drop 1.23–1.28
+points), and so are the per-sample threshold and, at B ≥ 16, random search (1.06–1.48 points). The
+fastest policies within budget there are the unified exit, the threshold with an exit plan and majority vote, at
+1.46–1.66×. At length 32 and B ≤ 16 the plan's policy is within budget but 3–5% behind
+the unified exit. Section 5.2 checks whether the MNLI overshoot is a property of this held-out half.</p>
+<table class='num'><tr><th rowspan=2>Policy</th><th colspan=4>QQP, length 128</th><th colspan=4>QQP, length 32</th></tr><tr><th>B=8</th><th>B=16</th><th>B=64</th><th>B=128</th><th>B=8</th><th>B=16</th><th>B=64</th><th>B=128</th></tr><tr class=''><td>Per-sample threshold</td><td>1.48</td><td>1.79</td><td>2.11</td><td>2.13</td><td>0.84</td><td>0.85</td><td>1.75</td><td>2.03</td></tr><tr class=''><td>Threshold + exit plan</td><td>1.90*</td><td>1.83</td><td>2.15</td><td>2.13</td><td>1.73*</td><td>1.80*</td><td>1.86</td><td>2.04</td></tr><tr class=''><td>Unified exit</td><td>1.91*</td><td>1.96*</td><td>1.99*</td><td>1.99*</td><td>1.79*</td><td>1.83*</td><td>1.97*</td><td>1.98*</td></tr><tr class=''><td>Majority vote</td><td>1.33</td><td>1.40</td><td>1.80</td><td>1.87</td><td>1.06</td><td>1.16</td><td>1.73</td><td>1.83</td></tr><tr class=''><td>Random search (150 rules)</td><td>1.77</td><td>1.99</td><td>2.11</td><td>2.26</td><td>1.09</td><td>1.14</td><td>1.75</td><td>2.34</td></tr><tr class='ours'><td>Cost rule, all exits (ours)</td><td>1.84</td><td>2.20</td><td>2.45</td><td>2.39</td><td><b>1.33</b></td><td><b>1.30</b></td><td><b>2.11</b></td><td><b>2.37</b></td></tr><tr class='ours'><td>Cost rule + exit plan (ours)</td><td><b>1.95</b></td><td><b>2.20</b></td><td><b>2.46</b></td><td><b>2.44</b></td><td>1.68*</td><td>1.76*</td><td>2.11</td><td>2.30</td></tr></table><p class='cap'><b>Table 11:</b> QQP, RTX A6000, eager PyTorch, trained RoBERTa-base checkpoint, real inputs: measured speedup of each method's certified policy on held-out inputs (2,048 per pass, 5 rounds, median paired speedup). Bold: fastest policy within the one-point budget in the column. * held-out drop above one point. <code>results/local_time_qqp_a6000_T{128,32}.csv</code>.</p><table class='num'><tr><th rowspan=2>Policy</th><th colspan=4>MNLI, length 128</th><th colspan=4>MNLI, length 32</th></tr><tr><th>B=8</th><th>B=16</th><th>B=64</th><th>B=128</th><th>B=8</th><th>B=16</th><th>B=64</th><th>B=128</th></tr><tr class=''><td>Per-sample threshold</td><td>1.33*</td><td>1.54*</td><td>1.69*</td><td>1.73*</td><td>0.85*</td><td>0.93*</td><td>1.48*</td><td>1.65*</td></tr><tr class=''><td>Threshold + exit plan</td><td>1.46</td><td><b>1.51</b></td><td><b>1.66</b></td><td>1.67*</td><td>1.38</td><td>1.41</td><td>1.47</td><td>1.63*</td></tr><tr class=''><td>Unified exit</td><td><b>1.46</b></td><td>1.49</td><td>1.50</td><td>1.50</td><td><b>1.42</b></td><td><b>1.45</b></td><td><b>1.48</b></td><td><b>1.49</b></td></tr><tr class=''><td>Majority vote</td><td>1.32*</td><td>1.40</td><td>1.48</td><td><b>1.51</b></td><td>1.05*</td><td>1.20</td><td>1.44</td><td>1.49</td></tr><tr class=''><td>Random search (150 rules)</td><td>1.44</td><td>1.66*</td><td>1.80*</td><td>1.83*</td><td>1.01</td><td>1.22*</td><td>1.71*</td><td>1.79*</td></tr><tr class='ours'><td>Cost rule, all exits (ours)</td><td>1.47*</td><td>1.63*</td><td>1.72*</td><td>1.71*</td><td>1.07</td><td>1.20*</td><td>1.61*</td><td>1.67*</td></tr><tr class='ours'><td>Cost rule + exit plan (ours)</td><td>1.54*</td><td>1.65*</td><td>1.71*</td><td>1.72*</td><td>1.35</td><td>1.40</td><td>1.65*</td><td>1.69*</td></tr></table><p class='cap'><b>Table 12:</b> MNLI, same layout. <code>results/local_time_mnli_a6000_T{128,32}.csv</code>.</p>
 <h3>5.2 Tighten the certificate (13–15 Nov)</h3>
 <p>Replace the <i class='v'>t</i>-test with a finite-sample bound for bounded batch losses (Hoeffding–Bentkus), add the
 label-free version that controls disagreement with the full model, and repeat the re-split check on CIFAR-100. In
@@ -327,35 +343,83 @@ the same runs, repeat the selection with 10%, 25% and 50% of the calibration dat
 random search, to test whether a rule with one parameter needs less data than a searched rule with three.</p>
 <p class='fb'><i class='l'>Expected:</i> the same violation rates with a speed cost of a few percent.<br>
 <i class='l'>Fallback:</i> keep the <i class='v'>t</i>-test and state it as an asymptotic guarantee with the measured violation rate.</p>
+<p class='fb'><i class='l'>Result (Table 13):</i> the t-test keeps the share of re-splits over budget
+at or below δ = 10% on average on all three tasks (1.3% QQP, 5.3% MNLI,
+8.5% CIFAR-100, mean over five methods). On CIFAR-100 two methods are slightly above δ (per-sample
+threshold 13.3%, cost rule + plan 11.7%),
+which 120 cases per method cannot separate from 10% (the 95% interval is about ±5 points). The finite-sample bounds are
+too conservative at these sample sizes: for the accuracy drop, Hoeffding–Bentkus certifies no policy on any task, and
+the WSR bound certifies
+one in 49% of the QQP cases, at 1.50× against 2.31×
+with the t-test, and never on MNLI or CIFAR-100. The label-free version (disagreement with the full model) had no
+violations and costs speed: 1.88× against 2.31× on QQP. With 10% of the
+calibration data the cost rule falls from 2.30× to 1.83× on QQP, and random
+search loses about as much (2.13× → 1.71×), so the data-efficiency hypothesis (one parameter needs less data than three) is not
+supported. We therefore state the certificate as asymptotic, checked on re-splits.</p>
+<p><b>The MNLI held-out half.</b> On the fixed split (<code>results/delta_check_mnli.csv</code>) the cost rule, the
+per-sample threshold and random search at B ≥ 16 all exceed the budget at δ = 10% (cost rule, with or without the
+plan, and threshold: 1.21–1.28 points), while the unified exit and the threshold with an exit plan stay at or just
+above it (0.86–1.01 points). At
+δ = 2% the cost rule is within budget at B ≤ 64 (0.47–0.80 points) for 10–13% less
+speed, but not at B = 128 (1.25). The split is random (<code>traces/train_exit_heads.py</code>),
+and on 30 random re-splits at δ = 10% the cost rule is over budget in 7.5% of cases. Lowering δ to 5% cuts the re-split violation rate of the cost rule from 7.5% to 2.5% (with the plan 6.7% → 3.3%, random search 4.2% → 0.8%) for about 3% less speed (1.51× → 1.46×).
+We read the fixed-split overshoot as an unlucky split, not a distribution shift; these numbers are consistent with that
+reading and do not prove it.</p>
+<table class='num'><tr><th>Task</th><th>t-test: share over budget, mean of 5 methods (worst)</th><th>Cost rule + plan, t-test (share over budget)</th><th>Same, WSR bound (share of cases with a certified policy)</th><th>Hoeffding–Bentkus</th><th>Cost rule + plan, label-free t-test (over budget)</th><th>Cost rule, all → 10% of calibration data (over budget)</th></tr><tr><td>QQP</td><td>1.3% (2.5%, Random search)</td><td>2.31× (1.7%)</td><td>1.50× (49%)</td><td>never</td><td>1.88× (0.0%)</td><td>2.30× → 1.83× (2.5%)</td></tr><tr><td>MNLI</td><td>5.3% (8.3%, Per-sample threshold)</td><td>1.52× (6.7%)</td><td>1.00× (0%)</td><td>never</td><td>1.29× (0.0%)</td><td>1.51× → 1.15× (7.5%)</td></tr><tr><td>CIFAR-100</td><td>8.5% (13.3%, Per-sample threshold)</td><td>1.26× (11.7%)</td><td>1.00× (0%)</td><td>never</td><td>1.19× (0.0%)</td><td>1.17× → 1.04× (9.2%)</td></tr><tr><td>MNLI, δ = 5%</td><td>2.2% (4.2%, Per-sample threshold)</td><td>1.47× (3.3%)</td><td>–</td><td>–</td><td>1.27× (0.0%)</td><td>1.46× → 1.11× (5.0%)</td></tr></table><p class='cap'><b>Table 13:</b> Certified selection on 30 random re-splits of the validation traces (20% tables and paths, 30% certification, 50% test) at B = 8, 16, 64, 128; share of the 120 cases per method whose test drop exceeds one point, and mean speedup from the cost table (not timed). δ = 10% unless stated. <code>results/cert_check_{qqp,mnli,cifar100,mnli_d05}_summary.csv</code>.</p>
 <h3>5.3 Fluctuating load (19–21 Nov)</h3>
 <p>Replay an arrival trace in which the batch size moves between 1 and 128. Compare the rule, re-certified for each
 batch size from one set of calibration traces, against heuristics tuned at a single batch size and against
 heuristics re-tuned per batch size.</p>
 <p class='fb'><i class='l'>Expected:</i> within 5% of per-batch-size re-tuned heuristics and ahead of heuristics tuned once.<br>
 <i class='l'>Fallback:</i> if tuned-once heuristics are as good, drop the load claim and keep the per-setting results.</p>
+<p class='fb'><i class='l'>Result (Table 14):</i> passes on QQP: the cost rule tuned once reaches
+2.32× against 2.11× for the best baseline re-tuned per batch size
+(random search). CIFAR-100 passes only with the exit plan (1.39×
+against 1.38×); with all exits the rule reaches 1.24× and is behind
+the best tuned-once baseline. MNLI fails on the budget: tuned once, the cost rule loses 1.48 points (with the
+plan 1.23), and δ = 5% does not change the policy tuned at B = 64.</p>
+<table class='num'><tr><th>Task</th><th>Cost rule, tuned once at B = 64 (drop)</th><th>Cost rule + plan, tuned once (drop)</th><th>Best baseline re-tuned per batch size, within budget</th><th>Best baseline tuned once, within budget</th><th>Criterion</th></tr><tr><td>QQP</td><td>2.32× (0.61)</td><td>2.31× (0.62)</td><td>2.11× (Random search, 0.68)</td><td>2.10× (Random search once@8, 0.76)</td><td>pass</td></tr><tr><td>MNLI</td><td>1.68× (1.48*)</td><td>1.67× (1.23*)</td><td>1.63× (Threshold + exit plan, 0.97)</td><td>1.60× (Threshold + exit plan once@64, 0.98)</td><td>fail</td></tr><tr><td>MNLI, δ = 5%</td><td>1.68× (1.48*)</td><td>1.67× (1.23*)</td><td>1.63× (Threshold + exit plan, 0.97)</td><td>1.60× (Threshold + exit plan once@64, 0.98)</td><td>fail</td></tr><tr><td>CIFAR-100</td><td>1.24× (0.49)</td><td>1.39× (0.75)</td><td>1.38× (Threshold + exit plan, 0.68)</td><td>1.33× (Per-sample threshold once@8, 0.81)</td><td>pass (plan only)</td></tr></table><p class='cap'><b>Table 14:</b> Fluctuating load: 3 arrival traces of 3,000 batches with B from 1 to 128, throughput speedup over all batches and accuracy drop over all served inputs (held-out, cost-table replay). Criterion of <code>docs/DIRECTION.md</code>: tuned once, within budget, within 5% of the best per-batch-size re-tuned baseline and ahead of every tuned-once baseline. * over the one-point budget. <code>results/load_trace_{qqp,mnli,mnli_d05,cifar100}_levels.csv</code>.</p>
 <h3>5.4 Bandit with error bars (22–23 Nov)</h3>
 <p>Ten seeds with confidence bands, a probe-rate ablation (<i class='v'>t</i><sup>−1/2</sup>, <i class='v'>t</i><sup>−1/3</sup>, constant), and a
 warm start from a small labelled set.</p>
 <p class='fb'><i class='l'>Expected:</i> slopes between 0.5 and 0.7 where the oracle stops batches.<br>
 <i class='l'>Fallback:</i> report the measured slopes without a rate claim.</p>
+<p class='fb'><i class='l'>Result (ten seeds, B = 64, 3,000 batches; <code>results/bandit_slopes_*_10seeds.csv</code>):</i>
+the log–log slope of cumulative regret is 0.55–0.77 in the 5
+settings where the bandit has regret to measure (95% intervals ±0.01–0.03);
+in the remaining one (<code>cifar100_dec_eager</code>) cumulative regret stays below
+0.06 and the slope means nothing. 4 of the 5 slopes are
+in the 0.5–0.7 band we expected; a slope is not a proof of a rate. The <i class='v'>t</i><sup>−1/3</sup> probe schedule has
+the lowest regret of the three schedules in 3 of these 5 settings; <i class='v'>t</i><sup>−1/2</sup> is
+lower in the others. The warm start reduces regret by 2–12%.</p>
 <h3>5.5 Robustness in the compute-bound regime (22–23 Nov)</h3>
 <p>Run the attack experiments where majority vote loses its clean speedup, and test an attacker that uses
 <i class='v'>k</i> &gt; <i class='v'>m</i> inputs.</p>
 <p class='fb'><i class='l'>Expected:</i> the bound holds; the clean-speed cost at low ρ is quantified per task.<br>
 <i class='l'>Fallback:</i> claim only the certificate.</p>
+<p class='fb'><i class='l'>Result (<code>experiments/robust_bound.py --tune cert</code>, 3 tasks × 4 cost
+profiles, B = 64; <code>results/robust_*_B64_cert.csv</code>):</i> the pathwise bound held in all 25,200 checked batches
+(0 violations). Collective rules that count votes collapse: on the text tasks majority vote reaches
+1.01–1.11× full-model latency at 16–32 attackers and consensus 0.97–1.10× at 8. The cost rule degrades
+smoothly (victims' latency at 32 attackers 0.60–0.85× without trimming). Two findings narrow the claim: the
+per-sample threshold is also robust (0.74–0.94× at 32 attackers, outside the
+decoder-cost profile where it gives no speedup at all), and trimming buys little. At 32 attackers the trimmed rules
+are not faster than the untrimmed one on the text tasks, and on CIFAR-100 trimming eight gains costs most of the clean
+speedup (0.91–1.02× against 1.15–1.57×). On MNLI the certified cost rule is again over
+budget on the held-out half (1.4–1.6 points).</p>
 <h3>5.6 Trained checkpoints on the local GPU (when checkpoints are copied)</h3>
 <p>Repeat Section 4.4 with the trained weights and real tokenised inputs, with batches padded to their own longest
 input, so that the short-sequence settings are measured on real short inputs.</p>
 <p class='fb'><i class='l'>Expected:</i> the same ordering; timing does not depend on weight values.<br>
 <i class='l'>Fallback:</i> keep the replayed-decision results, labelled as such.</p>
-<h3>5.7 LLM decoders, second attempt (future work; scripts ready, not run)</h3>
+<h3>5.7 LLMs: decoders (second attempt) and batched classifiers</h3>
 <p>The first attempt failed for reasons we can now name: the backbone was frozen while its exits were trained (the
 same fault the encoders had before joint training), LayerSkip checkpoints are trained for drafting and not for
 returning the early answer, the test was run only at batch sizes 16 and 64, and the budget was one point of
 next-token accuracy on free text. The second attempt trains LoRA adapters and exit heads together with
 self-distillation from the final layer on Qwen2.5-1.5B, keeps a frozen baseline at the same budget, and sweeps
 batch sizes from 2 to 64. The training script and a runbook with pass and kill conditions for each step are
-written. Nothing in this track has been run, including the functional test of the training script.</p>
+written. Steps 0–2 have since been run; the result is below.</p>
 <p><b>Key–value cache.</b> A token that exits at layer <i class='v'>l</i> leaves the layers above it without keys and values,
 which later tokens attend to. Our decoding loop already handles this the way CALM does [27]: the exit hidden state
 is projected into the keys and values of every skipped layer. In the first attempt this cost about 2% of a layer
@@ -371,6 +435,26 @@ greedy output as the metric.</p>
 backbone), and a speedup at small batch sizes. This is a forecast.<br>
 <i class='l'>Fallback:</i> if the exit stays more than 4 points short, the LLM track ends as a negative result with its
 cause.</p>
+<p class='fb'><i class='l'>Result, decoding (15–16 Nov):</i> steps 0–2 of the runbook ran. Training
+the exits with LoRA narrows the gap of frozen exits (Qwen2.5-1.5B, layer 24: 2.4 points below the fine-tuned
+model against 4.0 frozen), but on free-text next-token prediction a batch-level rule has almost nothing to
+adapt to: the gain of an adaptive depth over a fixed exit at a one-point budget falls from
+12% at B = 1 to
+0.2% at B = 64 (<code>results/adaptivity_vs_batch.csv</code>). Decoding stays a negative result (<code>docs/PLAN_LLM.md</code> §7).</p>
+<p class='fb'><i class='l'>Result, the LLM as a batched classifier (16–22 Nov, Tables 15–16):</i> on Llama-3.1-8B
+(compute-bound: ρ = 0.09 at B = 8) the cost rule is the fastest policy within budget at every batch size on both
+tasks: QQP 3.48–3.66× against 3.11–3.50× (5–13% ahead), MNLI
+2.97–3.14× against 2.56–2.66× (14–18% ahead), at held-out drops of
+0.42–0.44 and 0.70–0.74
+points. On Qwen2.5-1.5B QQP it is 5–16% ahead (2.18–3.02×). Qwen2.5-1.5B MNLI is the
+exception: with all exits the rule is the slowest certified policy (1.10–1.19×); with the exit plan it
+reaches 1.38–1.48× at a 0.2-point drop, ahead of the best baseline within budget at
+B = 16, 128 (+1%, +5%) and behind at B = 8, 64
+(−7%, −6%). The per-sample threshold is faster there (1.34–1.94×) but
+over budget (1.21–1.23 points). Decisions are replayed from the recorded traces on the trained weights;
+the device's predictions agree with the traces on 97–100% of inputs at every exit
+(<code>results/local_check_*_a6000_T128.json</code>).</p>
+<table class='num'><tr><th rowspan=2>Policy</th><th colspan=4>Llama-3.1-8B</th><th colspan=4>Qwen2.5-1.5B</th></tr><tr><th>B=8</th><th>B=16</th><th>B=64</th><th>B=128</th><th>B=8</th><th>B=16</th><th>B=64</th><th>B=128</th></tr><tr class=''><td>Per-sample threshold</td><td>3.08</td><td>3.07</td><td>3.32</td><td>3.32</td><td>1.52</td><td>1.97</td><td>2.54</td><td>2.58</td></tr><tr class=''><td>Threshold + exit plan</td><td>3.04</td><td>3.03</td><td>3.27</td><td>3.26</td><td>2.00</td><td>2.00</td><td>2.55</td><td>2.58</td></tr><tr class=''><td>Unified exit</td><td>2.65</td><td>2.66</td><td>2.66</td><td>2.66</td><td>1.73</td><td>1.74</td><td>1.75</td><td>1.75</td></tr><tr class=''><td>Majority vote</td><td>1.94</td><td>1.64</td><td>1.81</td><td>1.66</td><td>1.45</td><td>1.60</td><td>1.90</td><td>1.86</td></tr><tr class=''><td>Random search (150 rules)</td><td>3.13</td><td>3.11</td><td>3.50</td><td>3.43</td><td>2.02*</td><td>2.41</td><td>2.56</td><td>2.60</td></tr><tr class='ours'><td>Cost rule, all exits (ours)</td><td>3.48</td><td><b>3.52</b></td><td><b>3.66</b></td><td>3.62</td><td>2.15</td><td>2.52</td><td><b>2.96</b></td><td><b>3.02</b></td></tr><tr class='ours'><td>Cost rule + exit plan (ours)</td><td><b>3.48</b></td><td>3.49</td><td>3.64</td><td><b>3.62</b></td><td><b>2.18</b></td><td><b>2.52</b></td><td>2.96</td><td>3.01</td></tr></table><p class='cap'><b>Table 15:</b> LLMs as batched classifiers, QQP: LoRA + one linear exit head per exit on the last prompt token (prefill only, prompts padded to 128 tokens, bf16, eager), RTX A6000, trained weights and real prompts, held-out, 2,048 inputs per pass, 5 rounds. Layout as Table 11. <code>results/local_time_qqp_{llama,qwen}_a6000_T128.csv</code>.</p><table class='num'><tr><th rowspan=2>Policy</th><th colspan=4>Llama-3.1-8B</th><th colspan=4>Qwen2.5-1.5B</th></tr><tr><th>B=8</th><th>B=16</th><th>B=64</th><th>B=128</th><th>B=8</th><th>B=16</th><th>B=64</th><th>B=128</th></tr><tr class=''><td>Per-sample threshold</td><td>2.38</td><td>2.44*</td><td>2.62</td><td>2.61</td><td>1.34*</td><td>1.65*</td><td>1.89*</td><td>1.94*</td></tr><tr class=''><td>Threshold + exit plan</td><td>2.56</td><td>2.47</td><td>2.53</td><td>2.53</td><td>1.70*</td><td>1.72*</td><td>1.73*</td><td>1.72*</td></tr><tr class=''><td>Unified exit</td><td>2.64*</td><td>2.66*</td><td>2.66*</td><td>2.66*</td><td>1.39</td><td>1.40</td><td>1.40</td><td>1.40</td></tr><tr class=''><td>Majority vote</td><td>1.62</td><td>1.72</td><td>2.75*</td><td>2.72*</td><td>1.29</td><td>–</td><td><b>1.54</b></td><td>–</td></tr><tr class=''><td>Random search (150 rules)</td><td>2.40</td><td>2.66</td><td>2.66</td><td>2.66</td><td><b>1.48</b></td><td>1.37</td><td>–</td><td>1.33</td></tr><tr class='ours'><td>Cost rule, all exits (ours)</td><td>2.97</td><td><b>3.05</b></td><td>3.12</td><td>3.14</td><td>1.10</td><td>1.16</td><td>1.18</td><td>1.19</td></tr><tr class='ours'><td>Cost rule + exit plan (ours)</td><td><b>2.97</b></td><td>3.04</td><td><b>3.12</b></td><td><b>3.14</b></td><td>1.38</td><td><b>1.41</b></td><td>1.44</td><td><b>1.48</b></td></tr></table><p class='cap'><b>Table 16:</b> MNLI, same layout. <code>results/local_time_mnli_{llama,qwen}_a6000_T128.csv</code>.</p>
 <h3>5.8 Theory and write-up (24–26 Nov)</h3>
 <p>State and prove when the lookahead rule is optimal: the monotone case [12] for an affine cost with gains that
 diminish with depth. For a general non-decreasing <i class='v'>c</i>(<i class='v'>n</i>) we aim only at the regime switch at the knee of a
@@ -385,17 +469,19 @@ floor-shaped cost, and at a bound on what rule (2) loses by overestimating its s
 <tr><td>22–23 Nov</td><td>Bandit with ten seeds; robustness at low ρ</td></tr>
 <tr><td>24–26 Nov</td><td>Theory write-up, final figures, presentation</td></tr>
 <tr><td>When a server GPU is free</td><td>LLM second attempt, first three steps of the runbook (about 4 GPU-hours, estimate). It does not take time from the server rerun</td></tr></table>
-<h3>5.10 Claims and their status</h3>
-<table><tr><th>Claim</th><th>Status</th><th>Evidence still required</th></tr>
-<tr><td>Which rule is fastest flips with batch size, execution mode and sequence length</td><td><span class='tag'>HOLDS</span> on two GPUs</td><td>Accuracy-matched server rerun (5.1)</td></tr>
-<tr><td>The per-layer cost is a floor plus a linear part, not affine</td><td><span class='tag'>HOLDS</span> on the GTX 1650</td><td>The same profile on the A6000; whether it changes realised speed, not only the fit</td></tr>
-<tr><td>At matched accuracy the rule is at least as fast as every baseline</td><td><span class='tag'>PARTLY</span> yes on QQP, no on MNLI (cost table)</td><td>Timed, trained checkpoints on the server (5.1), CIFAR-100</td></tr>
-<tr><td>Stopping a batch spreads the accuracy loss evenly</td><td><span class='tag'>FALSE</span> loss lands on hard inputs</td><td>A per-input floor on the loss; not planned before 26 Nov</td></tr>
-<tr><td>The exit plan fixes the small-batch weakness</td><td><span class='tag'>PARTLY</span> +7% and +21% at B = 8 on the cost floor (cost table); the threshold gains as much from the same search</td><td>Server run under CUDA graphs, where heads cost 19% (5.1)</td></tr>
-<tr><td>Certified selection keeps the accuracy budget</td><td><span class='tag'>HOLDS</span> on re-splits (t-test); fixed MNLI half over budget</td><td>Finite-sample bound (5.2)</td></tr>
-<tr><td>The label-free bandit learns the rule (secondary)</td><td><span class='tag'>PARTLY</span> single seeds</td><td>Ten seeds (5.4)</td></tr>
-<tr><td>Bounded damage from slowdown inputs</td><td><span class='tag'>HOLDS</span> 0 violations</td><td>Low-ρ cost, adaptive attacker (5.5)</td></tr>
-<tr><td>Benefit on LLM decoders</td><td><span class='tag'>FAILED</span> first attempt</td><td>Second attempt with jointly trained exits (5.7), not started</td></tr></table>
+<h3>5.10 Claims and their status (23 November)</h3>
+<table><tr><th>Claim</th><th>Status</th><th>Evidence, and what is still missing</th></tr>
+<tr><td>Which rule is fastest flips with batch size, execution mode and sequence length</td><td><span class='tag'>HOLDS</span> on two GPUs</td><td>Sections 4.2, 4.4, 5.1. CUDA-graph rerun on the A6000 still missing</td></tr>
+<tr><td>The per-layer cost is a floor plus a linear part, not affine</td><td><span class='tag'>HOLDS</span> on the GTX 1650; Qwen2.5-1.5B on the A6000 has a floor up to B = 4</td><td>Section 4.3; <code>results/local_cost_a6000_T128_qwen.json</code></td></tr>
+<tr><td>Re-certified per setting (a CPU replay), the rule is near the best certified method everywhere</td><td><span class='tag'>HOLDS</span> on QQP (RoBERTa, Qwen2.5-1.5B, Llama-3.1-8B) and Llama MNLI, strongest on the LLM classifiers (5–18% ahead on Llama). Exceptions: RoBERTa MNLI (over budget on the fixed split) and Qwen MNLI (needs the plan; −7%, +1%, −6%, +5% at B = 8, 16, 64, 128)</td><td>Timed A6000 runs, Tables 11–12 and 15–16. CUDA graphs and CIFAR-100 on the A6000 still missing</td></tr>
+<tr><td>Stopping a batch spreads the accuracy loss evenly</td><td><span class='tag'>FALSE</span> loss lands on hard inputs</td><td>Table 9. A per-input floor on the loss is not planned before 26 Nov</td></tr>
+<tr><td>The exit plan fixes the small-batch weakness</td><td><span class='tag'>PARTLY</span> needed on Qwen MNLI and CIFAR-100 under load; at length 32 and B ≤ 16 on QQP its policy is just over budget</td><td>Tables 11, 14, 16. Under CUDA graphs, where heads cost 19%, not yet measured</td></tr>
+<tr><td>Certified selection keeps the accuracy budget</td><td><span class='tag'>WEAKENED</span> to an asymptotic certificate (t-test), within δ on average over 30 re-splits on all three tasks</td><td>Table 13: finite-sample bounds (Hoeffding–Bentkus, WSR) are too conservative at these sample sizes; the label-free version costs speed</td></tr>
+<tr><td>The MNLI held-out overshoot is an unlucky split</td><td><span class='tag'>PARTLY</span> consistent: the re-split violation rate is within δ, and δ = 2% fixes B ≤ 64 at about 10% less speed</td><td>Section 5.2; not proved, one fixed split</td></tr>
+<tr><td>Under fluctuating load, one tuning of the rule is enough</td><td><span class='tag'>HOLDS</span> on QQP; CIFAR-100 only with the plan; <span class='tag'>FAILS</span> on MNLI (budget)</td><td>Table 14 (cost-table replay, not timed)</td></tr>
+<tr><td>The label-free bandit learns the rule (secondary)</td><td><span class='tag'>HOLDS</span> ten seeds, sublinear regret</td><td>Section 5.4; slopes are not a rate proof</td></tr>
+<tr><td>Bounded damage from slowdown inputs</td><td><span class='tag'>HOLDS</span> 0 violations of the bound; majority and consensus collapse. The per-sample threshold is also robust, and trimming buys little</td><td>Section 5.5</td></tr>
+<tr><td>Benefit on LLMs</td><td><span class='tag'>FAILED</span> for decoding; <span class='tag'>HOLDS</span> for classification on Llama-3.1-8B (both tasks) and Qwen2.5-1.5B QQP, mixed on Qwen MNLI</td><td>Section 5.7, Tables 15–16</td></tr></table>
 
 <h2>6. Expected outcome</h2>
 <p>By 26 November we expect a timed, accuracy-matched comparison on two GPUs showing where the cost-derived rule

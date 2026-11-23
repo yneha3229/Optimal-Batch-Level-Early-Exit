@@ -119,3 +119,11 @@ the CLI in `experiments/local_hw.py`**.
   - anything over about 20 MB;
   - `.env` / tokens.
 - Don't push to the user's CUDA-graph branch.
+
+## 6. Corrections found on 23 Nov (supersede the numbers above)
+- Llama QQP B=128 is already timed: 3.62× vs 3.43× (random search). Task 5 is not needed.
+- MNLI fixed split: unified exit and threshold + plan stay at 0.86–1.01 pt; not every family overshoots.
+- The t^-1/3 probe schedule is lowest in 3 of 5 settings with measurable regret (t^-1/2 is lower on MNLI-real and CIFAR-real).
+- Qwen MNLI with the plan is mixed (−7%, +1%, −6%, +5% at B = 8, 16, 64, 128), not a plain loss.
+- Done on 23 Nov: tasks 1, 3 (launched), 4 and the code for the re-targeted evolve (`MINRANK_EVO_TARGET=sat`,
+  `scripts/minrank/06b_evolve_hard.sh`, not launched). Task 2 (gate memo) is being finished.
