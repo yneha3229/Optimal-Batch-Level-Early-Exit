@@ -45,13 +45,15 @@ fix U_I = [Id | 0] and V_I[:, s:] = 0. Do not combine this with the old u_0 = e_
 | Kneser K(n,2), n = 5, 6, 7, 8, 10, 12 | 10-66 | n-1 | 5, 5, 7, 7, 9, 11 | equal to minrank | n-1 for even n, n for odd n, which is the chromatic index of K_n |
 | K(7,3) | 35 | 15 | 18 | 18 | rank 17 UNSAT in 44 s |
 | **K(8,3)** | 56 | 21 | **22** | **28** | rank 21 UNSAT in 822 s and in 898 s (two runs), with the same independent set (vertices 0-20) |
+| K(9,3) | 84 | 28 | 28 | 28 | trivial: 3 divides 9 (Baranyai), see T2 (0) |
+| **K(10,3)** | 120 | 36 | **36 = alpha** | **>= 40** (cliques have at most 3 disjoint triples) | found 23 Nov in 5.6 s; explicit matrix in `minrank/certificates/kneser_10_3.json`, checked with plain Python; no UNSAT proof needed because alpha is the lower bound |
 | Mycielski M3-M6 | 5, 11, 23, 47 | 2, 5, 11, 23 | 3, 6, 12, 24 | equal to minrank | = alpha + 1 = (n+1)/2; M6 rank 23 UNSAT in 504-538 s |
 | Paley 5, 13, 17 | | 2, 3, 3 | 3, 5, 6 | equal to minrank | |
 | Cycle powers C(n,2), C(n,3), 9 <= n <= 27, plus C(29,2) and C(31,3) | | | equal to the clique cover | | under 0.1 s each |
 | planted n = 50, s1 and s3-s6 | 50 | 6-7 | 8 | > 8 | equal to the planted rank |
 | planted_d n = 50 (directed) | 50 | 8 | upper bounds only: s1 13, s3 14, s4 14, s6 15 | | not proven |
 
-K(8,3) is the only named graph so far where minrank is strictly below the clique cover.
+K(8,3) (22 vs 28) and K(10,3) (36 vs >= 40) are the named graphs where minrank is strictly below the clique cover. Along K(n,3): 18 = alpha + 3 = cover (n = 7), alpha + 1 (n = 8), alpha = cover (n = 9), alpha < cover (n = 10).
 
 **Still running (scratch, Claude's session, started about 07:00 UTC):**
 - Sweep: K(9,2), K(11,2), K(9,3), and Paley 29, 37, 41.
@@ -104,7 +106,8 @@ K(8,3) is the only named graph so far where minrank is strictly below the clique
   - Look for structure: blocks, which triples share rows, the action of S_8.
   - A construction that generalises to K(n,3) would give minrk_2(K(n,3)) < clique cover for all n >= 8 with
     3 not dividing n. That would be the headline theorem.
-  - K(7,3) = 18 = cover, but K(8,3) = 22 < 28. What changes between 7 and 8? K(10,3) (alpha 36, cover 40),
+  - K(7,3) = 18 = cover, but K(8,3) = 22 < 28 and K(10,3) = 36 = alpha < 40. What changes between 7 and 8? Is there
+    a rank-alpha construction for K(10,3) (the certificate) that generalises, e.g. to n = 1 mod 3 or n even? K(10,3) (alpha 36, cover 40),
     K(11,3) (alpha 45, cover 55) and K(10,4) (alpha 84, cover 105) are running.
 
 **T3. Literature and novelty** (`docs/MINRANK_LIT.md`). For each paper, note what it computes and whether it covers
