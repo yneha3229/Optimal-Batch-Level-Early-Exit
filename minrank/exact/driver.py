@@ -12,10 +12,14 @@ For each selected graph:
 Improved certificates are saved with run_baselines.keep_best (in the main process). One CSV row per attempt is
 appended to minrank/results/exact.csv; graphs already proven optimal there are skipped (resumable). Graphs not
 proven get a new row on each run; readers should take the last row per graph.
+`--rerun-from CSV` restricts the run to graphs whose last row in CSV has a status in `--rerun-status` (default
+call_timeout) and is not proven; combine it with `--out` so the earlier results are not appended to.
 
 Usage:
   python -m minrank.exact.driver --family kneser paley mycielski orthogonality cycle_power circulant \
       --max-n 60 --time-per-call 600 --workers 8
+  python -m minrank.exact.driver --rerun-from minrank/results/exact.csv --time-per-call 3600 \
+      --out minrank/results/exact_long.csv --workers 16
 """
 from __future__ import annotations
 
@@ -93,6 +97,13 @@ def proven_graphs(path: Path) -> set[str]:
         return {r["graph"] for r in rd if r["proven_optimal"] == "True"}
 
 
+def graphs_with_status(path: Path, statuses: list[str]) -> set[str]:
+    """Graphs whose last row in an exact CSV has a status in `statuses` and is not proven optimal."""
+    with path.open(newline="") as f:
+        last = {r["graph"]: r for r in csv.DictReader(f)}
+    return {g for g, r in last.items() if r["status"] in statuses and r["proven_optimal"] != "True"}
+
+
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--graphs", type=Path, default=ROOT / "bench/graphs")
@@ -109,10 +120,15 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--out", type=Path, default=ROOT / "results/exact.csv")
     ap.add_argument("--certs", type=Path, default=ROOT / "certificates")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--rerun-from", type=Path, default=None,
+                    help="only graphs whose last row in this exact CSV has a status in --rerun-status")
+    ap.add_argument("--rerun-status", nargs="+", default=["call_timeout"])
     a = ap.parse_args(argv)
+    rerun = graphs_with_status(a.rerun_from, a.rerun_status) if a.rerun_from else None
 
     idx = [r for r in load_index(a.graphs) if r["split"] in a.split and int(r["n"]) <= a.max_n
-           and (not a.family or r["family"] in a.family) and (not a.names or r["name"] in a.names)]
+           and (not a.family or r["family"] in a.family) and (not a.names or r["name"] in a.names)
+           and (rerun is None or r["name"] in rerun)]
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.certs.mkdir(parents=True, exist_ok=True)
     done = proven_graphs(a.out)

@@ -225,6 +225,30 @@ def test_driver_runs_and_is_resumable(tmp_path, capsys):
     assert len(list(csv.DictReader((tmp_path / "exact.csv").open()))) == 2
 
 
+def test_driver_rerun_from_selects_last_timeout_rows(tmp_path, capsys):
+    from minrank.exact.driver import FIELDS, graphs_with_status, main
+    _tiny_bench(tmp_path)
+    prev = tmp_path / "exact.csv"
+    base = {f: "" for f in FIELDS}
+    with prev.open("w", newline="") as f:
+        w = csv.DictWriter(f, FIELDS)
+        w.writeheader()
+        w.writerow(base | {"graph": "cycle_5", "proven_optimal": "False", "status": "call_timeout"})
+        w.writerow(base | {"graph": "kneser_5_2", "proven_optimal": "False", "status": "call_timeout"})
+        w.writerow(base | {"graph": "kneser_5_2", "proven_optimal": "True", "status": "unsat"})  # last row wins
+        w.writerow(base | {"graph": "other", "proven_optimal": "False", "status": "total_timeout"})
+    assert graphs_with_status(prev, ["call_timeout"]) == {"cycle_5"}
+    assert graphs_with_status(prev, ["call_timeout", "total_timeout"]) == {"cycle_5", "other"}
+    out = tmp_path / "exact_long.csv"
+    main(["--graphs", str(tmp_path / "graphs"), "--out", str(out), "--certs", str(tmp_path / "certs"),
+          "--time-per-call", "30", "--lb-time", "5", "--cover-time", "0.2", "--workers", "1",
+          "--rerun-from", str(prev)])
+    assert "1 graphs selected" in capsys.readouterr().out
+    rows = list(csv.DictReader(out.open()))
+    assert [(r["graph"], r["best_rank"], r["proven_optimal"]) for r in rows] == [("cycle_5", "3", "True")]
+    assert len(list(csv.DictReader(prev.open()))) == 4  # the source CSV is not appended to
+
+
 def test_separations_smoke(tmp_path):
     from minrank.exact.separations import main
     main(["--random-n", "5", "--random-count", "1", "--no-structured", "--time-per-call", "20", "--lb-time", "2",

@@ -187,10 +187,12 @@ def minrank_bruteforce(g: Graph) -> int:
     return best
 
 
-def sat_descend(g: Graph, time_limit: float, rng: np.random.Generator, cover_fraction: float = 0.1) -> list[int]:
+def sat_descend(g: Graph, time_limit: float, rng: np.random.Generator, cover_fraction: float = 0.1,
+                info: dict | None = None) -> list[int]:
     """B9 anytime: clique cover (TabuCol) for `cover_fraction` of the budget, then SAT for rank r-1, r-2, ... until the
     budget is spent or UNSAT (then the result is proven optimal). Returns the best verified rows.
-    Total wall-clock stays within `time_limit` plus process-kill latency: every SAT call gets only what is left."""
+    Total wall-clock stays within `time_limit` plus process-kill latency: every SAT call gets only what is left.
+    If `info` is a dict, info["proven"] is set to True iff the descent ended with UNSAT (the result is optimal)."""
     from ..baselines.clique_cover import clique_cover_rows
 
     deadline = time.perf_counter() + time_limit
@@ -202,6 +204,8 @@ def sat_descend(g: Graph, time_limit: float, rng: np.random.Generator, cover_fra
             break
         res = rank_at_most(g, best - 1, time_limit=left)
         if res is None or res is False:
+            if info is not None:
+                info["proven"] = res is False
             break
         rows, best = res, verify(g, res)
     return rows
