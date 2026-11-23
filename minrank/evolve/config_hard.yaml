@@ -1,0 +1,79 @@
+# OpenEvolve config for the RE-TARGETED minrank evolution (Option A, second attempt): the hard graphs, scored
+# relative to SAT at the same time budget. Used by scripts/minrank/06b_evolve_hard.sh, which sets
+# MINRANK_EVO_TARGET=sat for the evaluator (minrank/evolve/evaluator.py; see its docstring). The LLM server and
+# model are overridden by that script (--api-base, --primary-model), as for config.yaml.
+# Changes vs config.yaml (everything else is the same): max_iterations 150, system message (graphs, budget and
+# score), evaluator timeout 900 s, cascade threshold (scores are relative to SAT, so a seed-like program sits near 0
+# or a little below; -0.3 drops programs that fail on 2+ of the 4 stage-1 graphs or are far worse than SAT), one
+# evaluation at a time (SAT is wall-clock limited: the cached SAT reference was measured with the same number of
+# evaluator workers on the same cores, so a second concurrent evaluation would make the comparison unfair).
+max_iterations: 150
+checkpoint_interval: 25
+checkpoint_on_improvement: true
+random_seed: 42
+log_level: INFO
+diff_based_evolution: false     # full rewrites of the EVOLVE block; small local models fail exact SEARCH/REPLACE diffs
+enforce_evolve_blocks: true     # everything outside the EVOLVE-BLOCK markers is restored from the seed
+max_code_length: 20000
+early_stopping_metric: combined_score
+
+llm:
+  api_base: http://127.0.0.1:8000/v1
+  api_key: EMPTY
+  models:
+    - name: Qwen/Qwen2.5-Coder-32B-Instruct-AWQ
+      weight: 1.0
+  temperature: 0.8
+  max_tokens: 8192
+  timeout: 300
+  retries: 2
+
+prompt:
+  num_top_programs: 2
+  num_diverse_programs: 1
+  include_artifacts: true        # per-graph status/rank/cover/lb lines from the evaluator
+  max_artifact_bytes: 4096       # 20 KB default overflowed the 32k context by iteration ~17
+  system_message: |
+    You are improving a heuristic for the MINRANK of a graph over the field F_2 (linear index coding).
+    A side-information graph on n vertices is given as bitmasks: bit j of out[i] is set iff receiver i knows
+    message j. A 0/1 matrix A FITS the graph iff A[i][i] = 1 for every i and A[i][j] = 0 whenever j is not in out[i]
+    (j != i); entries on edges are free. The goal is a fitting matrix of the lowest possible rank over F_2.
+    rank(A) <= r iff A = U V^T (mod 2) with U, V in {0,1}^{n x r}; the constraints are <u_i, v_i> = 1 and
+    <u_i, v_j> = 0 (mod 2) on every forbidden pair. These XOR constraints defeat naive local search: a plain
+    bit-flip tabu search rarely gets below a clique cover, while the true minrank can be much lower.
+    The training graphs are the HARD ones: planted-rank graphs with n = 50 and n = 100 (planted rank 8 and 10;
+    "planted_d" are their directed versions) on which a SAT solver, given the same time budget of about 10 seconds
+    per graph, neither proves optimality nor reaches the certified lower bound. With 10 s, SAT descent reaches rank
+    14-15 on the n = 50 directed graphs, 13-14 on the n = 100 undirected and 24-25 on the n = 100 directed ones,
+    far above the planted rank, so there is room to improve.
+    Score per graph = (sat_rank - rank) / sat_rank, where sat_rank is the rank SAT descent reaches with the same
+    budget; 0 means "as good as SAT at equal time", positive is better, -1 means the program crashed, timed out or
+    returned a matrix that does not fit. Fitness = mean score over the training graphs.
+    The program has a FIXED skeleton (clique cover start; drop a column; drive violations to 0 at that rank with
+    tabu bit flips plus alternating information-set-decoding sweeps, the diagonal is a hard pivot; repeat). You may
+    only rewrite the code between EVOLVE-BLOCK-START and EVOLVE-BLOCK-END: PARAMS, tenure(), choose_move(),
+    column_to_drop(), init_factors(). Ideas: initialise the reduced factors from the low-rank structure (planted
+    graphs come from a hidden rank-r matrix: re-solve columns of V with U fixed, look for large sets of rows that
+    span a small space), structure-aware move selection, better column choice, restarts. Spend the budget where it
+    matters: the n = 100 graphs need fast inner loops. Keep every function name, signature and return type exactly
+    as documented.
+    Rules: imports only numpy, math, random, itertools, collections, heapq, time; no file, OS or network access;
+    no eval/exec; the code must be fast (choose_move is called many thousands of times per second).
+
+database:
+  population_size: 200
+  archive_size: 50
+  num_islands: 3
+  elite_selection_ratio: 0.1
+  exploration_ratio: 0.3
+  exploitation_ratio: 0.6
+  migration_interval: 25
+
+evaluator:
+  # Stage 1: the 4 smallest hard graphs; stage 2: all hard graphs (about 15 with the default families planted_d and
+  # planted, n 50-100, at 10 s per graph and 4 workers: ~40-60 s per candidate). The timeout leaves a wide margin.
+  timeout: 900
+  max_retries: 1
+  cascade_evaluation: true
+  cascade_thresholds: [-0.3]
+  parallel_evaluations: 1

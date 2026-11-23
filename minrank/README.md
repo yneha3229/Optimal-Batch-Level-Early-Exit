@@ -35,9 +35,11 @@ bash scripts/minrank/09_aggregate.sh                          # tables + figures
 | `02_baselines.sh` | sweep: graph x method x budget x seed | `minrank/results/baselines.csv`, `minrank/certificates/` |
 | `03_lower_bounds.sh` | certified lower bounds (CP-SAT) | `minrank/results/lower_bounds.csv` |
 | `04_exact.sh` | Option B: SAT descent to proven optima on structured graphs | `minrank/results/exact.csv` |
+| `04c_exact_rerun.sh` | Option B, second pass: only the `call_timeout` graphs of `exact.csv`, 3600 s per SAT call | `minrank/results/exact_long.csv` |
 | `04b_separations.sh` | Option B: search for explicit separations (gap to clique cover, F_2 vs F_3) | `minrank/results/separations.csv` |
 | `05_vllm_serve.sh` | start the vLLM server for OpenEvolve | |
 | `06_evolve.sh` | Option A: OpenEvolve run (writes evaluation traces) | `minrank/evolve/runs/` |
+| `06b_evolve_hard.sh` | Option A, re-targeted: hard graphs, fitness relative to SAT at equal time (see below) | `minrank/evolve/runs/` |
 | `07_eval_heldout.sh` | evaluate the best evolved program like a baseline | `minrank/results/evolved.csv` (method `evolved:<id>`) |
 | `08_cascade_replay.sh` | Option D: replay early-exit policies on the traces | `minrank/results/cascade/` |
 | `09_aggregate.sh` | summary tables, figures; fails if a certificate does not verify | `minrank/results/summary_*.csv`, `figures/` |
@@ -58,6 +60,43 @@ Every script takes `PY=/path/to/python` (default `python`); see the comments at 
 | `analysis/` | aggregation into summary tables and figures |
 | `run_baselines.py` | the sweep runner |
 | `tests/` | unit tests (`python -m pytest minrank/tests -q`) |
+
+## Re-targeted evolution: hard graphs, fitness relative to SAT
+
+The first run (`06_evolve.sh`, `config.yaml`) scores a program against a clique cover on all training graphs with
+n <= 50. SAT descent already beats the cover there in a few seconds, so that fitness rewards nothing SAT cannot do.
+The re-targeted mode trains only on graphs that SAT does not solve within the budget, and scores against SAT:
+
+- **Opt-in:** `MINRANK_EVO_TARGET=sat` in the evaluator's environment. Unset (or `cover`), the evaluator behaves
+  exactly as before: same graphs, scores, metrics and trace records.
+- **Graphs:** the training graphs of `MINRANK_EVO_FAMILIES` with `MINRANK_EVO_MIN_N <= n <= MINRANK_EVO_MAX_N`, kept if
+  SAT at the evaluation budget neither proves optimality (UNSAT) nor reaches the certified lower bound
+  (`MINRANK_EVO_HARD=auto`, the default). `MINRANK_EVO_HARD=all` keeps them all; a comma-separated list of graph names
+  fixes the set by hand.
+- **Score per graph:** `(sat_rank - rank) / sat_rank`, or -1 on a crash, timeout or non-fitting answer. `sat_rank` is
+  what `sat_descend` (the `sat` baseline, seed `MINRANK_EVO_SAT_SEED`, default 0) reaches with the same budget
+  `MINRANK_EVO_BUDGET`. It is computed once per (graph, budget, seed) and cached in `minrank/evolve/reference_sat.json`
+  (`MINRANK_SAT_REFERENCE`; module `minrank/evolve/reference_sat.py`), like `reference.json` for the clique cover.
+  Extra metrics are `n_tied_ref` and `n_below_cover`, and `n_improved` counts graphs below SAT. Trace records gain
+  `ref_rank` and `target`.
+- **Config:** `minrank/evolve/config_hard.yaml`: prompt describing the hard graphs and the SAT-relative score,
+  cascade threshold -0.3, one evaluation at a time, 150 iterations.
+
+Run it (the defaults are `planted_d,planted`, n 50-100, 10 s per graph, 4 workers on cores 12-15,44-47):
+
+```bash
+PY=~/venv/bin/python PREPARE_ONLY=1 bash scripts/minrank/06b_evolve_hard.sh   # references + seed check (CPU only)
+PY=~/venv/bin/python RUN=evo_hard1 PORT=8000 bash scripts/minrank/06b_evolve_hard.sh      # needs 05_vllm_serve.sh
+FAMILIES=planted_d MIN_N=50 MAX_N=50 bash scripts/minrank/06b_evolve_hard.sh              # n=50 planted_d only
+MINRANK_EVO_TARGET=sat MINRANK_EVO_FAMILIES=planted_d,planted MINRANK_EVO_MIN_N=50 MINRANK_EVO_MAX_N=100 \
+  MINRANK_EVO_BUDGET=10 python -m minrank.evolve.evaluator path/to/program.py --no-trace   # score one program
+```
+
+SAT is limited by wall-clock time, so the cached reference depends on the machine load when it was computed. The
+script computes it on the same cores, with the same number of parallel runs, as the candidate evaluations. Delete
+the file's entries (or pass another `SAT_REF`) to recompute after moving machines. Held-out evaluation is unchanged:
+`07_eval_heldout.sh` with `PROGRAM=minrank/evolve/runs/evo_hard1/best/best_program.py`; the aggregator compares the
+program with SAT at every budget.
 
 ## Conventions
 

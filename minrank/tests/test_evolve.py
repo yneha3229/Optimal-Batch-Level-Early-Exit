@@ -187,3 +187,125 @@ def test_eval_heldout_writes_baseline_format(small_bench):
     assert len(data) == len(rows)
     assert all(d["method"].startswith("evolved:") and d["verified"] == "True" for d in data)
     assert len(list((tmp / "certs").glob("*.json"))) == len(rows)
+
+
+# ---- re-targeted mode: score relative to SAT at the same budget (MINRANK_EVO_TARGET=sat) ---------------------------
+def _write_refs(tmp: Path, rows: list[dict], sat: dict[str, tuple[int, bool]], budget: float) -> None:
+    """Hand-made reference.json (cover 3 more than lb) and reference_sat.json (sat_rank, sat_proven) for `rows`."""
+    from minrank.evolve.reference_sat import sat_key
+    covers = {"cycle_5": (3, 2), "gnp_n20_p0.5_s4": (7, 4), "planted_d_n30_r6_e0.0_s1": (9, 6)}
+    ref, sref = {}, {}
+    for r in rows:
+        cover, lb = covers[r["name"]]
+        ref[r["name"]] = {"cover_rank": cover, "lb": lb, "digest": r["digest"], "split": r["split"],
+                          "family": r["family"], "n": int(r["n"]), "cover_time": 1.0, "lb_time": 5.0}
+        rank, proven = sat[r["name"]]
+        sref[sat_key(r["name"], budget, 0)] = {"graph": r["name"], "sat_rank": rank, "sat_proven": proven,
+                                               "budget": budget, "seed": 0, "seconds": budget,
+                                               "digest": r["digest"], "split": r["split"], "family": r["family"],
+                                               "n": int(r["n"])}
+    (tmp / "reference.json").write_text(json.dumps(ref))
+    (tmp / "reference_sat.json").write_text(json.dumps(sref))
+
+
+@pytest.fixture()
+def sat_target(small_bench, monkeypatch):
+    rows, gs, tmp = small_bench
+    monkeypatch.setenv("MINRANK_EVO_TARGET", "sat")
+    monkeypatch.setenv("MINRANK_SAT_REFERENCE", str(tmp / "reference_sat.json"))
+    monkeypatch.setenv("MINRANK_EVO_BUDGET", "0.3")
+    monkeypatch.setenv("MINRANK_EVO_FAMILIES", "cycle,gnp,planted_d")
+    return rows, gs, tmp
+
+
+def test_default_target_is_cover_and_unknown_target_fails(monkeypatch):
+    monkeypatch.delenv("MINRANK_EVO_TARGET", raising=False)
+    assert ev.target() == "cover"
+    monkeypatch.setenv("MINRANK_EVO_TARGET", "bogus")
+    with pytest.raises(ValueError):
+        ev.target()
+
+
+def test_score_record_relative_to_ref_rank():
+    g = gen.cycle(5)
+    res = {"status": "ok", "rows": [1 << i for i in range(5)], "error": ""}  # identity: rank 5
+    assert ev.score_record(g, {"cover_rank": 3}, res) == ("ok", 5, pytest.approx(-2 / 3), "")
+    assert ev.score_record(g, {"cover_rank": 3}, res, ref_rank=4) == ("ok", 5, pytest.approx(-1 / 4), "")
+    assert ev.score_record(g, {"cover_rank": 3}, {"status": "timeout", "rows": None, "error": "timeout"},
+                           ref_rank=4)[2] == -1.0
+
+
+def test_default_mode_traces_and_metrics_unchanged(small_bench, monkeypatch):
+    monkeypatch.delenv("MINRANK_EVO_TARGET", raising=False)
+    rows, _, tmp = small_bench
+    rep = ev.run_evaluation(str(SEED), rows, budget=0.3, workers=3)
+    rec = json.loads((tmp / "traces" / "evals.jsonl").read_text().splitlines()[0])
+    assert list(rec) == ev.TRACE_FIELDS + ["stage"]
+    assert set(rep.metrics) == {"combined_score", "n_graphs", "n_improved", "n_invalid", "frac_ok", "mean_seconds",
+                                "mean_rank_gap_to_lb"} | {f"score_{r['family']}" for r in rows}
+    assert not (tmp / "reference_sat.json").exists()
+
+
+def test_hard_graphs_auto_filter(sat_target, monkeypatch):
+    rows, _, tmp = sat_target
+    # cycle_5: SAT proven -> easy; gnp: SAT rank == lb -> easy; planted_d: SAT 8 > lb 6, not proven -> hard
+    _write_refs(tmp, rows, {"cycle_5": (3, True), "gnp_n20_p0.5_s4": (4, False),
+                            "planted_d_n30_r6_e0.0_s1": (8, False)}, 0.3)
+    assert [r["name"] for r in ev.hard_graphs()] == ["planted_d_n30_r6_e0.0_s1"]
+    assert ev.training_graphs() == ev.hard_graphs()
+    monkeypatch.setenv("MINRANK_EVO_HARD", "all")
+    assert [r["name"] for r in ev.hard_graphs()] == [r["name"] for r in rows]
+    monkeypatch.setenv("MINRANK_EVO_HARD", "cycle_5, gnp_n20_p0.5_s4")
+    assert [r["name"] for r in ev.hard_graphs()] == ["cycle_5", "gnp_n20_p0.5_s4"]
+    monkeypatch.setenv("MINRANK_EVO_HARD", "all")
+    monkeypatch.setenv("MINRANK_EVO_MIN_N", "20")
+    assert [r["name"] for r in ev.hard_graphs()] == ["gnp_n20_p0.5_s4", "planted_d_n30_r6_e0.0_s1"]
+
+
+def test_sat_target_scores_traces_and_metrics(sat_target):
+    rows, _, tmp = sat_target
+    sat = {"cycle_5": (4, False), "gnp_n20_p0.5_s4": (7, False), "planted_d_n30_r6_e0.0_s1": (6, False)}
+    _write_refs(tmp, rows, sat, 0.3)
+    rep = ev.run_evaluation(str(SEED), rows, budget=0.3, workers=3)
+    recs = [json.loads(ln) for ln in (tmp / "traces" / "evals.jsonl").read_text().splitlines()]
+    assert len(recs) == len(rows)
+    for rec in recs:
+        assert rec["status"] == "ok" and rec["target"] == "sat" and rec["ref_rank"] == sat[rec["graph"]][0]
+        assert rec["score"] == pytest.approx((rec["ref_rank"] - rec["rank"]) / rec["ref_rank"])
+    m = rep.metrics
+    assert m["combined_score"] == pytest.approx(sum(r["score"] for r in recs) / len(recs))
+    assert m["n_improved"] == sum(r["rank"] < r["ref_rank"] for r in recs)
+    assert m["n_tied_ref"] == sum(r["rank"] == r["ref_rank"] for r in recs)
+    assert m["n_below_cover"] == sum(r["rank"] < r["cover_rank"] for r in recs)
+    assert any("sat=" in d for d in rep.details)
+
+
+def test_sat_target_cache_does_not_leak_into_cover_mode(sat_target, monkeypatch):
+    rows, _, tmp = sat_target
+    _write_refs(tmp, rows, {r["name"]: (30, False) for r in rows}, 0.3)
+    sat_rep = ev.run_evaluation(str(SEED), rows, budget=0.3, workers=3, trace=False)
+    monkeypatch.setenv("MINRANK_EVO_TARGET", "cover")
+    cov_rep = ev.run_evaluation(str(SEED), rows, budget=0.3, workers=3, trace=False)
+    assert all("ref_rank" not in r for r in cov_rep.records)
+    assert sat_rep.metrics["combined_score"] > cov_rep.metrics["combined_score"]
+
+
+def test_sat_reference_computed_and_cached(tmp_path, small_bench):
+    from minrank.evolve.reference_sat import ensure_sat_reference, sat_entry
+    rows, _, _ = small_bench
+    path = tmp_path / "sat_ref.json"
+    cyc = [r for r in rows if r["name"] == "cycle_5"]
+    ref = ensure_sat_reference(cyc, 3.0, 0, ev.graph_dir(), path, workers=1)
+    e = sat_entry(ref, "cycle_5", 3.0, 0)
+    assert e["sat_rank"] == 3 and e["sat_proven"] is True and e["digest"] == cyc[0]["digest"]
+    before = path.read_text()
+    ensure_sat_reference(cyc, 3.0, 0, ev.graph_dir(), path, workers=1)  # cached: nothing recomputed
+    assert path.read_text() == before
+
+
+def test_sat_descend_info_reports_proof():
+    import numpy as np
+    from minrank.exact.sat import sat_descend
+    info: dict = {}
+    rows = sat_descend(gen.cycle(5), 5.0, np.random.default_rng(0), info=info)
+    assert verify(gen.cycle(5), rows) == 3 and info["proven"] is True
