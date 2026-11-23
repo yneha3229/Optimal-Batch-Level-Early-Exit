@@ -1,0 +1,15 @@
+{'graph': 'cyclepow_31_3', 'n': 31, 'directed': False, 'alpha': 7, 'r': 7, 'status': 'unsat', 'seconds': 0.1, 'found_rank': None}
+{'graph': 'mycielski_5', 'n': 23, 'directed': False, 'alpha': 11, 'r': 11, 'status': 'unsat', 'seconds': 0.2, 'found_rank': None}
+{'graph': 'kneser_7_2', 'n': 21, 'directed': False, 'alpha': 6, 'r': 6, 'status': 'unsat', 'seconds': 0.9, 'found_rank': None}
+{'graph': 'kneser_8_3', 'n': 56, 'directed': False, 'alpha': 21, 'r': 27, 'status': 'sat', 'seconds': 1.1, 'found_rank': 22}
+{'graph': 'planted_d_n50_r8_e0.0_s6', 'n': 50, 'directed': True, 'alpha': 8, 'r': 15, 'status': 'sat', 'seconds': 171.1, 'found_rank': 15}
+{'graph': 'planted_n50_r8_e0.0_s1', 'n': 50, 'directed': False, 'alpha': 6, 'r': 7, 'status': 'unsat', 'seconds': 0.1, 'found_rank': None}
+{'graph': 'planted_n50_r8_e0.0_s2', 'n': 50, 'directed': False, 'alpha': 7, 'r': 8, 'status': 'sat', 'seconds': 1.1, 'found_rank': 8}
+{'graph': 'planted_n50_r8_e0.0_s3', 'n': 50, 'directed': False, 'alpha': 7, 'r': 7, 'status': 'unsat', 'seconds': 0.1, 'found_rank': None}
+{'graph': 'planted_n50_r8_e0.0_s4', 'n': 50, 'directed': False, 'alpha': 7, 'r': 7, 'status': 'unsat', 'seconds': 0.1, 'found_rank': None}
+{'graph': 'planted_n50_r8_e0.0_s5', 'n': 50, 'directed': False, 'alpha': 7, 'r': 7, 'status': 'unsat', 'seconds': 0.1, 'found_rank': None}
+{'graph': 'planted_n50_r8_e0.0_s6', 'n': 50, 'directed': False, 'alpha': 7, 'r': 7, 'status': 'unsat', 'seconds': 0.1, 'found_rank': None}
+{'graph': 'mycielski_6', 'n': 47, 'directed': False, 'alpha': 23, 'r': 23, 'status': 'unsat', 'seconds': 538.5, 'found_rank': None}
+{'graph': 'planted_d_n50_r8_e0.0_s1', 'n': 50, 'directed': True, 'alpha': 8, 'r': 13, 'status': 'sat', 'seconds': 584.0, 'found_rank': 13}
+{'graph': 'planted_d_n50_r8_e0.0_s3', 'n': 50, 'directed': True, 'alpha': 8, 'r': 14, 'status': 'sat', 'seconds': 620.6, 'found_rank': 14}
+{'graph': 'planted_d_n50_r8_e0.0_s4', 'n': 50, 'directed': True, 'alpha': 8, 'r': 14, 'status': 'sat', 'seconds': 1761.4, 'found_rank': 14}
