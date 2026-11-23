@@ -480,12 +480,166 @@ class LLMDevice(Device):
                 "mean_abs_conf_diff_per_exit": np.round(np.mean(dconf, 0), 4).tolist()}
 
 
-def make_device(task: str, device: str, seq_len: int, n_inputs: int = 2048) -> Device:
+GRAPH_BUCKETS = [1, 2, 4, 8, 12, 16, 24, 32, 48, 64, 96, 128]     # as runner/graph_runner.py
+
+
+def bucket(n: int) -> int:
+    for b in GRAPH_BUCKETS:
+        if b >= n:
+            return b
+    raise ValueError(f"batch of {n} rows exceeds the largest CUDA-graph bucket {GRAPH_BUCKETS[-1]}")
+
+
+class GraphDevice(Device):
+    """Device with every model segment replayed as a CUDA graph (--exec graph), as a compiled serving stack runs it.
+
+    Same model, dtype (fp32), synthetic inputs and decision protocol as Device: one host sync per evaluated exit,
+    decide() on the recorded confidences, the same rows leave. CUDA graphs need static shapes, so the active rows
+    are padded up to bucket(n) (padding rows are copies of a real row and are never read back). A segment is
+    "layers lo..LAYERS[e]-1, then head e" (the first segment starts with the embedding); its graph is captured once
+    per (bucket, lo, e) in one shared memory pool. The full-model plan FULL is therefore a single graph per bucket.
+    Between segments the kept rows are gathered (index_select, as Device's compaction) from the previous graph's
+    output into the static input buffers of the new bucket. prepare() captures everything a timing run needs, so no
+    capture happens inside a timed region (time_pass asserts this)."""
+
+    def __init__(self, task: str, device: str, seq_len: int = 128, n_inputs: int = 2048) -> None:
+        if device != "cuda":
+            raise ValueError("--exec graph needs --device cuda")
+        super().__init__(task, device, seq_len, n_inputs)
+        torch = self.torch
+        self.pool = torch.cuda.graph_pool_handle()
+        self.graphs: dict = {}            # (bucket, lo, e) -> (CUDAGraph, (h_out, mask_out, conf_out))
+        self.bufs: dict = {}              # bucket -> static inputs {"ids", "am", "h", "mask"}
+        self.captures = 0
+        self.record: list | None = None   # if a list, run_batch appends (exit, device confidences of the live rows)
+        with torch.inference_mode():
+            h, mask = self.model.embed({k: v[:1] for k, v in self.inp.items()})
+        self.hshape, self.mshape, self.hdtype = tuple(h.shape[1:]), tuple(mask.shape[1:]), h.dtype
+
+    def _buf(self, nb: int) -> dict:
+        if nb not in self.bufs:
+            t, d = self.torch, self.dev
+            self.bufs[nb] = {"ids": t.zeros((nb, self.T), dtype=self.inp["input_ids"].dtype, device=d),
+                             "am": t.ones((nb, self.T), dtype=self.inp["attention_mask"].dtype, device=d),
+                             "h": t.zeros((nb, *self.hshape), dtype=self.hdtype, device=d),
+                             "mask": t.zeros((nb, *self.mshape), dtype=self.hdtype, device=d)}
+        return self.bufs[nb]
+
+    def _graph(self, nb: int, lo: int | None, e: int):
+        key = (nb, lo, e)
+        if key in self.graphs:
+            return self.graphs[key]
+        torch, m, b = self.torch, self.model, self._buf(nb)
+
+        def seg():
+            if lo is None:
+                h, mask = m.embed({"input_ids": b["ids"], "attention_mask": b["am"]})
+                start = 0
+            else:
+                h, mask, start = b["h"], b["mask"], lo
+            for i in range(start, LAYERS[e]):
+                h = m.layer(i, h, mask)
+            conf = m.head(e, h).float().softmax(-1).max(-1)[0]
+            return h, mask, conf
+
+        with torch.inference_mode():
+            side = torch.cuda.Stream()
+            side.wait_stream(torch.cuda.current_stream())
+            with torch.cuda.stream(side):
+                for _ in range(2):                            # warm-up outside the capture (cuBLAS handles, autotune)
+                    seg()
+            torch.cuda.current_stream().wait_stream(side)
+            g = torch.cuda.CUDAGraph()
+            with torch.cuda.graph(g, pool=self.pool):
+                out = seg()
+        self.captures += 1
+        self.graphs[key] = (g, out)
+        return g, out
+
+    def prepare(self, batch_sizes, plans) -> None:
+        """Capture every graph that batches of these sizes can need under these plans, and replay each once."""
+        for B in batch_sizes:
+            top = bucket(B)
+            for plan in plans:
+                lo = None
+                for j, e in enumerate(plan):
+                    for nb in ([top] if j == 0 else [x for x in GRAPH_BUCKETS if x <= top]):
+                        self._graph(nb, lo, e)
+                    lo = LAYERS[e]
+        for g, _ in self.graphs.values():
+            g.replay()
+        self.sync()
+
+    def _pad(self, rows: np.ndarray, nb: int):
+        """Device index tensor of length nb: rows, then copies of rows[0]."""
+        idx = np.concatenate([rows, np.full(nb - len(rows), rows[0], rows.dtype)]) if nb > len(rows) else rows
+        return self.torch.from_numpy(idx).to(self.dev)
+
+    def run_batch(self, slot: np.ndarray, plan: tuple[int, ...], decide, conf: np.ndarray, pred: np.ndarray,
+                  cost: Cost) -> np.ndarray:
+        torch = self.torch
+        with torch.inference_mode():
+            B = len(slot)
+            nb = bucket(B)
+            b = self._buf(nb)
+            st = self._pad(np.asarray(slot, np.int64), nb)
+            torch.index_select(self.inp["input_ids"], 0, st, out=b["ids"])
+            torch.index_select(self.inp["attention_mask"], 0, st, out=b["am"])
+            ids = np.arange(B)
+            out = np.empty(B, np.int64)
+            lo = None
+            for j, e in enumerate(plan):
+                g, (h_out, mask_out, c_out) = self._graph(nb, lo, e)
+                g.replay()
+                n = len(ids)
+                ch = self.host[:n]
+                ch.copy_(c_out[:n], non_blocking=True)
+                self.sync()                                   # the one host sync per evaluated exit
+                if self.record is not None:
+                    self.record.append((e, ch.numpy().copy()))
+                c = conf[ids, e].astype(np.float64)           # recorded confidences of the trained model
+                if j == len(plan) - 1:
+                    out[ids] = pred[ids, e]
+                    break
+                mk, stop = decide(j, c, n, B, LAYERS[-1] - LAYERS[e], cost.a, cost.b)
+                leave = np.ones(n, bool) if stop else np.asarray(mk, bool)
+                out[ids[leave]] = pred[ids[leave], e]
+                keep = np.flatnonzero(~leave)
+                if len(keep) == 0:
+                    break
+                nb2 = bucket(len(keep))
+                b2 = self._buf(nb2)
+                if len(keep) < n:                             # compaction: gather the kept rows into bucket nb2
+                    k = self._pad(keep, nb2)
+                    torch.index_select(h_out, 0, k, out=b2["h"])
+                    torch.index_select(mask_out, 0, k, out=b2["mask"])
+                    ids = ids[keep]
+                else:                                         # same rows, same bucket: hand the state over
+                    b2["h"].copy_(h_out)
+                    if mask_out.data_ptr() != b2["mask"].data_ptr():
+                        b2["mask"].copy_(mask_out)
+                nb, lo = nb2, LAYERS[e]
+            self.sync()
+        return out
+
+    def time_pass(self, batches, slots, plan, decide, tr: Traces, cost: Cost) -> tuple[float, np.ndarray]:
+        n0 = self.captures
+        res = super().time_pass(batches, slots, plan, decide, tr, cost)
+        assert self.captures == n0, f"{self.captures - n0} CUDA graph(s) captured inside a timed pass; call prepare()"
+        return res
+
+
+def make_device(task: str, device: str, seq_len: int, n_inputs: int = 2048, exec_mode: str = "eager") -> Device:
+    if exec_mode == "graph":
+        if is_llm():
+            raise ValueError("--exec graph supports the RoBERTa tasks only (LLMDevice has no CUDA-graph path)")
+        return GraphDevice(task, device, seq_len, n_inputs)
     return LLMDevice(task, device, seq_len) if is_llm() else Device(task, device, seq_len, n_inputs)
 
 
 def tag(args) -> str:
-    return f"{args.name or args.device}_T{args.seq_len}"
+    ex = "_graph" if getattr(args, "exec", "eager") == "graph" else ""           # eager names are unchanged
+    return f"{args.name or args.device}{ex}_T{args.seq_len}"
 
 
 def cost_path(args) -> Path:
@@ -500,11 +654,13 @@ def load_cost(args, kind: str | None = None) -> TCost:
 # ------------------------------------------------------------------------------------------ subcommands
 def cmd_profile(args) -> None:
     import torch
-    dv = make_device(args.task if is_llm() else "mnli", args.device, args.seq_len, 512)
+    dv = make_device(args.task if is_llm() else "mnli", args.device, args.seq_len, 512, args.exec)
     zero = Cost("none", 0.0, 0.0, 0.0)
     E = len(LAYERS)
     conf, pred = np.zeros((256, E)), np.zeros((256, E), np.int64)
     Bs = [1, 2, 4, 8, 16, 32, 64] + ([128] if args.device == "cuda" else [])
+    if isinstance(dv, GraphDevice):
+        dv.prepare(Bs, [FULL, ALL])
     rows = []
     for B in Bs:
         reps = max(3, min(20, int(args.budget / ((0.02 if args.device == "cuda" else 0.08) * B * args.seq_len / 128))))
@@ -512,6 +668,7 @@ def cmd_profile(args) -> None:
 
         def med(plan):
             dv.run_batch(slot, plan, never, conf[:B], pred[:B], zero)
+            n0 = getattr(dv, "captures", 0)
             ts = []
             for _ in range(reps):
                 dv.sync()
@@ -519,6 +676,7 @@ def cmd_profile(args) -> None:
                 dv.run_batch(slot, plan, never, conf[:B], pred[:B], zero)
                 dv.sync()
                 ts.append(time.perf_counter() - t0)
+            assert getattr(dv, "captures", 0) == n0, "CUDA graph captured inside a timed region"
             return 1000 * float(np.median(ts))
         f1, h1, f2, h2 = med(FULL), med(ALL), med(FULL), med(ALL)      # interleaved
         rows.append({"B": B, "full_ms": (f1 + f2) / 2, "heads_ms": (h1 + h2) / 2, "reps": reps})
@@ -527,7 +685,7 @@ def cmd_profile(args) -> None:
     b, a12 = np.polyfit(d.B, d.full_ms, 1, w=1 / d.full_ms)      # relative-error fit: small batches count too
     head = float(np.median((d.heads_ms - d.full_ms) / (E - 1)))
     fit = a12 + b * d.B
-    out = {"device": args.device, "seq_len": args.seq_len, "dtype": "bf16" if is_llm() else "fp32",
+    out = {"device": args.device, "exec": args.exec, "seq_len": args.seq_len, "dtype": "bf16" if is_llm() else "fp32",
            "model": META.get("model", "roberta-base"), "exit_layers": list(LAYERS),
            "a": float(max(a12, 0) / LAYERS[-1]), "b": float(b / LAYERS[-1]), "head": max(head, 0.0), "head_raw": head,
            "rho8": float(a12 / b / 8), "rho64": float(a12 / b / 64),
@@ -570,7 +728,7 @@ def cmd_time(args) -> None:
     ho = load_traces(ROOT / f"traces/{args.task}_val.parquet", "heldout", exit_layers=list(LAYERS))
     fit, _ = split_evolve(ev, 0)
     sel = json.loads((ROOT / f"results/local_select_{args.task}_{tag(args)}.json").read_text())
-    dv = make_device(args.task, args.device, args.seq_len)
+    dv = make_device(args.task, args.device, args.seq_len, exec_mode=args.exec)
     if is_llm():
         chk = dv.check(ho)
         print("device vs traces:", chk, flush=True)
@@ -586,6 +744,8 @@ def cmd_time(args) -> None:
                 pols[r["family"]] = (*make(r["family"], r["cert_params"], fit, cost), r["cert_params"])
         # held-out accuracy on the whole held-out split (exact, from traces), same policy objects
         hb = disjoint_batches(len(ho), B, 100 + B)
+        if isinstance(dv, GraphDevice):
+            dv.prepare([B], [plan for plan, _, _ in pols.values()])
         times = {k: [] for k in pols}
         preds = {}
         dv.time_pass(batches[:2], slots[:2], ALL, never, ho, cost)           # warm-up
@@ -730,6 +890,8 @@ def main() -> None:
         s.add_argument("--seeds", type=int, default=40)
         s.add_argument("--cost-model", default="table", choices=["table", "affine"])
         s.add_argument("--families", nargs="+", default=["threshold", "majority", "theory"])
+        s.add_argument("--exec", default="eager", choices=["eager", "graph"],
+                       help="eager PyTorch or CUDA graphs (GraphDevice); graph outputs get a _graph tag")
     args = ap.parse_args()
     set_task(args.task)
     {"profile": cmd_profile, "select": cmd_select, "time": cmd_time, "resplit": cmd_resplit, "front": cmd_front}[args.cmd](args)
