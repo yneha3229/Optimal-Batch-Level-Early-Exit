@@ -36,8 +36,9 @@ class LabelFreeStopRule:
     def __init__(self, exit_layers: list[int], cost: Cost, num_classes: int, lam: float = 0.1,
                  n_bins: int = 12, beta: float = 1.0, probe_c: float = 1.0, min_probe: float = 0.0,
                  individual: bool = True, target_disagree: float | None = None, eta: float = 2.0,
-                 seed: int = 0) -> None:
+                 seed: int = 0, probe_exp: float = 1 / 3) -> None:
         self.L, self.E, self.cost = list(exit_layers), len(exit_layers), cost
+        self.probe_exp = probe_exp                             # p_t = c * t^(-probe_exp); 0 = constant rate c
         self.lam, self.beta, self.probe_c, self.min_probe = lam, beta, probe_c, min_probe
         self.individual, self.target, self.eta = individual, target_disagree, eta
         self.edges = np.linspace(1.0 / num_classes, 1.0, n_bins + 1)[1:-1]
@@ -51,7 +52,7 @@ class LabelFreeStopRule:
 
     # ------------------------------------------------------------------ feedback
     def probe_prob(self) -> float:
-        return float(min(1.0, max(self.min_probe, self.probe_c * (self.t + 1) ** (-1 / 3))))
+        return float(min(1.0, max(self.min_probe, self.probe_c * (self.t + 1) ** (-self.probe_exp))))
 
     def is_probe(self) -> bool:
         self.t += 1

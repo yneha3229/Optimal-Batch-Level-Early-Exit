@@ -42,8 +42,9 @@ sys.path.insert(0, str(ROOT))
 from simulator import policies as P  # noqa: E402
 from simulator.simulator import Cost, Traces, load_traces  # noqa: E402
 
-LAYERS = [2, 4, 6, 8, 10, 12]
+LAYERS = [2, 4, 6, 8, 10, 12]            # exit layers; set_task() replaces them from traces/<task>_val.meta.json
 NUM_LABELS = {"mnli": 3, "qqp": 2}
+META: dict = {}                          # trace meta of the current task ({} for the RoBERTa tasks)
 FRONT_ALPHAS = [0.0025, 0.005, 0.0075, 0.01, 0.0125, 0.015, 0.02, 0.03]
 ALPHA, DELTA = 0.01, 0.10          # accuracy budget (drop vs full model) and failure probability
 G: dict = {}
@@ -138,6 +139,25 @@ def disjoint_batches(n: int, B: int, seed: int, limit: int | None = None) -> lis
 # ------------------------------------------------------------------------------------------ candidates
 PLANS = [tuple(s) + (5,) for r in range(1, 6) for s in itertools.combinations(range(5), r)]   # 31 plans
 ALL = (0, 1, 2, 3, 4, 5)
+FULL = (5,)                              # plan of the full model: only the last exit is evaluated
+
+
+def set_task(task: str) -> None:
+    """Exit layers of the task. RoBERTa tasks keep the default six; tasks with a trace meta file (the LLM
+    classifiers of decoder/train_cls_exit_lora.py) take theirs from it. Call before any Pool is created."""
+    global PLANS, ALL, FULL
+    meta = ROOT / f"traces/{task}_val.meta.json"
+    META.clear()
+    if meta.exists():
+        META.update(json.loads(meta.read_text()))
+        LAYERS[:] = META["exit_layers"]
+    E = len(LAYERS)
+    PLANS = [tuple(s) + (E - 1,) for r in range(1, E) for s in itertools.combinations(range(E - 1), r)]
+    ALL, FULL = tuple(range(E)), (E - 1,)
+
+
+def is_llm() -> bool:
+    return "model" in META
 TAUS = np.round(np.linspace(0.40, 0.995, 36), 4)
 LAMS = np.round(np.logspace(-3.5, 1.5, 40), 7)
 FAMILIES = ["threshold", "threshold+plan", "majority", "unified", "random_collective", "theory", "theory+plan"]
@@ -201,7 +221,7 @@ def grid(fam: str) -> list[dict]:
     if fam == "majority":
         return [{"tau": float(t)} for t in TAUS]
     if fam == "unified":
-        return [{"exit_idx": e} for e in range(5)]
+        return [{"exit_idx": e} for e in range(len(LAYERS) - 1)]
     if fam == "random_collective":
         rng = np.random.default_rng(0)
         return [dict(tau=float(rng.uniform(0.5, 1.0)), frac_cut=float(rng.uniform(0, 0.5)),
@@ -351,12 +371,126 @@ class Device:
         return time.perf_counter() - t0, np.stack(preds)
 
 
+class LLMDevice(Device):
+    """A trained LLM classifier (decoder/train_cls_exit_lora.py) timed on this machine: the real weights with LoRA
+    merged in, bf16, and the real validation prompts, right-padded to seq_len (prompts longer than seq_len are cut,
+    which only matters when seq_len is below the training max_len of 128). Attention is causal, so padding on the
+    right never changes a real token; the label is read at each row's last real token. Exit decisions are replayed
+    from the traces exactly as in Device; check() measures how closely this code path reproduces them."""
+
+    def __init__(self, task: str, device: str, seq_len: int = 128, n_inputs: int = 0) -> None:
+        import torch
+        from datasets import load_dataset
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+        from decoder.train_cls_exit_lora import TASKS, ClsHeads, encode
+        from decoder.train_exit_lora import TARGETS
+        self.torch, self.dev, self.T = torch, device, seq_len
+        ck = torch.load(ROOT / f"checkpoints/{task}_cls.pt", weights_only=False)
+        assert ck["exits"] == LAYERS, (ck["exits"], LAYERS)
+        lm = AutoModelForCausalLM.from_pretrained(ck["model"], dtype=torch.bfloat16).to(device).eval()
+        it = iter(ck["lora"])                               # same traversal order as train_exit_lora.add_lora
+        with torch.no_grad():
+            for layer in (lm.model.layers if ck["rank"] > 0 else []):
+                for parent in (layer.self_attn, layer.mlp):
+                    for name in TARGETS:
+                        lin = getattr(parent, name, None)
+                        if isinstance(lin, torch.nn.Linear):
+                            A, B = next(it).to(device), next(it).to(device)
+                            lin.weight.copy_((lin.weight.float() + (B @ A) * (ck["alpha"] / ck["rank"])).to(lin.weight.dtype))
+        self.m = lm.model
+        f1, f2, split, C, body, suffix = TASKS[ck["task"]]
+        self.heads = ClsHeads(lm.config.hidden_size, lm.model.norm, len(LAYERS), C)
+        self.heads.load_state_dict(ck["heads"])
+        self.heads = self.heads.to(device).eval()
+        tok = AutoTokenizer.from_pretrained(ck["model"])
+        pad = tok.pad_token_id if tok.pad_token_id is not None else tok.eos_token_id
+        va = load_dataset("nyu-mll/glue", ck["task"])[split]
+        if n_inputs:
+            va = va.select(range(n_inputs))
+        seqs = [s[:seq_len] for s in encode(tok, va[f1], va[f2], body, suffix, ck["max_len"])]
+        ids = torch.full((len(seqs), seq_len), pad, dtype=torch.long)
+        for i, q in enumerate(seqs):
+            ids[i, : len(q)] = torch.tensor(q)
+        self.ids, self.last = ids.to(device), torch.tensor([len(q) - 1 for q in seqs], device=device)
+        self.pos = torch.arange(seq_len, device=device)[None]
+        self.host = torch.empty(4096, dtype=torch.float32, pin_memory=device == "cuda")
+
+    def _layers(self, h, pos, lo: int, hi: int):
+        for i in range(lo, hi):
+            h = self.m.layers[i](h, attention_mask=None, position_embeddings=pos)     # None = causal (SDPA)
+            h = h[0] if isinstance(h, tuple) else h
+        return h
+
+    def run_batch(self, slot: np.ndarray, plan: tuple[int, ...], decide, conf: np.ndarray, pred: np.ndarray,
+                  cost: Cost, want: bool = False):
+        """slot: validation rows (dataset idx) of this batch. want=True returns the device's own (conf, pred) at the
+        evaluated exits instead of the policy's predictions (used by check(); run it with decide=never)."""
+        torch = self.torch
+        with torch.inference_mode():
+            st = torch.from_numpy(np.asarray(slot)).to(self.dev)
+            last = self.last.index_select(0, st)
+            h = self.m.embed_tokens(self.ids.index_select(0, st))
+            pos = self.m.rotary_emb(h, self.pos)
+            B = h.shape[0]
+            ids = np.arange(B)
+            out = np.empty(B, np.int64)
+            own = []
+            layer = 0
+            for j, e in enumerate(plan):
+                h = self._layers(h, pos, layer, LAYERS[e])
+                layer = LAYERS[e]
+                hl = h[torch.arange(h.shape[0], device=self.dev), last]
+                if LAYERS[e] == LAYERS[-1]:                   # HF returns the last hidden state after the final norm,
+                    hl = self.m.norm(hl)                      # and that is what the last head was trained on
+                probs = self.heads(e, hl).softmax(-1)
+                c_dev, p_dev = probs.max(-1)
+                n = len(ids)
+                ch = self.host[:n]
+                ch.copy_(c_dev, non_blocking=True)
+                self.sync()                                   # the one host sync per evaluated exit
+                if want:
+                    own.append((ch.numpy().copy(), p_dev.cpu().numpy()))
+                c = conf[ids, e].astype(np.float64)           # recorded confidences (bf16 trace run)
+                if j == len(plan) - 1:
+                    out[ids] = pred[ids, e]
+                    break
+                mk, stop = decide(j, c, n, B, LAYERS[-1] - LAYERS[e], cost.a, cost.b)
+                leave = np.ones(n, bool) if stop else np.asarray(mk, bool)
+                out[ids[leave]] = pred[ids[leave], e]
+                keep = np.flatnonzero(~leave)
+                if len(keep) == 0:
+                    break
+                if len(keep) < n:
+                    k = torch.from_numpy(keep).to(self.dev)
+                    h, last = h.index_select(0, k), last.index_select(0, k)
+                    ids = ids[keep]
+            self.sync()
+        return own if want else out
+
+    def check(self, tr: Traces, n: int = 256) -> dict:
+        """Agreement of this code path with the recorded traces on the first n rows of tr, all exits."""
+        zero = Cost("none", 0.0, 0.0, 0.0)
+        agree, dconf = [], []
+        for i in range(0, n, 64):
+            r = np.arange(i, min(i + 64, n))
+            own = self.run_batch(tr.ids[r], ALL, never, tr.conf[r], tr.pred[r], zero, want=True)
+            agree.append([float((p == tr.pred[r, e]).mean()) for e, (c, p) in enumerate(own)])
+            dconf.append([float(np.abs(c - tr.conf[r, e]).mean()) for e, (c, p) in enumerate(own)])
+        return {"pred_agreement_per_exit": np.round(np.mean(agree, 0), 4).tolist(),
+                "mean_abs_conf_diff_per_exit": np.round(np.mean(dconf, 0), 4).tolist()}
+
+
+def make_device(task: str, device: str, seq_len: int, n_inputs: int = 2048) -> Device:
+    return LLMDevice(task, device, seq_len) if is_llm() else Device(task, device, seq_len, n_inputs)
+
+
 def tag(args) -> str:
-    return f"{args.device}_T{args.seq_len}"
+    return f"{args.name or args.device}_T{args.seq_len}"
 
 
 def cost_path(args) -> Path:
-    return ROOT / f"results/local_cost_{tag(args)}.json"
+    model = "_" + args.task.split("_", 1)[1] if is_llm() else ""       # an LLM's cost is its own: one file per model
+    return ROOT / f"results/local_cost_{tag(args)}{model}.json"
 
 
 def load_cost(args, kind: str | None = None) -> TCost:
@@ -366,9 +500,10 @@ def load_cost(args, kind: str | None = None) -> TCost:
 # ------------------------------------------------------------------------------------------ subcommands
 def cmd_profile(args) -> None:
     import torch
-    dv = Device("mnli", args.device, args.seq_len, 512)
+    dv = make_device(args.task if is_llm() else "mnli", args.device, args.seq_len, 512)
     zero = Cost("none", 0.0, 0.0, 0.0)
-    conf, pred = np.zeros((256, 6)), np.zeros((256, 6), np.int64)
+    E = len(LAYERS)
+    conf, pred = np.zeros((256, E)), np.zeros((256, E), np.int64)
     Bs = [1, 2, 4, 8, 16, 32, 64] + ([128] if args.device == "cuda" else [])
     rows = []
     for B in Bs:
@@ -385,15 +520,16 @@ def cmd_profile(args) -> None:
                 dv.sync()
                 ts.append(time.perf_counter() - t0)
             return 1000 * float(np.median(ts))
-        f1, h1, f2, h2 = med((5,)), med(ALL), med((5,)), med(ALL)      # interleaved
+        f1, h1, f2, h2 = med(FULL), med(ALL), med(FULL), med(ALL)      # interleaved
         rows.append({"B": B, "full_ms": (f1 + f2) / 2, "heads_ms": (h1 + h2) / 2, "reps": reps})
         print(rows[-1], flush=True)
     d = pd.DataFrame(rows)
     b, a12 = np.polyfit(d.B, d.full_ms, 1, w=1 / d.full_ms)      # relative-error fit: small batches count too
-    head = float(np.median((d.heads_ms - d.full_ms) / 5))
+    head = float(np.median((d.heads_ms - d.full_ms) / (E - 1)))
     fit = a12 + b * d.B
-    out = {"device": args.device, "seq_len": args.seq_len, "dtype": "fp32", "a": float(max(a12, 0) / 12),
-           "b": float(b / 12), "head": max(head, 0.0), "head_raw": head,
+    out = {"device": args.device, "seq_len": args.seq_len, "dtype": "bf16" if is_llm() else "fp32",
+           "model": META.get("model", "roberta-base"), "exit_layers": list(LAYERS),
+           "a": float(max(a12, 0) / LAYERS[-1]), "b": float(b / LAYERS[-1]), "head": max(head, 0.0), "head_raw": head,
            "rho8": float(a12 / b / 8), "rho64": float(a12 / b / 64),
            "affine_max_rel_err": float(np.max(np.abs(fit - d.full_ms) / d.full_ms)), "points": rows,
            "gpu": torch.cuda.get_device_name(0) if args.device == "cuda" else "cpu",
@@ -414,7 +550,7 @@ def split_evolve(ev: Traces, seed: int, frac_fit: float = 0.4) -> tuple[Traces, 
 
 
 def cmd_select(args) -> None:
-    ev = load_traces(ROOT / f"traces/{args.task}_val.parquet", "evolve")
+    ev = load_traces(ROOT / f"traces/{args.task}_val.parquet", "evolve", exit_layers=list(LAYERS))
     G["fit"], G["cert"] = split_evolve(ev, 0)
     G["cost"], G["key"] = load_cost(args), "drop"
     jobs = [(f, B) for B in args.batch_sizes for f in FAMILIES]
@@ -430,17 +566,21 @@ def cmd_select(args) -> None:
 
 def cmd_time(args) -> None:
     cost = load_cost(args)
-    ev = load_traces(ROOT / f"traces/{args.task}_val.parquet", "evolve")
-    ho = load_traces(ROOT / f"traces/{args.task}_val.parquet", "heldout")
+    ev = load_traces(ROOT / f"traces/{args.task}_val.parquet", "evolve", exit_layers=list(LAYERS))
+    ho = load_traces(ROOT / f"traces/{args.task}_val.parquet", "heldout", exit_layers=list(LAYERS))
     fit, _ = split_evolve(ev, 0)
     sel = json.loads((ROOT / f"results/local_select_{args.task}_{tag(args)}.json").read_text())
-    dv = Device(args.task, args.device, args.seq_len)
+    dv = make_device(args.task, args.device, args.seq_len)
+    if is_llm():
+        chk = dv.check(ho)
+        print("device vs traces:", chk, flush=True)
+        (ROOT / f"results/local_check_{args.task}_{tag(args)}.json").write_text(json.dumps(chk))
     rows = []
     for B in args.batch_sizes:
         batches = disjoint_batches(len(ho), B, 100 + B, limit=args.n // B)
         rng = np.random.default_rng(B)
-        slots = [rng.choice(2048, B, replace=False) for _ in batches]
-        pols = {"full": ((5,), never, {}), "heads_only": (ALL, never, {})}
+        slots = [ho.ids[r] for r in batches] if is_llm() else [rng.choice(2048, B, replace=False) for _ in batches]
+        pols = {"full": (FULL, never, {}), "heads_only": (ALL, never, {})}
         for r in sel:
             if r["B"] == B and r["cert_params"] is not None:
                 pols[r["family"]] = (*make(r["family"], r["cert_params"], fit, cost), r["cert_params"])
@@ -500,7 +640,7 @@ def _resplit_job(a):
 
 def cmd_resplit(args) -> None:
     path = ROOT / f"traces/{args.task}_val.parquet"
-    G["all"] = Traces.concat(load_traces(path, "evolve"), load_traces(path, "heldout"))
+    G["all"] = Traces.concat(load_traces(path, "evolve", exit_layers=list(LAYERS)), load_traces(path, "heldout", exit_layers=list(LAYERS)))
     G["all"].attacker = None
     G["cost"] = load_cost(args)
     jobs = [(s, B, f) for s in range(args.seeds) for B in args.batch_sizes for f in args.families]
@@ -559,8 +699,8 @@ def _front_job(a):
 def cmd_front(args) -> None:
     """Speed at matched held-out accuracy: certified selection at a range of accuracy targets, scored on held-out.
     Speedups are from the measured cost table (CPU replay), not timed."""
-    ev = load_traces(ROOT / f"traces/{args.task}_val.parquet", "evolve")
-    G["ho"] = load_traces(ROOT / f"traces/{args.task}_val.parquet", "heldout")
+    ev = load_traces(ROOT / f"traces/{args.task}_val.parquet", "evolve", exit_layers=list(LAYERS))
+    G["ho"] = load_traces(ROOT / f"traces/{args.task}_val.parquet", "heldout", exit_layers=list(LAYERS))
     G["fit"], G["cert"] = split_evolve(ev, 0)
     G["cost"], G["task"], G["tag"] = load_cost(args), args.task, tag(args)
     m = G["ho"].conf[:, :-1].mean(1)                       # hard inputs: lowest quartile of mean intermediate confidence
@@ -579,6 +719,7 @@ def main() -> None:
     for name in ("profile", "select", "time", "resplit", "front"):
         s = sub.add_parser(name)
         s.add_argument("--device", default="cuda")
+        s.add_argument("--name", default=None, help="machine name used in output file names (default: --device)")
         s.add_argument("--task", default="qqp")
         s.add_argument("--batch-sizes", type=int, nargs="+", default=[8, 16, 64, 128])
         s.add_argument("--workers", type=int, default=6)
@@ -590,6 +731,7 @@ def main() -> None:
         s.add_argument("--cost-model", default="table", choices=["table", "affine"])
         s.add_argument("--families", nargs="+", default=["threshold", "majority", "theory"])
     args = ap.parse_args()
+    set_task(args.task)
     {"profile": cmd_profile, "select": cmd_select, "time": cmd_time, "resplit": cmd_resplit, "front": cmd_front}[args.cmd](args)
 
 

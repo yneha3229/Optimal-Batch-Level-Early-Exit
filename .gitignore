@@ -16,3 +16,6 @@ docs/papers/
 minrank/evolve/runs/
 minrank/evolve/reference.json.lock
 minrank/evolve/*.tmp*
+
+# raw per-step bandit traces (about 25 MB each); summaries are results/bandit_slopes_*.csv
+results/bandit_*_10seeds.csv
