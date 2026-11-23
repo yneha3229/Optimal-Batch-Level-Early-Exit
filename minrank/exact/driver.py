@@ -9,6 +9,8 @@ For each selected graph:
      Measured (CPU, 30 s limit): "cols"/"u0" prove Mycielski-4 r<=5 UNSAT in 1.5 s and Paley-13 r<=4 in 0.2 s;
      "aut" (automorphism lex-leader, which cannot be combined with u_0 = e_1) times out on Mycielski-4 and takes
      0.8 s on Paley-13; "none" takes 16 s on Paley-13. The GL(r) fix matters most; "aut" is kept as an option.
+     "indep" / "indep_cols" fix U_I = V_I = [Id | 0] on the acyclic set I found in step 2 (see symmetry.py); on the
+     n = 50 planted graphs this turns 3600 s timeouts into sub-second UNSAT proofs.
 Improved certificates are saved with run_baselines.keep_best (in the main process). One CSV row per attempt is
 appended to minrank/results/exact.csv; graphs already proven optimal there are skipped (resumable). Graphs not
 proven get a new row on each run; readers should take the last row per graph.
@@ -40,7 +42,7 @@ from ..core.graph import Graph
 from ..core.verify import load_certificate, verify
 from ..run_baselines import keep_best, stored_rank
 from .lower import mais
-from .symmetry import automorphisms, rank_at_most_sym
+from .symmetry import INDEP_MODES, MODES, automorphisms, rank_at_most_sym
 
 ROOT = Path(__file__).resolve().parents[1]
 FIELDS = ["graph", "n", "family", "lb", "lb_proven", "start_rank", "best_rank", "proven_optimal", "seconds",
@@ -48,7 +50,8 @@ FIELDS = ["graph", "n", "family", "lb", "lb_proven", "start_rank", "best_rank", 
 
 
 def solve_graph(graph_path: str, cert_dir: str, family: str, lb_time: float, cover_time: float,
-                time_per_call: float, total_time: float | None, mode: str, seed: int) -> dict:
+                time_per_call: float, total_time: float | None, mode: str, seed: int,
+                dimacs_dir: str | None = None) -> dict:
     """Run steps 1-3 for one graph. Returns the CSV row plus '_rows' (best verified rows)."""
     t0 = time.perf_counter()
     g = Graph.load(graph_path)
@@ -69,13 +72,23 @@ def solve_graph(graph_path: str, cert_dir: str, family: str, lb_time: float, cov
             status = "total_timeout"
             break
         limit = time_per_call if left is None else min(time_per_call, left)
-        res = rank_at_most_sym(g, best - 1, limit, mode=use, gens=gens if use == "aut" else None)
+        res = rank_at_most_sym(g, best - 1, limit, mode=use, gens=gens if use == "aut" else None,
+                               indep=lb.vertices if use in INDEP_MODES else None)
         calls += 1
         if res is None:
             status = "call_timeout"
             break
         if res is False:
             proven, status = True, "unsat"
+            if dimacs_dir and use in INDEP_MODES and len(lb.vertices) <= best - 1:
+                from .families import write_dimacs
+                from .symmetry import encode_sym
+
+                I = sorted(int(v) for v in lb.vertices)
+                write_dimacs(Path(dimacs_dir) / f"{g.name}_r{best - 1}_{use}.cnf.gz",
+                             encode_sym(g, best - 1, use, indep=I),
+                             [f"minrk_2({g.name}) <= {best - 1} is UNSAT", f"mode {use}",
+                              f"indep {' '.join(map(str, I))}", f"graph digest {g.digest()}"])
             break
         rows, best = res, rank_f2(res)
     if best <= lb.value:
@@ -115,7 +128,7 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--total-time", type=float, default=None, help="cap per graph (s); default: no cap")
     ap.add_argument("--lb-time", type=float, default=60.0)
     ap.add_argument("--cover-time", type=float, default=5.0)
-    ap.add_argument("--mode", default="cols", choices=["none", "u0", "cols", "aut"])
+    ap.add_argument("--mode", default="cols", choices=list(MODES))
     ap.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) // 2))
     ap.add_argument("--out", type=Path, default=ROOT / "results/exact.csv")
     ap.add_argument("--certs", type=Path, default=ROOT / "certificates")
@@ -123,6 +136,8 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--rerun-from", type=Path, default=None,
                     help="only graphs whose last row in this exact CSV has a status in --rerun-status")
     ap.add_argument("--rerun-status", nargs="+", default=["call_timeout"])
+    ap.add_argument("--dimacs-dir", type=Path, default=None,
+                    help="indep modes: write the CNF of the final UNSAT call here (gzipped DIMACS)")
     a = ap.parse_args(argv)
     rerun = graphs_with_status(a.rerun_from, a.rerun_status) if a.rerun_from else None
 
@@ -131,6 +146,8 @@ def main(argv: list[str] | None = None) -> None:
            and (rerun is None or r["name"] in rerun)]
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.certs.mkdir(parents=True, exist_ok=True)
+    if a.dimacs_dir:
+        a.dimacs_dir.mkdir(parents=True, exist_ok=True)
     done = proven_graphs(a.out)
     todo = [r for r in idx if r["name"] not in done]
     print(f"{len(idx)} graphs selected, {len(idx) - len(todo)} already proven, {len(todo)} to run", flush=True)
@@ -142,7 +159,8 @@ def main(argv: list[str] | None = None) -> None:
         if new:
             w.writeheader()
         futs = [ex.submit(solve_graph, str(a.graphs / r["path"]), str(a.certs), r["family"], a.lb_time,
-                          a.cover_time, a.time_per_call, a.total_time, a.mode, a.seed) for r in todo]
+                          a.cover_time, a.time_per_call, a.total_time, a.mode, a.seed,
+                          str(a.dimacs_dir) if a.dimacs_dir else None) for r in todo]
         for fu in as_completed(futs):
             row = fu.result()
             rows = row.pop("_rows")

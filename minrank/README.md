@@ -36,6 +36,7 @@ bash scripts/minrank/09_aggregate.sh                          # tables + figures
 | `03_lower_bounds.sh` | certified lower bounds (CP-SAT) | `minrank/results/lower_bounds.csv` |
 | `04_exact.sh` | Option B: SAT descent to proven optima on structured graphs | `minrank/results/exact.csv` |
 | `04c_exact_rerun.sh` | Option B, second pass: only the `call_timeout` graphs of `exact.csv`, 3600 s per SAT call | `minrank/results/exact_long.csv` |
+| `04d_exact_indep.sh` | Option B with independent-set symmetry breaking (`--mode indep`): `PART=bench` reruns the unproven benchmark graphs, `PART=families` runs named families via `python -m minrank.exact.families`; CNFs of UNSAT calls for DRAT checks | `minrank/results/exact_indep.csv`, `families.csv`, `unsat_cnf/` |
 | `04b_separations.sh` | Option B: search for explicit separations (gap to clique cover, F_2 vs F_3) | `minrank/results/separations.csv` |
 | `05_vllm_serve.sh` | start the vLLM server for OpenEvolve | |
 | `06_evolve.sh` | Option A: OpenEvolve run (writes evaluation traces) | `minrank/evolve/runs/` |

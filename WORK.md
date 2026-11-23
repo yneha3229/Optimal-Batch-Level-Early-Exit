@@ -90,18 +90,22 @@ K(8,3) is the only named graph so far where minrank is strictly below the clique
   `taskset` to free cores (section 4).
 
 **T2. Theory** (`docs/MINRANK_THEORY.md`). Turning patterns into theorems is what makes this a paper.
-- (a) **K(n,2).** Data so far: 5, 5, 7, 7, 9, 11 for n = 5, 6, 7, 8, 10, 12; 9 and 11 are pending. The clique cover of
-  K(n,2) is the chromatic index of K_n (n - 1 for even n, n for odd n). So the conjecture is minrk_2(K(n,2)) =
-  χ'(K_n): the lower bound alpha = n - 1 is tight for even n, and for odd n rank n - 1 is impossible. Prove the
-  odd case.
+- (0) **When Kneser is trivial (found 23 Nov).** If k | n, Baranyai's theorem splits the k-subsets of [n] into
+  C(n-1, k-1) parallel classes, each a clique of K(n,k). So the clique cover equals alpha and minrk = alpha, as for
+  K(9,3) = 28 and K(n,2) with n even. **The open cases are k not dividing n**: K(n,2) with n odd, K(7,3), K(8,3),
+  K(10,3), K(11,3), K(10,4), ... There the cover is at least ceil(C(n,k) / floor(n/k)) > alpha.
+- (a) **K(n,2), n odd.** The cover is n (the chromatic index of K_n) and alpha = n - 1; minrk = n is proven for
+  n = 5 and 7 (9, 11 and 13 are running). Conjecture: minrk_2(K(n,2)) = n for every odd n, i.e. rank n - 1 is
+  impossible. Prove it.
 - (b) **Mycielski.** minrk_2(M_k) = alpha + 1 = (n+1)/2 for k = 3..6. The upper bound is the clique cover. Is the
   lower bound alpha + 1 true for all k? A Mycielski-step argument may work.
 - (c) **K(8,3) = 22, the main target.** The rank-22 matrix will be in `minrank/certificates/kneser_8_3.json`, with
   rows as hex bitmasks over the 56 vertices in `combinations(range(8), 3)` order.
   - Look for structure: blocks, which triples share rows, the action of S_8.
-  - A construction that generalises to K(n,3) would give minrk_2(K(n,3)) < clique cover for all n >= 8. That would
-    be the headline theorem.
-  - K(9,3) results will come from the sweep.
+  - A construction that generalises to K(n,3) would give minrk_2(K(n,3)) < clique cover for all n >= 8 with
+    3 not dividing n. That would be the headline theorem.
+  - K(7,3) = 18 = cover, but K(8,3) = 22 < 28. What changes between 7 and 8? K(10,3) (alpha 36, cover 40),
+    K(11,3) (alpha 45, cover 55) and K(10,4) (alpha 84, cover 105) are running.
 
 **T3. Literature and novelty** (`docs/MINRANK_LIT.md`). For each paper, note what it computes and whether it covers
 our values or our trick. End with a one-paragraph novelty verdict.
@@ -140,10 +144,11 @@ git clone --depth 1 https://github.com/marijnheule/drat-trim && (cd drat-trim &&
 
   | Cores | In use for |
   |---|---|
-  | 0-3, 32-35 | Claude's sweep and the K(8,3) cross-check (normally GPU timing, keep them quiet when you time) |
-  | 4-11, 36-43 | Claude's open-graph run |
-  | 16-31, 48-63 | the old-encoding exact rerun (PID 4100444, ends by about 11:30 UTC) |
-  | 12-15, 44-47 | free, use these |
+  | 0-3, 32-35 | the K(8,3) cross-check on core 3 (normally GPU timing, keep them quiet when you time) |
+  | 4-11, 36-43 | Claude: large Kneser graphs (`families_big.csv`) |
+  | 12-15, 44-47, 30-31, 62-63 | Claude: benchmark rerun (`exact_indep.csv`) |
+  | 16-29, 48-61 | Claude: families (`families.csv`) |
+  | 0-2, 32-35 | free for short jobs; ask before long ones |
 - **Processes:** kill by PID only, never with `pkill -f` / `pgrep -f` patterns.
 - **GPUs:** GPUs 2 and 3 belong to another user; never touch them. vLLM on GPU 4 (PID 3843328) is ours and can be stopped
   for the CUDA-graph timing.
@@ -155,5 +160,6 @@ git clone --depth 1 https://github.com/marijnheule/drat-trim && (cd drat-trim &&
 | Date (UTC) | Who | Task | Status |
 |---|---|---|---|
 | 23 Nov 07:40 | Claude | WORK.md, preliminary results pushed | done |
-| 23 Nov 07:40 | Claude | C1 (indep mode, tests) | in progress |
+| 23 Nov 08:30 | Claude | C1 (indep mode, tests), C2 (`families.py`), C4 (`--dimacs-dir`), `04d_exact_indep.sh` | done; 315 tests pass |
+| 23 Nov 08:30 | Claude | C2/C3 runs: `logs/minrank_families.log`, `logs/minrank_families_big.log`, `logs/minrank_exact_indep.log` | running (scratch runs stopped; the old-encoding rerun stopped, superseded) |
 | | you | T1-T4 | not started |
