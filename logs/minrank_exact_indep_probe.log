@@ -1,0 +1,5 @@
+9 graphs selected, 0 already proven, 9 to run
+planted_d_n50_r8_e0.0_s2: lb=8 best=8 proven=True (reached_lb, 1.92s)
+planted_d_n50_r8_e0.0_s0: lb=8 best=8 proven=True (reached_lb, 2.08s)
+planted_d_n50_r8_e0.0_s5: lb=8 best=8 proven=True (reached_lb, 2.5s)
+planted_d_n50_r8_e0.0_s6: lb=8 best=8 proven=True (reached_lb, 2.53s)

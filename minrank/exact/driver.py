@@ -10,7 +10,9 @@ For each selected graph:
      "aut" (automorphism lex-leader, which cannot be combined with u_0 = e_1) times out on Mycielski-4 and takes
      0.8 s on Paley-13; "none" takes 16 s on Paley-13. The GL(r) fix matters most; "aut" is kept as an option.
      "indep" / "indep_cols" fix U_I = V_I = [Id | 0] on the acyclic set I found in step 2 (see symmetry.py); on the
-     n = 50 planted graphs this turns 3600 s timeouts into sub-second UNSAT proofs.
+     n = 50 planted graphs this turns 3600 s timeouts into sub-second UNSAT proofs. With these modes the driver
+     first probes "minrk <= alpha" (`--probe-lb` s) before descending: on the n = 50 planted digraphs that probe is
+     SAT in under a second, while descending from the cover times out at rank 14.
 Improved certificates are saved with run_baselines.keep_best (in the main process). One CSV row per attempt is
 appended to minrank/results/exact.csv; graphs already proven optimal there are skipped (resumable). Graphs not
 proven get a new row on each run; readers should take the last row per graph.
@@ -51,7 +53,7 @@ FIELDS = ["graph", "n", "family", "lb", "lb_proven", "start_rank", "best_rank", 
 
 def solve_graph(graph_path: str, cert_dir: str, family: str, lb_time: float, cover_time: float,
                 time_per_call: float, total_time: float | None, mode: str, seed: int,
-                dimacs_dir: str | None = None) -> dict:
+                dimacs_dir: str | None = None, probe_lb: float = 60.0) -> dict:
     """Run steps 1-3 for one graph. Returns the CSV row plus '_rows' (best verified rows)."""
     t0 = time.perf_counter()
     g = Graph.load(graph_path)
@@ -66,7 +68,19 @@ def solve_graph(graph_path: str, cert_dir: str, family: str, lb_time: float, cov
     use = mode
     proven, calls = best <= lb.value, 0
     status = "lb_meets_ub" if proven else "not_started"
-    while not proven and best > lb.value:
+    floor = lb.value  # minrk >= floor
+    if not proven and use in INDEP_MODES and probe_lb > 0:
+        # probe from below first: "minrk <= alpha?" is often easy when it is SAT (planted digraphs n = 50: < 1 s,
+        # while descending from the cover times out at every step); UNSAT raises the floor by one
+        res = rank_at_most_sym(g, floor, min(probe_lb, time_per_call), mode=use, indep=lb.vertices)
+        calls += 1
+        if res is False:
+            _dump_unsat(dimacs_dir, g, floor, use, lb.vertices)
+            floor += 1
+            proven, status = best <= floor, "unsat"
+        elif res is not None:
+            rows, best = res, rank_f2(res)
+    while not proven and best > floor:
         left = None if total_time is None else total_time - (time.perf_counter() - t0)
         if left is not None and left <= 0:
             status = "total_timeout"
@@ -80,24 +94,32 @@ def solve_graph(graph_path: str, cert_dir: str, family: str, lb_time: float, cov
             break
         if res is False:
             proven, status = True, "unsat"
-            if dimacs_dir and use in INDEP_MODES and len(lb.vertices) <= best - 1:
-                from .families import write_dimacs
-                from .symmetry import encode_sym
-
-                I = sorted(int(v) for v in lb.vertices)
-                write_dimacs(Path(dimacs_dir) / f"{g.name}_r{best - 1}_{use}.cnf.gz",
-                             encode_sym(g, best - 1, use, indep=I),
-                             [f"minrk_2({g.name}) <= {best - 1} is UNSAT", f"mode {use}",
-                              f"indep {' '.join(map(str, I))}", f"graph digest {g.digest()}"])
+            if use in INDEP_MODES:
+                _dump_unsat(dimacs_dir, g, best - 1, use, lb.vertices)
             break
         rows, best = res, rank_f2(res)
-    if best <= lb.value:
-        proven, status = True, ("lb_meets_ub" if calls == 0 else "reached_lb")
+    if best <= floor:
+        proven = True
+        if status != "unsat" or best < floor:
+            status = "lb_meets_ub" if calls == 0 else "reached_lb"
     row = {"graph": g.name, "n": g.n, "family": family, "lb": lb.value, "lb_proven": lb.proven_max,
            "start_rank": start, "best_rank": best, "proven_optimal": proven,
            "seconds": round(time.perf_counter() - t0, 2), "mode": use,
            "n_automorphisms": len(gens) if gens else 0, "calls": calls, "status": status, "_rows": rows}
     return row
+
+
+def _dump_unsat(dimacs_dir: str | None, g: Graph, r: int, mode: str, indep: list[int]) -> None:
+    """Write the CNF of an UNSAT "minrk <= r" call with the independent-set fix (for a DRAT check)."""
+    if not dimacs_dir or len(indep) > r:
+        return
+    from .families import write_dimacs
+    from .symmetry import encode_sym
+
+    I = sorted(int(v) for v in indep)
+    write_dimacs(Path(dimacs_dir) / f"{g.name}_r{r}_{mode}.cnf.gz", encode_sym(g, r, mode, indep=I),
+                 [f"minrk_2({g.name}) <= {r} is UNSAT", f"mode {mode}", f"indep {' '.join(map(str, I))}",
+                  f"graph digest {g.digest()}"])
 
 
 def proven_graphs(path: Path) -> set[str]:
@@ -138,6 +160,8 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--rerun-status", nargs="+", default=["call_timeout"])
     ap.add_argument("--dimacs-dir", type=Path, default=None,
                     help="indep modes: write the CNF of the final UNSAT call here (gzipped DIMACS)")
+    ap.add_argument("--probe-lb", type=float, default=60.0,
+                    help="indep modes: first try minrk <= alpha for this many seconds (0: descend only)")
     a = ap.parse_args(argv)
     rerun = graphs_with_status(a.rerun_from, a.rerun_status) if a.rerun_from else None
 
@@ -160,7 +184,7 @@ def main(argv: list[str] | None = None) -> None:
             w.writeheader()
         futs = [ex.submit(solve_graph, str(a.graphs / r["path"]), str(a.certs), r["family"], a.lb_time,
                           a.cover_time, a.time_per_call, a.total_time, a.mode, a.seed,
-                          str(a.dimacs_dir) if a.dimacs_dir else None) for r in todo]
+                          str(a.dimacs_dir) if a.dimacs_dir else None, a.probe_lb) for r in todo]
         for fu in as_completed(futs):
             row = fu.result()
             rows = row.pop("_rows")

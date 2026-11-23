@@ -23,3 +23,7 @@ planted_d_n50_r8_e0.0_s3,50,planted_d,8,True,15,8,True,3407.93,indep,0,7,reached
 planted_d_n50_r8_e0.0_s5,50,planted_d,8,True,15,15,False,3602.3,indep,0,1,call_timeout
 planted_d_n50_r8_e0.0_s6,50,planted_d,8,True,15,15,False,3602.44,indep,0,1,call_timeout
 planted_d_n50_r8_e0.0_s7,50,planted_d,8,True,14,8,True,2537.32,indep,0,6,reached_lb
+planted_d_n50_r8_e0.0_s2,50,planted_d,8,True,14,8,True,1.92,indep,0,1,reached_lb
+planted_d_n50_r8_e0.0_s0,50,planted_d,8,True,14,8,True,2.08,indep,0,1,reached_lb
+planted_d_n50_r8_e0.0_s5,50,planted_d,8,True,15,8,True,2.5,indep,0,1,reached_lb
+planted_d_n50_r8_e0.0_s6,50,planted_d,8,True,15,8,True,2.53,indep,0,1,reached_lb
