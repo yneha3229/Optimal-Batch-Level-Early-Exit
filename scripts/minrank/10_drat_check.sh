@@ -25,7 +25,7 @@ mapfile -t FILES < <(find "$@" -name '*.cnf.gz' -printf '%s %p\n' | sort -n | cu
 
 check_one() {
   local f=$1 base cnf prf sha hdr t0 t1 t2 rc sres cres
-  base=$(basename "$f" .cnf.gz); cnf="$WORK/$base.cnf"; prf="$WORK/$base.drat"
+  base=$(basename "$(dirname "$f")")_$(basename "$f" .cnf.gz); cnf="$WORK/$base.cnf"; prf="$WORK/$base.drat"   # dir prefix: same name in bench/ and families/
   gzip -dc "$f" > "$cnf"
   sha=$(sha256sum "$cnf" | cut -d' ' -f1)
   if grep -q ",$sha,.*,VERIFIED," "$OUT" 2>/dev/null; then rm -f "$cnf"; return; fi

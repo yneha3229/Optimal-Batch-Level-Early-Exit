@@ -3,7 +3,8 @@
 For each spec `name:a,b,...` the graph is `minrank.bench.generators.<name>(a, b, ...)` (integer or float arguments),
 so new generators need no change here. Per graph:
   1. lower bound: an acyclic set I by CP-SAT (`lower.mais`, `--lb-time` s); alpha = |I| <= minrk;
-  2. upper bound: the stored certificate (if it is for this graph and verifies) or a TabuCol clique cover;
+  2. upper bound: the best of a TabuCol clique cover, I + A(G) over F_2 (minrank/baselines/identity_adj.py) and the
+     stored certificate (if it is for this graph and verifies);
   3. ascend: SAT for r = alpha, alpha + 1, ... with I fixed. The first SAT r is minrk (every smaller r is UNSAT or
      below the L1 bound), so the result is proven;
   4. on a timeout at r, minrk >= r is known; descend from the upper bound (upper - 1, upper - 2, ...) with the same
@@ -29,6 +30,7 @@ from pathlib import Path
 import numpy as np
 
 from ..baselines.clique_cover import clique_cover_rows
+from ..baselines.identity_adj import identity_plus_adjacency_rows
 from ..bench import generators
 from ..core.graph import Graph
 from ..core.verify import load_certificate, verify
@@ -76,6 +78,9 @@ def solve_family(spec: str, cert_dir: str, lb_time: float, cover_time: float, ti
     cover_rows = clique_cover_rows(g, "tabucol", cover_time, np.random.default_rng(seed))
     cover = verify(g, cover_rows)
     rows, upper = cover_rows, cover
+    ia = identity_plus_adjacency_rows(g)            # I + A(G): fits every graph, optimal on several Kneser graphs
+    if verify(g, ia) < upper:
+        rows, upper = ia, verify(g, ia)
     cert = Path(cert_dir) / f"{g.name}.json"
     stored = stored_rank(cert, g)
     if stored is not None and stored < upper:

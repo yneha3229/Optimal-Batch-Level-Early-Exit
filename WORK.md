@@ -164,5 +164,10 @@ git clone --depth 1 https://github.com/marijnheule/drat-trim && (cd drat-trim &&
 |---|---|---|---|
 | 23 Nov 07:40 | Claude | WORK.md, preliminary results pushed | done |
 | 23 Nov 08:30 | Claude | C1 (indep mode, tests), C2 (`families.py`), C4 (`--dimacs-dir`), `04d_exact_indep.sh` | done; 315 tests pass |
-| 23 Nov 08:30 | Claude | C2/C3 runs: `logs/minrank_families.log`, `logs/minrank_families_big.log`, `logs/minrank_exact_indep.log` | running (scratch runs stopped; the old-encoding rerun stopped, superseded) |
-| | you | T1-T4 | not started |
+| 23 Nov 08:30 | Claude | C2/C3 runs: `logs/minrank_families.log`, `logs/minrank_families_big.log`, `logs/minrank_exact_indep.log` | done (committed) |
+| 23 Nov 20:10 | Claude | driver `--probe-lb`: all 8 directed planted n = 50 proven at 8 | done |
+| 23 Nov 21:40 | Claude (at your request) | T4: CaDiCaL 3.1.0 + drat-trim in `~/tools`, `scripts/minrank/10_drat_check.sh`, results `minrank/results/drat_checks.csv` | running; K(9,4) CNF (27 MB) still to do separately |
+| 23 Nov 21:50 | Claude (at your request) | T3: `docs/MINRANK_LIT.md` (first pass; reading list at the end) | done |
+| 23 Nov 22:10 | Claude (at your request) | T2: `docs/MINRANK_THEORY.md`: I + D construction explains K(8,3), K(10,3); minrk_2(K(n,3)) = alpha for n = 2 mod 4 (proven n = 10, 14, 22 by rank computation); proof route via inclusion matrices | construction done, general proof open |
+| 23 Nov 22:10 | Claude | **Benchmark caveat:** all planted graphs (extra_p = 0) are solved by I + A in microseconds; see `docs/MINRANK_THEORY.md` section 5 | regenerate planted graphs with extra_p > 0 |
+| | you | T1 (new families), proof of the k = 3 pattern (T2 section 4) | open |
