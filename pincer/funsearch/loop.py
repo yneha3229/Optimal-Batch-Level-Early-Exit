@@ -195,7 +195,11 @@ def reselect(run_dir: Path, top_val: int = 8) -> dict:
     seed = evaluate(SEED_PROGRAM, TRAIN)
     db.register(SEED_PROGRAM, seed.score, seed.per_graph, None, 0)
     n = 0
-    for line in (run_dir / "log.jsonl").read_text().splitlines():
+    import gzip
+
+    lp = run_dir / "log.jsonl"
+    text = lp.read_text() if lp.exists() else gzip.decompress((run_dir / "log.jsonl.gz").read_bytes()).decode()
+    for line in text.splitlines():
         d = json.loads(line)
         if d.get("score") is not None:
             db.register(d["code"], d["score"], [d["score"]], 0, d["it"])

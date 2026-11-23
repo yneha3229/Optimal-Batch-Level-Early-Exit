@@ -4,6 +4,11 @@
   "ref": 14,
   "seconds": 20.0
  },
+ "066da01c07685b8d": {
+  "name": "clustered_k6_m12_pb0.002_s10",
+  "ref": 34,
+  "seconds": 20.0
+ },
  "0de7b5be3e1d5741": {
   "name": "dnp_n400_p0.03_s5",
   "ref": 182,
@@ -19,6 +24,21 @@
   "ref": 14,
   "seconds": 20.0
  },
+ "269eb69019479ed1": {
+  "name": "planted_d_n60_r10_e0.05_s10",
+  "ref": 10,
+  "seconds": 20.0
+ },
+ "28552bcbd8838b83": {
+  "name": "dnp_n60_p0.4_s13",
+  "ref": 15,
+  "seconds": 20.0
+ },
+ "2ac8978a1f98d178": {
+  "name": "dnp_n60_p0.4_s10",
+  "ref": 15,
+  "seconds": 20.0
+ },
  "379a120db61ab9fa": {
   "name": "planted_d_n60_r10_e0.05_s1",
   "ref": 10,
@@ -31,6 +51,16 @@
  },
  "3f5455daebf8347d": {
   "name": "dnp_n60_p0.15_s0",
+  "ref": 29,
+  "seconds": 20.0
+ },
+ "404aaf594ecf5590": {
+  "name": "dnp_n100_p0.25_s10",
+  "ref": 25,
+  "seconds": 20.0
+ },
+ "41cadf66a3814b6a": {
+  "name": "dnp_n60_p0.15_s12",
   "ref": 29,
   "seconds": 20.0
  },
@@ -59,6 +89,26 @@
   "ref": 12,
   "seconds": 20.0
  },
+ "53f0b845e31ee70f": {
+  "name": "dnp_n100_p0.25_s11",
+  "ref": 23,
+  "seconds": 20.0
+ },
+ "541c791e038794fe": {
+  "name": "planted_d_n60_r10_e0.05_s13",
+  "ref": 10,
+  "seconds": 20.0
+ },
+ "577b93ece6e8fea9": {
+  "name": "clustered_k6_m12_pb0.002_s13",
+  "ref": 33,
+  "seconds": 20.0
+ },
+ "581b2cab556f80eb": {
+  "name": "dnp_n100_p0.1_s10",
+  "ref": 49,
+  "seconds": 20.0
+ },
  "5ca7d135a08249ef": {
   "name": "dnp_n100_p0.25_s1",
   "ref": 26,
@@ -72,6 +122,16 @@
  "632218ed6418be30": {
   "name": "dnp_n40_p0.3_s10",
   "ref": 15,
+  "seconds": 20.0
+ },
+ "635354fef3ec5045": {
+  "name": "dnp_n40_p0.3_s12",
+  "ref": 14,
+  "seconds": 20.0
+ },
+ "63886b89e5296b38": {
+  "name": "planted_d_n60_r10_e0.05_s12",
+  "ref": 9,
   "seconds": 20.0
  },
  "648350e56ded60d1": {
@@ -89,9 +149,19 @@
   "ref": 14,
   "seconds": 20.0
  },
+ "70efda7f190305d9": {
+  "name": "clustered_k6_m12_pb0.002_s12",
+  "ref": 34,
+  "seconds": 20.0
+ },
  "73eceab20544d3a2": {
   "name": "planted_d_n60_r10_e0.05_s3",
   "ref": 9,
+  "seconds": 20.0
+ },
+ "77bb28f2c09700d4": {
+  "name": "dnp_n100_p0.25_s12",
+  "ref": 25,
   "seconds": 20.0
  },
  "7ac0093e85490485": {
@@ -99,14 +169,29 @@
   "ref": 9,
   "seconds": 20.0
  },
+ "7c32a93f5a7772a0": {
+  "name": "dnp_n40_p0.3_s11",
+  "ref": 14,
+  "seconds": 20.0
+ },
  "7d1393aab102d886": {
   "name": "dnp_n100_p0.1_s1",
   "ref": 49,
   "seconds": 20.0
  },
+ "89c2ba37e1b1c994": {
+  "name": "dnp_n60_p0.4_s11",
+  "ref": 14,
+  "seconds": 20.0
+ },
  "8cbfebeaab6f6181": {
   "name": "dnp_n200_p0.05_s5",
   "ref": 95,
+  "seconds": 20.0
+ },
+ "8d4467580f46cae4": {
+  "name": "dnp_n60_p0.15_s13",
+  "ref": 30,
   "seconds": 20.0
  },
  "92b9a5733a663823": {
@@ -117,6 +202,16 @@
  "9657020536944ef6": {
   "name": "dnp_n60_p0.15_s6",
   "ref": 31,
+  "seconds": 20.0
+ },
+ "9b889c541f2587f7": {
+  "name": "dnp_n100_p0.25_s13",
+  "ref": 26,
+  "seconds": 20.0
+ },
+ "a3ca093ceb407f05": {
+  "name": "clustered_k6_m12_pb0.002_s11",
+  "ref": 34,
   "seconds": 20.0
  },
  "a558e892a8c120fe": {
@@ -164,9 +259,19 @@
   "ref": 48,
   "seconds": 20.0
  },
+ "d5d5a3bf1507ca92": {
+  "name": "dnp_n60_p0.15_s10",
+  "ref": 29,
+  "seconds": 20.0
+ },
  "d88dd1a43a57879e": {
   "name": "clustered_k10_m15_pb0.001_s5",
   "ref": 68,
+  "seconds": 20.0
+ },
+ "d9559f8ce06c61b3": {
+  "name": "dnp_n100_p0.1_s11",
+  "ref": 47,
   "seconds": 20.0
  },
  "dca3b8d1db19ffcd": {
@@ -219,9 +324,39 @@
   "ref": 45,
   "seconds": 20.0
  },
+ "f3d8dec4513d4865": {
+  "name": "dnp_n40_p0.3_s13",
+  "ref": 15,
+  "seconds": 20.0
+ },
  "f504f2572d497738": {
   "name": "dnp_n60_p0.15_s2",
   "ref": 29,
+  "seconds": 20.0
+ },
+ "f628d1e4bedb4cd2": {
+  "name": "planted_d_n60_r10_e0.05_s11",
+  "ref": 10,
+  "seconds": 20.0
+ },
+ "f653770778b85a80": {
+  "name": "dnp_n60_p0.4_s12",
+  "ref": 14,
+  "seconds": 20.0
+ },
+ "fa3e6667cf0c7866": {
+  "name": "dnp_n100_p0.1_s13",
+  "ref": 48,
+  "seconds": 20.0
+ },
+ "fdf912aee0fc8b0d": {
+  "name": "dnp_n60_p0.15_s11",
+  "ref": 30,
+  "seconds": 20.0
+ },
+ "fe9d692fc3fbc752": {
+  "name": "dnp_n100_p0.1_s12",
+  "ref": 48,
   "seconds": 20.0
  }
 }
