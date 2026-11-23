@@ -1,0 +1,15 @@
+dnp_n40_p0.3_s0 15
+dnp_n60_p0.15_s0 29
+dnp_n60_p0.4_s0 14
+dnp_n100_p0.1_s0 48
+dnp_n100_p0.25_s0 24
+clustered_k6_m12_pb0.002_s0 35
+planted_d_n60_r10_e0.05_s0 10
+dnp_n40_p0.3_s1 15
+dnp_n60_p0.15_s1 28
+dnp_n60_p0.4_s1 13
+dnp_n100_p0.1_s1 49
+dnp_n100_p0.25_s1 26
+clustered_k6_m12_pb0.002_s1 34
+planted_d_n60_r10_e0.05_s1 10
+dnp_n40_p0.3_s10 15
