@@ -20,14 +20,15 @@ llm:
     - name: Qwen/Qwen2.5-Coder-32B-Instruct-AWQ
       weight: 1.0
   temperature: 0.8
-  max_tokens: 4096
+  max_tokens: 8192
   timeout: 300
   retries: 2
 
 prompt:
-  num_top_programs: 3
-  num_diverse_programs: 2
+  num_top_programs: 2
+  num_diverse_programs: 1
   include_artifacts: true        # per-graph status/rank/cover/lb lines from the evaluator
+  max_artifact_bytes: 4096       # 20 KB default overflowed the 32k context by iteration ~17
   system_message: |
     You are improving a heuristic for the MINRANK of a graph over the field F_2 (linear index coding).
     A side-information graph on n vertices is given as bitmasks: bit j of out[i] is set iff receiver i knows
