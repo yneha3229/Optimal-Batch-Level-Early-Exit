@@ -117,16 +117,27 @@ def _partial(s: CompState, budget: float, rng: random.Random, t: float) -> str:
     return "improved" if s.offer_rows(rows, "partial_cover", t) else "no_change"
 
 
-def _fix_set(s: CompState, r: int) -> list[int]:
-    a = sorted(s.acyclic)
-    return a[:r]
+def _fix_set(s: CompState, r: int, question: tuple, rng: random.Random) -> list[int]:
+    """The acyclic set the SAT call fixes (independent-set symmetry breaking). SAT time depends heavily on which
+    maximum set is fixed (planted n = 100, r = 10, five maximum independent sets: 1.6 s to > 60 s), so every retry
+    of the same question uses a different set of the same size when a short SA run with a new seed finds one: a
+    restart portfolio against heavy-tailed run times. Any acyclic subset is sound for the fix."""
+    k = s.sat_attempts.get(question, 0)
+    s.sat_attempts[question] = k + 1
+    best = sorted(s.acyclic)
+    if k > 0:
+        alt = sa_order(s.comp.graph, min(0.3, 0.02 * s.n), random.Random(rng.randrange(2**31)),
+                       init=greedy_fvs(s.comp.graph))
+        if len(alt) >= len(best) and sorted(alt) != best:
+            best = sorted(alt)
+    return best[:r]
 
 
 def _sat_down(s: CompState, budget: float, rng: random.Random, t: float) -> str:
     r = s.mr_hi - 1
     if r < s.mr_lo:
         return "done"
-    I = _fix_set(s, r)
+    I = _fix_set(s, r, ("down", r), rng)
     t0 = time.perf_counter()
     res = rank_at_most_sym(s.comp.graph, r, time_limit=budget, mode="indep_cols", indep=I)
     if res is None:
@@ -143,7 +154,7 @@ def _sat_up(s: CompState, budget: float, rng: random.Random, t: float) -> str:
     r = s.mr_lo
     if r >= s.mr_hi:
         return "done"
-    I = _fix_set(s, r)
+    I = _fix_set(s, r, ("up", r), rng)
     t0 = time.perf_counter()
     res = rank_at_most_sym(s.comp.graph, r, time_limit=budget, mode="indep_cols", indep=I)
     if res is None:
