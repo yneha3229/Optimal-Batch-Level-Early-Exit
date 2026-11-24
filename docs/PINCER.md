@@ -52,6 +52,15 @@ simulated annealing run after it (§4). Random digraphs with n >= 80 stay wide o
   (3 × > 60 s, 32 s), the fastest regresses to 3.6-13 s. So some sets are reliably bad, the rest is solver luck;
   the restart portfolio (§0a) is the right response and a FunSearch target over set choice is not worth its cost.
   Data: `pincer/results/fixset_*.jsonl`, scripts `pincer/fixset_{study,analysis,relabel}.py`.
+- **Scale study (n = 200-400, 120 s, 12 graphs, seeds 7-8; `pincer/results/summary_scale_b120.md`).** Pincer index
+  vs classic: mean minrank gap 32.7 vs 62.7, paired 10 wins / 2 ties / 0 losses, classic's final quality reached
+  after a median 23 s. Sparse random digraphs gain mostly on the upper bound (n = 400: 348 → 277; n = 200, p = 0.05:
+  168 → 140) and on MAIS (151 → 187). The planted n = 200 digraphs (rank 12) first stayed at [12, 38]: SAT slices
+  were a flat 1-2 s and reset whenever the lower bound rose, while building and solving that CNF takes ~4 s. SAT
+  slices now start at 1 s + 1.5e-5 s per (forbidden pair × r) unit, and SAT is not offered above 10⁶ units (an
+  n = 400, r ≈ 200 encoding was killed for memory). After the fix both close at **minrk₂ = 12 in ~40 s**; test2 is
+  unchanged within noise (14/26 closed vs 13, mean gap 5.15 vs 5.27). Still open at this size: the undirected planted
+  n = 200 graphs (one direct call "≤ 12?" took 213 s) and every random graph (no interval closes).
 
 ## 0a. Update, 24 Nov (second session)
 
@@ -346,5 +355,7 @@ PROPOSER=gp ITER=1500 bash scripts/pincer/02_funsearch.sh                       
    server (§0b).
 7. **Ascending SAT search in the minrank driver** (done by hand here for the n = 100 planted graphs: all 8 settled);
    in Pincer, let `sat_up` keep a long slice when its question is r = L and the lower bound has just risen.
-8. **Scale study**: 300 s budgets and n = 200-500 to find where the tool mix changes.
+8. ~~Scale study~~ first pass done (§0b). Next at scale: an anytime SAT that keeps its learnt state across slices
+   (incremental solving with assumptions) instead of restarting each slice, and MAIS bounds beyond CP-SAT for
+   n ≥ 200 (both are where the n = 200-400 gaps sit).
 
