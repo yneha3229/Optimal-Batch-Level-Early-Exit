@@ -1,0 +1,25 @@
+24 jobs -> /home/user/Optimal-Batch-Level-Early-Exit/pincer/results/bench_scale_b120.jsonl
+classic    dnp_n200_p0.15_s8                  mr [42,98] beta [42.000,98.000] 119.73s
+classic    dnp_n200_p0.05_s7                  mr [93,168] beta [93.000,168.000] 120.02s
+index      dnp_n400_p0.03_s8                  mr [186,279] beta [186.000,279.000] 120.0s
+index      planted_d_n200_r12_e0.03_s7        mr [12,38] beta [12.000,38.000] 120.01s
+classic    planted_d_n200_r12_e0.03_s7        mr [12,38] beta [12.000,38.000] 120.11s
+index      clustered_k20_m15_pb0.0002_s7      mr [137,144] beta [137.000,144.000] 120.03s
+classic    clustered_k20_m15_pb0.0002_s8      mr [129,142] beta [129.000,142.000] 120.04s
+classic    clustered_k20_m15_pb0.0002_s7      mr [136,144] beta [136.000,144.000] 120.03s
+index      planted_n200_r12_e0.03_s8          mr [12,22] beta [11.000,22.000] 120.24s
+classic    planted_n200_r12_e0.03_s8          mr [11,22] beta [11.000,22.000] 117.96s
+classic    dnp_n200_p0.15_s7                  mr [40,97] beta [40.000,97.000] 118.24s
+classic    dnp_n400_p0.03_s7                  mr [151,348] beta [151.000,348.000] 120.04s
+index      dnp_n200_p0.15_s7                  mr [48,97] beta [48.000,97.000] 120.0s
+index      planted_d_n200_r12_e0.03_s8        mr [12,39] beta [12.000,39.000] 120.04s
+index      dnp_n400_p0.03_s7                  mr [187,277] beta [187.000,277.000] 120.0s
+classic    planted_d_n200_r12_e0.03_s8        mr [12,39] beta [12.000,39.000] 120.08s
+index      planted_n200_r12_e0.03_s7          mr [12,22] beta [11.000,22.000] 120.02s
+index      clustered_k20_m15_pb0.0002_s8      mr [133,142] beta [133.000,142.000] 120.02s
+index      dnp_n200_p0.15_s8                  mr [49,98] beta [49.000,98.000] 120.0s
+classic    dnp_n400_p0.03_s8                  mr [155,350] beta [155.000,350.000] 120.04s
+classic    planted_n200_r12_e0.03_s7          mr [10,22] beta [10.000,22.000] 120.07s
+index      dnp_n200_p0.05_s7                  mr [103,140] beta [103.000,140.000] 120.0s
+index      dnp_n200_p0.05_s8                  mr [102,143] beta [102.000,143.000] 120.0s
+classic    dnp_n200_p0.05_s8                  mr [96,171] beta [96.000,171.000] 120.02s

@@ -1,0 +1,13 @@
+12 jobs -> pincer/results/bench_scale_b120_v4.jsonl
+index      planted_d_n200_r12_e0.03_s8        mr [12,12] beta [12.000,12.000] 39.07s
+index      dnp_n200_p0.15_s7                  mr [48,97] beta [48.000,97.000] 120.0s
+index      dnp_n400_p0.03_s8                  mr [188,279] beta [188.000,279.000] 120.6s
+index      clustered_k20_m15_pb0.0002_s7      mr [137,144] beta [137.000,144.000] 120.03s
+index      planted_d_n200_r12_e0.03_s7        mr [12,12] beta [12.000,12.000] 41.44s
+index      planted_n200_r12_e0.03_s8          mr [12,22] beta [11.000,22.000] 120.04s
+index      dnp_n400_p0.03_s7                  mr [187,277] beta [187.000,277.000] 120.0s
+index      dnp_n200_p0.15_s8                  mr [49,98] beta [49.000,98.000] 120.01s
+index      planted_n200_r12_e0.03_s7          mr [12,22] beta [11.000,22.000] 119.99s
+index      dnp_n200_p0.05_s7                  mr [103,140] beta [103.000,140.000] 120.0s
+index      clustered_k20_m15_pb0.0002_s8      mr [133,142] beta [133.000,140.000] 119.99s
+index      dnp_n200_p0.05_s8                  mr [103,143] beta [103.000,143.000] 120.0s
