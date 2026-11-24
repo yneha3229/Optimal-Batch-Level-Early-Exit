@@ -1,0 +1,29 @@
+{
+ "0.0": {
+  "seed+SA": 0.8624,
+  "evolved+SA": 0.9161,
+  "wins/ties/losses": [
+   36,
+   6,
+   6
+  ]
+ },
+ "0.5": {
+  "seed+SA": 0.9519,
+  "evolved+SA": 0.9566,
+  "wins/ties/losses": [
+   17,
+   20,
+   11
+  ]
+ },
+ "2.0": {
+  "seed+SA": 0.9891,
+  "evolved+SA": 0.983,
+  "wins/ties/losses": [
+   5,
+   28,
+   15
+  ]
+ }
+}

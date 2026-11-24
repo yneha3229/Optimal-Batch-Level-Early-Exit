@@ -1,0 +1,28 @@
+26 jobs -> /home/user/Optimal-Batch-Level-Early-Exit/pincer/results/bench_train_b30.jsonl
+roundrobin dnp_n30_p0.3_s0                    mr [15,15] beta [15.000,15.000] 1.31s
+roundrobin planted_n50_r8_e0.05_s1            mr [8,8] beta [6.000,7.466] 7.57s
+roundrobin dnp_n50_p0.1_s1                    mr [34,37] beta [33.000,37.000] 30.0s
+roundrobin dnp_n120_p0.1_s1                   mr [52,72] beta [52.000,72.000] 30.01s
+roundrobin dnp_n120_p0.3_s0                   mr [22,44] beta [22.000,43.973] 30.0s
+roundrobin gnp_n40_p0.5_s0                    mr [9,9] beta [7.000,8.160] 10.54s
+roundrobin planted_d_n50_r8_e0.05_s1          mr [8,8] beta [8.000,8.000] 4.02s
+roundrobin gnp_n40_p0.5_s1                    mr [8,8] beta [7.000,7.558] 4.09s
+roundrobin dnp_n120_p0.1_s0                   mr [50,73] beta [50.000,73.000] 30.01s
+roundrobin planted_n50_r8_e0.05_s0            mr [8,8] beta [7.000,8.000] 30.0s
+roundrobin dnp_n80_p0.3_s0                    mr [20,33] beta [19.000,32.000] 30.0s
+roundrobin dnp_n50_p0.3_s0                    mr [17,23] beta [16.000,22.500] 30.0s
+roundrobin gnp_n80_p0.5_s1                    mr [10,13] beta [8.000,12.754] 30.0s
+roundrobin dnp_n50_p0.6_s0                    mr [9,12] beta [8.000,11.528] 29.98s
+roundrobin dnp_n80_p0.3_s1                    mr [19,33] beta [19.000,32.333] 30.0s
+roundrobin planted_d_n50_r8_e0.05_s0          mr [8,8] beta [8.000,8.000] 3.2s
+roundrobin clustered_k8_m12_pb0.0_s0          mr [46,46] beta [45.000,45.500] 30.0s
+roundrobin dnp_n120_p0.3_s1                   mr [20,43] beta [20.000,43.000] 30.0s
+roundrobin clustered_k8_m12_pb0.0005_s1       mr [46,46] beta [46.000,46.000] 27.03s
+roundrobin dnp_n50_p0.3_s1                    mr [17,23] beta [16.000,23.000] 30.01s
+roundrobin dnp_n50_p0.6_s1                    mr [9,12] beta [8.000,11.137] 30.0s
+roundrobin dnp_n30_p0.3_s1                    mr [14,14] beta [14.000,14.000] 1.47s
+roundrobin clustered_k8_m12_pb0.0_s1          mr [47,47] beta [47.000,47.000] 3.02s
+roundrobin gnp_n80_p0.5_s0                    mr [10,13] beta [8.000,12.158] 30.01s
+roundrobin dnp_n50_p0.1_s0                    mr [33,34] beta [32.000,34.000] 30.0s
+roundrobin clustered_k8_m12_pb0.0005_s0       mr [44,48] beta [44.000,47.500] 30.0s
+wrote /home/user/Optimal-Batch-Level-Early-Exit/pincer/priors.json
