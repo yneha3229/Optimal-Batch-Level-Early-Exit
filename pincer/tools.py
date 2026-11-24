@@ -167,19 +167,47 @@ def _sat_up(s: CompState, budget: float, rng: random.Random, t: float) -> str:
     return "improved"
 
 
+def _shannon_child(conn, g, gens) -> None:
+    try:
+        r = shannon_bound_sym(g, gens) if gens else shannon_bound(g)
+        conn.send(("ok", (r.bound, r.y, r.mu, getattr(r, "gens", None))))
+    except BaseException as e:  # report, the parent decides
+        conn.send(("err", repr(e)))
+    finally:
+        conn.close()
+
+
 def _shannon(s: CompState, budget: float, rng: random.Random, t: float) -> str:
     """Full LP for small asymmetric SCCs; the orbit-reduced LP when the SCC has nontrivial automorphisms (always
-    faster) or is too large for the full LP (12 < n <= 16)."""
+    faster) or is too large for the full LP (12 < n <= 16). Runs in a child process killed after `budget` seconds
+    (the agent passes the time left), so a long LP cannot overrun the run's budget."""
+    import multiprocessing as mp
+
     from minrank.exact.symmetry import automorphisms
 
     g = s.comp.graph
     gens = automorphisms(g, max_gens=16) if g.n > 3 else []
-    if gens and g.n <= SHANNON_SYM_MAX_N:
-        r = shannon_bound_sym(g, gens)
-        s.offer_shannon(r.bound, r.y, r.mu, "shannon", t, recheck=False, gens=r.gens)
-    elif g.n <= SHANNON_MAX_N:
-        r = shannon_bound(g)
-        s.offer_shannon(r.bound, r.y, r.mu, "shannon", t, recheck=False)  # certified_bound already exact
+    if not (gens and g.n <= SHANNON_SYM_MAX_N) and g.n > SHANNON_MAX_N:
+        return "done"
+    gens = gens if (gens and g.n <= SHANNON_SYM_MAX_N) else []
+    ctx = mp.get_context("forkserver")
+    parent, child = ctx.Pipe(duplex=False)
+    p = ctx.Process(target=_shannon_child, args=(child, g, gens), daemon=True)
+    p.start()
+    child.close()
+    try:
+        if not parent.poll(max(0.1, budget)):
+            p.kill()
+            return "timeout"
+        status, payload = parent.recv()
+    finally:
+        parent.close()
+        p.join()
+    if status != "ok":
+        raise RuntimeError(f"shannon child failed: {payload}")
+    bound, y, mu, rgens = payload
+    # The child is untrusted for correctness: recheck the certificate in this process.
+    s.offer_shannon(bound, y, mu, "shannon", t, recheck=True, gens=rgens or None)
     return "done"
 
 
@@ -256,10 +284,32 @@ def default_tools(include_lns: bool = False, evolved: str | None = None) -> dict
     return {t.name: t for t in tools}
 
 
+def shannon_cost(s: CompState) -> float:
+    """Predicted seconds for the shannon tool (cached on the state). Fitted on this container: full LP about
+    0.004 * 2^(n-1); orbit-reduced LP about 1e-5 * M^2 + 0.2 with M = number of subset orbits (C13: M = 380,
+    0.5 s; C15: 1224, 9-13 s; circ(16; 1,4): 2250, 32-51 s)."""
+    if "shannon_cost" in s.cache:
+        return s.cache["shannon_cost"]
+    from minrank.exact.symmetry import automorphisms
+
+    from .lp import subset_orbits
+
+    g = s.comp.graph
+    est = math.inf
+    gens = automorphisms(g, max_gens=16) if 3 < g.n <= SHANNON_SYM_MAX_N else []
+    if gens:
+        M = len(set(subset_orbits(g.n, gens)))
+        est = 1e-5 * M * M + 0.2
+    elif g.n <= SHANNON_MAX_N:
+        est = 0.004 * 2 ** max(0, g.n - 1)
+    s.cache["shannon_cost"] = est
+    return est
+
+
 def predicted_seconds(tool: Tool, s: CompState) -> float:
-    """Rough cost model for one-shot tools (used for budget checks, not for correctness)."""
+    """Rough cost model for one-shot tools (used for scheduling, not for correctness)."""
     if tool.name == "shannon":
-        return 0.004 * 2 ** max(0, s.n - 1) if s.n <= SHANNON_MAX_N else math.inf
+        return shannon_cost(s)
     if tool.name == "quick":
         return 0.001 * s.n + 0.05
     return 0.0

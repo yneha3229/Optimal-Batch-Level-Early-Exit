@@ -47,6 +47,7 @@ class CompState:
     unsat: list[dict] = field(default_factory=list)        # [{"r": r, "mode": ..., "indep": [...], "seconds": s}]
     sources: dict = field(default_factory=dict)            # which tool set each bound
     sat_attempts: dict = field(default_factory=dict)       # (direction, r) -> SAT calls so far (fixed-set restarts)
+    cache: dict = field(default_factory=dict)              # per-component scratch (e.g. predicted tool costs)
     events: list[Event] = field(default_factory=list)
 
     def __post_init__(self) -> None:

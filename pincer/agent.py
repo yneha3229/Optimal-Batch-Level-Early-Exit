@@ -150,6 +150,8 @@ class Pincer:
                 stopped = "policy_stop"
                 break
             arm, slice_s = choice
+            if self.tools[arm.tool].once:  # one-shot tools run to completion: give them the time left as a limit
+                slice_s = self.left()
             slice_s = max(0.05, min(slice_s, self.left()))
             self.run_tool(arm, slice_s)
             self.policy.update(arm, self.steps[-1])
