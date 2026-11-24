@@ -167,15 +167,18 @@ def cmd_report():
                          f"{(f'{np.median(pins):.1f} s' if pins else '-')} | "
                          f"{sum(bool(r[key][4]) for r in rs)}/{len(rs)} |")
     lines += ["", "## What v2's structure and lambda workers contributed", "",
-              "| graph | SCCs | SCCs closed (receivers) | acyclic kernel: receivers before -> after | block-code merges |"
-              " pieces through lambda-agent | SCCs whose upper bound beats the clique cover | v1 final | v2 final |",
-              "|---|---|---|---|---|---|---|---|---|"]
+              "| graph | SCCs | SCCs closed (receivers) | acyclic kernel: receivers before -> after | code savings found |"
+              " pieces through lambda-agent | transmissions saved vs clique cover | workers re-assigned to search (at s) |"
+              " v1 final | v2 final |",
+              "|---|---|---|---|---|---|---|---|---|---|"]
     for gname, r in ok:
         i = r["v2info"]
         kt = i.get("kernel_total", [0, 0])
-        better = i["upper_from"]["block codes"] + i["upper_from"]["lambda-agent codes"]
+        merges = i["lambda_merges"]
+        merges = ", ".join(f"{k}: {v}" for k, v in merges.items()) if isinstance(merges, dict) and merges else "0"
+        moved = ", ".join(f"{w} ({t})" for w, t in i.get("became_search", [])) or "-"
         lines.append(f"| {gname} | {i['sccs']} | {i['sccs_closed']} ({i['receivers_in_closed']}) | {kt[0]} -> {kt[1]} | "
-                     f"{i['lambda_merges']} | {i['lambda_agent_pieces']} | {better} | "
+                     f"{merges} | {i['lambda_agent_pieces']} | {i.get('saved_by_codes_vs_cover', 0):g} | {moved} | "
                      f"{r['v1'][1]:g} .. {r['v1'][2]:g} | {i['lo_exact']} .. {i['hi_exact']} |")
     missing = [gn for gn, r in table if not r]
     if missing:
