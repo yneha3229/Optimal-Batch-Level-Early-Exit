@@ -129,3 +129,51 @@ def make_graph(family: str, n: int, rng) -> Graph:
 
 
 FAMILIES = ("random", "planted", "layered")
+
+
+def communities(n, rng, name=None):
+    """Groups of 4-200 receivers (dense inside: random arcs, many two-way), ordered; earlier groups know some messages
+    of later groups (one-way), and a few back links tie some groups together into larger strongly connected parts.
+    Models side information that comes in clusters (shared caches, neighbourhoods, interest groups)."""
+    sizes = []
+    while sum(sizes) < n:
+        sizes.append(int(np.exp(rng.uniform(np.log(4), np.log(200)))))
+    sizes[-1] -= sum(sizes) - n
+    sizes = [s for s in sizes if s > 0]
+    a = np.zeros((n, n), dtype=bool)
+    off = np.cumsum([0] + sizes)
+    for k, s in enumerate(sizes):
+        sub = random_digraph(s, rng.uniform(0.4, 0.9), rng.uniform(0.2, 0.9), rng).adj
+        a[off[k]:off[k + 1], off[k]:off[k + 1]] = sub
+    q, px, back = rng.uniform(0.02, 0.1), rng.uniform(0.05, 0.3), rng.uniform(0.0, 0.003)
+    for i in range(len(sizes)):
+        for j in range(i + 1, len(sizes)):
+            r = rng.random()
+            if r < q:
+                blk = rng.random((sizes[i], sizes[j])) < px
+                a[off[i]:off[i + 1], off[j]:off[j + 1]] |= blk
+            elif r < q + back:
+                u, v = rng.integers(off[i], off[i + 1]), rng.integers(off[j], off[j + 1])
+                a[u, v] = a[v, u] = True
+    return Graph(a, name or f"communities_n{n}")
+
+
+def sparse_digraph(n, rng, name=None):
+    """Sparse side information: each receiver knows a few messages (average 1.5-6), some pairs two-way."""
+    d, recip = rng.uniform(1.5, 6.0), rng.uniform(0.2, 0.6)
+    m = int(d * n / (1 + recip))
+    i, j = rng.integers(0, n, m), rng.integers(0, n, m)
+    keep = i != j
+    i, j = i[keep], j[keep]
+    a = np.zeros((n, n), dtype=bool)
+    a[i, j] = True
+    two = rng.random(len(i)) < recip
+    a[j[two], i[two]] = True
+    return Graph(a, name or f"sparse_n{n}")
+
+
+STRUCTURED = ("communities", "sparse")
+
+
+def make_structured(family: str, n: int, rng) -> Graph:
+    return communities(n, rng) if family == "communities" else sparse_digraph(n, rng)
