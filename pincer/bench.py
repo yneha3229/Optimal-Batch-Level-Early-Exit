@@ -84,6 +84,13 @@ def minrank_bench(pattern: str) -> list[Graph]:
 def instances(split: str) -> list[Graph]:
     if split == "structured":
         return structured()
+    if split == "scale":  # larger graphs, seeds 7-8 (never used for tuning)
+        gs = []
+        for sd in (7, 8):
+            gs += [gen.gnp(200, 0.05, sd, True), gen.gnp(200, 0.15, sd, True), gen.gnp(400, 0.03, sd, True),
+                   gen.planted(200, 12, 0.03, sd, True), gen.planted(200, 12, 0.03, sd, False),
+                   clustered(20, 15, 0.5, 0.1, 0.0002, sd)]
+        return gs
     if split == "planted_e01":  # the minrank teammate's planted extra_p = 0.1 benchmark (exact SAT results exist)
         return minrank_bench("planted*_e0.1_*")
     if split == "planted_e01_n100":

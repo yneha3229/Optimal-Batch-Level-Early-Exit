@@ -57,11 +57,12 @@ class SliceSchedule:
             return 0.2
         return min(5.0, max(0.5, 0.02 * n))
 
-    def get(self, key: tuple[int, str], n: int, question: tuple = ()) -> float:
+    def get(self, key: tuple[int, str], n: int, question: tuple = (), base: float | None = None) -> float:
+        b = base if base is not None else self.base(key[1], n)
         if key[1] in SAT_TOOLS and self.question.get(key) != question:
             self.question[key] = question
-            self.slice[key] = self.base(key[1], n)
-        return self.slice.setdefault(key, self.base(key[1], n))
+            self.slice[key] = b
+        return self.slice.setdefault(key, b)
 
     def update(self, key: tuple[int, str], status: str, n: int) -> None:
         cur = self.slice.get(key, self.base(key[1], n))
@@ -99,7 +100,13 @@ class BasePolicy:
 
     def slice_for(self, arm) -> float:
         s = self.agent.states[arm.comp]
-        return self.sched.get((arm.comp, arm.tool), s.n, self._question(arm.comp, arm.tool))
+        base = None
+        if arm.tool in SAT_TOOLS:  # first slice scales with the CNF size (and never below the configured base)
+            from .tools import sat_base_seconds
+
+            r = s.mr_hi - 1 if arm.tool == "sat_down" else s.mr_lo
+            base = max(self.sched.sat_base, sat_base_seconds(s, r))
+        return self.sched.get((arm.comp, arm.tool), s.n, self._question(arm.comp, arm.tool), base)
 
     def update(self, arm, step) -> None:
         s = self.agent.states[arm.comp]

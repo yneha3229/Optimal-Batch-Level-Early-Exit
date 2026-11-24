@@ -33,6 +33,26 @@ simulated annealing run after it (§4). Random digraphs with n >= 80 stay wide o
 ~10 for Pincer, e.g. n = 120, p = 0.3: [21, 44] for every method): neither MAIS nor the covers get close, and SAT does not scale there yet.
 
 
+## 0b. Update, 24 Nov (third session)
+
+- **DRAT-ready certificates.** The r = 9 UNSAT steps behind minrk₂ = 10 for all 8 undirected planted n = 100 graphs are
+  exported as gzipped DIMACS (re-solved UNSAT here, 0.9-4.7 s each; header: graph digest, r, mode, fixed set):
+  `pincer/certificates/unsat_cnf/` (8.9 MB). Check them on the server with
+  `bash scripts/minrank/10_drat_check.sh pincer/certificates/unsat_cnf`. (Building CaDiCaL / drat-trim in this
+  container was not permitted, so the DRAT run itself is still to do.)
+- **Scheduling fix for slow one-shot tools.** The index policy priced the Shannon LP at its default 0.5 s slice, so
+  on C(16,2) it ran the 60 s LP before a 0.04 s fractional cover and ran out of budget with β ∈ [16/3, 6]. One-shot
+  tools are now charged their predicted run time (LP: about 1e-5·M² s for M subset orbits), skipped when they cannot
+  finish, and the LP runs in a child process killed at the time left (certificate re-checked in the parent). C(16,2)
+  and circ(16; 1,4) are now pinned by the index policy too (given ≥ 65 s; the LP alone needs ~61 s).
+- **Negative: no cheap predictor of a good SAT fixed set.** 39 maximum independent sets on two planted n = 100 graphs,
+  one call "minrk ≤ 10?" each (60 s limit): times 0.9 s to > 60 s; Spearman correlation with 7 set features
+  (degrees, coverage, private neighbours) is weak and inconsistent between the graphs (|ρ| ≤ 0.47, the one p < 0.05
+  among 14 tests is not robust). Relabelling test: the slowest set stays slow under 4 random vertex relabellings
+  (3 × > 60 s, 32 s), the fastest regresses to 3.6-13 s. So some sets are reliably bad, the rest is solver luck;
+  the restart portfolio (§0a) is the right response and a FunSearch target over set choice is not worth its cost.
+  Data: `pincer/results/fixset_*.jsonl`, scripts `pincer/fixset_{study,analysis,relabel}.py`.
+
 ## 0a. Update, 24 Nov (second session)
 
 Positive:
@@ -66,8 +86,7 @@ Negative:
 - **Partial clique cover gives nothing on these graphs** (0/26 test2 graphs improve on the clique cover; no merge of
   two groups ever saves a transmission), so the planned GF(p) vector-linear upper bound (old next step 5) was not
   built. Random digraphs keep β gap = minrank gap.
-- The index policy can still lose a slow one-shot tool to the budget: on C(16,2) it ran SAT first and the 36-60 s
-  LP did not finish inside 60 s (round-robin pinned it).
+- The index policy could lose a slow one-shot tool to the budget (C(16,2)); fixed in §0b.
 - Mycielski M5 (n = 23) and Paley 17 stay open for β (LP too large / too little symmetry found).
 - FunSearch on the SA candidate choice (§4b): GP beats its seed at a fixed move budget but not the library SA at
   equal wall time.
@@ -315,17 +334,16 @@ PROPOSER=gp ITER=1500 bash scripts/pincer/02_funsearch.sh                       
    `PROPOSER="local:http://127.0.0.1:8000/v1|Qwen/Qwen2.5-Coder-32B-Instruct-AWQ" ITER=300 bash scripts/pincer/02_funsearch.sh`
    and `PROPOSER=anthropic ITER=300 ...`; compare with `PROPOSER=gp ITER=300` (same number of evaluated programs).
    Pass: val_selected ≥ gp's + 0.01 and test wins on ≥ 10/16 graphs. Cost: log `llm_usage` from summary.json.
-2. ~~Re-target FunSearch at deployment conditions~~ done for SA (§4b, negative for GP). Remaining target: the
-   choice of the symmetry-breaking set for `sat_up` (SAT time varies 1.6 s to > 60 s with it, §0a), scored by
-   time to decide r = L on hard planted graphs. Pass: beats the restart portfolio at equal time.
+2. ~~Re-target FunSearch at deployment conditions~~ done for SA (§4b, negative for GP). The fixed-set choice for
+   SAT was studied instead of evolved (§0b): mostly solver luck, so no target there.
 3. **LLM controller**: `bash scripts/pincer/03_llm_controller.sh` (test2; the budget includes LLM latency). Pass: paired total-gap wins > losses against `index`. If not, the LLM's place is offline (writing
    tools and priors), not in the loop.
 4. ~~Bigger Shannon LPs~~ done for n ≤ 16 (§0a); M5 (n = 23) needs an LP over fewer inequalities (e.g. only
    inequalities on orbit representatives of small sets) — open.
 5. ~~Partial clique cover over GF(p)~~ measured, no gain (§0a). Better β upper bounds for random digraphs need
    minrk over other fields (`minrank/exact/sat_fq.py`) or composite / vector codes — open.
-6. **DRAT** for Pincer's UNSAT records, first for the r = 9 steps of the two new planted values
-   (`scripts/minrank/10_drat_check.sh` needs CaDiCaL + drat-trim, which this container cannot build).
+6. **DRAT** for the exported CNFs: `bash scripts/minrank/10_drat_check.sh pincer/certificates/unsat_cnf` on the
+   server (§0b).
 7. **Ascending SAT search in the minrank driver** (done by hand here for the n = 100 planted graphs: all 8 settled);
    in Pincer, let `sat_up` keep a long slice when its question is r = L and the lower bound has just risen.
 8. **Scale study**: 300 s budgets and n = 200-500 to find where the tool mix changes.

@@ -117,6 +117,27 @@ def _partial(s: CompState, budget: float, rng: random.Random, t: float) -> str:
     return "improved" if s.offer_rows(rows, "partial_cover", t) else "no_change"
 
 
+SAT_MAX_UNITS = 1_000_000  # (forbidden pairs + n) * r; ~7 clauses each. Above this the CNF needs GBs: no SAT.
+
+
+def sat_units(s: CompState, r: int) -> int:
+    """Size of the minrank CNF for rank r: one AND/XOR chain of length r per forbidden pair (and per diagonal)."""
+    if "pairs" not in s.cache:
+        g = s.comp.graph
+        s.cache["pairs"] = sum(g.forbidden(i).bit_count() + 1 for i in range(g.n))
+    return s.cache["pairs"] * max(1, r)
+
+
+def sat_base_seconds(s: CompState, r: int) -> float:
+    """First slice for a SAT question: building the CNF alone costs ~4.4 us per unit (n = 200, r = 12: 1 s), and the
+    planted n = 200 digraph needs ~4 s in all; a flat 1 s slice never got there."""
+    return 1.0 + 1.5e-5 * sat_units(s, r)
+
+
+def _sat_ok(s: CompState, r: int) -> bool:
+    return not s.mr_closed and r >= 1 and sat_units(s, r) <= SAT_MAX_UNITS
+
+
 def _fix_set(s: CompState, r: int, question: tuple, rng: random.Random) -> list[int]:
     """The acyclic set the SAT call fixes (independent-set symmetry breaking). SAT time depends heavily on which
     maximum set is fixed (planted n = 100, r = 10, five maximum independent sets: 1.6 s to > 60 s), so every retry
@@ -266,9 +287,9 @@ def default_tools(include_lns: bool = False, evolved: str | None = None) -> dict
              description="TabuCol clique cover (lowers U)"),
         Tool("partial_cover", "upper", True, _partial, lambda s: s.comp.graph.directed and _upper_useful(s),
              description="clique cover plus disjoint cycles of cliques, directed graphs (lowers U)"),
-        Tool("sat_down", "upper", False, _sat_down, lambda s: not s.mr_closed,
+        Tool("sat_down", "upper", False, _sat_down, lambda s: _sat_ok(s, s.mr_hi - 1),
              description="SAT: is minrank <= U-1? SAT lowers U, UNSAT closes the minrank interval"),
-        Tool("sat_up", "lower", False, _sat_up, lambda s: not s.mr_closed,
+        Tool("sat_up", "lower", False, _sat_up, lambda s: _sat_ok(s, s.mr_lo),
              description="SAT: is minrank <= L? UNSAT raises the minrank lower bound, SAT closes it"),
         Tool("shannon", "beta_lower", False, _shannon, lambda s: not s.b_closed and s.shannon is None,
              once=True, max_n=SHANNON_SYM_MAX_N,
