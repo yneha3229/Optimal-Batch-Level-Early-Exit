@@ -1,0 +1,598 @@
+<title>Pincer Broadcast Rate</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout: a drawing board (left) and a bench of instruments (right): the pincer meter, the agent, its log, the
+     two certificates. Stacks to one column on phones. */
+  :root {
+    --bg: #f3f5f8; --panel: #ffffff; --ink: #17202c; --muted: #5d6878; --line: #d9dee6; --grid: #e7ebf0;
+    --lower: #0b7f74; --lower-soft: #d6efec; --upper: #5146d6; --upper-soft: #e4e2fb;
+    --exact: #1d7a35; --warn: #9a5b00; --node: #ffffff; --node-ink: #17202c; --focus: #5146d6;
+    --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg: #11161d; --panel: #18202a; --ink: #e6ebf2; --muted: #98a3b3; --line: #2b3643; --grid: #1e2732;
+    --lower: #3cc3b4; --lower-soft: #133a37; --upper: #9b94ff; --upper-soft: #27264a;
+    --exact: #5fcf7c; --warn: #e0a43b; --node: #202a36; --node-ink: #e6ebf2; --focus: #9b94ff; color-scheme: dark } }
+  :root[data-theme="dark"] {
+    --bg: #11161d; --panel: #18202a; --ink: #e6ebf2; --muted: #98a3b3; --line: #2b3643; --grid: #1e2732;
+    --lower: #3cc3b4; --lower-soft: #133a37; --upper: #9b94ff; --upper-soft: #27264a;
+    --exact: #5fcf7c; --warn: #e0a43b; --node: #202a36; --node-ink: #e6ebf2; --focus: #9b94ff; color-scheme: dark }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 20px 40px; }
+  .wrap { max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; }
+  h1 { font-size: 1.55rem; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+  .lede { margin: 0; color: var(--muted); max-width: 72ch; }
+  .formula { font-family: var(--font-mono); font-size: 0.9rem; }
+  .main { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 16px; align-items: start; }
+  @media (max-width: 960px) { .main { grid-template-columns: minmax(0, 1fr); } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; min-width: 0; }
+  .board { display: flex; flex-direction: column; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); align-items: center; }
+  .toolbar .sep { width: 1px; align-self: stretch; background: var(--line); margin: 0 4px; }
+  button, select { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+    border-radius: 7px; padding: 6px 10px; cursor: pointer; }
+  button:hover { border-color: var(--muted); }
+  button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  button[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+  button.primary { background: var(--upper); border-color: var(--upper); color: #fff; font-weight: 600; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  kbd { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); margin-left: 4px; }
+  .svgwrap { position: relative; }
+  svg#board { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; max-width: 100%; touch-action: none; user-select: none;
+    background-color: var(--panel);
+    background-image: radial-gradient(var(--grid) 1.2px, transparent 1.2px); background-size: 24px 24px; border-radius: 0 0 10px 10px; }
+  .hint { position: absolute; left: 12px; bottom: 10px; right: 12px; font-size: 0.8rem; color: var(--muted); pointer-events: none; }
+  .board-foot { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 10px 12px; border-top: 1px solid var(--line); font-size: 0.85rem; color: var(--muted); align-items: center; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+  .sw { display: inline-block; width: 12px; height: 12px; border-radius: 50%; vertical-align: -1px; margin-right: 5px; }
+  .side { display: flex; flex-direction: column; gap: 16px; }
+  .section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+  .bounds { display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px; align-items: end; text-align: center; font-variant-numeric: tabular-nums; }
+  .bounds .num { font-family: var(--font-mono); font-size: 2rem; font-weight: 600; line-height: 1.1; }
+  .bounds .lbl { font-size: 0.78rem; color: var(--muted); }
+  .bounds .lo .num { color: var(--lower); } .bounds .hi .num { color: var(--upper); }
+  .bounds .mid { font-family: var(--font-mono); font-size: 1.1rem; color: var(--muted); padding-bottom: 22px; }
+  .meter { position: relative; height: 34px; }
+  .meter svg { width: 100%; height: 34px; display: block; }
+  .verdict { font-size: 0.92rem; padding: 8px 10px; border-radius: 7px; background: var(--bg); border-left: 3px solid var(--muted); }
+  .verdict.exact { border-left-color: var(--exact); } .verdict.gap { border-left-color: var(--warn); }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .row label { font-size: 0.85rem; color: var(--muted); }
+  .note { font-size: 0.8rem; color: var(--muted); margin: 0; }
+  ol.log { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; max-height: 340px; overflow-y: auto; }
+  ol.log li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 6px; padding: 6px 8px; border-radius: 7px; cursor: pointer; border: 1px solid transparent; }
+  ol.log li:hover { border-color: var(--line); }
+  ol.log li.active { background: var(--bg); border-color: var(--line); }
+  ol.log .k { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); padding-top: 2px; }
+  ol.log .tool { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; }
+  ol.log .tool .chip { font-weight: 500; font-size: 0.7rem; padding: 0 6px; border-radius: 99px; margin-left: 6px; }
+  .chip.lower { background: var(--lower-soft); color: var(--lower); } .chip.upper { background: var(--upper-soft); color: var(--upper); }
+  .chip.info { background: var(--bg); color: var(--muted); }
+  ol.log .why { font-size: 0.8rem; color: var(--muted); }
+  ol.log .res { font-size: 0.84rem; }
+  ol.log .bnd { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
+  .replay { display: flex; gap: 8px; align-items: center; }
+  .replay input[type=range] { flex: 1; min-width: 0; accent-color: var(--upper); }
+  .cert { font-size: 0.88rem; display: flex; flex-direction: column; gap: 6px; }
+  .cert code { font-family: var(--font-mono); font-size: 0.82rem; }
+  .plan { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
+  .plan li { display: flex; gap: 8px; align-items: baseline; font-family: var(--font-mono); font-size: 0.82rem; flex-wrap: wrap; }
+  .plan .t { color: var(--muted); min-width: 30px; }
+  .agent-text { font-size: 0.85rem; white-space: pre-wrap; background: var(--bg); border-radius: 7px; padding: 8px 10px; max-height: 180px; overflow-y: auto; }
+  details summary { cursor: pointer; font-size: 0.85rem; color: var(--muted); }
+  textarea { width: 100%; min-height: 90px; font-family: var(--font-mono); font-size: 0.78rem; background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 7px; padding: 8px; }
+  .explain { font-size: 0.86rem; color: var(--muted); display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px 24px; }
+  .explain b { color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  .node circle { stroke: var(--ink); stroke-width: 1.6; fill: var(--node); transition: fill .25s, stroke .25s; }
+  .node text { font-family: var(--font-mono); font-size: 15px; font-weight: 600; fill: var(--node-ink); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+  .node.sel circle { stroke: var(--focus); stroke-width: 3; }
+  .node.acyc circle { stroke: var(--lower); stroke-width: 4; }
+  .arc { stroke: var(--muted); stroke-width: 1.6; fill: none; }
+  .arc.two { stroke: var(--ink); stroke-width: 2.2; }
+  .arc-hit { stroke: transparent; stroke-width: 14; fill: none; cursor: pointer; }
+  .halo { fill-opacity: 0.22; stroke-opacity: 0.6; stroke-width: 1.5; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Pincer</h1>
+    <p class="lede">Draw who already has which message, and an agent squeezes the broadcast rate between two certified bounds:
+      <span class="formula">MAIS ≤ β ≤ clique cover</span>.</p>
+  </header>
+
+  <div class="main">
+    <section class="card board" aria-label="Drawing board">
+      <div class="toolbar" role="toolbar" aria-label="Drawing tools">
+        <button id="m-node" data-mode="node" aria-pressed="true">Receiver<kbd>R</kbd></button>
+        <button id="m-arc" data-mode="arc" aria-pressed="false">Knows →<kbd>K</kbd></button>
+        <button id="m-two" data-mode="two" aria-pressed="false">Know each other ↔<kbd>B</kbd></button>
+        <button id="m-move" data-mode="move" aria-pressed="false">Move<kbd>M</kbd></button>
+        <button id="m-erase" data-mode="erase" aria-pressed="false">Erase<kbd>E</kbd></button>
+        <span class="sep" aria-hidden="true"></span>
+        <select id="preset" aria-label="Load an example">
+          <option value="">Load example…</option>
+          <option value="ring5">Five friends in a ring</option>
+          <option value="dcycle">Directed cycle (6)</option>
+          <option value="groups">Two caching groups</option>
+          <option value="complete">Everyone knows everyone</option>
+          <option value="mixed">Mixed: groups and a cycle</option>
+          <option value="random">Random network (12)</option>
+        </select>
+        <button id="clear">Clear</button>
+      </div>
+      <div class="svgwrap">
+        <svg id="board" viewBox="0 0 900 600" role="img" aria-label="Side-information graph">
+          <defs>
+            <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"></path></marker>
+            <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--ink)"></path></marker>
+          </defs>
+          <g id="halos"></g><g id="arcs"></g><g id="nodes"></g>
+        </svg>
+        <div class="hint" id="hint"></div>
+      </div>
+      <div class="board-foot">
+        <span class="legend">
+          <span><span class="sw" style="background: transparent; border: 3px solid var(--lower)"></span>in the acyclic set (lower bound)</span>
+          <span><span class="sw" style="background: var(--upper-soft); border: 1px solid var(--upper)"></span>one clique = one XOR transmission (upper bound)</span>
+          <span>A → B: receiver A already has B's message</span>
+        </span>
+      </div>
+    </section>
+
+    <aside class="side">
+      <section class="card section" aria-label="Bounds">
+        <p class="eyebrow">Broadcast rate</p>
+        <div class="bounds">
+          <div class="lo"><div class="num" id="L">–</div><div class="lbl">lower · acyclic set</div></div>
+          <div class="mid">≤ β ≤</div>
+          <div class="hi"><div class="num" id="U">–</div><div class="lbl">upper · clique cover</div></div>
+        </div>
+        <div class="meter"><svg id="meter" viewBox="0 0 360 34" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+        <div class="verdict" id="verdict">Draw a network or load an example, then run the agent.</div>
+      </section>
+
+      <section class="card section" aria-label="Agent">
+        <p class="eyebrow">Agent</p>
+        <div class="row">
+          <label for="agentMode">Who decides</label>
+          <select id="agentMode">
+            <option value="planner">Built-in planner</option>
+            <option value="claude" disabled>Claude (tool use)</option>
+          </select>
+          <select id="tier" aria-label="Claude speed" hidden>
+            <option value="quick">fast</option>
+            <option value="default">thorough</option>
+          </select>
+        </div>
+        <div class="row">
+          <button class="primary" id="run">Run agent</button>
+          <button id="stop" disabled>Stop</button>
+        </div>
+        <p class="note" id="agentNote">The built-in planner runs cheap tools first and exact search only where a gap remains. Every result is checked before it can move a bound.</p>
+        <div class="agent-text" id="agentText" hidden></div>
+      </section>
+
+      <section class="card section" aria-label="Steps">
+        <p class="eyebrow">Steps</p>
+        <div class="replay">
+          <button id="play" aria-label="Replay the steps" disabled>▶ Replay</button>
+          <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Step" disabled>
+        </div>
+        <ol class="log" id="log"></ol>
+      </section>
+
+      <section class="card section cert" aria-label="Certificates">
+        <p class="eyebrow">Why these bounds hold</p>
+        <div id="certL"><b>Lower bound.</b> <span class="note">Run the agent to see the acyclic set.</span></div>
+        <div id="certU"><b>Upper bound.</b> <span class="note">Run the agent to see the broadcast plan.</span></div>
+      </section>
+    </aside>
+  </div>
+
+  <section class="card section" aria-label="How it works">
+    <p class="eyebrow">How it works</p>
+    <div class="explain">
+      <div><b>The problem.</b> A server broadcasts to receivers; receiver <i>i</i> wants message <i>x<sub>i</sub></i> and already has some others (the arrows). β is the fewest transmissions that let everyone decode. Computing it exactly is out of reach in general, so we trap it between two checkable numbers.</div>
+      <div><b>Lower bound (MAIS).</b> If a set of receivers has no directed cycle among them, order them so each knows only messages of later ones; then no scheme can serve them in fewer than one transmission each. The largest such set gives L.</div>
+      <div><b>Upper bound (clique cover).</b> A group in which everyone has everyone else's message needs one transmission: the XOR of the group's messages. Covering all receivers with U such groups gives a valid scheme with U transmissions.</div>
+      <div><b>The agent.</b> It reads the graph, splits it into strongly connected components (both bounds add up over them), calls greedy, local-search and exact tools, reads each verified result, and stops when L = U (β found) or both bounds are proven optimal.</div>
+    </div>
+    <details>
+      <summary>Graph as JSON (copy or paste to import)</summary>
+      <textarea id="json" spellcheck="false" aria-label="Graph JSON"></textarea>
+      <div class="row"><button id="importJson">Import JSON</button><button id="copyJson">Copy</button><span class="note" id="jsonNote"></span></div>
+    </details>
+  </section>
+</div>
+
+<script src="engine.js"></script>
+<script>
+(() => {
+  "use strict";
+  const E = window.BetaEngine;
+  const $ = (id) => document.getElementById(id);
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const GROUP_COLORS = ["#5146d6", "#0b7f74", "#c2410c", "#a21caf", "#2563eb", "#b45309", "#0f766e", "#be123c", "#4d7c0f", "#7c3aed"];
+
+  // ------------------------------------------------------------------ state
+  let nodes = [];          // {x, y}
+  let arcs = new Set();    // "i>j"
+  let mode = "node";
+  let pending = null;      // first node picked for an arc
+  let dragging = null;
+  let session = null, steps = [], shown = -1, running = false, stopFlag = false, abortCtl = null, sample = null;
+
+  const key = (i, j) => i + ">" + j;
+  const nice = (t) => String(t || "").replace(/\bbeta\b/g, "β").replace(/<=/g, "≤").replace(/->/g, "→");
+  const graph = () => E.makeGraph(nodes.length, [...arcs].map((s) => s.split(">").map(Number)));
+
+  // ------------------------------------------------------------------ presets
+  function circle(n, cx = 450, cy = 300, r = 210) {
+    return [...Array(n).keys()].map((k) => ({ x: cx + r * Math.cos(-Math.PI / 2 + 2 * Math.PI * k / n), y: cy + r * Math.sin(-Math.PI / 2 + 2 * Math.PI * k / n) }));
+  }
+  function load(name) {
+    arcs = new Set();
+    if (name === "ring5") {
+      nodes = circle(5);
+      for (let i = 0; i < 5; i++) { arcs.add(key(i, (i + 1) % 5)); arcs.add(key((i + 1) % 5, i)); }
+    } else if (name === "dcycle") {
+      nodes = circle(6);
+      for (let i = 0; i < 6; i++) arcs.add(key(i, (i + 1) % 6));
+    } else if (name === "complete") {
+      nodes = circle(5);
+      for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) if (i !== j) arcs.add(key(i, j));
+    } else if (name === "groups") {
+      nodes = [...circle(4, 250, 300, 120), ...circle(4, 650, 300, 120)];
+      for (const base of [0, 4]) for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) if (i !== j) arcs.add(key(base + i, base + j));
+      arcs.add(key(1, 7)); arcs.add(key(6, 3)); arcs.add(key(2, 4));
+    } else if (name === "mixed") {
+      nodes = [...circle(3, 220, 220, 100), ...circle(4, 640, 230, 120), { x: 300, y: 480 }, { x: 470, y: 520 }, { x: 640, y: 470 }];
+      for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) if (i !== j) arcs.add(key(i, j));
+      for (let i = 0; i < 4; i++) arcs.add(key(3 + i, 3 + ((i + 1) % 4)));
+      arcs.add(key(3, 5)); arcs.add(key(5, 3));
+      arcs.add(key(7, 8)); arcs.add(key(8, 9)); arcs.add(key(9, 7)); arcs.add(key(8, 7));
+      arcs.add(key(0, 3)); arcs.add(key(7, 1)); arcs.add(key(9, 6));
+    } else if (name === "random") {
+      nodes = circle(12, 450, 300, 230);
+      const rng = E.rngFrom(Date.now() & 0xffff);
+      for (let i = 0; i < 12; i++) for (let j = i + 1; j < 12; j++) {
+        if (rng() > 0.32) continue;
+        if (rng() < 0.45) { arcs.add(key(i, j)); arcs.add(key(j, i)); } else arcs.add(rng() < 0.5 ? key(i, j) : key(j, i));
+      }
+    } else { nodes = []; }
+    changed();
+  }
+
+  // ------------------------------------------------------------------ drawing
+  function el(tag, attrs) { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+
+  function render() {
+    const snap = shown >= 0 && steps[shown] ? steps[shown] : null;
+    const acyc = new Set(snap ? snap.acyclic : []);
+    const groupOf = new Map();
+    if (snap) snap.groups.forEach((g, gi) => g.forEach((v) => groupOf.set(v, gi)));
+    // halos: one translucent blob per clique of 2+ receivers, a tinted ring for singletons
+    const halos = $("halos"); halos.replaceChildren();
+    if (snap) snap.groups.forEach((g, gi) => {
+      const col = GROUP_COLORS[gi % GROUP_COLORS.length];
+      if (g.length === 1) { const p = nodes[g[0]]; halos.append(el("circle", { cx: p.x, cy: p.y, r: 34, fill: col, stroke: col, class: "halo" })); return; }
+      const pts = g.map((v) => nodes[v]);
+      for (let a = 0; a < pts.length; a++) for (let b = a + 1; b < pts.length; b++) {
+        halos.append(el("line", { x1: pts[a].x, y1: pts[a].y, x2: pts[b].x, y2: pts[b].y, stroke: col, "stroke-width": 44, "stroke-linecap": "round", "stroke-opacity": 0.18 }));
+      }
+    });
+    // arcs
+    const ga = $("arcs"); ga.replaceChildren();
+    const drawn = new Set();
+    for (const s of arcs) {
+      const [i, j] = s.split(">").map(Number);
+      const two = arcs.has(key(j, i));
+      if (two && drawn.has(key(j, i))) continue;
+      drawn.add(s);
+      const a = nodes[i], b = nodes[j];
+      const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1, r = 24;
+      const x1 = a.x + dx / d * r, y1 = a.y + dy / d * r, x2 = b.x - dx / d * (r + 2), y2 = b.y - dy / d * (r + 2);
+      const line = el("line", { x1, y1, x2, y2, class: "arc" + (two ? " two" : ""), "marker-end": two ? "url(#ah2)" : "url(#ah)" });
+      if (two) line.setAttribute("marker-start", "url(#ah2)");
+      ga.append(line);
+      const hit = el("line", { x1, y1, x2, y2, class: "arc-hit" });
+      hit.addEventListener("pointerdown", (ev) => { if (mode === "erase") { ev.stopPropagation(); arcs.delete(s); if (two) arcs.delete(key(j, i)); changed(); } });
+      const title = el("title", {}); title.textContent = two ? `Receivers ${i + 1} and ${j + 1} have each other's message` : `Receiver ${i + 1} has message x${j + 1}`;
+      hit.append(title);
+      ga.append(hit);
+    }
+    // nodes
+    const gn = $("nodes"); gn.replaceChildren();
+    nodes.forEach((p, v) => {
+      const g = el("g", { class: "node" + (pending === v ? " sel" : "") + (acyc.has(v) ? " acyc" : ""), transform: `translate(${p.x},${p.y})`, tabindex: 0 });
+      g.append(el("circle", { r: 22 }));
+      const t = el("text", {}); t.textContent = v + 1; g.append(t);
+      const title = el("title", {}); title.textContent = `Receiver ${v + 1} wants x${v + 1}`; g.append(title);
+      g.addEventListener("pointerdown", (ev) => nodeDown(ev, v));
+      gn.append(g);
+    });
+    $("hint").textContent = nodes.length ? hintFor(mode) : "Click anywhere to place a receiver, or load an example.";
+    renderBounds(snap);
+  }
+
+  function hintFor(m) {
+    return { node: "Click empty space to add a receiver.", arc: pending === null ? "Click receiver A, then B: A already has B's message." : `Receiver ${pending + 1} has the message of… (click another receiver)`,
+      two: pending === null ? "Click two receivers that have each other's messages." : `…and receiver ${pending + 1} share messages with (click another)`,
+      move: "Drag receivers to rearrange.", erase: "Click a receiver or an arrow to remove it." }[m];
+  }
+
+  function svgPoint(ev) {
+    const svg = $("board"), pt = svg.createSVGPoint();
+    pt.x = ev.clientX; pt.y = ev.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    return { x: Math.max(26, Math.min(874, p.x)), y: Math.max(26, Math.min(574, p.y)) };
+  }
+
+  $("board").addEventListener("pointerdown", (ev) => {
+    if (running) return;
+    if (mode === "node" && nodes.length < 40) { nodes.push(svgPoint(ev)); changed(); }
+    else if (mode === "node") $("hint").textContent = "This demo keeps to 40 receivers.";
+    else { pending = null; render(); }
+  });
+
+  function nodeDown(ev, v) {
+    ev.stopPropagation();
+    if (running) return;
+    if (mode === "erase") {
+      nodes.splice(v, 1);
+      const next = new Set();
+      for (const s of arcs) { let [i, j] = s.split(">").map(Number); if (i === v || j === v) continue; if (i > v) i--; if (j > v) j--; next.add(key(i, j)); }
+      arcs = next; changed(); return;
+    }
+    if (mode === "move" || mode === "node") { dragging = v; $("board").setPointerCapture(ev.pointerId); return; }
+    if (pending === null) { pending = v; render(); return; }
+    if (pending !== v) {
+      arcs.add(key(pending, v));
+      if (mode === "two") arcs.add(key(v, pending));
+      pending = null; changed();
+    }
+  }
+  $("board").addEventListener("pointermove", (ev) => { if (dragging !== null) { nodes[dragging] = svgPoint(ev); render(); } });
+  $("board").addEventListener("pointerup", () => { if (dragging !== null) { dragging = null; syncJson(); } });
+
+  function setMode(m) {
+    mode = m; pending = null;
+    document.querySelectorAll("[data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
+    render();
+  }
+  document.querySelectorAll("[data-mode]").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
+  document.addEventListener("keydown", (ev) => {
+    if (ev.target.closest("textarea, input, select")) return;
+    const m = { r: "node", k: "arc", b: "two", m: "move", e: "erase" }[ev.key.toLowerCase()];
+    if (m) setMode(m);
+    if (ev.key === "Escape") { pending = null; render(); }
+  });
+  $("preset").addEventListener("change", (ev) => { if (ev.target.value) load(ev.target.value); ev.target.value = ""; });
+  $("clear").addEventListener("click", () => load(""));
+
+  // An edit invalidates the last run.
+  function changed() {
+    if (!running) { session = null; steps = []; shown = -1; renderLog(); renderCerts(null); $("verdict").className = "verdict";
+      $("verdict").textContent = nodes.length ? "Graph changed. Run the agent to bound β." : "Draw a network or load an example, then run the agent."; }
+    syncJson(); render();
+  }
+
+  // ------------------------------------------------------------------ bounds display
+  function renderBounds(snap) {
+    $("L").textContent = snap ? snap.L : "–";
+    $("U").textContent = snap ? snap.U : "–";
+    const m = $("meter"); m.replaceChildren();
+    const n = Math.max(1, nodes.length), W = 360, pad = 10, x = (v) => pad + (W - 2 * pad) * v / n;
+    m.append(el("line", { x1: pad, y1: 17, x2: W - pad, y2: 17, stroke: "var(--line)", "stroke-width": 2 }));
+    for (let v = 0; v <= n; v++) m.append(el("line", { x1: x(v), y1: 13, x2: x(v), y2: 21, stroke: "var(--line)", "stroke-width": 1 }));
+    if (!snap) return;
+    m.append(el("rect", { x: x(snap.L), y: 10, width: Math.max(2, x(snap.U) - x(snap.L)), height: 14, rx: 4, fill: "var(--upper-soft)" }));
+    m.append(el("rect", { x: x(snap.L) - 3, y: 4, width: 6, height: 26, rx: 2, fill: "var(--lower)" }));
+    m.append(el("rect", { x: x(snap.U) - 3, y: 4, width: 6, height: 26, rx: 2, fill: "var(--upper)" }));
+  }
+
+  function renderCerts(snap) {
+    const cl = $("certL"), cu = $("certU");
+    if (!snap) {
+      cl.innerHTML = '<b>Lower bound.</b> <span class="note">Run the agent to see the acyclic set.</span>';
+      cu.innerHTML = '<b>Upper bound.</b> <span class="note">Run the agent to see the broadcast plan.</span>'; return;
+    }
+    cl.replaceChildren();
+    const b1 = document.createElement("b"); b1.textContent = `Lower bound L = ${snap.L}${snap.lowerProven ? " (proven maximum)" : ""}. `;
+    const t1 = document.createElement("span");
+    t1.textContent = `Receivers {${snap.acyclic.map((v) => v + 1).join(", ")}} have no cycle of side information among them, so at least ${snap.L} transmissions are needed.`;
+    cl.append(b1, t1);
+    cu.replaceChildren();
+    const b2 = document.createElement("b"); b2.textContent = `Upper bound U = ${snap.U}${snap.upperProven ? " (smallest clique cover)" : ""}. `;
+    const t2 = document.createElement("span"); t2.textContent = "Broadcast plan, one transmission per group:";
+    const ol = document.createElement("ol"); ol.className = "plan";
+    snap.groups.forEach((g, gi) => {
+      const li = document.createElement("li");
+      const t = document.createElement("span"); t.className = "t"; t.textContent = `t${gi + 1}`;
+      const sw = document.createElement("span"); sw.className = "sw"; sw.style.background = GROUP_COLORS[gi % GROUP_COLORS.length];
+      const c = document.createElement("code"); c.textContent = g.map((v) => `x${v + 1}`).join(" ⊕ ");
+      li.append(t, sw, c);
+      ol.append(li);
+    });
+    cu.append(b2, t2, ol);
+  }
+
+  // ------------------------------------------------------------------ log and replay
+  const SIDE = Object.fromEntries(E.TOOLS.map((t) => [t.name, t.side]));
+  function renderLog() {
+    const ol = $("log"); ol.replaceChildren();
+    steps.forEach((s, k) => {
+      const li = document.createElement("li"); if (k === shown) li.className = "active";
+      const kk = document.createElement("span"); kk.className = "k"; kk.textContent = k;
+      const body = document.createElement("div");
+      const tool = document.createElement("div"); tool.className = "tool"; tool.textContent = s.tool === "start" ? "start" : s.tool;
+      if (s.tool !== "start") {
+        const chip = document.createElement("span"); const side = SIDE[s.tool] || "info";
+        chip.className = "chip " + side; chip.textContent = { lower: "lower bound", upper: "upper bound", info: "inspect" }[side];
+        if (s.by) chip.textContent += " · " + s.by;
+        tool.append(chip);
+      }
+      body.append(tool);
+      if (s.why) { const w = document.createElement("div"); w.className = "why"; w.textContent = nice(s.why); body.append(w); }
+      const r = document.createElement("div"); r.className = "res"; r.textContent = nice(s.note); body.append(r);
+      const bd = document.createElement("div"); bd.className = "bnd";
+      bd.textContent = `${s.L} ≤ β ≤ ${s.U}` + (s.took !== undefined ? ` · ${s.took} ms` : "");
+      body.append(bd);
+      li.append(kk, body);
+      li.addEventListener("click", () => show(k));
+      ol.append(li);
+    });
+    const sc = $("scrub"); sc.max = Math.max(0, steps.length - 1); sc.value = Math.max(0, shown); sc.disabled = steps.length < 2 || running;
+    $("play").disabled = steps.length < 2 || running;
+    const act = ol.querySelector(".active"); if (act) act.scrollIntoView({ block: "nearest" });
+  }
+  function show(k) { shown = k; renderLog(); renderCerts(steps[k]); render(); }
+  $("scrub").addEventListener("input", (ev) => show(Number(ev.target.value)));
+  $("play").addEventListener("click", async () => {
+    for (let k = 0; k < steps.length; k++) { show(k); await sleep(700); }
+  });
+
+  function finish() {
+    const v = session.verdict();
+    $("verdict").className = "verdict " + v.kind;
+    $("verdict").textContent = nice(v.text);
+  }
+
+  // ------------------------------------------------------------------ agents
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  function newSession() {
+    session = new E.Session(graph(), 7);
+    steps = session.steps;
+    session.onStep = () => { shown = steps.length - 1; renderLog(); renderCerts(steps[shown]); render(); };
+    session.onStep();
+  }
+  function setRunning(on) {
+    running = on; $("run").disabled = on; $("stop").disabled = !on;
+    document.querySelectorAll(".toolbar button, .toolbar select, #agentMode, #tier").forEach((b) => { b.disabled = on; });
+    if (!on) syncClaudeOption();
+  }
+
+  async function runPlanner() {
+    const gen = E.plannerSteps(session, 8000);
+    for (const d of gen) {
+      if (stopFlag) break;
+      $("verdict").className = "verdict";
+      $("verdict").textContent = nice(`Running ${d.tool}… ${d.why}`);
+      await sleep(350);          // let the board update between decisions
+      try { session.run(d.tool, d.args); steps[steps.length - 1].why = d.why; steps[steps.length - 1].by = "planner"; }
+      catch (e) { session.log(d.tool, d.args, "Rejected: " + e.message); }
+      renderLog();
+      if (session.done) break;
+    }
+  }
+
+  function promptFor(g) {
+    return [
+      "You are the controller of Pincer, a tool-using agent that bounds the broadcast rate beta of an index-coding problem.",
+      "Receivers 1..n; receiver i wants message x_i. An arc i -> j means receiver i already has x_j.",
+      "Lower bound L: a largest acyclic induced subgraph (no scheme uses fewer transmissions). Upper bound U: a smallest clique cover of the two-way pairs (one XOR per clique). L <= beta <= U.",
+      "Every tool result is verified by the page before it can change L or U; tools return the current L and U.",
+      "Plan: inspect the graph, get cheap bounds, then spend effort only where the gap is. Stop as soon as L == U (beta exact) or both bounds are proven optimal, or after about 8 tool calls.",
+      "Before each tool call, write ONE short sentence saying why you are calling it. At the end, write 2-3 sentences: the final bounds, whether beta is exact, and which step mattered most.",
+      "",
+      `Graph: n = ${g.n}; arcs (i -> j, 1-based): ${E.arcsOf(g).map(([i, j]) => `${i + 1}->${j + 1}`).join(", ") || "none"}.`,
+    ].join("\n");
+  }
+
+  async function runClaude() {
+    const tools = E.TOOLS.map((t) => ({
+      name: t.name, description: t.description,
+      inputSchema: t.ms ? { type: "object", properties: { ms: { type: "integer", description: "time budget in milliseconds (50-10000)" } } } : { type: "object", properties: {} },
+      execute: async (input) => {
+        if (stopFlag) throw new Error("stopped by the viewer");
+        await sleep(30);
+        const r = session.run(t.name, { ms: Math.min(10000, Number(input && input.ms) || 0) || undefined });
+        const s = steps[steps.length - 1]; s.by = "Claude"; s.why = lastSentence($("agentText").textContent);
+        renderLog();
+        return r;
+      },
+    }));
+    abortCtl = new AbortController();
+    const box = $("agentText"); box.hidden = false; box.textContent = "Thinking…";
+    try {
+      await sample(promptFor(session.g), {
+        tools, signal: abortCtl.signal, modelTier: $("tier").value,
+        onText: ({ text }) => { box.textContent = text; box.scrollTop = box.scrollHeight; },
+      });
+    } catch (e) {
+      const msg = { cancelled: "Stopped.", not_granted: "Claude was not allowed for this page. Use the built-in planner.",
+        rate_limited: "Too many requests right now. Try again in a little while, or use the built-in planner.",
+        tools_unavailable: "This view cannot run tools for Claude. Use the built-in planner." }[e && e.code] || "Claude could not finish this run. The bounds found so far are kept.";
+      box.textContent = (e && e.text ? e.text + "\n\n" : "") + msg;
+      if (e && ["not_granted", "tools_unavailable", "sampling_disabled"].includes(e.code)) { sample = null; syncClaudeOption(); }
+    }
+  }
+  function lastSentence(text) {
+    const t = (text || "").trim().split(/\n+/).pop() || "";
+    return t.length > 160 ? t.slice(0, 157) + "…" : t;
+  }
+
+  $("run").addEventListener("click", async () => {
+    if (!nodes.length) { $("verdict").textContent = "Add at least one receiver first."; return; }
+    stopFlag = false; setRunning(true); newSession();
+    $("agentText").hidden = $("agentMode").value !== "claude";
+    try { if ($("agentMode").value === "claude" && sample) await runClaude(); else await runPlanner(); }
+    finally { setRunning(false); finish(); show(steps.length - 1); }
+  });
+  $("stop").addEventListener("click", () => { stopFlag = true; if (abortCtl) abortCtl.abort(); });
+
+  // Claude is offered only where the page can ask it (claude.ai viewer); elsewhere the planner runs alone.
+  function syncClaudeOption() {
+    const opt = $("agentMode").querySelector('option[value="claude"]');
+    opt.disabled = !sample;
+    if (!sample && $("agentMode").value === "claude") $("agentMode").value = "planner";
+    $("tier").hidden = $("agentMode").value !== "claude";
+    $("agentNote").textContent = $("agentMode").value === "claude"
+      ? "Claude decides which tool to call next and explains why. The tools run here in the page and every result is checked before it can move a bound."
+      : (sample ? "The built-in planner runs cheap tools first and exact search only where a gap remains. Switch to Claude to let the model decide."
+        : "The built-in planner runs cheap tools first and exact search only where a gap remains. Open this page on claude.ai to let Claude drive the same tools.");
+  }
+  $("agentMode").addEventListener("change", syncClaudeOption);
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("sample").then(async (s) => {
+      if (!s) return;
+      const lim = await s.limits().catch(() => null);
+      if (lim && lim.tools) { sample = s; syncClaudeOption(); }
+    }).catch(() => {});
+  }
+
+  // ------------------------------------------------------------------ JSON import / export
+  function syncJson() {
+    $("json").value = JSON.stringify({ receivers: nodes.length, positions: nodes.map((p) => [Math.round(p.x), Math.round(p.y)]),
+      knows: [...arcs].map((s) => s.split(">").map((x) => Number(x) + 1)) });
+  }
+  $("importJson").addEventListener("click", () => {
+    try {
+      const d = JSON.parse($("json").value);
+      const n = Math.min(40, Number(d.receivers) || (d.positions || []).length);
+      nodes = (d.positions && d.positions.length === n) ? d.positions.map(([x, y]) => ({ x: Number(x), y: Number(y) })) : circle(n);
+      arcs = new Set();
+      for (const [i, j] of d.knows || []) if (i >= 1 && j >= 1 && i <= n && j <= n && i !== j) arcs.add(key(i - 1, j - 1));
+      $("jsonNote").textContent = `Imported ${n} receivers and ${arcs.size} arcs.`;
+      changed();
+    } catch (e) { $("jsonNote").textContent = "That is not valid JSON in this format: {\"receivers\": n, \"knows\": [[i, j], …]} (1-based)."; }
+  });
+  $("copyJson").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText($("json").value); $("jsonNote").textContent = "Copied."; }
+    catch (e) { $("json").select(); $("jsonNote").textContent = "Selected: press Ctrl+C / Cmd+C to copy."; }
+  });
+
+  // Open on a worked example so the first view shows what the tool does.
+  load("mixed");
+})();
+</script>
