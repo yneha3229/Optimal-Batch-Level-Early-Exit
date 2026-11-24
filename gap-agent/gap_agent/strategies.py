@@ -61,6 +61,23 @@ class Search:
             self.colour = colour.copy()
             self.events.append((self.clock(), "hi", k, self.current))
 
+    def load(self, acyclic, colour) -> None:
+        """Warm start from a known acyclic set and clique cover (e.g. projected from a larger graph)."""
+        g = self.g
+        acyclic = [int(v) for v in acyclic]
+        order = _topological(g, acyclic)
+        m = len(order)
+        self.order[:m] = order
+        self.m = m
+        self.pos[:] = -1
+        self.pos[order] = np.arange(m, dtype=np.int32)
+        self.lo = 0
+        self._new_lo(m, self.order)
+        col = np.unique(np.asarray(colour), return_inverse=True)[1].astype(np.int32)
+        self.hi = g.n + 1
+        self._new_hi(int(col.max()) + 1 if g.n else 0, col)
+        self.tabu = None
+
     def acyclic_set(self):
         return sorted(int(v) for v in self.best_order[: self.lo])
 
@@ -163,6 +180,26 @@ class Search:
             col = np.unique(col, return_inverse=True)[1].astype(np.int32)
         gamma, f = K.tabu_init(g.conf_ptr, g.conf, col, k)
         self.tabu = (k, col, gamma, np.zeros((g.n, k), dtype=np.int64), int(f), 0)
+
+
+def _topological(g: Graph, verts) -> list[int]:
+    vs = np.asarray(sorted(verts), dtype=np.int64)
+    if len(vs) == 0:
+        return []
+    sub = g.adj[np.ix_(vs, vs)]
+    indeg = sub.sum(0)
+    stack = list(np.nonzero(indeg == 0)[0])
+    out = []
+    while stack:
+        v = stack.pop()
+        out.append(int(vs[v]))
+        for w in np.nonzero(sub[v])[0]:
+            indeg[w] -= 1
+            if indeg[w] == 0:
+                stack.append(w)
+    if len(out) != len(vs):
+        raise ValueError("not an acyclic set")
+    return out
 
 
 def warm_start(search: Search) -> None:

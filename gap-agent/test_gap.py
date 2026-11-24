@@ -72,3 +72,52 @@ def test_learned_bandit_runs():
     g = make_graph("planted", 120, np.random.default_rng(3))
     r = run(g, LearnedBandit(Flat()), T=1.0)
     assert r["lo"] <= r["hi"] and r["decisions"] > 0
+
+
+def _brute_mais(adj):
+    import itertools
+
+    g = Graph(adj)
+    for size in range(adj.shape[0], -1, -1):
+        for S in itertools.combinations(range(adj.shape[0]), size):
+            if is_acyclic_set(g, S):
+                return size
+    return 0
+
+
+def test_kernel_rules_keep_the_optimum():
+    from gap_agent.structure import kernel, lift_acyclic
+
+    rng = np.random.default_rng(7)
+    for _ in range(60):
+        n = int(rng.integers(3, 9))
+        a = rng.random((n, n)) < rng.uniform(0.15, 0.5)
+        np.fill_diagonal(a, False)
+        k = kernel(a)
+        kadj = k.graph().adj if k.verts else np.zeros((0, 0), bool)
+        assert _brute_mais(a) == len(k.keep) + (_brute_mais(kadj) if k.verts else 0)
+        assert is_acyclic_set(Graph(a), lift_acyclic(k, []))
+
+
+def test_cycle_of_receivers_saves_one_transmission():
+    from gap_agent.lam import BlockSearch
+
+    a = np.zeros((4, 4), bool)
+    for i in range(4):
+        a[i, (i + 1) % 4] = True                    # directed 4-cycle: clique cover 4, cycle code 3
+    bs = BlockSearch(a, np.zeros(4, dtype=np.int64), np.arange(4))
+    for _ in range(5):
+        bs.cycle_step()
+    assert int(bs.scc_cost[0]) == 3
+
+
+def test_parallel_agent_small():
+    import pickle
+
+    from gap_agent.graph import make_structured
+    from gap_agent.parallel import solve
+
+    model = pickle.loads((Path(__file__).resolve().parent / "models" / "rate.pkl").read_bytes())
+    g = make_structured("sparse", 400, np.random.default_rng(1))
+    r = solve(g, model, T=4.0)
+    assert r["verified"] and r["lo"] <= r["hi"]
