@@ -1,0 +1,20 @@
+{
+ "0.5": {
+  "library_sa": 0.9861,
+  "program_sa": 0.9943,
+  "wins/ties/losses": [
+   7,
+   20,
+   5
+  ]
+ },
+ "2.0": {
+  "library_sa": 1.0076,
+  "program_sa": 1.0042,
+  "wins/ties/losses": [
+   2,
+   24,
+   6
+  ]
+ }
+}

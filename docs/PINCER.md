@@ -66,7 +66,12 @@ Negative:
 - The index policy can still lose a slow one-shot tool to the budget: on C(16,2) it ran SAT first and the 36-60 s
   LP did not finish inside 60 s (round-robin pinned it).
 - Mycielski M5 (n = 23) and Paley 17 stay open for β (LP too large / too little symmetry found).
+- FunSearch on the SA candidate choice (§4b): GP beats its seed at a fixed move budget but not the library SA at
+  equal wall time.
 - Fixed on the way: fractional-cover certificates could carry 100-digit denominators (weights now on one grid).
+- **SAT restart portfolio.** At a fixed rank, SAT time depends heavily on which maximum independent set is fixed
+  (planted n = 100, r = 10: 1.6 s to > 60 s across five sets). `sat_up` / `sat_down` now fix a different set of
+  the same size on each retry: undirected planted n = 100 at 120 s, the agent alone closes 5/8 (was 3/8).
 
 ---
 
@@ -206,6 +211,32 @@ So the evolved construction is better, but SA erases the head start within about
 the opt-in tool `mais_evolved` (`--evolved pincer/funsearch/runs/gp42_s3/best.py`), not a default. Lesson for the
 next target (§7): score candidates **after** the downstream solver, at the deployment budget.
 
+### 4b. Second target: the candidate choice inside simulated annealing (24 Nov)
+
+Following the lesson above, the evolved object is now part of the downstream solver: `score(f)` ranks the 5
+candidates SA samples per move (`sandbox_sa.py`; f = conflicts at the best slot, kept neighbours, degrees,
+temperature, step). Fitness = set size after a fixed move budget of 40 n (load-independent) on harder graphs
+(n = 120-250, splits `train_sa` / `val_sa`), seed = fewest conflicts first.
+
+| | train | val | test (move budget) |
+|---|---|---|---|
+| seed (fewest conflicts) | 0.955 | 0.954 | 0.983 |
+| GP, 500 programs (`runs/gpsa_s0`) | 0.978 | 0.985 | 0.998 |
+
+Deployment check at equal **wall time** on the 16 test graphs × 3 seeds (`deploy_check_sa.py`, and the formula
+ported into `pincer.mais.sa_order(score=...)`):
+
+| SA seconds | library default | evolved, in the library | W/T/L |
+|---|---|---|---|
+| 0.5 | 0.987 | 0.988 | 11/26/11 |
+| 2 | 1.008 | 1.003 | 4/30/14 |
+
+Verdict: the evolved score beats its seed at a fixed move budget, but not the library at equal time; the library
+keeps the default. What this target did produce is the seed itself: building it showed that a 5-candidate
+tournament plus kept-neighbour bitmasks beats plain SA clearly (§0a), and that is now the default `mais_sa`.
+Two GP targets, two honest negatives for evolution against a tuned baseline; the LLM runs (§7.1) must clear the
+same bar (deployment budget, equal wall time).
+
 
 ## 5. Experiments
 
@@ -283,10 +314,9 @@ PROPOSER=gp ITER=1500 bash scripts/pincer/02_funsearch.sh                       
    `PROPOSER="local:http://127.0.0.1:8000/v1|Qwen/Qwen2.5-Coder-32B-Instruct-AWQ" ITER=300 bash scripts/pincer/02_funsearch.sh`
    and `PROPOSER=anthropic ITER=300 ...`; compare with `PROPOSER=gp ITER=300` (same number of evaluated programs).
    Pass: val_selected ≥ gp's + 0.01 and test wins on ≥ 10/16 graphs. Cost: log `llm_usage` from summary.json.
-2. **Re-target FunSearch at deployment conditions.** Score = acyclic set after greedy + 1 s SA (or the SA move
-   selection itself), and a minrank target: the choice of the symmetry-breaking set / column order for `sat_up`,
-   scored by SAT time to decide r = L on the hard planted/random graphs of `minrank/`. Pass: beats the default on
-   val at the deployment budget.
+2. ~~Re-target FunSearch at deployment conditions~~ done for SA (§4b, negative for GP). Remaining target: the
+   choice of the symmetry-breaking set for `sat_up` (SAT time varies 1.6 s to > 60 s with it, §0a), scored by
+   time to decide r = L on hard planted graphs. Pass: beats the restart portfolio at equal time.
 3. **LLM controller**: `bash scripts/pincer/03_llm_controller.sh` (test2; the budget includes LLM latency). Pass: paired total-gap wins > losses against `index`. If not, the LLM's place is offline (writing
    tools and priors), not in the loop.
 4. ~~Bigger Shannon LPs~~ done for n ≤ 16 (§0a); M5 (n = 23) needs an LP over fewer inequalities (e.g. only
