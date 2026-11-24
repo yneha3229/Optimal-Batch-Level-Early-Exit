@@ -125,6 +125,21 @@ planted matrix), and add I + A as a baseline everywhere.
     unchanged**.
 - Baselines and exact SAT on the new graphs: `minrank/results/baselines_planted_e01.csv`,
   `minrank/results/exact_planted_e01.csv`.
+  - Baselines: 9 methods, budgets of 1 and 10 s, seeds 0-1.
+  - Exact: SAT with the independent-set fix, 300 s per call.
+  - Results, 8 graphs per row:
+
+| family (e0.1) | planted r | best baseline (mean) | I + A (mean) | exact |
+|---|---|---|---|---|
+| undirected n = 30 | 6 | 5.9 | 25.8 | 8/8 proven (one graph has minrank 5 < r) |
+| directed n = 30 | 6 | 6.0 | 25.5 | 8/8 proven = 6 |
+| undirected n = 50 | 8 | 8.1 | 47.6 | 8/8 proven = 8 (UNSAT at 7) |
+| directed n = 50 | 8 | 13.1 | 48.9 | 8/8 proven = 8 (probe at alpha, ~1 s each) |
+| undirected n = 100 | 10 | 12.9 | 99.0 | 2/8 proven = 10; 6 open, SAT stuck at 13 although minrk <= 10 by construction |
+| directed n = 100 | 10 | 21.2 | 99.5 | 8/8 proven = 10 (probe at alpha, ~18 s each) |
+
+  The undirected n = 100 graphs are now the hard planted instances: the true value is known to be at most 10, and
+  every heuristic and the SAT descent stop at 12-13.
 
 
 ## 6. Proofs for k = 3 (24 Nov 2026)
