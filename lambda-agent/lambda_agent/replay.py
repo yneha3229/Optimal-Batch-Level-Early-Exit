@@ -154,6 +154,10 @@ class View:
     def tried(self, k, name):
         return (k, name) in self.sim.tried
 
+    def stalled(self, k, name):
+        """Seconds since this running move last improved a bound (or since it started)."""
+        return self.sim.now - self.sim.progress.get((k, name), self.sim.running.get((k, name), self.sim.now))
+
     def candidates(self, k):
         """Moves worth starting now on component k (not running, not finished, and able to move a bound)."""
         c = self.sim.comps[k]
@@ -185,6 +189,7 @@ class Sim:
                 self.comps.append({"lo": Fraction(0), "hi": Fraction(len(c["verts"])), "log": c, "n": len(c["verts"]),
                                    "asked": {}, "features": c["features"]})
         self.running: dict[tuple[int, str], float] = {}
+        self.progress: dict[tuple[int, str], float] = {}
         self.tried: set[tuple[int, str]] = set()
         self.queue: list = []
         self.trace: list = []
@@ -236,6 +241,10 @@ class Sim:
                 self.pinned_at = self.now
                 break
             nxt = self.queue[0][0] if self.queue else math.inf
+            if getattr(self.ctrl, "tick", None) and self.running:
+                nxt_tick = self.now + self.ctrl.tick
+                if nxt_tick < nxt and (pending_decision is None or nxt_tick < pending_decision):
+                    pending_decision = nxt_tick
             if pending_decision is not None and pending_decision <= nxt and pending_decision <= self.budget:
                 self.now = pending_decision
                 pending_decision = decide()
@@ -255,10 +264,12 @@ class Sim:
             self.now = t
             c = self.comps[k]
             if kind == "ev":
-                if ev[1] == "lower":
-                    c["lo"] = max(c["lo"], Fraction(ev[2]))
-                elif ev[1] == "upper":
-                    c["hi"] = min(c["hi"], Fraction(ev[2]))
+                if ev[1] == "lower" and Fraction(ev[2]) > c["lo"]:
+                    c["lo"] = Fraction(ev[2])
+                    self.progress[(k, name)] = self.now
+                elif ev[1] == "upper" and Fraction(ev[2]) < c["hi"]:
+                    c["hi"] = Fraction(ev[2])
+                    self.progress[(k, name)] = self.now
             else:
                 del self.running[(k, name)]
                 self.tried.add((k, name))

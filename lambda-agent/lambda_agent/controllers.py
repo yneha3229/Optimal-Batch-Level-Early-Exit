@@ -204,3 +204,68 @@ class LLMController:
         i = self.choose(prompt_for(view, opts), len(opts))
         kind, k, m = opts[i]
         return [] if kind == "wait" else [(kind, k, m)]
+
+
+class _OrderedCodes:
+    """Cheap bounds first, then SAT questions in a fixed order of rate (subclasses define the order)."""
+
+    name = "ordered"
+
+    def code_key(self, view, k, rate):
+        raise NotImplementedError
+
+    def decide(self, view):
+        acts, free = [], view.free
+        cands = []
+        for k in view.open_comps():
+            for m in view.candidates(k):
+                key = (0, ONE_SHOT_ORDER.index(m)) if m in ONE_SHOT_ORDER else (1, self.code_key(view, k, code_rate(m)), code_t(m))
+                cands.append((key, -view.comp(k)["n"], k, m))
+        for _, _, k, m in sorted(cands):
+            if free <= 0:
+                break
+            acts.append(("start", k, m))
+            free -= 1
+        return acts
+
+
+class TopDownController(_OrderedCodes):
+    name = "top-down (one below the best code first)"
+
+    def code_key(self, view, k, rate):
+        return -rate
+
+
+class BisectController(_OrderedCodes):
+    name = "bisection (middle of the gap first)"
+
+    def code_key(self, view, k, rate):
+        c = view.comp(k)
+        return abs(rate - (c["lo"] + c["hi"]) / 2)
+
+
+class StallStopController(RuleController):
+    """The rule-based playbook plus one stopping rule: an anytime method (acyclic set, clique cover) that has not
+    improved its bound for `patience` seconds is stopped, freeing its slot for the next move."""
+
+    name = "rule-based + stop stalled methods"
+    tick = 0.25
+
+    def __init__(self, patience: float = 1.0):
+        self.patience = patience
+
+    def decide(self, view):
+        acts = []
+        for k, m, _ in view.running():
+            if m in ("acyclic", "cover") and view.stalled(k, m) >= self.patience:
+                acts.append(("stop", k, m))
+        freed = len(acts)
+
+        class _V:  # same view, with the freed slots counted
+            def __getattr__(s, a):
+                return getattr(view, a)
+
+            @property
+            def free(s):
+                return view.free + freed
+        return acts + super().decide(_V())
