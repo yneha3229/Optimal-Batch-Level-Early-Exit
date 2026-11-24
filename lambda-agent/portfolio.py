@@ -6,6 +6,7 @@
     python lambda-agent/portfolio.py train                  LoRA fine-tune of the small LLM (CPU)
     python lambda-agent/portfolio.py replay                 score all controllers on the test logs (replay)
     python lambda-agent/portfolio.py live                   live runs on test graphs (real processes)
+    python lambda-agent/portfolio.py headroom train hard    how much could ANY controller gain? (oracle vs rules)
 """
 from __future__ import annotations
 
@@ -110,6 +111,22 @@ def main() -> None:
 
         which = sys.argv[2]
         log_suite(DATA / f"{which}.json", DATA / f"logs_{which}", cap=8.0, workers=3)
+    elif cmd == "headroom":
+        import glob
+        import statistics as st
+
+        from lambda_agent.controllers import OracleController, RuleController, StaticController
+        from lambda_agent.replay import Sim
+
+        for which in sys.argv[2:]:
+            logs = [json.loads(Path(f).read_text()) for f in sorted(glob.glob(str(DATA / f"logs_{which}" / "*.json")))]
+            print(f"== {which}: {len(logs)} graphs")
+            for slots in (1, 3):
+                for C in (StaticController, RuleController, OracleController):
+                    rows = [Sim(L, C(), slots=slots, budget=60).run() for L in logs]
+                    pinned = [r for r in rows if r["pinned"]]
+                    print(f"  slots {slots} {C.name:30s} pinned {len(pinned)}/{len(rows)}  mean time on pinned "
+                          f"{st.mean(r['time'] for r in pinned) if pinned else 0:.3f} s  total gap {sum(r['gap'] for r in rows):.2f}")
     else:
         print(__doc__)
 
