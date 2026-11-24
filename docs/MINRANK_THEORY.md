@@ -181,8 +181,10 @@ So dim R = n - 1, n - 2, 0 respectively, and rank_2(I + D) = C(n,2) - dim R. QED
 
 ### Theorem 2 (odd characteristic). Let p >= 5 be a prime with **p | n - 6**. Then rank_p(I + D) = alpha, hence
 **minrk_p(K(n,3)) = alpha**. Conversely, if p does not divide n - 6 then rank_p(I + D) > alpha.
-Proof. For p >= 5, Wilson's rank formula gives rank_p W_{2,3} = C(n,2) (all of C(3,2), C(2,1), C(1,0) are units), so
-dim C = C(n,2) and dim C^perp = n + 1. C^perp consists of the vectors
+Proof. For p >= 5, Wilson's rank formula gives rank_p W_{2,3} = C(n,2) (all of C(3,2), C(2,1), C(1,0) are units).
+The rows of W_0 and W_1 add nothing: summing the rows of W_2 gives 3 W_0 (a 3-set has three pairs), and summing the
+rows {i, j} over j != i gives 2 (row i of W_1) (a 3-set containing i has two pairs through i). 2 and 3 are units,
+so dim C = rank_p M = C(n,2) and dim C^perp = n + 1. C^perp consists of the vectors
 g(empty) = -3(t + c), g({i}) = t - 2 x_i, g({i,j}) = c + x_i + x_j, with (c, t, x) modulo (c - 2s, t + 2s, x + s 1)
 (each 3-set condition reads -3t - 3c + 3t - 2 sum_S x + 3c + 2 sum_S x = 0; the parametrisation has dimension n + 1).
 With Q = (+, -, +):
@@ -245,3 +247,23 @@ Still worth checking before submission (not read): Wilson 1990 (diagonal form; u
 Frankl-Wilson / Ray-Chaudhuri-Wilson style p-rank results on intersection matrices, and recent work on Smith forms
 of Kneser / disjointness matrices (arXiv:2310.09227, which treats disjointness as inclusion in the complement).
 These could contain the p-rank of I + D in another guise; it is a narrower risk than before.
+
+## 9. Independent verification of section 6 (24 Nov 2026)
+
+`python -m minrank.analysis.verify_kneser_proof --nmax 22` (log: `logs/verify_kneser_proof.log`) checks each step of
+the proofs separately, with ranks from FLINT (python-flint), not from our own elimination code:
+- the integer identity I + D = W_0^T W_0 - W_1^T W_1 + W_2^T W_2, and that I + D fits K(n,3);
+- rank_p M = C(n,2);
+- the explicit bases of C^perp (Lemma 1 over F_2, and the (c, t, x) parametrisation over F_p) lie in C^perp and span it;
+- their Gram matrices equal the closed forms B and B_Q term by term;
+- rank B is as in Lemma 2;
+- rank_p(I + D) = rank M - dim C^perp + rank B_Q;
+- the iff of Theorems 1 and 2.
+
+Coverage:
+- n = 7..22 and p in {2, 3, 5, 7, 11, 13, 17, 19, 23}: 128 (n, p) cases, all checks pass. p = 3 is computed but not
+  covered by the proof.
+- The arithmetic of Corollary 3 is checked for 9 <= n <= 10^6.
+
+Re-reading the proof found one missing sentence, now added to Theorem 2: why W_0 and W_1 do not enlarge the row space
+for p >= 5. No step was found to be wrong. A human line-by-line check is still required before submission.
