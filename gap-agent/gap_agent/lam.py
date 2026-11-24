@@ -249,5 +249,78 @@ class BlockSearch:
         self.merges += 1
         return s
 
+    def cycle_cover_step(self, max_len: int = 10, max_nodes: int = 3000, max_degree: float = 30.0) -> int | None:
+        """Carve a directed cycle of single receivers out of the clique cover and re-cover what is left.
+
+        Find a shortest directed cycle c0 -> c1 -> ... -> c(k-1) -> c0 through receivers that sit in clique blocks;
+        the cycle is coded with k - 1 transmissions (x_ci + x_c(i+1)). The other members of the cliques it touches,
+        together with the cliques of their mutual neighbours, are re-covered exactly (CP-SAT). Kept only when the
+        total cost drops. Meant for sparse pieces, where the clique cover is mostly pairs and singletons."""
+        from .exact import cover_exact
+
+        if not hasattr(self, "_outdeg"):
+            self._outdeg = self.adj.sum(1)
+            self._scc_deg = np.bincount(self.label, weights=self._outdeg) / np.maximum(1, np.bincount(self.label))
+            self._succ = None
+            if self._outdeg.mean() <= max_degree:
+                i, j = np.nonzero(self.adj)
+                ptr = np.searchsorted(i, np.arange(self.n + 1))
+                self._succ = [j[ptr[u]:ptr[u + 1]] for u in range(self.n)]
+        free = [v for v in range(self.n) if self.blocks[self.block_of[v]][2] is None]
+        if not free:
+            return None
+        v = int(free[self.rng.integers(len(free))])
+        s = int(self.label[v])
+        if self._scc_deg[s] > max_degree:
+            return None
+        parent, frontier, cyc = {v: -1}, [v], None
+        for depth in range(max_len):
+            nxt = []
+            for u in frontier:
+                for w in (self._succ[u] if self._succ is not None else np.nonzero(self.adj[u])[0]):
+                    w = int(w)
+                    if w == v and depth >= 1:
+                        cyc = [u]
+                        while parent[cyc[-1]] != -1:
+                            cyc.append(parent[cyc[-1]])
+                        cyc = cyc[::-1]
+                        break
+                    if w not in parent and self.label[w] == s and self.blocks[self.block_of[w]][2] is None:
+                        parent[w] = u
+                        nxt.append(w)
+                if cyc or len(parent) > max_nodes:
+                    break
+            if cyc or len(parent) > max_nodes or not nxt:
+                break
+            frontier = nxt
+        if not cyc:
+            return None
+        k = len(cyc)
+        touched = {int(self.block_of[c]) for c in cyc}
+        rest = np.setdiff1d(np.concatenate([self.blocks[b][0] for b in touched]), cyc)
+        mutual = self.adj[rest] & self.adj[:, rest].T if len(rest) else np.zeros((0, self.n), dtype=bool)
+        nb = {int(self.block_of[w]) for w in np.nonzero(mutual.any(0))[0]} - touched if len(rest) else set()
+        nb = {b for b in nb if self.blocks[b][2] is None and self.label[self.blocks[b][0][0]] == s}
+        pool = np.concatenate([rest] + [self.blocks[b][0] for b in nb]) if (len(rest) or nb) else np.zeros(0, int)
+        old = len(touched) + len(nb)
+        if len(pool):
+            kk, col, _ = cover_exact(self.adj[np.ix_(pool, pool)], 0.3)
+        else:
+            kk, col = 0, np.zeros(0, dtype=np.int32)
+        if (k - 1) + kk >= old:
+            return None
+        cyc = np.asarray(cyc)
+        rows = [(1 << i) | (1 << ((i + 1) % k)) for i in range(k)]
+        if not check_block(self.adj, cyc, rows, k - 1):
+            raise RuntimeError("bad cycle code")
+        for b in touched | nb:
+            del self.blocks[b]
+        self._new_block(cyc, k - 1, rows)
+        for c in np.unique(col):
+            self._new_block(pool[col == c], 1, None)
+        self.scc_cost[s] -= old - (k - 1) - kk
+        self.merges += 1
+        return s
+
     def certificate(self, s: int):
         return [(vs.tolist(), c, r) for vs, c, r in self.blocks.values() if self.label[vs[0]] == s]

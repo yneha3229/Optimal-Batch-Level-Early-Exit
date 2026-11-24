@@ -51,6 +51,8 @@ class Kernel:
     def graph(self) -> Graph:
         m = len(self.verts)
         a = np.zeros((m, m), dtype=bool)
+        if self.arcs is None:
+            raise ValueError("dense kernel: use the piece itself")
         if self.arcs:
             ij = np.asarray(self.arcs)
             a[ij[:, 0], ij[:, 1]] = True
@@ -60,9 +62,8 @@ class Kernel:
 def kernel(adj: np.ndarray, max_arcs: int = DENSE_ARCS) -> Kernel:
     n = adj.shape[0]
     rules = {k: 0 for k in ("LOOP", "IN0/OUT0", "IN1", "OUT1", "CORE", "PIE")}
-    if int(adj.sum()) > max_arcs:
-        i, j = np.nonzero(adj)
-        return Kernel(n, [], [], list(range(n)), list(zip(i.tolist(), j.tolist())), rules)
+    if int(adj.sum()) > max_arcs:  # dense piece: no rules, the kernel is the piece itself (arcs not listed)
+        return Kernel(n, [], [], list(range(n)), None, rules)
     succ = [set(np.nonzero(adj[v])[0].tolist()) for v in range(n)]
     pred = [set(np.nonzero(adj[:, v])[0].tolist()) for v in range(n)]
     alive = set(range(n))
