@@ -267,3 +267,33 @@ Coverage:
 
 Re-reading the proof found one missing sentence, now added to Theorem 2: why W_0 and W_1 do not enlarge the row space
 for p >= 5. No step was found to be wrong. A human line-by-line check is still required before submission.
+
+## 10. Final literature check: Wilson 1990 and Ducey et al. 2024 (24 Nov 2026, full texts read)
+
+- **Wilson 1990** (Europ. J. Combin. 11, 609-615) gives the diagonal form and p-rank of the inclusion matrix W_{t,k}
+  for t <= min{k, v - k}. This is exactly the rank formula used in Theorem 2, and the condition holds for t = 2,
+  k = 3, v = n >= 5. The paper says nothing about Kneser graphs, disjointness matrices, Gram matrices or minrank.
+  No overlap: it is a tool we cite.
+- **Ducey, Engelthaler, Gathje, Jones, Pfaff, Plute** (arXiv:2310.09227v2, *Integer diagonal forms for subset
+  intersection relations*) is the closest prior work.
+  - Their Theorem 4.1 reduces the Smith group of any integer matrix in the Bose-Mesner algebra of the Johnson
+    scheme to (k+1-s) x (k+1-s) blocks M_s, valid for n >= 3k - 1. Our I + D is in that algebra.
+  - So the p-ranks in Theorems 1-2 **can be derived** from their framework by a finite computation. We checked
+    that their route gives exactly our ranks for n = 8..22 and nine primes (`check_ducey_route` in
+    `verify_kneser_proof.py`).
+  - They work out only the Kneser adjacency matrix (lambda = 0, Thm 4.11) and the Kneser Laplacian (lambda = degree,
+    Thm 4.13), not A + I (lambda = -1). They never mention minrank, the Haemers bound, Shannon capacity or index coding.
+
+**Final verdict on novelty.**
+1. The rank statement (rank_p(I + D) = alpha iff p | n - 6, or 4 | n - 6 for p = 2) is not stated in any paper we
+   read. It is, however, a consequence of the Ducey et al. machinery, so a referee may call it routine given that
+   paper. Cite them, present our proof as a short self-contained one, and optionally rederive it from their
+   Theorem 4.1.
+2. The minrank and information-theoretic consequences are new as far as we can tell:
+   - exact minrk_p(K(n,3)) = alpha;
+   - the Golovnev-Haviv / Haviv matrix has p-rank alpha, below their bounds by n - 1 or more;
+   - Corollary 3: the Haemers bound is tight on K(n,3) for all n >= 9;
+   - the n - 2k conjecture for general k.
+   This is now the headline.
+3. Opportunity: their framework may make the **general-k conjecture provable**. The rank of I + (-1)^(k+1) D reduces
+   to the p-ranks of k + 1 small explicit blocks, and that is the way to a stronger paper.

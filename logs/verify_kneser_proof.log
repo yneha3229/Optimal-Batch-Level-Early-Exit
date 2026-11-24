@@ -142,5 +142,6 @@ n=22 p=13  rank(I+D)= 231  alpha= 210  rank M= 231  rank B= 23  hit=False  all c
 n=22 p=17  rank(I+D)= 231  alpha= 210  rank M= 231  rank B= 23  hit=False  all checks ok
 n=22 p=19  rank(I+D)= 231  alpha= 210  rank M= 231  rank B= 23  hit=False  all checks ok
 n=22 p=23  rank(I+D)= 231  alpha= 210  rank M= 231  rank B= 23  hit=False  all checks ok
+Ducey et al. Thm 4.1 route agrees for n = 8..22
 corollary arithmetic ok for 9 <= n <= 1000000
 ALL CHECKS PASSED: n = 7..22, primes [2, 3, 5, 7, 11, 13, 17, 19, 23]

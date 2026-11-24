@@ -152,6 +152,27 @@ def check_corollary(nmax: int) -> None:
         assert (cover_lb > comb(n - 1, 2)) == (n % 3 != 0), f"[cor] cover n={n}"
 
 
+def check_ducey_route(nmax: int, primes: list[int]) -> int:
+    """Third route: Ducey et al. (arXiv:2310.09227, Thm 4.1) reduce the Smith group of B = D + I in the Johnson
+    algebra to small blocks M_s(i, j) = C(j-s, i-s) (-1)^i C(n-3-j, 3-j) + delta_ij (s <= i, j <= 3) with
+    multiplicity C(n,s) - 2 C(n,s-1) + C(n,s-2), valid for n >= 3k - 1 = 8. Returns the number of (n, p) that
+    disagree with Theorems 1-2."""
+    bad = 0
+    for n in range(8, nmax + 1):
+        for p in primes:
+            tot = 0
+            for s0 in range(4):
+                idx = range(s0, 4)
+                blk = [[(comb(j - s0, i - s0) if j >= i else 0) * ((-1) ** i * comb(n - 3 - j, 3 - j))
+                        + (1 if i == j else 0) for j in idx] for i in idx]
+                mult = comb(n, s0) - 2 * (comb(n, s0 - 1) if s0 else 0) + (comb(n, s0 - 2) if s0 >= 2 else 0)
+                tot += mult * frank(np.array(blk), p)
+            pred = (n - 6) % 4 == 0 if p == 2 else (n - 6) % p == 0
+            if p != 3 and (tot == comb(n - 1, 2)) != pred:
+                bad += 1
+    return bad
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--nmin", type=int, default=7)
@@ -163,6 +184,9 @@ def main() -> None:
     for n in range(a.nmin, a.nmax + 1):
         check_n(n, a.primes, log)
         print("\n".join(log[-len(a.primes):]), flush=True)
+    bad = check_ducey_route(a.nmax, a.primes)
+    assert bad == 0, f"Ducey et al. route disagrees on {bad} cases"
+    print(f"Ducey et al. Thm 4.1 route agrees for n = 8..{a.nmax}")
     check_corollary(a.cor_nmax)
     print(f"corollary arithmetic ok for 9 <= n <= {a.cor_nmax}")
     print(f"ALL CHECKS PASSED: n = {a.nmin}..{a.nmax}, primes {a.primes}")
