@@ -75,9 +75,19 @@ def structured() -> list[Graph]:
     return gs
 
 
+def minrank_bench(pattern: str) -> list[Graph]:
+    """Graphs of the shared minrank benchmark (minrank/bench/graphs/*.json), e.g. 'planted*_e0.1_*'."""
+    root = ROOT.parent / "minrank" / "bench" / "graphs"
+    return [Graph.load(p) for p in sorted(root.glob(pattern + ".json"))]
+
+
 def instances(split: str) -> list[Graph]:
     if split == "structured":
         return structured()
+    if split == "planted_e01":  # the minrank teammate's planted extra_p = 0.1 benchmark (exact SAT results exist)
+        return minrank_bench("planted*_e0.1_*")
+    if split == "planted_e01_n100":
+        return minrank_bench("planted*_n100_*_e0.1_*")
     seeds = {"train": (0, 1), "test": (5, 6), "test2": (7, 8)}[split]
     out: list[Graph] = []
     for s in seeds:
