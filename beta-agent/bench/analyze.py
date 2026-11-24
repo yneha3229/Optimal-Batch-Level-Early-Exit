@@ -81,6 +81,9 @@ def main():
     summary["per_graph"] = per
     (HERE / "RESULTS.md").write_text("\n".join(lines) + "\n")
     (HERE / "summary.json").write_text(json.dumps(summary, indent=1))
+    # the demo page loads this (works from a local file and on claude.ai)
+    slim = {"graphs": summary["graphs"], "limit_s": summary["limit_s"], "groups": summary["groups"]}
+    (HERE / "bench-data.js").write_text("window.BETA_BENCH = " + json.dumps(slim) + ";\n")
     print("\n".join(lines[: 6 + 4 * 7]))
 
 

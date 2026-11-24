@@ -85,11 +85,19 @@
   .plan { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
   .plan li { display: flex; gap: 8px; align-items: baseline; font-family: var(--font-mono); font-size: 0.82rem; flex-wrap: wrap; }
   .plan .t { color: var(--muted); min-width: 30px; }
-  .agent-text { font-size: 0.85rem; white-space: pre-wrap; background: var(--bg); border-radius: 7px; padding: 8px 10px; max-height: 180px; overflow-y: auto; }
   details summary { cursor: pointer; font-size: 0.85rem; color: var(--muted); }
   textarea { width: 100%; min-height: 90px; font-family: var(--font-mono); font-size: 0.78rem; background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 7px; padding: 8px; }
   .explain { font-size: 0.86rem; color: var(--muted); display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px 24px; }
   .explain b { color: var(--ink); }
+  .cmp { overflow-x: auto; }
+  table.t { border-collapse: collapse; width: 100%; font-size: 0.86rem; font-variant-numeric: tabular-nums; }
+  table.t th, table.t td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  table.t th { font-size: 0.75rem; font-weight: 600; color: var(--muted); }
+  table.t td.num { font-family: var(--font-mono); }
+  table.t tr.ours td { background: var(--upper-soft); }
+  table.t td.ok { color: var(--exact); } table.t td.bad { color: var(--warn); }
+  .two-col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+  @media (max-width: 960px) { .two-col { grid-template-columns: minmax(0, 1fr); } }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
   .node circle { stroke: var(--ink); stroke-width: 1.6; fill: var(--node); transition: fill .25s, stroke .25s; }
   .node text { font-family: var(--font-mono); font-size: 15px; font-weight: 600; fill: var(--node-ink); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
@@ -164,22 +172,10 @@
       <section class="card section" aria-label="Agent">
         <p class="eyebrow">Agent</p>
         <div class="row">
-          <label for="agentMode">Who decides</label>
-          <select id="agentMode">
-            <option value="planner">Built-in planner</option>
-            <option value="claude" disabled>Claude (tool use)</option>
-          </select>
-          <select id="tier" aria-label="Claude speed" hidden>
-            <option value="quick">fast</option>
-            <option value="default">thorough</option>
-          </select>
-        </div>
-        <div class="row">
           <button class="primary" id="run">Run agent</button>
           <button id="stop" disabled>Stop</button>
         </div>
-        <p class="note" id="agentNote">The built-in planner runs cheap tools first and exact search only where a gap remains. Every result is checked before it can move a bound.</p>
-        <div class="agent-text" id="agentText" hidden></div>
+        <p class="note" id="agentNote">Runs fully offline. The planner tries the cheap tools first, then exact search with a short time slice that doubles only if it runs out, improving the incumbent by local search in between. It stops as soon as L = U. Every result is checked before it can move a bound.</p>
       </section>
 
       <section class="card section" aria-label="Steps">
@@ -199,13 +195,32 @@
     </aside>
   </div>
 
+  <div class="two-col">
+    <section class="card section" aria-label="Compare on this graph">
+      <p class="eyebrow">Compare on this graph</p>
+      <p class="note">Runs three methods on the graph you drew, one after another, each with a 5 s limit: the classic greedy heuristics, the textbook exact search (whole graph, no decomposition, no warm start, no early stop) and the Pincer agent.</p>
+      <div class="row"><button id="compare">Compare methods</button><span class="note" id="cmpNote"></span></div>
+      <div class="cmp"><table class="t" id="cmpTable" hidden>
+        <thead><tr><th>Method</th><th>L</th><th>U</th><th>Off the best by</th><th>Proven</th><th>Time</th></tr></thead>
+        <tbody></tbody></table></div>
+    </section>
+    <section class="card section" aria-label="Benchmark">
+      <p class="eyebrow">Benchmark: 46 graphs, 10 to 60 receivers</p>
+      <div class="row"><label for="benchGroup">Graphs</label><select id="benchGroup"></select></div>
+      <div class="cmp"><table class="t" id="benchTable">
+        <thead><tr><th>Method</th><th>Both bounds optimal</th><th>Missed transmissions</th><th>Median time to answer</th><th>Worst time to answer</th><th>Worst time incl. proof</th></tr></thead>
+        <tbody></tbody></table></div>
+      <p class="note" id="benchNote">Same 30 s limit and one CPU core per method. CP-SAT is Google OR-Tools' exact solver (strengthened textbook models); it runs in Python, so it appears here and not in the live comparison. "Missed transmissions" sums each method's distance from the true optimum of both bounds. Details: bench/RESULTS.md.</p>
+    </section>
+  </div>
+
   <section class="card section" aria-label="How it works">
     <p class="eyebrow">How it works</p>
     <div class="explain">
       <div><b>The problem.</b> A server broadcasts to receivers; receiver <i>i</i> wants message <i>x<sub>i</sub></i> and already has some others (the arrows). β is the fewest transmissions that let everyone decode. Computing it exactly is out of reach in general, so we trap it between two checkable numbers.</div>
       <div><b>Lower bound (MAIS).</b> If a set of receivers has no directed cycle among them, order them so each knows only messages of later ones; then no scheme can serve them in fewer than one transmission each. The largest such set gives L.</div>
       <div><b>Upper bound (clique cover).</b> A group in which everyone has everyone else's message needs one transmission: the XOR of the group's messages. Covering all receivers with U such groups gives a valid scheme with U transmissions.</div>
-      <div><b>The agent.</b> It reads the graph, splits it into strongly connected components (both bounds add up over them), calls greedy, local-search and exact tools, reads each verified result, and stops when L = U (β found) or both bounds are proven optimal.</div>
+      <div><b>The agent.</b> It reads the graph, splits it into strongly connected components (both bounds add up over them), calls greedy, local-search and exact tools in a cost-aware order, reads each verified result, and stops when L = U (β found) or both bounds are proven optimal. It runs offline, with no language model.</div>
     </div>
     <details>
       <summary>Graph as JSON (copy or paste to import)</summary>
@@ -216,6 +231,7 @@
 </div>
 
 <script src="engine.js"></script>
+<script src="bench/bench-data.js"></script>
 <script>
 (() => {
   "use strict";
@@ -230,7 +246,7 @@
   let mode = "node";
   let pending = null;      // first node picked for an arc
   let dragging = null;
-  let session = null, steps = [], shown = -1, running = false, stopFlag = false, abortCtl = null, sample = null;
+  let session = null, steps = [], shown = -1, running = false, stopFlag = false;
 
   const key = (i, j) => i + ">" + j;
   const nice = (t) => String(t || "").replace(/\bbeta\b/g, "β").replace(/<=/g, "≤").replace(/->/g, "→");
@@ -478,8 +494,7 @@
   }
   function setRunning(on) {
     running = on; $("run").disabled = on; $("stop").disabled = !on;
-    document.querySelectorAll(".toolbar button, .toolbar select, #agentMode, #tier").forEach((b) => { b.disabled = on; });
-    if (!on) syncClaudeOption();
+    document.querySelectorAll(".toolbar button, .toolbar select").forEach((b) => { b.disabled = on; });
   }
 
   async function runPlanner() {
@@ -496,80 +511,13 @@
     }
   }
 
-  function promptFor(g) {
-    return [
-      "You are the controller of Pincer, a tool-using agent that bounds the broadcast rate beta of an index-coding problem.",
-      "Receivers 1..n; receiver i wants message x_i. An arc i -> j means receiver i already has x_j.",
-      "Lower bound L: a largest acyclic induced subgraph (no scheme uses fewer transmissions). Upper bound U: a smallest clique cover of the two-way pairs (one XOR per clique). L <= beta <= U.",
-      "Every tool result is verified by the page before it can change L or U; tools return the current L and U.",
-      "Plan: inspect the graph, get cheap bounds, then spend effort only where the gap is. Stop as soon as L == U (beta exact) or both bounds are proven optimal, or after about 8 tool calls.",
-      "Before each tool call, write ONE short sentence saying why you are calling it. At the end, write 2-3 sentences: the final bounds, whether beta is exact, and which step mattered most.",
-      "",
-      `Graph: n = ${g.n}; arcs (i -> j, 1-based): ${E.arcsOf(g).map(([i, j]) => `${i + 1}->${j + 1}`).join(", ") || "none"}.`,
-    ].join("\n");
-  }
-
-  async function runClaude() {
-    const tools = E.TOOLS.map((t) => ({
-      name: t.name, description: t.description,
-      inputSchema: t.ms ? { type: "object", properties: { ms: { type: "integer", description: "time budget in milliseconds (50-10000)" } } } : { type: "object", properties: {} },
-      execute: async (input) => {
-        if (stopFlag) throw new Error("stopped by the viewer");
-        await sleep(30);
-        const r = session.run(t.name, { ms: Math.min(10000, Number(input && input.ms) || 0) || undefined });
-        const s = steps[steps.length - 1]; s.by = "Claude"; s.why = lastSentence($("agentText").textContent);
-        renderLog();
-        return r;
-      },
-    }));
-    abortCtl = new AbortController();
-    const box = $("agentText"); box.hidden = false; box.textContent = "Thinking…";
-    try {
-      await sample(promptFor(session.g), {
-        tools, signal: abortCtl.signal, modelTier: $("tier").value,
-        onText: ({ text }) => { box.textContent = text; box.scrollTop = box.scrollHeight; },
-      });
-    } catch (e) {
-      const msg = { cancelled: "Stopped.", not_granted: "Claude was not allowed for this page. Use the built-in planner.",
-        rate_limited: "Too many requests right now. Try again in a little while, or use the built-in planner.",
-        tools_unavailable: "This view cannot run tools for Claude. Use the built-in planner." }[e && e.code] || "Claude could not finish this run. The bounds found so far are kept.";
-      box.textContent = (e && e.text ? e.text + "\n\n" : "") + msg;
-      if (e && ["not_granted", "tools_unavailable", "sampling_disabled"].includes(e.code)) { sample = null; syncClaudeOption(); }
-    }
-  }
-  function lastSentence(text) {
-    const t = (text || "").trim().split(/\n+/).pop() || "";
-    return t.length > 160 ? t.slice(0, 157) + "…" : t;
-  }
-
   $("run").addEventListener("click", async () => {
     if (!nodes.length) { $("verdict").textContent = "Add at least one receiver first."; return; }
     stopFlag = false; setRunning(true); newSession();
-    $("agentText").hidden = $("agentMode").value !== "claude";
-    try { if ($("agentMode").value === "claude" && sample) await runClaude(); else await runPlanner(); }
+    try { await runPlanner(); }
     finally { setRunning(false); finish(); show(steps.length - 1); }
   });
-  $("stop").addEventListener("click", () => { stopFlag = true; if (abortCtl) abortCtl.abort(); });
-
-  // Claude is offered only where the page can ask it (claude.ai viewer); elsewhere the planner runs alone.
-  function syncClaudeOption() {
-    const opt = $("agentMode").querySelector('option[value="claude"]');
-    opt.disabled = !sample;
-    if (!sample && $("agentMode").value === "claude") $("agentMode").value = "planner";
-    $("tier").hidden = $("agentMode").value !== "claude";
-    $("agentNote").textContent = $("agentMode").value === "claude"
-      ? "Claude decides which tool to call next and explains why. The tools run here in the page and every result is checked before it can move a bound."
-      : (sample ? "The built-in planner runs cheap tools first and exact search only where a gap remains. Switch to Claude to let the model decide."
-        : "The built-in planner runs cheap tools first and exact search only where a gap remains. Open this page on claude.ai to let Claude drive the same tools.");
-  }
-  $("agentMode").addEventListener("change", syncClaudeOption);
-  if (window.claude && typeof window.claude.use === "function") {
-    window.claude.use("sample").then(async (s) => {
-      if (!s) return;
-      const lim = await s.limits().catch(() => null);
-      if (lim && lim.tools) { sample = s; syncClaudeOption(); }
-    }).catch(() => {});
-  }
+  $("stop").addEventListener("click", () => { stopFlag = true; });
 
   // ------------------------------------------------------------------ JSON import / export
   function syncJson() {
@@ -591,6 +539,73 @@
     try { await navigator.clipboard.writeText($("json").value); $("jsonNote").textContent = "Copied."; }
     catch (e) { $("json").select(); $("jsonNote").textContent = "Selected: press Ctrl+C / Cmd+C to copy."; }
   });
+
+
+  // ------------------------------------------------------------------ comparison: live, on the drawn graph
+  function liveMethod(name, g, limitMs) {
+    const t0 = performance.now();
+    let L, U, lp, up;
+    if (name === "greedy") {
+      const s = new E.Session(g, 1); s.run("lower_greedy"); s.run("upper_greedy");
+      L = s.L; U = s.U; lp = false; up = false;
+    } else if (name === "plain") {
+      const deadline = Date.now() + limitMs;
+      const a = E.acyclicExactOne(g, [], deadline);
+      const c = E.coverExactOne(g, [...Array(g.n).keys()].map((v) => [v]), a.proven ? a.set.length : 1, deadline);
+      L = a.set.length; U = c.groups.length; lp = a.proven; up = c.proven;
+    } else {
+      const s = new E.Session(g, 1);
+      for (const d of E.plannerSteps(s, limitMs)) s.run(d.tool, d.args);
+      L = s.L; U = s.U; lp = s.lowerProven; up = s.upperProven;
+    }
+    if (L === U) { lp = up = true; }
+    return { L, U, lp, up, ms: performance.now() - t0 };
+  }
+  $("compare").addEventListener("click", async () => {
+    if (!nodes.length) { $("cmpNote").textContent = "Draw a graph first."; return; }
+    const g = graph(), rows = [];
+    $("compare").disabled = true;
+    const names = [["greedy", "Greedy heuristics"], ["plain", "Plain exact search"], ["pincer", "Pincer agent"]];
+    for (const [k, label] of names) {
+      $("cmpNote").textContent = `Running ${label}…`;
+      await sleep(30);
+      rows.push({ label, ours: k === "pincer", ...liveMethod(k, g, 5000) });
+    }
+    const bestL = Math.max(...rows.map((r) => r.L)), bestU = Math.min(...rows.map((r) => r.U));
+    const tb = $("cmpTable").querySelector("tbody"); tb.replaceChildren();
+    for (const r of rows) {
+      const tr = document.createElement("tr"); if (r.ours) tr.className = "ours";
+      const off = (bestL - r.L) + (r.U - bestU);
+      const cells = [r.label, r.L, r.U, off === 0 ? "0" : `${off} transmission${off > 1 ? "s" : ""}`,
+        r.lp && r.up ? "both" : r.lp ? "lower" : r.up ? "upper" : "no", r.ms < 1 ? "< 1 ms" : r.ms < 1000 ? `${r.ms.toFixed(0)} ms` : `${(r.ms / 1000).toFixed(2)} s`];
+      cells.forEach((c, i) => { const td = document.createElement("td"); td.textContent = c; if (i > 0) td.className = "num"; if (i === 3) td.classList.add(off ? "bad" : "ok"); tr.append(td); });
+      tb.append(tr);
+    }
+    $("cmpTable").hidden = false;
+    $("cmpNote").textContent = "\"Off the best\" compares with the best bounds any of the three found.";
+    $("compare").disabled = false;
+  });
+
+  // ------------------------------------------------------------------ comparison: the benchmark suite
+  function renderBench() {
+    const B = window.BETA_BENCH;
+    if (!B) { $("benchNote").textContent = "Benchmark data not found (bench/bench-data.js)."; return; }
+    const sel = $("benchGroup");
+    if (!sel.options.length) for (const k of Object.keys(B.groups)) { const o = document.createElement("option"); o.value = k; o.textContent = k; sel.append(o); }
+    const G = B.groups[sel.value || Object.keys(B.groups)[0]];
+    const tb = $("benchTable").querySelector("tbody"); tb.replaceChildren();
+    const fmt = (s) => s < 0.001 ? "< 1 ms" : s < 1 ? `${Math.round(s * 1000)} ms` : `${s.toFixed(2)} s`;
+    for (const m of ["greedy", "plain_exact", "cpsat", "pincer"]) {
+      const r = G[m]; if (!r) continue;
+      const both = Math.min(r.lower_opt, r.upper_opt);
+      const tr = document.createElement("tr"); if (m === "pincer") tr.className = "ours";
+      const cells = [r.name, `${r.lower_opt === r.n && r.upper_opt === r.n ? r.n : `${r.lower_opt} / ${r.upper_opt}`} of ${r.n}`, String(r.missing), fmt(r.median_answer_s), fmt(r.max_answer_s), fmt(r.max_s)];
+      cells.forEach((c, i) => { const td = document.createElement("td"); td.textContent = c; if (i > 0) td.className = "num"; if (i === 2) td.classList.add(r.missing ? "bad" : "ok"); tr.append(td); });
+      tb.append(tr);
+    }
+  }
+  $("benchGroup").addEventListener("change", renderBench);
+  renderBench();
 
   // Open on a worked example so the first view shows what the tool does.
   load("mixed");
