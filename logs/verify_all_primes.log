@@ -1,0 +1,18 @@
+[lemma2] rank_2(P_m + I) = floor(m/2), also with (0,0) flipped, m <= 64
+[lemmap] odd p <= 31, m <= 40: rank floor(m/2); boundary entry arbitrary when m - 1 is odd
+[period] C(w, r) = (-1)^r mod p for w = -1 mod q, r < q
+[iff] block formula: rank_p = alpha iff q | n - 2k in all 6666 cases (738 hits), k <= 12, n <= 120
+[direct] k=4 n=17 p=3 q=9: rank=560 alpha=560 predicted=alpha ok
+[direct] k=4 n=12 p=2 q=4: rank=165 alpha=165 predicted=alpha ok
+[direct] k=4 n=16 p=2 q=4: rank=455 alpha=455 predicted=alpha ok
+[direct] k=4 n=20 p=2 q=4: rank=969 alpha=969 predicted=alpha ok
+[direct] k=2 n=6 p=2 q=2: rank=5 alpha=5 predicted=alpha ok
+[direct] k=2 n=8 p=2 q=2: rank=7 alpha=7 predicted=alpha ok
+[direct] k=3 n=10 p=2 q=4: rank=36 alpha=36 predicted=alpha ok
+[direct] k=3 n=15 p=3 q=3: rank=91 alpha=91 predicted=alpha ok
+[direct] k=5 n=18 p=2 q=8: rank=2380 alpha=2380 predicted=alpha ok
+[direct] k=4 n=14 p=3 q=9: rank=287 alpha=286 predicted=> alpha ok
+[direct] k=4 n=11 p=3 q=9: rank=121 alpha=120 predicted=> alpha ok
+[direct] k=4 n=18 p=2 q=4: rank=697 alpha=680 predicted=> alpha ok
+[direct] k=5 n=15 p=5 q=5: rank=1001 alpha=1001 predicted=alpha ok
+ALL CHECKS PASSED

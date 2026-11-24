@@ -371,3 +371,72 @@ All pass.
 **Novelty after this.** Step 1 is Ducey et al.'s theorem, cited and used as a black box. Steps 2-4 (the reduction
 mod p to an n-independent Pascal-type block, the parity lemma, and the alternating sum to alpha) do not appear in
 the papers read. The statement of Theorem 4 and Corollary 5 for general k was found in none of the six papers read.
+
+## 12. All primes, including p = 2 and p <= k (24 Nov 2026)
+
+**Theorem 6.** Let p be a prime, k >= 2, n > 2k, and let q = p^c be the smallest power of p with q >= k. If
+**q | n - 2k**, then rank_p(I + (-1)^(k-1) D) = C(n-1, k-1) = alpha, hence minrk_p(K(n,k)) = alpha.
+- p > k: q = p, so this is Theorem 4.
+- p = 2: q = 2 for k = 2 (every even n), 4 for k = 3, 4 (Theorem 1 and the data of section 7), 8 for k = 5..8, and
+  so on.
+- 2 < p <= k: for example k = 4, p = 3 gives q = 9 (alpha at n = 17, 26, ...; alpha + 1 at n = 11, 14, as observed).
+- k = 3, p = 3 gives q = 3, i.e. 3 | n.
+
+**Proof.** Steps 1, 2 and 4 of Theorem 4 are unchanged. Only two points depend on p:
+
+*(a) The diagonal mod p.* The block entries are 1 - C(w, r) with w = 2k - n - 1 and r = k - j in {0, ..., k}.
+- For r < q, C(x, r) mod p is periodic in x with period q: C(x + q, r) = sum_i C(q, i) C(x, r - i), and p | C(q, i)
+  for 0 < i < q.
+- q | n - 2k means w = -1 (mod q), so C(w, r) = C(-1, r) = (-1)^r (mod p) for every r < q.
+- Since q >= k, this covers all r <= k except r = k when k = q is itself a power of p. That entry sits only in the
+  block s = 0 (position v = 0, the coefficient of x^0) and can take any value mod p.
+
+*(b) The parity lemma in every characteristic.* N_m is the matrix of f -> f(x+1) - sigma f(-x) on polynomials of
+degree < m, with sigma = (-1)^(m-1).
+- char != 2: rank floor(m/2) (Theorem 4, Step 3).
+- char 2: N_m = P_m + I is the matrix of f -> f(x+1) + f(x). Its kernel is the polynomials invariant under
+  x -> x + 1. Since F_2[x] = F_2[y] + x F_2[y] with y = x^2 + x, and x -> x + 1 fixes y and sends x to x + 1, the
+  invariants are F_2[y]. Those of x-degree < m have y-degree <= (m-1)/2, which is ceil(m/2) dimensions, so the rank
+  is floor(m/2).
+- The boundary entry of (a) changes only column 0 of the s = 0 block, by a multiple of e_0 = the constant 1. Here
+  m = k + 1 >= 3, and the column of x is (x + 1) - sigma(-x) = 1 + (1 + sigma) x:
+  - if 1 + sigma = 0 in F (char 2, or sigma = -1), that column is e_0 itself;
+  - in the remaining case (char != 2 and sigma = +1, i.e. k = q even, so p = 2) it does not arise.
+  So e_0 already lies in the span of the other columns, and changing column 0 by a multiple of e_0 leaves the
+  column space, hence the rank, unchanged.
+
+With every block of rank floor(m/2), Step 4 gives exactly alpha. QED
+
+**Corollary 7 (Haemers bound, all k).** For every k >= 2 and all but finitely many n > 2k:
+min_F minrk_F(K(n,k)) = alpha = Theta(K(n,k)).
+- Proof: n is settled when q_p | n - 2k for some prime p (Theorem 6), or k | n (Baranyai).
+- If neither holds, N = n - 2k has v_p(N) < c_p for every prime p. Then no prime p >= k divides N (for those
+  c_p = 1), so N divides prod_{p < k} p^(c_p - 1), a constant depending on k.
+- The exceptional n (computed; `n | k` removed):
+
+| k | exceptional n |
+|---|---|
+| 2 | 5 (Petersen) |
+| 3 | 7, 8 |
+| 4 | 9, 10, 11, 14 |
+| 5 | 11, 12, 13, 14, 16, 22 |
+| 6 | 13, 14, 15, 16, 17, 22, 27, 32 |
+| 7 | 15-20, 24, 26, 29, 34, 44, 74 |
+
+For these n the F_2 values are known in a few cases: K(5,2) = 5, K(7,3) = 18, K(8,3) = 22 (SAT, DRAT-checked), all
+above alpha. Whether some other field reaches alpha there is open.
+
+**Is the condition also necessary?**
+- For this matrix, yes numerically: the block formula gives rank_p = alpha if and only if q | n - 2k in all 6666
+  cases with k <= 12, 3k - 1 <= n <= 120, p <= 13 (738 hits). Not proven.
+- It says nothing about other fitting matrices. minrk_p could still be alpha by another matrix when the condition
+  fails.
+
+**Checks.** `python -m minrank.analysis.verify_all_primes` (log `logs/verify_all_primes.log`), all pass:
+- the char-2 lemma, with and without the flipped entry, for m <= 64;
+- the odd-p lemma with an arbitrary boundary entry;
+- the periodicity of C(w, r) mod p;
+- the iff in 6666 cases;
+- full-matrix ranks for new predictions: K(17,4) over F_3 = 560 = alpha (q = 9), K(18,5) over F_2 = 2380 = alpha
+  (q = 8), K(12,4), K(16,4) and K(20,4) over F_2 = alpha, and K(11,4), K(14,4) over F_3, K(18,4) over F_2 > alpha,
+  as predicted.
