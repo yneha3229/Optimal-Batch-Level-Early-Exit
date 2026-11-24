@@ -208,22 +208,25 @@ n - 6 is presumably n - 2k. Not attempted yet.
 What this does **not** settle: the F_2 values for n = 0 (mod 4) (alpha or alpha + 1; SAT says alpha + 1 for n = 8),
 odd n over F_2, K(9,4) over F_2 (57..63, I + D gives 83), and the index-coding rate beta(K(8,3)) (21 or 22).
 
-## 8. Literature status of sections 6-7 (24 Nov 2026)
+## 8. Literature status of sections 6-7 (24 Nov 2026, full texts read)
 
-Searched (web search only; this container could not fetch arxiv.org or golovnev.org, so no full texts were read):
-Haemers bound / minrank of Kneser graphs over F_2 and F_p; 2-ranks and Smith forms of disjointness and inclusion
-matrices; index coding on Kneser graphs. **Nothing found states rank_p(I + D) = alpha, the n - 6 (n - 2k)
-divisibility rule, or exact minrank values of K(n,3).** What is known and must be cited:
-- Lovász 1979: Theta(K(n,k)) = alpha (so minrank = alpha means the Haemers bound is tight).
-- Wilson 1990, *A diagonal form for the incidence matrices of t-subsets vs. k-subsets*: rank_p W_{t,k} (used above).
-- Golovnev and Haviv (arXiv:2002.08580, Thm 3.2): minrk_F(K(d,s)) <= sum_{i<s} C(d,i) by a symmetric matrix, with a
-  separate remark for F_2 (Lempel's decomposition). **Their matrix is very likely our M^T Q M** (a polynomial in
-  |S cap T| of degree s - 1, rank at most the number of rows of M). If so, our contribution is the exact p-rank of
-  that matrix: the radical of the Gram form cuts the rank from sum_{i<s} C(d,i) (= 1 + n + C(n,2)) to alpha.
-  Frame the paper that way and cite them prominently.
-- Haviv 2018 (arXiv:1802.03920, Props 13-14): polynomial-method bounds for generalized Kneser graphs over F_p, p > s.
-  Check whether a choice of p | n - 2k appears there.
-- arXiv:2608.06573 (lexicographic products): uses fractional Haemers numbers of Kneser graphs; check for minrank values.
+Read in full (PDFs supplied by the user): Golovnev-Haviv (arXiv:2002.08580v2), Haviv 2018 (arXiv:1802.03920v2),
+Haemers 1979 (IEEE T-IT 25(2)), Sason (arXiv:2608.06573v5). Their reference lists were scanned as well.
 
-**Before claiming novelty, read these four in full** (about an hour). The risk is mainly Golovnev-Haviv and Haviv
-2018; Theorem 1's statement over F_2 did not appear in any search result.
+| Paper | What it does with Kneser graphs | Relation to Theorems 1-2 |
+|---|---|---|
+| Golovnev-Haviv, Thm 3.2 (m = 1) | Matrix M_AB = q(\|A cap B\|) with q(x) = C(x-1, s-1). Since q(0) = (-1)^(s-1), q(1) = ... = q(s-1) = 0 and q(s) = 1, **this is exactly I + (-1)^(s-1) D, our matrix (same sign)**. Bound: real rank <= sum_{i<s} C(d,i), so minrk_F <= that for every finite field (via rank mod p <= real rank, Fact 3.5) | They never compute its rank mod p. For k = 3 their bound is 1 + n + C(n,2); the true F_p rank is alpha = C(n-1,2) when p \| n - 6 (Theorem 2) or 4 \| n - 6 (p = 2). The F_2 remark (Lempel) is about orthogonality dimension of triangle-free graphs, unrelated |
+| Haviv 2018, Prop 4.3 (T = {0}) | m(x) = prod_{j=1}^{s-1} (x - j), a scalar multiple of I + (-1)^(s-1) D again; minrk_p(K(d,s)) <= C(d, s-1) for primes p > s (Lemma 4.2 bounds the real rank) | Again only the generic rank: C(n,2) for k = 3, versus alpha = C(n,2) - (n-1) for p \| n - 6. Says nothing about p = 2 (needs p > s) |
+| Haemers 1979 | Uses the adjacency matrix of K(8,2) (over R) only to build the Schläfli graph example | No overlap |
+| Sason 2026 | Theta and fractional Haemers numbers of lexicographic products with Kneser factors; Theta(K(n,k)) = alpha cited from Lovász Thm 13 | No minrank values of Kneser graphs; no overlap |
+
+**Verdict.** The matrix is known (Golovnev-Haviv, Haviv); the exact p-rank of it, the n - 6 divisibility rule, the
+exact values minrk_p(K(n,3)) = alpha, and Corollary 3 (tightness of the Haemers bound for all n >= 9) appear in none of
+these papers or their cited works. Framing for the paper: *"the polynomial-method matrix of Golovnev-Haviv and Haviv
+for Kneser graphs has p-rank exactly alpha whenever p | n - 6; their bounds C(n,2) and 1 + n + C(n,2) are off by
+n - 1"*. Cite both prominently.
+
+Still worth checking before submission (not read): Wilson 1990 (diagonal form; used for rank_p W_{2,3}),
+Frankl-Wilson / Ray-Chaudhuri-Wilson style p-rank results on intersection matrices, and recent work on Smith forms
+of Kneser / disjointness matrices (arXiv:2310.09227, which treats disjointness as inclusion in the complement).
+These could contain the p-rank of I + D in another guise; it is a narrower risk than before.
