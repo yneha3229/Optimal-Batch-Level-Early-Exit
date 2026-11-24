@@ -46,16 +46,14 @@ class FixedPair:
             else STRATEGIES.index("lo_descent")
 
 
-def test_graphs():
-    out = []
-    for n in SIZES:
-        for f in FAMILIES:
-            for r in range(3):
-                rng = np.random.default_rng(900_000 + 1000 * n + 10 * FAMILIES.index(f) + r)
-                g = make_graph(f, n, rng)
-                g.name = f"{f}_n{n}_{r}"
-                out.append(g)
-    return out
+SPECS = [(n, f, r) for n in SIZES for f in FAMILIES for r in range(3)]
+
+
+def test_graph(gi):
+    n, f, r = SPECS[gi]
+    g = make_graph(f, n, np.random.default_rng(900_000 + 1000 * n + 10 * FAMILIES.index(f) + r))
+    g.name = f"{f}_n{n}_{r}"
+    return g
 
 
 def controllers():
@@ -70,7 +68,7 @@ def _init():
 
 def _job(args):
     gi, key = args
-    g = test_graphs()[gi]
+    g = test_graph(gi)
     res = run(g, controllers()[key](), T=T_TEST, seed=gi)
     res["family"] = g.name.split("_")[0]
     res["key"] = key
@@ -82,7 +80,7 @@ def _job(args):
 
 def cmd_run(workers=3):
     OUT.mkdir(exist_ok=True)
-    jobs = [(gi, k) for gi in range(len(test_graphs())) for k in controllers()]
+    jobs = [(gi, k) for gi in range(len(SPECS)) for k in controllers()]
     with mp.get_context("spawn").Pool(workers, initializer=_init) as pool, open(OUT / "bench.jsonl", "w") as f:
         for res in pool.imap_unordered(_job, jobs):
             f.write(json.dumps(res) + "\n")
@@ -161,9 +159,10 @@ def cmd_cpsat():
     from gap_agent.strategies import Search, warm_start
 
     rows = []
-    for gi, g in enumerate(test_graphs()):
-        if g.n != SIZES[0]:
+    for gi in range(len(SPECS)):
+        if SPECS[gi][0] != SIZES[0]:
             continue
+        g = test_graph(gi)
         s = Search(g, gi)
         warm_start(s)
         r = cpsat(g, T_TEST, s.lo, s.hi)
