@@ -33,7 +33,8 @@ from .exact.sat import sat_descend
 
 ROOT = Path(__file__).resolve().parent
 METHODS = ("dsatur", "random_greedy", "tabucol", "factor_tabu", "factor_anneal", "alt_isd", "sat", "ldg",
-           "partial_cover")
+           "partial_cover", "identity_adj")
+BUDGET_FREE = ("dsatur", "ldg", "identity_adj")  # deterministic: one row per graph at budget 0
 OPTIONAL_METHODS = ("sdp",)  # needs cvxpy; run only when named with --methods
 # Pool workers are spawned, never forked: a forked worker would inherit a SAT forkserver started by its parent
 # and fail on its next SAT call (ChildProcessError).
@@ -59,6 +60,9 @@ def run_method(g: Graph, method: str, budget: float, seed: int) -> list[int]:
     if method == "partial_cover":
         from .baselines.partial_cover import partial_cover_rows
         return partial_cover_rows(g, budget, rng)
+    if method == "identity_adj":
+        from .baselines.identity_adj import identity_plus_adjacency_rows
+        return identity_plus_adjacency_rows(g)
     if method == "sdp":
         from .baselines.sdp import sdp_rows
         return sdp_rows(g, budget, rng)
@@ -176,8 +180,8 @@ def main() -> None:
             meta = {"graph": r["name"], "split": r["split"], "family": r["family"], "n": int(r["n"]),
                     "density": float(r["density"])}
             for m in a.methods:
-                budgets = [0.0] if m in ("dsatur", "ldg") else a.budgets  # deterministic, budget-free
-                seeds = [0] if m in ("dsatur", "ldg") else a.seeds
+                budgets = [0.0] if m in BUDGET_FREE else a.budgets  # deterministic, budget-free
+                seeds = [0] if m in BUDGET_FREE else a.seeds
                 for b in budgets:
                     for s in seeds:
                         if job_key(r["name"], m, b, s) in done:

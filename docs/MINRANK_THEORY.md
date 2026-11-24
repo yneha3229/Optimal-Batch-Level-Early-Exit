@@ -1,5 +1,12 @@
 # Minrank of Kneser graphs over F_2: construction and conjectures (WORK.md T2), 23 Nov 2026
 
+> **Update 24 Nov 2026.** The k = 3 pattern of section 2 is now **proven** (section 6, Theorem 1), and it extends to
+> odd characteristic: rank_p(I + D) = alpha whenever p | n - 6 (Theorem 2). Together with Baranyai this gives
+> **min over prime fields of minrk_p(K(n,3)) = alpha = Theta(K(n,3)) for every n >= 9** (Corollary 3). Data for
+> k = 2, 3, 4 over F_2 ... F_19: `minrank/results/kneser_prank_k{2,3,4}.csv`, script `minrank/analysis/kneser_prank.py`.
+> Literature status: section 8.
+
+
 Data scripts: `minrank/baselines/identity_adj.py` (the construction). The exploration scripts behind the tables
 (group-invariant SAT search, rank sweeps) are summarised here and can be re-run on request.
 
@@ -102,3 +109,121 @@ Consequences:
 
 Fix: regenerate planted graphs with extra_p > 0 (extra edges add free entries, so I + A no longer equals the
 planted matrix), and add I + A as a baseline everywhere.
+
+**Done (24 Nov).**
+- `minrank/bench/instances.py` adds an extra_p = 0.1 copy of every planted family: 48 graphs `*_e0.1_*`, same
+  sizes and seed splits. The 172 old graphs are unchanged (digests checked).
+  - I + A on the new graphs has rank 44-50 at n = 50 and 99-100 at n = 100. Even extra_p = 0.05 already gives 36-43
+    at n = 50.
+- `identity_adj` is a baseline method in `minrank/run_baselines.py` (budget-free, one row per graph), and it has been
+  run on all 220 graphs (`minrank/results/baselines.csv`).
+  - On the old e0.0 planted graphs it strictly beats every other baseline on 26 of 48 and ties the rest.
+  - On K(8,3) it gives 22 against 28 for the best heuristic.
+- Pincer: `quick` now offers I + A, and the `classic` / `satdescend` baselines get it too.
+  - Pincer's benchmark already used planted graphs with extra_p = 0.05.
+  - I + A beats no method's upper bound on any of its 61 test / test2 graphs, so **Pincer's published numbers stand
+    unchanged**.
+- Baselines and exact SAT on the new graphs: `minrank/results/baselines_planted_e01.csv`,
+  `minrank/results/exact_planted_e01.csv`.
+
+
+## 6. Proofs for k = 3 (24 Nov 2026)
+
+Notation: n >= 7, D = adjacency matrix of K(n,3), alpha = C(n-1,2). Coordinates of F^N, N = 1 + n + C(n,2), are
+indexed by the subsets A of [n] with |A| <= 2; M is the N x C(n,3) matrix with M[A, S] = [A subset of S] (that is,
+M = [W_0; W_1; W_2]), and C is its column space. For |S cap T| = j, inclusion-exclusion gives the integer identity
+
+    [S cap T = 0]  =  1 - j + C(j,2) - C(j,3),   hence   I + D = W_0^T W_0 - W_1^T W_1 + W_2^T W_2  =  M^T Q M
+
+over Z, with Q = diag(+1 on W_0, -1 on W_1, +1 on W_2). Mod 2, Q = identity and I + D = M^T M.
+
+**General fact.** For a nondegenerate diagonal Q, rank(M^T Q M) = dim C - dim R, where R = C cap ker(M^T Q) and
+dim R = dim C^perp - rank(B_Q restricted to C^perp), B_Q(g, g') = g^T Q g'. (y -> Qy maps R onto the radical of B_Q on
+C^perp, because C = (C^perp)^perp.) So everything reduces to an (n+1)-dimensional form.
+
+### Theorem 1 (F_2). For n >= 7,
+rank_2(I + D) = C(n,2) for odd n, = **alpha** for n = 2 (mod 4), = alpha + 1 for n = 0 (mod 4).
+Hence **minrk_2(K(n,3)) = alpha for n = 2 (mod 4)**, strictly below the clique cover when 3 does not divide n
+(n = 10, 14, 22, 26, 34, ...), and minrk_2(K(n,3)) is alpha or alpha + 1 for n = 0 (mod 4).
+
+*Lemma 1 (C^perp over F_2).* C^perp = { f : f(empty) = a, f({i}) = b, f({i,j}) = a + b + x_i + x_j } with a, b in F_2,
+x in F_2^n, and dim C^perp = n + 1 (so rank_2 M = C(n,2)).
+Proof. f is in C^perp iff for every 3-set S: f(empty) + sum_{i in S} f(i) + sum_{e subset S, |e|=2} f(e) = 0. Read f on
+pairs as a 1-cochain g on the full simplex on [n] and h(S) = f(empty) + sum_{i in S} f(i); the condition is
+delta g = h. Then delta h = 0 on every 4-set Q: delta h(Q) = 4 f(empty) + 3 sum_{i in Q} f(i) = sum_{i in Q} f(i) = 0.
+For n >= 5, two 4-sets differing in one element give f(i) = f(j), so f(i) = b for all i and h = a + b is constant. The
+constant cochain a + b is a solution (a triangle has 3 edges) and the simplex has H^1 = 0, so the solutions are
+g_ij = (a + b) + x_i + x_j, with x defined modulo the all-ones vector: dimension 2 + (n - 1) = n + 1. QED
+
+*Lemma 2 (the radical).* With c = a + b, X = sum x_i, P = <x, x'>, the form on C^perp is
+B(f, f') = aa' + n bb' + C(n,2) cc' + (n-1)(c X' + c' X) + (n-2) P + X X'.
+- n = 2 (mod 4): n, n - 2 even, C(n,2), n - 1 odd: B = aa' + (c + X)(c' + X'), two independent forms, rank 2.
+- n = 0 (mod 4): C(n,2) even: B = aa' + cX' + c'X + XX'; Gram matrix of (a, c, X) is [[1,0,0],[0,0,1],[0,1,1]],
+  determinant 1, rank 3.
+- n odd: n - 2 odd, n - 1 even; B = (aa' + bb' or ab' + a'b) + (P + XX'). The matrix I + J on F_2^n has kernel
+  spanned by the all-ones vector (n odd), which is exactly the gauge, so the x-part has rank n - 1: total n + 1.
+So dim R = n - 1, n - 2, 0 respectively, and rank_2(I + D) = C(n,2) - dim R. QED (Theorem 1)
+
+### Theorem 2 (odd characteristic). Let p >= 5 be a prime with **p | n - 6**. Then rank_p(I + D) = alpha, hence
+**minrk_p(K(n,3)) = alpha**. Conversely, if p does not divide n - 6 then rank_p(I + D) > alpha.
+Proof. For p >= 5, Wilson's rank formula gives rank_p W_{2,3} = C(n,2) (all of C(3,2), C(2,1), C(1,0) are units), so
+dim C = C(n,2) and dim C^perp = n + 1. C^perp consists of the vectors
+g(empty) = -3(t + c), g({i}) = t - 2 x_i, g({i,j}) = c + x_i + x_j, with (c, t, x) modulo (c - 2s, t + 2s, x + s 1)
+(each 3-set condition reads -3t - 3c + 3t - 2 sum_S x + 3c + 2 sum_S x = 0; the parametrisation has dimension n + 1).
+With Q = (+, -, +):
+B_Q = 9(t + c)(t' + c') - [n tt' - 2(t X' + t' X) + 4P] + [C(n,2) cc' + (n-1)(c X' + c' X) + (n-2) P + X X'].
+The coefficient of P is **n - 6**. If p | n - 6, B_Q depends only on (c, t, X), a 3-dimensional space containing the
+non-zero gauge direction (-2, 2, n) in its radical, so rank B_Q <= 2, dim R >= n - 1 and
+rank_p(I + D) <= C(n,2) - (n - 1) = alpha; alpha is a lower bound for every fitting matrix, so equality holds.
+If p does not divide n - 6, restrict B_Q to {c = t = 0, X = 0} (dimension n - 1, meets the gauge only in 0): it is
+(n - 6) P on sum-zero vectors, of rank >= n - 2 >= 3, so dim R <= n - 2 and rank_p(I + D) >= alpha + 1. QED
+(Theorem 1's case n = 2 (mod 4) is the same statement for p = 2 with "4 | n - 6".)
+
+### Corollary 3 (the Haemers bound is tight for K(n,3), n >= 9). For every n >= 9 there is a prime p with
+minrk_p(K(n,3)) = alpha = Theta(K(n,3)) (Lovász): if n - 6 has a prime factor p >= 5 use Theorem 2; if 4 | n - 6 use
+Theorem 1; otherwise n - 6 = 2^e 3^f with e <= 1 and f >= 1, so 3 | n and the clique cover is already alpha
+(Baranyai). The only open cases are n = 7, 8: over F_2 the minrank is 18 and 22 (SAT, DRAT-checked), above
+alpha = 15 and 21; other fields are not decided. New exact values below the clique cover include K(11,3) over F_5,
+K(13,3) over F_7, K(16,3) over F_5, K(17,3) over F_11, K(19,3) over F_13, K(20,3) over F_7.
+
+All statements above are also checked numerically: `python -m minrank.analysis.kneser_prank --k 3 --n 7-16 --p 2
+--gram` (both lemmas) and `minrank/results/kneser_prank_k3.csv` (96 (n, p) cases, n = 7..22, p <= 19: the
+divisibility rule predicts every hit and every miss, including p = 3).
+
+## 7. Other fields and other k (data, 24 Nov 2026)
+
+Sweep of rank_p(I + (-1)^(k+1) D) for p in {2, ..., 19} (the sign is the one that makes the Gram identity work; the
+only S_n-invariant fitting matrices are lambda I + mu D, and mu = (-1)^(k+1) was the best mu in every case we tried):
+
+| k | range | rule rank_p = alpha iff p | n - 2k (odd p) / 4 | n - 2k (p = 2) | exceptions |
+|---|---|---|---|
+| 2 | n = 5..30 | holds for odd p (e.g. minrk_3(K(7,2)) = 6 < cover 7, minrk_5(K(9,2)) = 8) | p = 2: alpha for **every even n** (stronger) |
+| 3 | n = 7..22 | holds in all 96 cases (Theorems 1, 2) | none |
+| 4 | n = 9..16 | holds for p = 2 (n = 12, 16), p = 5 (n = 13: 220 < cover 239), p = 7 (n = 15: 364 < 455) | p = 3 (n = 11, 14): alpha + 1 |
+
+Conjecture (general k): for a prime p > k with p | n - 2k, and for p = 2 with 4 | n - 2k, minrk_p(K(n,k)) = alpha.
+The k = 3 proof should generalise (M = [W_0; ...; W_{k-1}], Q = diag((-1)^i)); the coefficient playing the role of
+n - 6 is presumably n - 2k. Not attempted yet.
+
+What this does **not** settle: the F_2 values for n = 0 (mod 4) (alpha or alpha + 1; SAT says alpha + 1 for n = 8),
+odd n over F_2, K(9,4) over F_2 (57..63, I + D gives 83), and the index-coding rate beta(K(8,3)) (21 or 22).
+
+## 8. Literature status of sections 6-7 (24 Nov 2026)
+
+Searched (web search only; this container could not fetch arxiv.org or golovnev.org, so no full texts were read):
+Haemers bound / minrank of Kneser graphs over F_2 and F_p; 2-ranks and Smith forms of disjointness and inclusion
+matrices; index coding on Kneser graphs. **Nothing found states rank_p(I + D) = alpha, the n - 6 (n - 2k)
+divisibility rule, or exact minrank values of K(n,3).** What is known and must be cited:
+- Lovász 1979: Theta(K(n,k)) = alpha (so minrank = alpha means the Haemers bound is tight).
+- Wilson 1990, *A diagonal form for the incidence matrices of t-subsets vs. k-subsets*: rank_p W_{t,k} (used above).
+- Golovnev and Haviv (arXiv:2002.08580, Thm 3.2): minrk_F(K(d,s)) <= sum_{i<s} C(d,i) by a symmetric matrix, with a
+  separate remark for F_2 (Lempel's decomposition). **Their matrix is very likely our M^T Q M** (a polynomial in
+  |S cap T| of degree s - 1, rank at most the number of rows of M). If so, our contribution is the exact p-rank of
+  that matrix: the radical of the Gram form cuts the rank from sum_{i<s} C(d,i) (= 1 + n + C(n,2)) to alpha.
+  Frame the paper that way and cite them prominently.
+- Haviv 2018 (arXiv:1802.03920, Props 13-14): polynomial-method bounds for generalized Kneser graphs over F_p, p > s.
+  Check whether a choice of p | n - 2k appears there.
+- arXiv:2608.06573 (lexicographic products): uses fractional Haemers numbers of Kneser graphs; check for minrank values.
+
+**Before claiming novelty, read these four in full** (about an hour). The risk is mainly Golovnev-Haviv and Haviv
+2018; Theorem 1's statement over F_2 did not appear in any search result.
