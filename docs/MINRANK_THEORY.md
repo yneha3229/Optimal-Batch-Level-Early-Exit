@@ -42,7 +42,7 @@ minrank values (SAT, with DRAT-checked UNSAT where needed); the rest are upper b
 
 | k | n | alpha | rank_2(I + D) | cover >= | minrk_2 |
 |---|---|---|---|---|---|
-| 2 | odd n (5..29) | n-1 | n | n | n* for n = 5, 7; <= n otherwise |
+| 2 | odd n (5..29) | n-1 | n | n | **n for every odd n** (Corollary 9.3) |
 | 2 | even n (6..30) | n-1 | n-1 | n-1 | n-1 (= alpha) |
 | 3 | 7 | 15 | 21 | 18 | 18* (SAT finds a non-invariant matrix below I + D) |
 | 3 | 8 | 21 | **22** | 28 | **22*** |
@@ -245,3 +245,94 @@ Still worth checking before submission (not read): Wilson 1990 (diagonal form; u
 Frankl-Wilson / Ray-Chaudhuri-Wilson style p-rank results on intersection matrices, and recent work on Smith forms
 of Kneser / disjointness matrices (arXiv:2310.09227, which treats disjointness as inclusion in the complement).
 These could contain the p-rank of I + D in another guise; it is a narrower risk than before.
+
+## 9. The star identity: minrk_2(K(n,k)) > alpha for k even and n odd (24 Nov)
+
+**Lemma 9.1.** Let n >= 2k + 1, and let M fit K(n,k) over F_2 with rank_2(M) = alpha = C(n-1, k-1). Then for every
+point a in [n], with S_a = {T : a in T} the star of a,
+
+> M = M[:, S_a] · M[S_a, :],  and summing over a,  **n · M = k · M² (mod 2).**
+
+*Proof.*
+- The star S_a is an independent set of size alpha: its sets pairwise intersect. So M[S_a, S_a] = I, and the alpha
+  rows indexed by S_a are linearly independent. Since rank M = alpha, they are a basis of the row space.
+- Write row e as M_e = Σ_{T in S_a} c_T M_T. Evaluating at a column T' in S_a gives M_{e,T'} = c_{T'}. Hence
+  M = M[:, S_a] M[S_a, :].
+- Summing over the n points, each k-set T appears in exactly k stars:
+  n M = Σ_a Σ_{T ∋ a} M[:, T] M[T, :] = k M². ∎
+
+**Theorem 9.2.** For k even and n odd (n >= 2k + 1), minrk_2(K(n,k)) >= alpha + 1.
+
+*Proof.* If the rank were alpha, Lemma 9.1 gives M = n·M = k·M² = 0 over F_2. This contradicts M_TT = 1. ∎
+
+**Corollary 9.3.** minrk_2(K(n,2)) = n for every odd n >= 5.
+- The lower bound n is Theorem 9.2.
+- The upper bound is the clique cover: the chromatic index of K_n is n for odd n.
+- This closes K(9,2), K(11,2) and K(13,2) (SAT timed out on them at 1,800 s per call) and every larger odd n. It
+  also gives K(9,4) >= 57 without SAT; the rank-56 UNSAT call took 1,800+ s and its DRAT proof was too large to
+  check on this disk.
+
+**Structure for odd k (Lemma 9.1).**
+- A rank-alpha fitting matrix is M = I + X with X supported on the Kneser edges.
+- If n is odd, M² = M, i.e. X² = X.
+- If n is even, M² = 0, i.e. X² = I: X is an involution and rank(I + X) = alpha.
+- The I + D constructions of section 1 (n = 10, 14, 18, 22) and every stored rank-alpha certificate satisfy this:
+  `python -m minrank.analysis.star_identity` checks all 17 rank-alpha matrices we have, M = M[:, S_a] M[S_a, :] for
+  every a, and n M = k M² (`minrank/results/star_identity.json`).
+- For k odd and n ≡ 0 (mod 4), e.g. K(8,3) = alpha + 1, a proof of the lower bound would have to show that no
+  involution X supported on the Kneser edges has rank(I + X) = alpha. This is open; for n = 8 SAT decides it.
+
+The same argument works for any graph with a family of maximum independent sets, each of size minrk, that covers
+every vertex the same number r of times. With N sets: N·M = r·M². If N is odd and r even, minrk > alpha.
+
+## 10. Mycielski graphs: a rank-free reduction (24 Nov)
+
+M_k = mu(M_{k-1}) consists of the originals V, the shadows U = {u_y} and the apex w. The shadows are independent and
+|U| = |V| = alpha(M_k).
+
+**Lemma 10.1.** minrk_2(mu(G)) = |V(G)| (for |V| >= 2 alpha(G)) iff there exist
+- A, B in F_2^{V x V}, both supported on the ordered edges of G, and
+- x, z in F_2^V,
+such that:
+1. A B^T fits G;
+2. A z = 0 and B x = 0;
+3. ⟨x, z⟩ = 1.
+
+*Proof.*
+- (⇒) If rank M = |U|, the U-rows are a basis, so M = M[:, U] M[U, :]. Put A = M[V, U], B = M[U, V]^T,
+  x = M[w, U] and z = M[U, w]. The zero pattern of M between U and V gives the supports. The fitting conditions on
+  V ∪ {w} are conditions 1–3, since w is adjacent to no original.
+- (⇐) The matrix [A; I; x^T] · [B^T | I | z] fits mu(G) and has rank at most |V|. ∎
+
+The resulting SAT instance has no rank variables and only 2|E(G)| + 2|V| free bits. For M7, built on G = M6 with
+47 vertices and 236 edges, that is 1,038 bits, against 95 · 47 · 2 = 8,930 for the rank encoding.
+- Code: `minrank/exact/mycielski_reduction.py`.
+- Test: `minrank/tests/test_mycielski_reduction.py`, which checks agreement with the direct encoding on random small
+  graphs.
+- M3, M4 and M5 are UNSAT in about 1 s, which agrees with the known minrk = alpha + 1.
+- M6 and M7 are running with 8 h per instance; results go to `minrank/results/mycielski_reduction.json`.
+- The conjecture "minrk_2(M_k) = alpha + 1 for every k" is equivalent to: for every Mycielski graph G, whenever A B^T
+  fits G with supports on E(G), ker A and ker B are orthogonal.
+
+## 11. The general-k p-rank theorem of the other session (branch `feature/kneser-minrank-theorem`, `proof.md`)
+
+**Claim.** Let p be a prime and q the least power of p with q >= k. If q | n - 2k, then rank_p(I + (-1)^{k-1} D) = alpha,
+so minrk over F_p of K(n,k) equals alpha. The argument goes through the diagonal form of Ducey et al.
+- For k = 3 it is Theorems 1-2 of section 6 (already on this branch); the branch extends them to every k and every
+  prime, as conjectured in section 7.
+- It also gives the claimed corollary: the Haemers bound (minimum over fields) is tight on K(n,k) for all but
+  finitely many n.
+
+**Independent check (24 Nov).** We used our own Gaussian elimination mod p, not the branch's scripts, on 17 cases:
+- the theorem holds on (n,k,p) = (7,2,3), (10,2,3), (11,2,7), (9,3,3), (12,3,3), (11,3,5), (13,3,7), (10,3,2),
+  (14,3,2), (12,4,2), (16,4,2), (13,4,5), and (17,4,3), the q = 9 case;
+- where q ∤ n - 2k, the rank was above alpha in every case tried: (9,2,7), (11,3,2), (12,3,2), (13,3,3).
+- Over F_5, minrk(K(11,3)) = 45 = alpha, while over F_2 it is open between 45 and 55.
+
+The branch is **not merged** into ours; merging is the user's decision.
+
+**Theorem 9.2 is consistent with it.** For p = 2 and k even, q >= k is even, so q | n - 2k forces n to be even.
+
+**Novelty of sections 9-10 (not yet checked).** The star-identity argument is short, and statements such as
+"minrk_2(K(n,2)) = n for odd n" may already be known, for instance in the index-coding literature on the
+complement of the triangular graph. This has to be checked before it is presented as new.

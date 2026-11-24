@@ -1,0 +1,7 @@
+spec,graph,n,family,directed,alpha,alpha_proven,cover,lower,upper,proven,seconds,mode,solver,time_per_call,indep,log
+"planted:100,10,0.1,2,0",planted_n100_r10_e0.1_s2,100,planted,0,8,True,13,10,10,True,21.1,indep,cadical153,14400.0,27 37 51 54 57 59 65 96,"[[9, ""unsat"", 5.3]]"
+"planted:100,10,0.1,5,0",planted_n100_r10_e0.1_s5,100,planted,0,8,True,13,10,10,True,22.6,indep,cadical153,14400.0,23 25 51 69 70 77 84 93,"[[9, ""unsat"", 6.16]]"
+"planted:100,10,0.1,1,0",planted_n100_r10_e0.1_s1,100,planted,0,8,True,13,10,10,True,27.4,indep,cadical153,14400.0,5 9 23 28 81 84 85 97,"[[9, ""unsat"", 13.19]]"
+"planted:100,10,0.1,7,0",planted_n100_r10_e0.1_s7,100,planted,0,8,True,13,10,10,True,15.8,indep,cadical153,14400.0,14 18 22 32 33 39 46 63,"[[9, ""unsat"", 1.92]]"
+"planted:100,10,0.1,6,0",planted_n100_r10_e0.1_s6,100,planted,0,9,True,13,10,10,True,20.0,indep,cadical153,14400.0,15 16 24 25 33 37 40 51 74,"[[9, ""unsat"", 3.91]]"
+"planted:100,10,0.1,4,0",planted_n100_r10_e0.1_s4,100,planted,0,8,True,13,10,10,True,41.2,indep,cadical153,14400.0,11 12 40 56 74 80 82 85,"[[9, ""unsat"", 25.49]]"

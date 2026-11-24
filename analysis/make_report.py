@@ -187,6 +187,48 @@ def timed_grid(groups: list[tuple[str, pd.DataFrame]]) -> str:
     return f"<table class='num'>{h}{body}</table>"
 
 
+def timed_extra() -> str:
+    """5.1 runs that need a working A6000: CUDA graphs (RoBERTa) and CIFAR-100 (ViT-B/16, eager and graphs).
+    Rendered from results/local_time_{qqp,mnli}_a6000_graph_T*.csv and results/local_time_cifar100_a6000[_graph]_T197.csv
+    when they exist; otherwise a pending note."""
+    def load(pattern):
+        fs = sorted(ROOT.glob(pattern))
+        return pd.concat([pd.read_csv(f).assign(src=f.name) for f in fs], ignore_index=True) if fs else None
+    html, have = "", []
+    g = load("results/local_time_*_a6000_graph_T*.csv")
+    rob_g = None if g is None else g[g.task.isin(["qqp", "mnli"])]
+    if rob_g is not None and len(rob_g):
+        rob_g = rob_g.assign(T=rob_g.device.str.extract(r"_T(\d+)$")[0].astype(int))
+        groups = [(f"{t.upper()}, length {T}", rob_g[(rob_g.task == t) & (rob_g["T"] == T)])
+                  for t in ("qqp", "mnli") for T in sorted(rob_g["T"].unique()) if len(rob_g[(rob_g.task == t) & (rob_g["T"] == T)])]
+        html += (timed_grid(groups) + "<p class='cap'><b>Table 11b:</b> the same as Tables 11–12 under CUDA graphs "
+                 "(<code>--exec graph</code>: every segment replayed as a captured graph, rows padded to fixed buckets). "
+                 "<code>results/local_time_{qqp,mnli}_a6000_graph_T*.csv</code>.</p>")
+        have.append("CUDA graphs")
+    c = load("results/local_time_cifar100_a6000*_T197.csv")
+    if c is not None and len(c):
+        groups = [(("CUDA graphs" if "graph" in dv else "eager"), c[c.device == dv]) for dv in sorted(c.device.unique())]
+        html += (timed_grid(groups) + "<p class='cap'><b>Table 12b:</b> CIFAR-100, ViT-B/16 (197 tokens), RTX A6000, "
+                 "same protocol. <code>results/local_time_cifar100_a6000[_graph]_T197.csv</code>.</p>")
+        have.append("CIFAR-100")
+    if not have:
+        return ("<p class='fb'><i class='l'>Pending:</i> the CUDA-graph and CIFAR-100 (ViT) timings. The code and scripts "
+                "are ready (<code>scripts/run_server_a6000_graph.sh</code>, <code>scripts/run_server_a6000_vit.sh</code>), "
+                "and <code>scripts/wait_gpu_then_graph.sh</code> starts them as soon as an A6000 can initialise CUDA.</p>")
+    rows = []
+    for name, d in (("graph", rob_g), ("cifar", c)):
+        if d is None or not len(d):
+            continue
+        for k, gg in d[d.family.isin(FAMS)].groupby(["task", "device", "B"]):
+            ok = gg[gg.ho_drop_pts <= 1.0]
+            o, b = ok[ok.family.isin(OURS)], ok[ok.family.isin(BASE)]
+            if len(o) and len(b):
+                rows.append(100 * (o.real_speedup.max() / b.real_speedup.max() - 1))
+    summ = (f" Within the one-point budget, the cost rule is ahead of the best baseline in {sum(r > 0 for r in rows)} "
+            f"of {len(rows)} columns where both have a certified policy (median {np.median(rows):+.0f}%)." if rows else "")
+    return html + f"<p class='fb'><i class='l'>Result ({' and '.join(have)}):</i> Tables above.{summ}</p>"
+
+
 def in_budget_best(d: pd.DataFrame) -> pd.DataFrame:
     """Per (model, task, T, B): fastest of ours and fastest baseline within the 1-pt budget (held-out, timed)."""
     rows = []
@@ -316,6 +358,7 @@ def section5() -> dict:
                   "* held-out drop above one point. <code>results/local_time_qqp_a6000_T{128,32}.csv</code>.</p>"
                   + timed_grid([(f"MNLI, length {T}", rob[(rob.task == "mnli") & (rob["T"] == T)]) for T in (128, 32)])
                   + "<p class='cap'><b>Table 12:</b> MNLI, same layout. <code>results/local_time_mnli_a6000_T{128,32}.csv</code>.</p>")
+    out["t51x"] = timed_extra()
     q = s[(s.model == "roberta") & (s.task == "qqp") & (s["T"] == 128)]
     m = s[(s.model == "roberta") & (s.task == "mnli") & (s["T"] == 128)]
     q32 = s[(s.model == "roberta") & (s.task == "qqp") & (s["T"] == 32) & (s.B <= 16)]
@@ -328,9 +371,8 @@ def section5() -> dict:
     rc_over = rm[(rm.family == "random_collective") & (rm.B >= 16)]
     assert (rc_over.ho_drop_pts > 1.0).all()
     out["r51"] = f"""<p class='fb'><i class='l'>Result (16–22 Nov, eager only):</i> run for QQP and MNLI at sequence
-lengths 128 and 32 (Tables 11–12). CUDA graphs and CIFAR-100 (ViT) are not run yet. The CUDA-graph timing device is written and
-checked on the CPU side (<code>experiments/check_graph_device.py</code>, <code>scripts/run_server_a6000_graph.sh</code>);
-on 23–24 Nov no A6000 could start CUDA (one needs a reset, the idle ones fail to initialise), so the run is pending. On QQP at length 128 the cost rule with the exit plan is the fastest policy within budget at every
+lengths 128 and 32 (Tables 11–12). CUDA graphs and CIFAR-100 (ViT) are reported separately after the tables: both needed a working A6000, and
+on 23–24 Nov none could start CUDA (one needed a reset, the idle ones failed to initialise). On QQP at length 128 the cost rule with the exit plan is the fastest policy within budget at every
 batch size, {rng(q.ours, unit='×')} at a held-out drop of {rng(rq.ho_drop_pts)} points, {rng(q.gain, '{:.0f}')}% ahead of
 the best baseline within budget. At length 32 and B ≤ 16 the plan's policy is {rng(p32.ho_drop_pts - 1)} points over
 budget (so is the unified exit's), and the rule with all exits is the fastest policy within budget ({rng(q32.ours, unit='×')}). On MNLI
@@ -838,6 +880,7 @@ baseline elsewhere, as in Section 4.5.<br>
 state the settings where a unified exit should be used.</p>
 {r5['r51']}
 {r5['t51']}
+{r5['t51x']}
 <h3>5.2 Tighten the certificate (13–15 Nov)</h3>
 <p>Replace the {v('t')}-test with a finite-sample bound for bounded batch losses (Hoeffding–Bentkus), add the
 label-free version that controls disagreement with the full model, and repeat the re-split check on CIFAR-100. In

@@ -1,0 +1,4 @@
+started cadical153_indep pid 225909 on cores 8-18
+started cadical195_indep pid 225912 on cores 19-29
+started cadical195_indep_cols pid 225915 on cores 40-50
+started glucose42_indep pid 225920 on cores 51-61

@@ -1,0 +1,323 @@
+{
+ "rank_alpha_checks": [
+  {
+   "graph": "kneser_10_2",
+   "source": "certificate",
+   "rank": 9,
+   "alpha": 9,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": false,
+   "M2_eq_M": true
+  },
+  {
+   "graph": "kneser_10_3",
+   "source": "certificate",
+   "rank": 36,
+   "alpha": 36,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": true,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_10_4",
+   "source": "certificate",
+   "rank": 93,
+   "alpha": 84
+  },
+  {
+   "graph": "kneser_11_2",
+   "source": "certificate",
+   "rank": 11,
+   "alpha": 10
+  },
+  {
+   "graph": "kneser_11_3",
+   "source": "certificate",
+   "rank": 55,
+   "alpha": 45
+  },
+  {
+   "graph": "kneser_12_2",
+   "source": "certificate",
+   "rank": 11,
+   "alpha": 11,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": true,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_13_2",
+   "source": "certificate",
+   "rank": 13,
+   "alpha": 12
+  },
+  {
+   "graph": "kneser_13_3",
+   "source": "certificate",
+   "rank": 72,
+   "alpha": 66
+  },
+  {
+   "graph": "kneser_14_3",
+   "source": "certificate",
+   "rank": 78,
+   "alpha": 78,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": true,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_14_4",
+   "source": "certificate",
+   "rank": 299,
+   "alpha": 286
+  },
+  {
+   "graph": "kneser_14_5",
+   "source": "certificate",
+   "rank": 716,
+   "alpha": 715
+  },
+  {
+   "graph": "kneser_16_3",
+   "source": "certificate",
+   "rank": 106,
+   "alpha": 105
+  },
+  {
+   "graph": "kneser_20_3",
+   "source": "certificate",
+   "rank": 172,
+   "alpha": 171
+  },
+  {
+   "graph": "kneser_22_3",
+   "source": "certificate",
+   "rank": 210,
+   "alpha": 210,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": true,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_5_2",
+   "source": "certificate",
+   "rank": 5,
+   "alpha": 4
+  },
+  {
+   "graph": "kneser_6_2",
+   "source": "certificate",
+   "rank": 5,
+   "alpha": 5,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": false,
+   "M2_eq_M": true
+  },
+  {
+   "graph": "kneser_7_2",
+   "source": "certificate",
+   "rank": 7,
+   "alpha": 6
+  },
+  {
+   "graph": "kneser_7_3",
+   "source": "certificate",
+   "rank": 18,
+   "alpha": 15
+  },
+  {
+   "graph": "kneser_8_2",
+   "source": "certificate",
+   "rank": 7,
+   "alpha": 7,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": true,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_8_3",
+   "source": "certificate",
+   "rank": 22,
+   "alpha": 21
+  },
+  {
+   "graph": "kneser_9_2",
+   "source": "certificate",
+   "rank": 9,
+   "alpha": 8
+  },
+  {
+   "graph": "kneser_9_3",
+   "source": "certificate",
+   "rank": 28,
+   "alpha": 28,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": false,
+   "M2_eq_M": true
+  },
+  {
+   "graph": "kneser_9_4",
+   "source": "certificate",
+   "rank": 63,
+   "alpha": 56
+  },
+  {
+   "graph": "kneser_6_2",
+   "source": "I+D",
+   "rank": 5,
+   "alpha": 5,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": false,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_8_2",
+   "source": "I+D",
+   "rank": 7,
+   "alpha": 7,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": true,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_10_2",
+   "source": "I+D",
+   "rank": 9,
+   "alpha": 9,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": false,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_12_2",
+   "source": "I+D",
+   "rank": 11,
+   "alpha": 11,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": true,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_10_3",
+   "source": "I+D",
+   "rank": 36,
+   "alpha": 36,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": true,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_14_3",
+   "source": "I+D",
+   "rank": 78,
+   "alpha": 78,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": true,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_18_3",
+   "source": "I+D",
+   "rank": 136,
+   "alpha": 136,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": true,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_12_4",
+   "source": "I+D",
+   "rank": 165,
+   "alpha": 165,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": false,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_16_4",
+   "source": "I+D",
+   "rank": 455,
+   "alpha": 455,
+   "star_identity": true,
+   "nM_eq_kM2": true,
+   "M2_zero": true,
+   "M2_eq_M": false
+  },
+  {
+   "graph": "kneser_9_3",
+   "source": "I+D",
+   "rank": 36,
+   "alpha": 28
+  },
+  {
+   "graph": "kneser_12_3",
+   "source": "I+D",
+   "rank": 56,
+   "alpha": 55
+  }
+ ],
+ "k_even_n_odd": [
+  {
+   "graph": "kneser_5_2",
+   "alpha": 4,
+   "rank_I+D": 5
+  },
+  {
+   "graph": "kneser_7_2",
+   "alpha": 6,
+   "rank_I+D": 7
+  },
+  {
+   "graph": "kneser_9_2",
+   "alpha": 8,
+   "rank_I+D": 9
+  },
+  {
+   "graph": "kneser_11_2",
+   "alpha": 10,
+   "rank_I+D": 11
+  },
+  {
+   "graph": "kneser_13_2",
+   "alpha": 12,
+   "rank_I+D": 13
+  },
+  {
+   "graph": "kneser_15_2",
+   "alpha": 14,
+   "rank_I+D": 15
+  },
+  {
+   "graph": "kneser_9_4",
+   "alpha": 56,
+   "rank_I+D": 83
+  },
+  {
+   "graph": "kneser_11_4",
+   "alpha": 120,
+   "rank_I+D": 165
+  },
+  {
+   "graph": "kneser_13_4",
+   "alpha": 220,
+   "rank_I+D": 285
+  }
+ ]
+}
