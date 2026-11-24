@@ -222,14 +222,15 @@ temperature, step). Fitness = set size after a fixed move budget of 40 n (load-i
 |---|---|---|---|
 | seed (fewest conflicts) | 0.955 | 0.954 | 0.983 |
 | GP, 500 programs (`runs/gpsa_s0`) | 0.978 | 0.985 | 0.998 |
+| GP, 500 programs (`runs/gpsa_s1`) | 0.983 | 0.974 | 0.984 |
 
 Deployment check at equal **wall time** on the 16 test graphs × 3 seeds (`deploy_check_sa.py`, and the formula
 ported into `pincer.mais.sa_order(score=...)`):
 
-| SA seconds | library default | evolved, in the library | W/T/L |
+| SA seconds | library default | gpsa_s0 in the library (W/T/L) | gpsa_s1 in the library (W/T/L) |
 |---|---|---|---|
-| 0.5 | 0.987 | 0.988 | 11/26/11 |
-| 2 | 1.008 | 1.003 | 4/30/14 |
+| 0.5 | 0.987-0.989 | 0.988 (11/26/11) | 0.987 (12/26/10) |
+| 2 | 1.008 | 1.003 (4/30/14) | 1.001 (2/33/13) |
 
 Verdict: the evolved score beats its seed at a fixed move budget, but not the library at equal time; the library
 keeps the default. What this target did produce is the seed itself: building it showed that a 5-candidate
