@@ -43,3 +43,16 @@ def fitted_q(transitions, iters: int = 12, gamma: float = 0.97, log=print):
         log(f"  FQI iteration {k}: mean target {y_new.mean():.3f}, change {np.abs(y_new - y).mean():.4f}")
         y = y_new
     return model
+
+
+def rate_model(transitions):
+    """Supervised model of the gain rate of a strategy in the next slice (gap closed per second / initial gap),
+    from the state before the slice. The target is read from the next state's 'recent rate' feature."""
+    obs = np.stack([t[0] for t in transitions])
+    act = np.array([t[1] for t in transitions])
+    nxt = np.stack([t[3] for t in transitions])
+    y = nxt[np.arange(len(act)), nxt.shape[1] - A + act] * SCALE
+    model = HistGradientBoostingRegressor(max_iter=300, learning_rate=0.08, max_leaf_nodes=31, min_samples_leaf=40,
+                                          l2_regularization=1.0, random_state=0)
+    model.fit(_xa(obs, act), y)
+    return model
