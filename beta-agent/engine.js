@@ -417,7 +417,7 @@
 
     run(tool, args) {
       args = args || {};
-      const ms = Math.max(50, Math.min(20000, Number(args.ms) || (tool.endsWith("exact") ? 3000 : 400)));
+      const ms = Math.max(10, Math.min(60000, Number(args.ms) || (tool.endsWith("exact") ? 3000 : 400)));
       const L0 = this.L, U0 = this.U;
       const g = this.g;
       const t = Date.now();
@@ -501,30 +501,36 @@
 
   function bestOf(a, b) { return a.length && a.length <= b.length ? a : b; }
 
-  /** The built-in planner: a fixed, cost-aware playbook. Cheap tools first; exact search only where a gap remains,
-   *  on the side whose bound is not yet proven, smaller graphs first. Yields one decision at a time so the UI
-   *  can animate it. */
+  /** The built-in planner: a cost-aware playbook (iterative deepening). Cheap greedy bounds first; then exact
+   *  search with a tiny time slice, doubled only after it times out, on whichever side is still unproven; a short
+   *  local search improves the incumbent between attempts (a better incumbent prunes the exact search). Stops as
+   *  soon as L = U (that alone proves both optimal) or both sides are proven. Yields one decision at a time so the
+   *  UI can animate it. */
   function* plannerSteps(session, budgetMs) {
     const why = (text, tool, args) => ({ why: text, tool, args: args || {} });
+    const left = () => budgetMs - (Date.now() - session.t0);
     yield why("Look at the structure first: components can be solved separately.", "analyze_graph");
     yield why("Cheapest lower bound: a greedy acyclic set.", "lower_greedy");
     yield why("Cheapest upper bound: a greedy clique cover (the XOR scheme).", "upper_greedy");
-    if (session.done) return;
-    yield why(`Gap ${session.L}..${session.U}. Spend a little time improving both sides with local search.`, "lower_local_search", { ms: 300 });
-    if (session.done) return;
-    yield why("Now the upper side.", "upper_local_search", { ms: 300 });
-    if (session.done) return;
-    const biggest = Math.max(...session.comps.map((c) => c.length));
-    const exactMs = Math.max(500, Math.min(budgetMs / 2, 6000));
-    if (biggest > 40) {
-      yield why(`Largest component has ${biggest} receivers: exact search is unlikely to finish, so keep improving heuristically.`, "lower_local_search", { ms: 1500 });
-      if (session.done) return;
-      yield why("Same for the upper side.", "upper_local_search", { ms: 1500 });
-      return;
+    let slice = 50;
+    for (let round = 0; !session.done && left() > 20; round++) {
+      for (const side of ["lower", "upper"]) {
+        if (session.done || left() <= 20) return;
+        if (side === "lower" ? session.lowerProven : session.upperProven) continue;
+        const ms = Math.max(20, Math.min(slice, left()));
+        yield why(round === 0
+          ? `Gap ${session.L}..${session.U}. Exact search is often instant on small components: try it with ${ms} ms.`
+          : `Still unproven: retry the exact search with a doubled slice (${ms} ms).`, side + "_exact", { ms });
+        if (session.done) return;
+        const proven = side === "lower" ? session.lowerProven : session.upperProven;
+        if (!proven && left() > 40) {
+          const lms = Math.max(20, Math.min(Math.floor(slice / 2), left() - 20));
+          yield why(`Exact search timed out: improve the incumbent by local search (${lms} ms) so the next attempt prunes more.`,
+            side + "_local_search", { ms: lms });
+        }
+      }
+      slice *= 2;
     }
-    yield why(`Gap remains (${session.L}..${session.U}). Prove or improve the lower bound exactly.`, "lower_exact", { ms: exactMs });
-    if (session.done) return;
-    yield why(`Gap remains (${session.L}..${session.U}). Search for the smallest clique cover exactly.`, "upper_exact", { ms: exactMs });
   }
 
   const api = { makeGraph, arcsOf, scc, isAcyclic, isCliqueCover, Session, TOOLS, plannerSteps,
