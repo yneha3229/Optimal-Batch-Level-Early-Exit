@@ -1,0 +1,7 @@
+220 graphs
+220 jobs on 1 workers (0 already in baselines.csv, skipped)
+50/220 done
+100/220 done
+150/220 done
+200/220 done
+wrote /home/user/Optimal-Batch-Level-Early-Exit/minrank/results/baselines.csv

@@ -24,6 +24,8 @@ quality after a median 0.67 s instead of 15 s (23x). Examples: planted digraphs 
 [8, 15], Pincer closes at 8 in 4-9 s; C5, C7, C9, complement of C7, Mycielski M4: Pincer certifies β exactly
 (5/2, 7/2, 9/2, 7/3, 11/2), which MAIS + clique cover cannot.
 
+Check against the one-line I + A(G) matrix (24 Nov; it is optimal on the extra_p = 0 planted graphs of `minrank/`): Pincer's planted graphs use extra_p = 0.05, where I + A has rank 36-43 against the planted 8, and I + A beats no method's upper bound on any of the 61 test / test2 graphs. So the numbers above stand. I + A is now part of `quick` and of both baselines anyway.
+
 What does **not** work (yet): the index policy only ties round-robin on the *final* gap (5/16/5 on test2) — its
 value is reaching good bounds sooner; the block-minrank LNS never improved a bound; FunSearch (non-LLM GP so far)
 improves the greedy MAIS construction by 5 points on held-out graphs but the gain disappears once 1-2 s of
