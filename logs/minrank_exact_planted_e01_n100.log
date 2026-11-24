@@ -1,1 +1,18 @@
 48 graphs selected, 32 already proven, 16 to run
+planted_n100_r10_e0.1_s0: lb=9 best=10 proven=True (unsat, 128.12s)
+planted_n100_r10_e0.1_s3: lb=8 best=10 proven=True (unsat, 111.06s)
+planted_n100_r10_e0.1_s1: lb=8 best=13 proven=False (call_timeout, 303.18s)
+planted_n100_r10_e0.1_s2: lb=8 best=13 proven=False (call_timeout, 303.4s)
+planted_n100_r10_e0.1_s4: lb=8 best=13 proven=False (call_timeout, 303.44s)
+planted_n100_r10_e0.1_s5: lb=8 best=13 proven=False (call_timeout, 303.37s)
+planted_n100_r10_e0.1_s6: lb=9 best=13 proven=False (call_timeout, 303.89s)
+planted_d_n100_r10_e0.1_s1: lb=10 best=10 proven=True (reached_lb, 16.8s)
+planted_d_n100_r10_e0.1_s0: lb=10 best=10 proven=True (reached_lb, 19.43s)
+planted_d_n100_r10_e0.1_s2: lb=10 best=10 proven=True (reached_lb, 16.92s)
+planted_d_n100_r10_e0.1_s3: lb=10 best=10 proven=True (reached_lb, 19.81s)
+planted_d_n100_r10_e0.1_s4: lb=10 best=10 proven=True (reached_lb, 16.27s)
+planted_d_n100_r10_e0.1_s5: lb=10 best=10 proven=True (reached_lb, 18.7s)
+planted_d_n100_r10_e0.1_s6: lb=10 best=10 proven=True (reached_lb, 17.23s)
+planted_d_n100_r10_e0.1_s7: lb=10 best=10 proven=True (reached_lb, 19.35s)
+planted_n100_r10_e0.1_s7: lb=8 best=13 proven=False (call_timeout, 303.03s)
+wrote minrank/results/exact_planted_e01.csv
