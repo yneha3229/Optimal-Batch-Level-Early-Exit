@@ -182,11 +182,20 @@ class IndexPolicy(BasePolicy):
         mean_gain = (g0 * GAIN_K + gsum) / (GAIN_K + gn)
         gain = min(self.gain_cap(arm), mean_gain)
         sl = self.slice_for(arm)
-        return {"p": p_eff, "gain": gain, "slice": sl, "index": p_eff * gain / sl}
+        cost = sl
+        tool = self.agent.tools[arm.tool]
+        if tool.once:  # a one-shot tool runs to completion: charge its predicted run time, not the slice
+            from .tools import predicted_seconds
+
+            cost = max(sl, predicted_seconds(tool, s))
+        return {"p": p_eff, "gain": gain, "slice": sl, "cost": cost, "index": p_eff * gain / cost}
 
     def choose(self, arms):
         self.n_decisions += 1
         scored = [(self.estimate(a), a) for a in arms]
+        # a one-shot tool that cannot finish in the time left is skipped while anything else is available
+        fits = [(e, a) for e, a in scored if e["cost"] <= 1.2 * self.agent.left()]
+        scored = fits or scored
         est, arm = max(scored, key=lambda t: (t[0]["index"], -t[1].comp))
         if est["index"] < self.min_rate:
             return None
