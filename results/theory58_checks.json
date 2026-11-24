@@ -1,0 +1,46 @@
+{
+ "T1": {
+  "mono": 210,
+  "mono_gap": 0,
+  "nonmono": 190,
+  "nonmono_gap": 17,
+  "max_gap": 0.022727821646909667
+ },
+ "T2": {
+  "mono": 301,
+  "la_gap": 0,
+  "r2_gap": 165,
+  "r2_late": 0,
+  "nonmono": 699,
+  "nm_la_gap": 111,
+  "bound_n": 31,
+  "bound_viol": 0,
+  "bound_ratio_mean": 0.10200852099456897,
+  "bound_ratio_max": 0.7985564667272588,
+  "r2_loss_mean": 0.047604235035118445,
+  "r2_loss_max": 0.4454763374889009
+ },
+ "P3": {
+  "n_k": 8,
+  "simultaneous": -6.992,
+  "sequential": 0.0010000000000000009
+ },
+ "J_affine": {
+  "n": 150,
+  "rules_optimal": 122,
+  "gap_mean": 0.0036614205012564004,
+  "gap_max": 0.13520112663117312,
+  "seq_optimal": 122,
+  "seq_gap_mean": 0.0035569060582785845,
+  "seq_gap_max": 0.13520112663117312
+ },
+ "J_floor": {
+  "n": 150,
+  "rules_optimal": 109,
+  "gap_mean": 0.009442586224677257,
+  "gap_max": 0.1937973989366546,
+  "seq_optimal": 115,
+  "seq_gap_mean": 0.005818356842553473,
+  "seq_gap_max": 0.10884521308797168
+ }
+}
