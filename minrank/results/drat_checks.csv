@@ -62,3 +62,7 @@ minrank/results/unsat_cnf/families/paley_61_r7_indep.cnf.gz,966272a2451edbe64c6e
 minrank/results/unsat_cnf/families/paley_53_r7_indep.cnf.gz,d98c5b8bf8cd0f705ca564f76133f55a7b569015628a3784a9e57cdc7aad091a,19345,65896,UNSAT,1.774056771,VERIFIED,1.456609294,3
 minrank/results/unsat_cnf/families/paley_41_r7_indep.cnf.gz,38e9d70e42654fac90dd21be9b6af95a89e4dad4dc4ff8bfffcd343ee6970661,11767,39676,UNSAT,29.845231648,VERIFIED,17.437981165,27
 minrank/results/unsat_cnf/families/kneser_7_3_r17_indep.cnf.gz,6df40cb5558781a4e16b66021ba05c62b0b393b2d3e0874ebddfc6d2bb4b7169,36995,126370,UNSAT,26.154997373,VERIFIED,49.397112280,38
+minrank/results/unsat_cnf/bench/mycielski_6_r23_indep.cnf.gz,d32d9a5ee6ae43340c034760164171e0e9e1a65a71a9b976068a11ae2e7cbd21,80327,275504,UNSAT,315.381914842,VERIFIED,421.847564493,487
+minrank/results/unsat_cnf/families/mycielski_6_r23_indep.cnf.gz,d32d9a5ee6ae43340c034760164171e0e9e1a65a71a9b976068a11ae2e7cbd21,80327,275504,UNSAT,316.229272890,VERIFIED,427.463031359,487
+minrank/results/unsat_cnf/families/kneser_8_3_r21_indep.cnf.gz,3b14fc6f3f8ace3d84c6261db72b4d5fa77f5e699b1918eb0b5c80378d475d89,107968,371826,UNSAT,950.071005678,VERIFIED,1662.879908603,869
+minrank/results/unsat_cnf/bench/kneser_8_3_r21_indep.cnf.gz,3b14fc6f3f8ace3d84c6261db72b4d5fa77f5e699b1918eb0b5c80378d475d89,107968,371826,UNSAT,951.703397829,VERIFIED,1705.077293496,869

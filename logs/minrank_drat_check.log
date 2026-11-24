@@ -61,3 +61,8 @@
 21:34:14 families_paley_53_r7_indep: UNSAT, VERIFIED
 21:34:57 families_paley_41_r7_indep: UNSAT, VERIFIED
 21:35:27 families_kneser_7_3_r17_indep: UNSAT, VERIFIED
+21:46:28 bench_mycielski_6_r23_indep: UNSAT, VERIFIED
+21:46:35 families_mycielski_6_r23_indep: UNSAT, VERIFIED
+22:17:45 families_kneser_8_3_r21_indep: UNSAT, VERIFIED
+22:18:28 bench_kneser_8_3_r21_indep: UNSAT, VERIFIED
+done: 67 verified, 0 not
