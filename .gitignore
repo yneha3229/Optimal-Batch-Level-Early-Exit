@@ -20,3 +20,6 @@ minrank/evolve/*.tmp*
 # raw per-step bandit traces (about 25 MB each); summaries are results/bandit_slopes_*.csv
 results/bandit_*_10seeds.csv
 /minrank/results/unsat_cnf/families/kneser_9_4_r56_indep.cnf.gz
+# portfolio scratch: per-member copies of the certificates and its UNSAT CNFs (merged into minrank/certificates when done)
+minrank/results/open_portfolio/certs_*/
+minrank/results/open_portfolio/unsat_cnf/

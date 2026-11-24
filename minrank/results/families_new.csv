@@ -1,0 +1,26 @@
+spec,graph,n,family,directed,alpha,alpha_proven,cover,lower,upper,proven,seconds,mode,solver,time_per_call,indep,log
+"gkneser:9,3,1",gkneser_9_3_1,84,generalized_kneser,False,7,True,7,7,7,True,10.1,indep,cadical153,1800.0,27 48 63 73 79 82 83,[]
+"johnson:6,2",johnson_6_2,15,johnson,False,3,True,4,4,4,True,11.5,indep,cadical153,1800.0,2 5 14,"[[3, ""unsat"", 1.5]]"
+"gkneser:7,3,1",gkneser_7_3_1,35,generalized_kneser,False,5,True,6,6,6,True,11.6,indep,cadical153,1800.0,14 24 30 33 34,"[[5, ""unsat"", 1.38]]"
+"johnson:7,2",johnson_7_2,21,johnson,False,3,True,5,5,5,True,12.3,indep,cadical153,1800.0,8 11 20,"[[3, ""unsat"", 1.48], [4, ""unsat"", 0.69]]"
+"johnson:8,2",johnson_8_2,28,johnson,False,4,True,6,6,6,True,12.5,indep,cadical153,1800.0,1 8 22 27,"[[4, ""unsat"", 1.33], [5, ""unsat"", 0.89]]"
+"gkneser:8,3,1",gkneser_8_3_1,56,generalized_kneser,False,6,True,7,7,7,True,12.8,indep,cadical153,1800.0,20 35 45 51 54 55,"[[6, ""unsat"", 2.37]]"
+"johnson:7,3",johnson_7_3,35,johnson,False,7,True,9,9,9,True,13.5,indep,cadical153,1800.0,3 8 9 16 21 26 34,"[[7, ""unsat"", 1.38], [8, ""unsat"", 1.34]]"
+"johnson:9,2",johnson_9_2,36,johnson,False,4,True,7,7,7,True,14.0,indep,cadical153,1800.0,8 23 26 35,"[[4, ""unsat"", 1.25], [5, ""unsat"", 0.77], [6, ""unsat"", 1.23]]"
+"co_kneser:6,2",cokneser_6_2,15,co_kneser,False,3,True,4,4,4,True,10.9,indep,cadical153,1800.0,2 5 14,"[[3, ""unsat"", 0.89]]"
+"co_kneser:7,2",cokneser_7_2,21,co_kneser,False,3,True,5,5,5,True,11.4,indep,cadical153,1800.0,8 11 20,"[[3, ""unsat"", 0.74], [4, ""unsat"", 0.56]]"
+"co_kneser:7,3",cokneser_7_3,35,co_kneser,False,2,True,3,3,3,True,10.9,indep,cadical153,1800.0,0 34,"[[2, ""unsat"", 0.82]]"
+"hamming:3,2,1",hamming_3_2_1,8,hamming,False,4,True,4,4,4,True,10.0,indep,cadical153,1800.0,1 2 4 7,[]
+"co_kneser:8,2",cokneser_8_2,28,co_kneser,False,4,True,6,6,6,True,12.0,indep,cadical153,1800.0,1 8 22 27,"[[4, ""unsat"", 0.75], [5, ""unsat"", 0.89]]"
+"co_kneser:8,3",cokneser_8_3,56,co_kneser,False,2,True,4,4,4,True,11.9,indep,cadical153,1800.0,0 55,"[[2, ""unsat"", 0.88], [3, ""unsat"", 0.84]]"
+"hamming:4,2,1",hamming_4_2_1,16,hamming,False,8,True,8,8,8,True,10.0,indep,cadical153,1800.0,0 3 5 6 9 10 12 15,[]
+"hamming:5,2,1",hamming_5_2_1,32,hamming,False,16,True,16,16,16,True,10.0,indep,cadical153,1800.0,1 2 4 7 8 11 13 14 16 19 21 22 25 26 28 31,[]
+"hamming:6,2,1",hamming_6_2_1,64,hamming,False,32,True,32,32,32,True,10.2,indep,cadical153,1800.0,0 3 5 6 9 10 12 15 17 18 20 23 24 27 29 30 33 34 36 39 40 43 45 46 48 51 53 54 57 58 60 63,[]
+"hamming:3,3,1",hamming_3_3_1,27,hamming,False,9,True,9,9,9,True,10.0,indep,cadical153,1800.0,1 5 6 11 12 16 18 22 26,[]
+"hamming:2,4,1",hamming_2_4_1,16,hamming,False,4,True,4,4,4,True,10.0,indep,cadical153,1800.0,0 5 10 15,[]
+"hamming:4,2,2",hamming_4_2_2,16,hamming,False,4,True,4,4,4,True,10.0,indep,cadical153,1800.0,0 7 8 15,[]
+"hamming:4,2,3",hamming_4_2_3,16,hamming,False,8,True,8,8,8,True,10.0,indep,cadical153,1800.0,0 3 5 6 9 10 12 15,[]
+"hamming:5,2,3",hamming_5_2_3,32,hamming,False,16,True,16,16,16,True,10.0,indep,cadical153,1800.0,1 2 4 7 8 11 13 14 16 19 21 22 25 26 28 31,[]
+"hamming:5,2,2",hamming_5_2_2,32,hamming,False,4,True,8,8,8,True,15.2,indep,cadical153,1800.0,1 3 30 31,"[[4, ""unsat"", 0.53], [5, ""unsat"", 0.7], [6, ""unsat"", 0.56], [7, ""unsat"", 2.47]]"
+odd_graph:3,odd_3,35,odd,False,15,True,18,18,18,True,50.0,indep,cadical153,1800.0,4 8 11 13 14 18 21 23 24 27 29 30 32 33 34,"[[15, ""unsat"", 1.16], [16, ""unsat"", 1.55], [17, ""unsat"", 33.2]]"
+"johnson:8,3",johnson_8_3,56,johnson,False,8,True,12,11,12,False,1822.6,indep,cadical153,1800.0,2 8 14 25 28 41 46 55,"[[8, ""unsat"", 1.58], [9, ""unsat"", 1.29], [10, ""unsat"", 4.29], [11, ""timeout"", 1800.13]]"
