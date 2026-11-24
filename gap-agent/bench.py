@@ -28,7 +28,7 @@ import numpy as np  # noqa: E402
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
-from gap_agent.agent import Bandit, LearnedAgent, RandomSwitch, RoundRobin, gap_integral, run  # noqa: E402
+from gap_agent.agent import Bandit, LearnedAgent, LearnedBandit, RandomSwitch, RoundRobin, gap_integral, run  # noqa: E402
 from gap_agent.graph import FAMILIES, is_acyclic_set, is_clique_cover, make_graph  # noqa: E402
 from gap_agent.strategies import STRATEGIES, compile_all  # noqa: E402
 
@@ -58,7 +58,8 @@ def test_graph(gi):
 
 def controllers():
     model = pickle.loads((HERE / "models" / "agent.pkl").read_bytes())
-    return {"learned": lambda: LearnedAgent(model), "bandit": Bandit, "random": lambda: RandomSwitch(0.0, 1),
+    rate = pickle.loads((HERE / "models" / "rate.pkl").read_bytes())
+    return {"prior": lambda: LearnedBandit(rate, k0=1.0), "learned": lambda: LearnedAgent(model), "bandit": Bandit, "random": lambda: RandomSwitch(0.0, 1),
             "roundrobin": RoundRobin, "fixedpair": FixedPair}
 
 
@@ -79,9 +80,12 @@ def _job(args):
 
 
 def cmd_run(workers=3):
+    """`run` = every controller (overwrites); `run KEY ...` = only those controllers (appended)."""
     OUT.mkdir(exist_ok=True)
-    jobs = [(gi, k) for gi in range(len(SPECS)) for k in controllers()]
-    with mp.get_context("spawn").Pool(workers, initializer=_init) as pool, open(OUT / "bench.jsonl", "w") as f:
+    keys = sys.argv[2:] or list(controllers())
+    jobs = [(gi, k) for gi in range(len(SPECS)) for k in keys]
+    mode = "a" if sys.argv[2:] else "w"
+    with mp.get_context("spawn").Pool(workers, initializer=_init) as pool, open(OUT / "bench.jsonl", mode) as f:
         for res in pool.imap_unordered(_job, jobs):
             f.write(json.dumps(res) + "\n")
             f.flush()
@@ -174,7 +178,7 @@ def cmd_cpsat():
 
 def cmd_report():
     rows = [json.loads(x) for x in (OUT / "bench.jsonl").read_text().splitlines()]
-    names = {"learned": "**learned agent**", "bandit": "online bandit (UCB)", "random": "random switching",
+    names = {"prior": "**learned agent: learned prior + online**", "learned": "learned agent: offline policy (FQI)", "bandit": "online bandit (UCB)", "random": "random switching",
              "roundrobin": "round robin", "fixedpair": "fixed pair (annealing + tabu)"}
     keys = list(names)
     by = {(r["graph"], r["key"]): r for r in rows}
@@ -205,7 +209,7 @@ def cmd_report():
     lines += ["", "## How the learned agent spends its time (share of slices)", "",
               "| graphs | " + " | ".join(STRATEGIES) + " |", "|---|" + "---|" * len(STRATEGIES)]
     for f in FAMILIES:
-        rs = [by[(x, "learned")] for x in graphs if x.startswith(f + "_") and (x, "learned") in by]
+        rs = [by[(x, "prior")] for x in graphs if x.startswith(f + "_") and (x, "prior") in by]
         if rs:
             lines.append(f"| {f} | " + " | ".join(f"{np.mean([r['share'][s] for r in rs]):.2f}" for s in STRATEGIES)
                          + " |")
@@ -216,7 +220,7 @@ def cmd_report():
                   "| graph | CP-SAT gap integral | CP-SAT final gap | learned agent gap integral | learned final gap |"
                   " notes |", "|---|---|---|---|---|---|"]
         for r in cr:
-            la = by.get((r["graph"], "learned"), {})
+            la = by.get((r["graph"], "prior"), {})
             lines.append(f"| {r['graph']} | {r['integral']:.3f} | {r['gap']} | {la.get('integral', float('nan')):.3f}"
                          f" | {la.get('gap', '')} | {', '.join(r['notes'])} |")
     (HERE / "RESULTS.md").write_text("\n".join(lines) + "\n")
