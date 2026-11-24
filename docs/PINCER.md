@@ -59,6 +59,9 @@ Positive:
   small (test2 index: mean minrank gap 5.35 → 5.27, vs classic 24/2/0), because at 30 s the CP-SAT MAIS models
   supply most lower bounds there.
 
+- **SAT restart portfolio.** At a fixed rank, SAT time depends heavily on which maximum independent set is fixed
+  (planted n = 100, r = 10: 1.6 s to > 60 s across five sets). `sat_up` / `sat_down` now fix a different set of
+  the same size on each retry: undirected planted n = 100 at 120 s, the agent alone closes 5/8 (was 3/8).
 Negative:
 - **Partial clique cover gives nothing on these graphs** (0/26 test2 graphs improve on the clique cover; no merge of
   two groups ever saves a transmission), so the planned GF(p) vector-linear upper bound (old next step 5) was not
@@ -69,9 +72,6 @@ Negative:
 - FunSearch on the SA candidate choice (§4b): GP beats its seed at a fixed move budget but not the library SA at
   equal wall time.
 - Fixed on the way: fractional-cover certificates could carry 100-digit denominators (weights now on one grid).
-- **SAT restart portfolio.** At a fixed rank, SAT time depends heavily on which maximum independent set is fixed
-  (planted n = 100, r = 10: 1.6 s to > 60 s across five sets). `sat_up` / `sat_down` now fix a different set of
-  the same size on each retry: undirected planted n = 100 at 120 s, the agent alone closes 5/8 (was 3/8).
 
 ---
 
