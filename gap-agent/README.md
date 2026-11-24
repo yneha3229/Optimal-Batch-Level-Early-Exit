@@ -73,8 +73,9 @@ What the numbers also say, plainly:
 - On 500-2000 receivers (`results/medium/RESULTS.md`) every strategy reaches its plateau within seconds and the time
   split hardly matters (a sweep of the split gave curves flat to within seed noise), so no controller has much to
   gain there. Switching pays where the graph is too large for the strategies to converge within the budget.
-- Exact solvers (CP-SAT on the textbook models) cannot even build the models for these sizes within 30 s (the
-  acyclic-set ordering model has one constraint per arc, ~10^7 here).
+- The standard exact solver gets nowhere at this size: CP-SAT on the textbook models (`bench.py cpsat`) did not
+  finish *building* either model within the 30 s on any of the nine 3000-receiver test graphs, so it improved
+  neither bound (gap integral 1.0 on all nine, vs 0.60 for the learned agent).
 
 ## Run it
 

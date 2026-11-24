@@ -44,3 +44,17 @@ Time to match = when the learned agent's gap first reaches the other controller'
 | random switching | 27/27 | -0.0464 ± 0.0080 | 25/27 | 9.6 s of 30 s |
 | round robin | 24/27 | -0.0474 ± 0.0144 | 26/27 | 8.0 s of 30 s |
 | fixed pair (annealing + tabu) | 23/27 | -0.0168 ± 0.0071 | 26/27 | 18.7 s of 30 s |
+
+## Standard exact solver (CP-SAT, textbook models) on the smallest test graphs
+
+| graph | CP-SAT gap integral | CP-SAT final gap | learned agent gap integral | learned final gap | notes |
+|---|---|---|---|---|---|
+| random_n3000_0 | 1.000 | 593 | 0.823 | 474 | model not built in time |
+| random_n3000_1 | 1.000 | 485 | 0.819 | 386 | model not built in time |
+| random_n3000_2 | 1.000 | 400 | 0.827 | 322 | model not built in time |
+| planted_n3000_0 | 1.000 | 449 | 0.810 | 354 | model not built in time |
+| planted_n3000_1 | 1.000 | 593 | 0.352 | 134 | model not built in time |
+| planted_n3000_2 | 1.000 | 375 | 0.820 | 301 | model not built in time |
+| layered_n3000_0 | 1.000 | 371 | 0.452 | 155 | model not built in time |
+| layered_n3000_1 | 1.000 | 594 | 0.244 | 124 | model not built in time |
+| layered_n3000_2 | 1.000 | 542 | 0.265 | 125 | model not built in time |
