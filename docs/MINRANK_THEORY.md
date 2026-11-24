@@ -297,3 +297,77 @@ for p >= 5. No step was found to be wrong. A human line-by-line check is still r
    This is now the headline.
 3. Opportunity: their framework may make the **general-k conjecture provable**. The rank of I + (-1)^(k+1) D reduces
    to the p-ranks of k + 1 small explicit blocks, and that is the way to a stronger paper.
+
+## 11. The general-k theorem (24 Nov 2026)
+
+**Theorem 4.** Let k >= 2, n > 2k, and let p > k be a prime with p | n - 2k. Then
+
+    rank_p( I + (-1)^(k-1) D ) = C(n-1, k-1) = alpha,   so   minrk_p(K(n,k)) = alpha = Theta(K(n,k)).
+
+(D = adjacency matrix of K(n,k). I + (-1)^(k-1) D is exactly the Golovnev-Haviv matrix q(|A cap B|),
+q(x) = C(x-1, k-1).) It contains Theorem 2 (k = 3) and the odd-p data of section 7 for k = 2 and 4. The exceptions
+seen there, p = 3 for k = 4, have p <= k and are outside the theorem.
+
+**Proof.** Write eps = (-1)^(k-1), theta_j = (-1)^j C(n-k-j, k-j) (the eigenvalues of D), and
+mu_s = C(n,s) - C(n,s-1).
+
+*Step 1: reduction to small blocks (Ducey et al., arXiv:2310.09227, Def. 3.1, Thm 3.4, Lemma 4.10).*
+- For n >= 3k - 1, L = D - lambda I has an integer diagonal form made of the diagonal forms of the blocks
+  M_s(i,j) = -lambda delta_ij + C(j-s, i-s) (-1)^i C(n-k-j, k-j), with s <= i, j <= k.
+- Each block M_s occurs with multiplicity mu_s - mu_{s-1}.
+- Take lambda = -eps: then I + eps D = eps L. Our hypotheses give n - 2k >= p >= k + 1, so n >= 3k + 1 and the
+  theorem applies.
+- The p-rank of an integer matrix is the number of diagonal-form entries not divisible by p. Hence
+  rank_p(I + eps D) = sum_{s=0}^{k} (mu_s - mu_{s-1}) rank_p(M_s).
+
+*Step 2: the blocks.*
+- Let T(i,j) = C(j-s, i-s) (upper Pascal) and Lam = diag((-1)^i). Pascal inversion gives T^{-1} = Lam T Lam, so
+  Lam T = T^{-1} Lam.
+- Hence T M_s = -lambda T + diag(theta_j), and rank_p M_s = rank_p(T + diag(eps theta_j)): for k odd this is direct
+  (lambda = -1); for k even multiply by -1.
+- Rewrite the diagonal entries with (-1)^r C(x, r) = C(r - x - 1, r), where r = k - j and w = 2k - n - 1:
+  eps theta_j = -(-1)^(k-j) C(n-k-j, k-j) = -C(w, k - j).
+- If p | n - 2k then w = -1 (mod p). Since k - j <= k < p, C(w, r) is a polynomial in w with p-invertible
+  denominator r!, so C(w, k-j) = C(-1, k-j) = (-1)^(k-j) (mod p).
+- With m = k - s + 1 and v = j - s, the block is congruent mod p to N_m = P_m - diag((-1)^(m-1-v)), where
+  P_m(u,v) = C(v,u). It no longer depends on n.
+
+*Step 3, Lemma: rank N_m = floor(m/2) over every field F with char F != 2.*
+- P_m is the matrix of the shift (Ef)(x) = f(x+1) on polynomials of degree < m, in the basis x^0, ..., x^(m-1)
+  (column v holds the coefficients of (x+1)^v).
+- diag((-1)^(m-1-v)) is the matrix of f(x) -> sigma f(-x), with sigma = (-1)^(m-1).
+- So ker N_m = { f : f(x+1) = sigma f(-x) }. Put g(z) = f(z - 1/2); the condition becomes g(z) = sigma g(-z).
+- So g is even (m odd) or odd (m even), of degree < m: a space of dimension ceil(m/2). Hence
+  rank = m - ceil(m/2) = floor(m/2).
+
+*Step 4: summation.*
+- rank_p = sum_s (mu_s - mu_{s-1}) floor((k-s+1)/2).
+- Summation by parts turns this into sum of mu_s over the s with k - s odd, because
+  floor((t+1)/2) - floor(t/2) = [t odd].
+- That sum is C(n,k-1) - C(n,k-2) + C(n,k-3) - ... = C(n-1, k-1) = alpha.
+- alpha is a lower bound for every fitting matrix, so minrk_p(K(n,k)) = alpha. QED
+
+**Corollary 5 (Haemers bound).**
+- If n - 2k has a prime factor p > k, or k | n (Baranyai: then the clique cover is alpha), then
+  min_F minrk_F(K(n,k)) = alpha = Theta(K(n,k)) (Lovász).
+- For each k this covers all n except those with n - 2k a product of primes <= k and k not dividing n. That is a
+  density-zero set, e.g. for k = 4: n = 9, 10, 11, 14, 17, 26, ...
+- k = 3 is complete for n >= 9, because Theorem 1 (p = 2) covers the remaining n = 2 (mod 4).
+- The cases where Theorem 4 gives alpha strictly below the clique cover are exactly the n with k not dividing n.
+  Examples: K(13,4) over F_5 (220 < 239), K(15,4) over F_7 (364 < 455), K(17,5) over F_7.
+
+**What remains open.**
+- p = 2 for k >= 4. The data say alpha iff 4 | n - 2k for k = 4, and every even n works for k = 2.
+- Primes 2 < p <= k (for k = 4 and p = 3 the rank is alpha + 1).
+- The n where no prime p > k divides n - 2k and k does not divide n.
+
+**Checks.** `python -m minrank.analysis.verify_general_k` (log: `logs/verify_general_k.log`):
+- [lemma] for m <= 40 and odd p <= 31;
+- [reduce] the block formula equals the directly computed rank for k = 2..5, all n in range and p <= 13;
+- [direct] Theorem 4 on 56 full matrices, k = 2..5;
+- [blocks] the block formula gives alpha in all 439 cases with k <= 12 and n <= 80.
+All pass.
+
+**Novelty after this.** Step 1 is Ducey et al.'s theorem, cited and used as a black box. Steps 2-4 (the reduction
+mod p to an n-independent Pascal-type block, the parity lemma, and the alternating sum to alpha) do not appear in
+the papers read. The statement of Theorem 4 and Corollary 5 for general k was found in none of the six papers read.
