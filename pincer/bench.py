@@ -105,6 +105,10 @@ def run_baseline(g: Graph, method: str, budget: float, seed: int) -> dict:
     else:
         rows = sat_descend(g, budget / 2, rng, info=info)
     st.offer_rows(rows, method, time.perf_counter() - t0)
+    # I + A(G): a one-line fitting matrix every method must at least match (it is optimal on planted graphs
+    # with extra_p = 0 and on several Kneser graphs), so the baselines get it too.
+    from minrank.baselines.identity_adj import identity_plus_adjacency_rows
+    st.offer_rows(identity_plus_adjacency_rows(g), "identity_adj", time.perf_counter() - t0)
     if info.get("proven"):
         st.offer_unsat(st.mr_hi - 1, {"mode": "cols(sat_descend)"}, method, time.perf_counter() - t0)
     tot = {"mr": [st.mr_lo, st.mr_hi], "beta": [str(st.b_lo), str(st.b_hi)], "components": 1,

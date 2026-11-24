@@ -42,6 +42,13 @@ schemes (Heule, Kauers, Seidl) also uses symmetry fixing; **not checked yet**.
 - A paper should lead with the explicit separations (K(8,3), K(10,3)) and their certificates, use the method as the
   enabling tool, and aim for a construction or theorem explaining them (T2).
 
+## Update 24 Nov 2026
+
+The k = 3 theorems (docs/MINRANK_THEORY.md sections 6-8) were searched for separately. No search result states them,
+but full texts could not be fetched from this container (arxiv.org and golovnev.org blocked), so the four papers listed
+in MINRANK_THEORY.md section 8 still need a full read. The main risk: Golovnev-Haviv's symmetric matrix is probably
+the same M^T Q M, and the paper should be framed as computing its exact p-rank.
+
 ## Not yet read (do before writing a paper)
 
 1. Haemers 1979 / 1981 (the original minrank papers; Kneser examples?).

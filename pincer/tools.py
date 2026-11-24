@@ -3,7 +3,7 @@
 
 | tool          | moves            | anytime | notes                                                            |
 |---------------|------------------|---------|------------------------------------------------------------------|
-| quick         | L, U             | no      | greedy FVS + DSatur cover + cycle-of-cliques cover; always first |
+| quick         | L, U             | no      | greedy FVS + DSatur + I + A + cycle-of-cliques cover; first   |
 | mais_sa       | L                | yes     | simulated annealing on topological orders                        |
 | mais_lazy     | L (+ MAIS bound) | yes     | CP-SAT with lazy cycle cuts, proves MAIS upper bounds            |
 | mais_order    | L (+ MAIS bound) | yes     | CP-SAT ordering model (minrank/exact/lower.py)                   |
@@ -27,6 +27,7 @@ from typing import Callable
 import numpy as np
 
 from minrank.baselines.clique_cover import clique_cover_rows
+from minrank.baselines.identity_adj import identity_plus_adjacency_rows
 from minrank.baselines.partial_cover import partial_cover_rows
 from minrank.exact.lower import mais as mais_order_cpsat
 from minrank.exact.symmetry import rank_at_most_sym
@@ -72,6 +73,7 @@ def _quick(s: CompState, budget: float, rng: random.Random, t: float) -> str:
     ch = s.offer_acyclic(greedy_fvs(g), "quick", t)
     nrng = np.random.default_rng(rng.randrange(2**31))
     ch |= s.offer_rows(clique_cover_rows(g, "dsatur", budget, nrng), "quick", t)
+    ch |= s.offer_rows(identity_plus_adjacency_rows(g), "quick", t)  # I + A: one line, optimal on some graphs
     if g.directed and budget > 0.05:
         ch |= s.offer_rows(partial_cover_rows(g, min(0.5, budget), nrng), "quick", t)
     if g.n == 1:
