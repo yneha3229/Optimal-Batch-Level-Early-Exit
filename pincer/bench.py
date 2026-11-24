@@ -65,7 +65,19 @@ def clustered(k: int, m: int, p_in: float, p_fwd: float, p_back: float, seed: in
                                 {"k": k, "m": m, "p_in": p_in, "p_fwd": p_fwd, "p_back": p_back, "seed": seed})
 
 
+def structured() -> list[Graph]:
+    """Vertex-transitive / symmetric graphs where beta is often fractional (the Shannon LP's home ground)."""
+    gs = [gen.cycle(n) for n in (5, 7, 9, 11, 13, 15)]
+    gs += [gen.cycle(n).complement() for n in (7, 9, 11, 13, 15)]
+    gs += [gen.circulant(13, (1, 5)), gen.circulant(15, (1, 4)), gen.circulant(16, (1, 4)), gen.circulant(14, (1, 3)),
+           gen.cycle_power(16, 2), gen.cycle_power(13, 2), gen.paley(13), gen.paley(17), gen.kneser(5, 2),
+           gen.kneser(6, 2), gen.mycielski(4), gen.mycielski(5)]
+    return gs
+
+
 def instances(split: str) -> list[Graph]:
+    if split == "structured":
+        return structured()
     seeds = {"train": (0, 1), "test": (5, 6), "test2": (7, 8)}[split]
     out: list[Graph] = []
     for s in seeds:

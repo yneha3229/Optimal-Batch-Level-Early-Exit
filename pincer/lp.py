@@ -35,6 +35,9 @@ from scipy.sparse import coo_matrix
 from minrank.core.graph import Graph, iter_bits
 
 SHANNON_MAX_N = 12
+# The exact basis fallback (python-flint) is automatic up to these sizes (it costs up to ~1 min above them):
+EXACT_FULL_MAX_N = 11
+EXACT_SYM_MAX_COLS = 2500
 
 
 # ---------------------------------------------------------------------------------------------- Shannon bound
@@ -137,7 +140,7 @@ def _on_grid(x: float, den: int) -> Fraction:
 GRID_DENOMINATORS = (720720, 2**20 * 45045, 10**9)
 
 
-def shannon_bound(g: Graph) -> ShannonResult:
+def shannon_bound(g: Graph, exact: bool | None = None) -> ShannonResult:
     """Certified Shannon lower bound on beta(g). Raises ValueError for n > SHANNON_MAX_N."""
     t0 = time.perf_counter()
     lp = build_shannon(g)
@@ -152,10 +155,12 @@ def shannon_bound(g: Graph) -> ShannonResult:
     best_y: dict[int, Fraction] = {}
     best_mu: dict[int, Fraction] = {}
     target = Fraction(res.fun).limit_denominator(1000)
+    candidates = None
     # Two ways to round the float multipliers: entry by entry to small denominators (exact when the optimal duals
     # are "nice", e.g. halves for odd cycles), or onto one common grid (never blows up the denominators). Any
     # rounding gives a valid bound; keep the best.
-    candidates = [("entry", d) for d in (60, 1000, 10**5)] + [("grid", d) for d in GRID_DENOMINATORS]
+    if candidates is None:
+        candidates = [("entry", d) for d in (60, 1000, 10**5)] + [("grid", d) for d in GRID_DENOMINATORS]
     for how, den in candidates:
         rnd = (lambda x, d=den: Fraction(float(x)).limit_denominator(d)) if how == "entry" else \
               (lambda x, d=den: _on_grid(x, d))
@@ -168,6 +173,16 @@ def shannon_bound(g: Graph) -> ShannonResult:
             best_mu = {k: v for k, v in enumerate(mu) if v}
         if b >= target:
             break
+    if exact is None:
+        exact = lp.n <= EXACT_FULL_MAX_N
+    if exact and best < target:  # rounding missed: exact dual vertex from the optimal basis (slower, no rounding)
+        ex = exact_basis_duals(lp, N)
+        if ex is not None:
+            b = certified_bound(lp, *ex)
+            if b > best:
+                best = b
+                best_y = {k: v for k, v in enumerate(ex[0]) if v}
+                best_mu = {k: v for k, v in enumerate(ex[1]) if v}
     if best.denominator > 10**12:  # report a short number below the certified one (still a valid bound)
         best = Fraction(math.floor(best * 10**9), 10**9)
     return ShannonResult(best, float(res.fun), time.perf_counter() - t0, best_y, best_mu)
@@ -302,18 +317,279 @@ def frac_clique_cover(g: Graph, time_limit: float = 10.0, init_cliques: list[lis
             break
         seen.add(tuple(C))
         cols.append(C)
-    # rationalise, then scale so every vertex is covered >= 1 exactly
-    used = [(cols[k], Fraction(float(w[k])).limit_denominator(max_den)) for k in range(len(cols)) if w[k] > 1e-9]
-    cover = [Fraction(0)] * n
-    for C, wk in used:
-        for v in C:
-            cover[v] += wk
-    worst = min(cover)
-    if worst <= 0:
-        raise RuntimeError("rounded weights leave a vertex uncovered")
-    if worst < 1:
-        used = [(C, wk / worst) for C, wk in used]
+    # Rationalise. Two candidates, keep the smaller value: (a) each weight to a small denominator (exact when the
+    # optimum is nice, e.g. 5/2 for C5), (b) every weight rounded UP onto one common grid 1/D (denominators stay
+    # bounded; an lcm of many different denominators can reach 100 digits). Either is then scaled up, if needed,
+    # by a factor on the same grid, so every vertex is covered >= 1 exactly.
+    D = 720720
+    idx = [k for k in range(len(cols)) if w[k] > 1e-9]
+
+    def scaled(ws: list[Fraction]) -> list[Fraction]:
+        cover = [Fraction(0)] * n
+        for k, wk in zip(idx, ws):
+            for v in cols[k]:
+                cover[v] += wk
+        worst = min(cover)
+        if worst <= 0:
+            raise RuntimeError("rounded weights leave a vertex uncovered")
+        if worst < 1:
+            f = Fraction(math.ceil(D / worst), D)  # >= 1 / worst
+            ws = [wk * f for wk in ws]
+        return ws
+
+    cands = [scaled([Fraction(float(w[k])).limit_denominator(max_den) for k in idx]),
+             scaled([Fraction(math.ceil(float(w[k]) * D), D) for k in idx])]
+    ws = min(cands, key=lambda c: (sum(c), max(x.denominator for x in c)))
+    used = list(zip([cols[k] for k in idx], ws))
     cliques = [C for C, _ in used]
     weights = [wk for _, wk in used]
     value = check_frac_cover(g, cliques, weights)
     return FracCover(value, cliques, weights, optimal, lp_val, time.perf_counter() - t0, it)
+
+
+# ------------------------------------------------------------------------- symmetry-reduced Shannon bound
+SHANNON_SYM_MAX_N = 16
+
+
+def subset_orbits(n: int, gens: list[list[int]]) -> list[int]:
+    """orbit[S] = smallest subset (as int) in the orbit of S under the group generated by `gens` (a vertex
+    permutation p maps S to {p[v] : v in S})."""
+    N = 1 << n
+    parent = list(range(N))
+
+    def find(x: int) -> int:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    for p in gens:
+        bit = [1 << p[v] for v in range(n)]
+        for S in range(N):
+            T = 0
+            x = S
+            while x:
+                low = x & -x
+                T |= bit[low.bit_length() - 1]
+                x ^= low
+            a, b = find(S), find(T)
+            if a != b:
+                if a < b:
+                    parent[b] = a
+                else:
+                    parent[a] = b
+    return [find(S) for S in range(N)]
+
+
+def build_shannon_sym(g: Graph, gens: list[list[int]]) -> tuple[ShannonLP, list[int], dict[int, int]]:
+    """The Shannon LP restricted to Aut-invariant g: one variable per subset orbit, constraints projected and
+    de-duplicated. Valid because the full system is permuted by every automorphism (submodularity and the bounds
+    are label-free, and the decoding constraint of i maps to that of p(i) since N(p(i)) = p(N(i))), so averaging a
+    feasible point over the group gives an invariant feasible point with the same objective g(empty)."""
+    from minrank.exact.symmetry import is_automorphism
+
+    n = g.n
+    if n > SHANNON_SYM_MAX_N:
+        raise ValueError(f"symmetric Shannon LP limited to n <= {SHANNON_SYM_MAX_N}")
+    for p in gens:
+        if not is_automorphism(g, p):
+            raise ValueError("not an automorphism")
+    orb = subset_orbits(n, gens)
+    reps = sorted(set(orb))
+    col = {r: k for k, r in enumerate(reps)}
+    N = 1 << n
+    full = N - 1
+    seen: dict[tuple, None] = {}
+
+    def add(row: dict[int, int], b: int, store: list, bs: list) -> None:
+        red: dict[int, int] = {}
+        for S, a in row.items():
+            c = col[orb[S]]
+            red[c] = red.get(c, 0) + a
+        red = {c: a for c, a in red.items() if a}
+        if not red:
+            if b < 0:
+                raise RuntimeError("infeasible projected constraint")
+            return
+        key = (tuple(sorted(red.items())), b, id(store))
+        if key in seen:
+            return
+        seen[key] = None
+        store.append(red)
+        bs.append(b)
+
+    A_ub: list[dict[int, int]] = []
+    b_ub: list[int] = []
+    for K in range(N):
+        if orb[K] != K:
+            continue  # constraints based at K are images of those at its orbit representative... only for the
+            # base set; the pair (i, j) is free, so this covers every orbit of (K, i, j) at least once
+        free = full & ~K
+        for i in iter_bits(free):
+            add({K | 1 << i: 1, K: -1}, 1, A_ub, b_ub)
+            for j in iter_bits(free >> (i + 1) << (i + 1)):
+                add({K | 1 << i | 1 << j: 1, K: 1, K | 1 << i: -1, K | 1 << j: -1}, 0, A_ub, b_ub)
+    for i in range(n):
+        add({full & ~(1 << i): 1, full: -1}, 0, A_ub, b_ub)
+    A_eq: list[dict[int, int]] = []
+    b_eq: list[int] = []
+    add({full: 1}, n, A_eq, b_eq)
+    for i in range(n):
+        Ni = g.out[i]
+        add({Ni | 1 << i: 1, Ni: -1}, 0, A_eq, b_eq)
+    c = np.zeros(len(reps))
+    c[col[0]] = 1.0
+    lb = [r.bit_count() for r in reps]
+    ub = [n] * len(reps)
+    lp = ShannonLP(n, c, A_ub, b_ub, A_eq, b_eq, lb, ub)
+    return lp, reps, col
+
+
+def _certified_bound_cols(lp: ShannonLP, y: list[Fraction], mu: list[Fraction]) -> Fraction:
+    """certified_bound for an LP whose variable count is len(lp.c) (not 2^n)."""
+    if any(v < 0 for v in y):
+        raise ValueError("inequality multipliers must be >= 0")
+    d = [Fraction(int(x)) for x in lp.c]
+    const = Fraction(0)
+    for rows, bs, mult in ((lp.A_ub, lp.b_ub, y), (lp.A_eq, lp.b_eq, mu)):
+        for row, b, m in zip(rows, bs, mult):
+            if m:
+                const -= m * b
+                for j, a in row.items():
+                    d[j] += m * a
+    for k, dk in enumerate(d):
+        if dk:
+            const += min(dk * lp.lb[k], dk * lp.ub[k])
+    return const
+
+
+def shannon_bound_sym(g: Graph, gens: list[list[int]] | None = None, ds_time_limit: float = 20.0,
+                      exact: bool | None = None) -> ShannonResult:
+    """Certified Shannon bound via the orbit-reduced LP. Certificate: y / mu on the reduced constraints plus the
+    generators (stored in result.y["gens"]-free form: see check_shannon_sym)."""
+    from minrank.exact.symmetry import automorphisms
+
+    t0 = time.perf_counter()
+    gens = [list(p) for p in (gens if gens is not None else automorphisms(g))]
+    lp, reps, _ = build_shannon_sym(g, gens)
+    M = len(reps)
+    best, by, bmu, lp_val = None, {}, {}, None
+    # Round the float duals of interior point (then, time-limited, dual simplex); if that misses the optimum, solve
+    # the optimal basis exactly. Both: their dual vertices differ, and which one rounds to an exact certificate varies by graph
+    # (C13: interior point exact at denominator 1000, dual simplex never).
+    # Dual simplex can stall on the larger LPs (circulant n = 16: > 300 s vs 9 s for interior point), so it only
+    # runs, time-limited, when the interior-point duals did not round to the optimum.
+    for method, limit in (("highs-ipm", None), ("highs-ds", ds_time_limit)):
+        opts = {"time_limit": limit} if limit else {}
+        res = linprog(lp.c, A_ub=_sparse(lp.A_ub, M), b_ub=lp.b_ub, A_eq=_sparse(lp.A_eq, M), b_eq=lp.b_eq,
+                      bounds=list(zip(lp.lb, lp.ub)), method=method, options=opts)
+        if res.status != 0:
+            continue
+        lp_val = res.fun if lp_val is None else lp_val
+        target = Fraction(res.fun).limit_denominator(1000)
+        if best is not None and best >= target:
+            break
+        for how, den in [("entry", d) for d in (60, 1000, 10**5, 10**7)] + [("grid", d) for d in GRID_DENOMINATORS]:
+            rnd = (lambda x, d=den: Fraction(float(x)).limit_denominator(d)) if how == "entry" else \
+                  (lambda x, d=den: _on_grid(x, d))
+            y = [max(Fraction(0), rnd(-m)) for m in res.ineqlin.marginals]
+            mu = [rnd(-m) for m in res.eqlin.marginals]
+            bnd = _certified_bound_cols(lp, y, mu)
+            if best is None or bnd > best:
+                best, by, bmu = bnd, {k: v for k, v in enumerate(y) if v}, {k: v for k, v in enumerate(mu) if v}
+            if bnd >= target:
+                break
+        if best is not None and best >= target:
+            break
+    if exact is None:
+        exact = M <= EXACT_SYM_MAX_COLS
+    if (best is None or best < Fraction(lp_val).limit_denominator(1000)) and (exact or best is None):
+        ex = exact_basis_duals(lp, M)
+        if ex is not None:
+            b = _certified_bound_cols(lp, *ex)
+            if best is None or b > best:
+                best = b
+                by, bmu = {k: v for k, v in enumerate(ex[0]) if v}, {k: v for k, v in enumerate(ex[1]) if v}
+    if best is None:
+        raise RuntimeError(f"symmetric Shannon LP failed on {g.name}")
+    if best.denominator > 10**12:
+        best = Fraction(math.floor(best * 10**9), 10**9)
+    r = ShannonResult(best, float(lp_val), time.perf_counter() - t0, by, bmu)
+    r.gens = gens  # type: ignore[attr-defined]
+    r.reduced_size = (M, len(lp.A_ub) + len(lp.A_eq))  # type: ignore[attr-defined]
+    return r
+
+
+def check_shannon_sym(g: Graph, gens: list[list[int]], y: dict[int, Fraction], mu: dict[int, Fraction]) -> Fraction:
+    """Rebuild the reduced LP from g and the generators (which must be automorphisms) and recompute the bound."""
+    lp, _, _ = build_shannon_sym(g, gens)
+    yy = [Fraction(0)] * len(lp.A_ub)
+    mm = [Fraction(0)] * len(lp.A_eq)
+    for k, v in y.items():
+        yy[int(k)] = Fraction(v)
+    for k, v in mu.items():
+        mm[int(k)] = Fraction(v)
+    return _certified_bound_cols(lp, yy, mm)
+
+
+def exact_basis_duals(lp: ShannonLP, ncols: int, time_limit: float = 120.0):
+    """Exact dual vertex: solve the LP with HiGHS (interior point + crossover), take the optimal basis and solve its
+    square system B^T y = c_B in exact rational arithmetic (python-flint). Returns (y, mu) as Fraction lists, or
+    None if flint/highspy is missing or the basis is unusable. Whatever comes back is only *used* through
+    `_certified_bound_cols`, so a wrong basis can lower the bound but never make it invalid."""
+    try:
+        import flint
+        import highspy
+    except ImportError:
+        return None
+    m_ub, m_eq = len(lp.A_ub), len(lp.A_eq)
+    rows = lp.A_ub + lp.A_eq
+    inf = highspy.kHighsInf
+    rl = [-inf] * m_ub + [float(b) for b in lp.b_eq]
+    ru = [float(b) for b in lp.b_ub] + [float(b) for b in lp.b_eq]
+    h = highspy.Highs()
+    h.setOptionValue("output_flag", False)
+    h.setOptionValue("solver", "ipm")
+    h.setOptionValue("run_crossover", "on")
+    h.setOptionValue("time_limit", float(time_limit))
+    h.addVars(ncols, np.array(lp.lb, float), np.array(lp.ub, float))
+    h.changeColsCost(ncols, np.arange(ncols, dtype=np.int32), np.asarray(lp.c, float))
+    M = _sparse(rows, ncols)
+    h.addRows(len(rows), np.array(rl), np.array(ru), M.nnz, M.indptr[:-1].astype(np.int32),
+              M.indices.astype(np.int32), M.data.astype(float))
+    h.run()
+    if h.getModelStatus() != highspy.HighsModelStatus.kOptimal:
+        return None
+    basis = h.getBasis()
+    if not basis.valid:
+        return None
+    B = highspy.HighsBasisStatus.kBasic
+    bcols = [j for j, st in enumerate(basis.col_status) if st == B]
+    nrows = [i for i, st in enumerate(basis.row_status) if st != B]
+    if len(bcols) != len(nrows):
+        return None
+    if not bcols:
+        return [Fraction(0)] * m_ub, [Fraction(0)] * m_eq
+    k = len(bcols)
+    cpos = {j: t for t, j in enumerate(bcols)}
+    # rows of the system: one per basic column j:  sum_{i in nrows} A[i, j] * yhat_i = c_j   (HiGHS convention
+    # c - A^T yhat - z = 0 with z_j = 0 on basic columns)
+    mat = flint.fmpz_mat(k, k)
+    for t, i in enumerate(nrows):
+        for j, a in rows[i].items():
+            p = cpos.get(j)
+            if p is not None:
+                mat[p, t] = a
+    rhs = flint.fmpz_mat(k, 1, [int(lp.c[j]) for j in bcols])
+    try:
+        sol = mat.solve(rhs)  # fmpq_mat
+    except Exception:  # singular (numerically chosen basis not exactly a basis)
+        return None
+    yhat = [Fraction(0)] * len(rows)
+    for t, i in enumerate(nrows):
+        q = sol[t, 0]
+        yhat[i] = Fraction(int(q.p), int(q.q))
+    # our multipliers: y (on b - A x >= 0) = -yhat for <= rows; mu = -yhat for equalities
+    y = [max(Fraction(0), -v) for v in yhat[:m_ub]]
+    mu = [-v for v in yhat[m_ub:]]
+    return y, mu

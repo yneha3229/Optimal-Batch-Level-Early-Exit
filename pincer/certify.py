@@ -4,7 +4,8 @@
 certificate with code that does not depend on how it was found:
 - global fitting matrix (block diagonal over SCCs): fit + exact F_2 rank  -> minrk_2 <= U_mr
 - global acyclic set (union over SCCs): Kahn's algorithm                -> MAIS >= |set|
-- per-SCC Shannon multipliers: exact rational weak duality               -> beta(SCC) >= bound
+- per-SCC Shannon multipliers: exact rational weak duality (full LP, or the orbit-reduced LP rebuilt from
+  the stored generators after checking they are automorphisms)          -> beta(SCC) >= bound
 - per-SCC fractional clique covers: exact coverage                       -> beta(SCC) <= value
 - per-SCC UNSAT records: listed as solver-trusted (re-run or DRAT-check them with `--recheck-unsat`)
 CLI:  python -m pincer.certify GRAPH.json BUNDLE.json [--recheck-unsat SECONDS]
@@ -23,7 +24,7 @@ from minrank.core.verify import verify
 from minrank.exact.lower import is_acyclic_induced
 
 from .decompose import decompose, lift_rows
-from .lp import check_frac_cover, check_shannon_certificate
+from .lp import check_frac_cover, check_shannon_certificate, check_shannon_sym
 from .state import CompState
 
 
@@ -45,6 +46,8 @@ def make_bundle(g: Graph, states: list[CompState], meta: dict | None = None) -> 
             c["shannon"] = {"bound": _frac(s.shannon["bound"]),
                             "y": {str(k): _frac(v) for k, v in s.shannon["y"].items()},
                             "mu": {str(k): _frac(v) for k, v in s.shannon["mu"].items()}}
+            if s.shannon.get("gens"):
+                c["shannon"]["gens"] = s.shannon["gens"]
         if s.frac:
             c["frac"] = {"value": _frac(s.frac["value"]), "cliques": s.frac["cliques"],
                          "weights": [_frac(w) for w in s.frac["weights"]]}
@@ -91,7 +94,8 @@ def verify_bundle(g: Graph, b: dict, recheck_unsat: float | None = None) -> dict
         if "shannon" in c:
             y = {int(k): Fraction(v) for k, v in c["shannon"]["y"].items()}
             mu = {int(k): Fraction(v) for k, v in c["shannon"]["mu"].items()}
-            sb = check_shannon_certificate(cg, y, mu)
+            gens = c["shannon"].get("gens")
+            sb = check_shannon_sym(cg, gens, y, mu) if gens else check_shannon_certificate(cg, y, mu)
             claimed = Fraction(c["shannon"]["bound"])
             if sb < claimed:
                 raise ValueError("Shannon certificate does not reproduce its bound")
