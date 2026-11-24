@@ -41,7 +41,10 @@ Positive:
   34-61 s by asking SAT *from below* (r = 6, 7, 8, 9 UNSAT in < 1 s each, then r = 10 SAT) instead of descending
   from the clique cover (13). Cross-checked with a second solver (Glucose, different independent set): r = 9 UNSAT,
   r = 10 SAT. Bundles: `pincer/certificates/planted_n100_r10_e0.1_s{2,6}.bundle.json`. On all 8 undirected n = 100
-  graphs Pincer's lower bound is 10 (driver: 8-9); 4 of 8 are now settled by one tool or the other (s0, s2, s3, s6).
+  graphs Pincer's lower bound is 10 (driver: 8-9), and one direct SAT call at r = 10 then found rank-10 matrices for
+  the remaining four (s1, s4, s5, s7; 1.6-539 s). So **all 8 undirected n = 100 planted e0.1 graphs have minrk₂ = 10**
+  (6 of them were open). Every r = 9 UNSAT was re-run with Glucose and an independently found independent set;
+  matrices in `pincer/certificates/planted_n100_r10_e0.1_s{1,4,5,7}.rank10.json`.
   Directed n = 100: both close all 8 (Pincer 7-23 s, driver 16-20 s). Table: §5.
 - **Symmetry-reduced Shannon LP with exact certificates** (`lp.shannon_bound_sym`): one variable per Aut(G)-orbit of
   subsets; the checker re-verifies the generators and rebuilds the reduced LP. When rounded duals miss the optimum,
@@ -236,7 +239,7 @@ exact driver's run (`minrank/results/exact_planted_e01.csv`, 300 s per SAT call)
 | undirected s0 | 10 (UNSAT 128 s) | 10 (closed at 45 s) |
 | undirected s2, s6 | open [8, 13], [9, 13] | **10 (closed at 61 s, 34 s)** |
 | undirected s3 | 10 (UNSAT 111 s) | [10, 12] (missed the rank-10 matrix) |
-| undirected s1, s4, s5, s7 | open [8, 13] | open [10, 13] |
+| undirected s1, s4, s5, s7 | open [8, 13] | open [10, 13]; then one direct SAT call "≤ 10?" (`pincer/probe_rank.py`, 600 s limit): **SAT in 539, 74, 14, 1.6 s → 10** |
 
 Why it works: the driver starts at the clique cover and asks "≤ 12?", which times out; Pincer's `sat_up` asks
 "≤ L?" with L the current lower bound, where the independent-set fix pins 80-90 % of the variables, so each UNSAT
@@ -292,7 +295,7 @@ PROPOSER=gp ITER=1500 bash scripts/pincer/02_funsearch.sh                       
    minrk over other fields (`minrank/exact/sat_fq.py`) or composite / vector codes — open.
 6. **DRAT** for Pincer's UNSAT records, first for the r = 9 steps of the two new planted values
    (`scripts/minrank/10_drat_check.sh` needs CaDiCaL + drat-trim, which this container cannot build).
-7. **Ascending SAT search in the minrank driver**, and on the 4 open undirected n = 100 planted graphs: ask r = 10
-   directly with longer slices (Pincer's lower bound is already 10).
+7. **Ascending SAT search in the minrank driver** (done by hand here for the n = 100 planted graphs: all 8 settled);
+   in Pincer, let `sat_up` keep a long slice when its question is r = L and the lower bound has just risen.
 8. **Scale study**: 300 s budgets and n = 200-500 to find where the tool mix changes.
 
