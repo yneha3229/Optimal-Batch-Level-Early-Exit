@@ -1,0 +1,2 @@
+{"graph": "planted_n100_r10_e0.1_s5", "r": 10, "status": "SAT", "seconds": 14.0, "solver": "cadical153", "fixed_set": 8}
+{"graph": "planted_n100_r10_e0.1_s7", "r": 10, "status": "SAT", "seconds": 1.6, "solver": "cadical153", "fixed_set": 8}
