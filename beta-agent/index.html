@@ -214,6 +214,18 @@
     </section>
   </div>
 
+  <section class="card section" aria-label="Linear codes">
+    <p class="eyebrow">Beyond the clique cover: the best linear code (λ₂)</p>
+    <p class="note">The offline Python pipeline in <code>lambda-agent/</code> also searches for scalar and vector-linear codes over GF(2), by SAT on the network's block-length-t blow-up, guided by the Shannon LP lower bound. When the best code meets the lower bound, β is proven. Benchmark on 119 networks with 6 to 10 receivers, 60 s per network per method:</p>
+    <div class="row"><label for="lamGroup">Graphs</label><select id="lamGroup"></select></div>
+    <div class="cmp"><table class="t" id="lamTable">
+      <thead><tr><th>Method</th><th>β pinned</th><th>Mean gap</th><th>Median time</th><th>90th pct</th><th>Worst</th></tr></thead>
+      <tbody></tbody></table></div>
+    <div class="cmp"><table class="t" id="lamEx">
+      <thead><tr><th>Network</th><th>Lower bound</th><th>Clique cover</th><th>Fractional cover</th><th>Scalar code</th><th>Lambda agent</th></tr></thead>
+      <tbody></tbody></table></div>
+  </section>
+
   <section class="card section" aria-label="How it works">
     <p class="eyebrow">How it works</p>
     <div class="explain">
@@ -232,6 +244,7 @@
 
 <script src="engine.js"></script>
 <script src="bench/bench-data.js"></script>
+<script src="bench/lambda-data.js"></script>
 <script>
 (() => {
   "use strict";
@@ -606,6 +619,36 @@
   }
   $("benchGroup").addEventListener("change", renderBench);
   renderBench();
+
+
+  // ------------------------------------------------------------------ linear codes (lambda-agent results)
+  function renderLambda() {
+    const D = window.LAMBDA_BENCH;
+    if (!D) return;
+    const sel = $("lamGroup");
+    if (!sel.options.length) for (const k of Object.keys(D.groups)) { const o = document.createElement("option"); o.value = k; o.textContent = k; sel.append(o); }
+    const G = D.groups[sel.value || Object.keys(D.groups)[0]];
+    const fmt = (s) => s < 1 ? `${Math.round(s * 1000)} ms` : `${s.toFixed(1)} s`;
+    const tb = $("lamTable").querySelector("tbody"); tb.replaceChildren();
+    for (const m of ["clique_cover", "frac_cover", "scalar_minrank", "vector_plain", "vector_plain_stop", "agent"]) {
+      const r = G[m]; if (!r) continue;
+      const tr = document.createElement("tr"); if (m === "agent") tr.className = "ours";
+      [r.name, `${r.pinned} of ${r.n}`, r.gap.toFixed(3), fmt(r.median_s), fmt(r.p90_s), fmt(r.max_s)].forEach((c, i) => {
+        const td = document.createElement("td"); td.textContent = c; if (i > 0) td.className = "num";
+        if (i === 1) td.classList.add(r.pinned === r.n ? "ok" : "bad"); tr.append(td); });
+      tb.append(tr);
+    }
+    const ex = $("lamEx").querySelector("tbody");
+    if (!ex.children.length) for (const e of D.examples) {
+      const tr = document.createElement("tr");
+      const cells = [e.graph.replace(/_/g, " "), e.lb, e.ub.clique_cover, e.ub.frac_cover, e.ub.scalar_minrank, e.ub.agent];
+      cells.forEach((c, i) => { const td = document.createElement("td"); td.textContent = c; if (i > 0) td.className = "num";
+        if (i >= 2) td.classList.add(c === e.lb ? "ok" : "bad"); tr.append(td); });
+      ex.append(tr);
+    }
+  }
+  $("lamGroup").addEventListener("change", renderLambda);
+  renderLambda();
 
   // Open on a worked example so the first view shows what the tool does.
   load("mixed");
