@@ -2,8 +2,8 @@
 
     python gap-agent/train.py            three rounds of data collection + fitted Q-iteration -> models/agent.pkl
 
-Training graphs: 200-1200 receivers, three families (random digraphs, planted cliques, layered digraphs), 20 s runs.
-The test graphs in bench.py are different graphs, and up to 2000 receivers.
+Training graphs: 2000-8000 receivers, three families (random digraphs, planted cliques, layered digraphs), 30 s runs.
+The test graphs in bench.py are different graphs, with 3000, 6000 and 10000 receivers.
 """
 from __future__ import annotations
 
@@ -30,13 +30,14 @@ from gap_agent.strategies import compile_all  # noqa: E402
 
 DATA = HERE / "data"
 MODELS = HERE / "models"
-T_TRAIN = 20.0
+T_TRAIN = 30.0
+N_RANGE = (2000, 8001)
 WORKERS = 3
 
 
 def train_graph(i: int):
     rng = np.random.default_rng(10_000 + i)
-    return make_graph(FAMILIES[i % 3], int(rng.integers(200, 1201)), rng)
+    return make_graph(FAMILIES[i % 3], int(rng.integers(*N_RANGE)), rng)
 
 
 def _init():

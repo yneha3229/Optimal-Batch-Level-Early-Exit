@@ -4,8 +4,8 @@
     python gap-agent/bench.py cpsat      the standard exact solver (CP-SAT) on the smallest test graphs
     python gap-agent/bench.py report     -> RESULTS.md
 
-Test graphs: 500, 1000 and 2000 receivers, three families, three graphs each (27 graphs; none used in training,
-training never saw 2000 receivers). Every controller gets the same 30 s, the same opening (one greedy acyclic set,
+Test graphs: 3000, 6000 and 10000 receivers, three families, three graphs each (27 graphs; none used in training,
+training never saw more than 8000 receivers). Every controller gets the same 30 s, the same opening (one greedy acyclic set,
 one DSatur cover) and the same random seed. One core each. Every final bound is re-checked: the acyclic set by a
 topological sort, the cover clique by clique.
 """
@@ -33,7 +33,7 @@ from gap_agent.graph import FAMILIES, is_acyclic_set, is_clique_cover, make_grap
 from gap_agent.strategies import STRATEGIES, compile_all  # noqa: E402
 
 T_TEST = 30.0
-SIZES = (500, 1000, 2000)
+SIZES = (3000, 6000, 10000)
 OUT = HERE / "results"
 
 
@@ -213,7 +213,7 @@ def cmd_report():
     cp = OUT / "cpsat.jsonl"
     if cp.exists():
         cr = [json.loads(x) for x in cp.read_text().splitlines() if x.strip()]
-        lines += ["", "## Standard exact solver (CP-SAT, textbook models) on the 500-receiver graphs", "",
+        lines += ["", "## Standard exact solver (CP-SAT, textbook models) on the smallest test graphs", "",
                   "| graph | CP-SAT gap integral | CP-SAT final gap | learned agent gap integral | learned final gap |"
                   " notes |", "|---|---|---|---|---|---|"]
         for r in cr:

@@ -31,6 +31,7 @@ class Stats:
         self.last_gain = np.full(A, -1.0)  # clock time of the last gain, -1 = never
         self.fails = np.zeros(A)           # slices in a row without gain
         self.gain = np.zeros(A)            # bound units gained
+        self.recent = np.zeros(A)          # gain per second the last time each strategy ran
         self.last_action = -1
         self.streak = 0
         self.last_lo_gain = 0.0
@@ -46,7 +47,8 @@ def observe(s: Search, st: Stats, T: float, gap0: int) -> np.ndarray:
     if st.last_action >= 0:
         last[st.last_action] = 1
     since = np.where(st.last_gain < 0, t, t - st.last_gain) / T
-    per = np.concatenate([st.used / T, since, np.minimum(st.fails, 20) / 20, st.gain / max(1, gap0)])
+    per = np.concatenate([st.used / T, since, np.minimum(st.fails, 20) / 20, st.gain / max(1, gap0),
+                          st.recent / max(1, gap0)])
     return np.concatenate([g, last, per]).astype(np.float32)
 
 
@@ -89,6 +91,7 @@ def run(g: Graph, controller, T: float = 30.0, seed: int = 0, record: list | Non
         gained = (s.lo - lo) + (hi - s.hi)
         reward = gained / gap0 * (T - t_end) / T
         st.used[a] += slice_s
+        st.recent[a] = gained / max(1e-3, t_end - t)
         st.streak = st.streak + 1 if a == st.last_action else 1
         st.last_action = a
         if gained:
