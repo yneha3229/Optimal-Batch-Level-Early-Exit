@@ -32,7 +32,7 @@ from minrank.baselines.partial_cover import partial_cover_rows
 from minrank.exact.lower import mais as mais_order_cpsat
 from minrank.exact.symmetry import rank_at_most_sym
 
-from .lp import SHANNON_MAX_N, frac_clique_cover, shannon_bound
+from .lp import SHANNON_MAX_N, SHANNON_SYM_MAX_N, frac_clique_cover, shannon_bound, shannon_bound_sym
 from .mais import exact_lazy, greedy_fvs, sa_order
 from .state import CompState
 
@@ -157,8 +157,18 @@ def _sat_up(s: CompState, budget: float, rng: random.Random, t: float) -> str:
 
 
 def _shannon(s: CompState, budget: float, rng: random.Random, t: float) -> str:
-    r = shannon_bound(s.comp.graph)
-    s.offer_shannon(r.bound, r.y, r.mu, "shannon", t, recheck=False)  # certified_bound already computed exactly
+    """Full LP for small asymmetric SCCs; the orbit-reduced LP when the SCC has nontrivial automorphisms (always
+    faster) or is too large for the full LP (12 < n <= 16)."""
+    from minrank.exact.symmetry import automorphisms
+
+    g = s.comp.graph
+    gens = automorphisms(g, max_gens=16) if g.n > 3 else []
+    if gens and g.n <= SHANNON_SYM_MAX_N:
+        r = shannon_bound_sym(g, gens)
+        s.offer_shannon(r.bound, r.y, r.mu, "shannon", t, recheck=False, gens=r.gens)
+    elif g.n <= SHANNON_MAX_N:
+        r = shannon_bound(g)
+        s.offer_shannon(r.bound, r.y, r.mu, "shannon", t, recheck=False)  # certified_bound already exact
     return "done"
 
 
@@ -222,7 +232,7 @@ def default_tools(include_lns: bool = False, evolved: str | None = None) -> dict
         Tool("sat_up", "lower", False, _sat_up, lambda s: not s.mr_closed,
              description="SAT: is minrank <= L? UNSAT raises the minrank lower bound, SAT closes it"),
         Tool("shannon", "beta_lower", False, _shannon, lambda s: not s.b_closed and s.shannon is None,
-             once=True, max_n=SHANNON_MAX_N,
+             once=True, max_n=SHANNON_SYM_MAX_N,
              description="polymatroid LP lower bound on beta (fractional; n <= 12; closes odd-cycle-type gaps)"),
         Tool("frac_cover", "beta_upper", True, _frac, lambda s: not s.b_closed,
              description="fractional clique cover upper bound on beta (vector-linear codes)"),
