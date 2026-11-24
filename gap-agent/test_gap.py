@@ -60,3 +60,15 @@ def test_controllers_and_record():
     r = run(g, Bandit(), T=1.0, record=rec)
     assert rec and all(0 <= a < A for _, a, _, _, _ in rec)
     assert r["lo"] <= r["hi"]
+
+
+def test_learned_bandit_runs():
+    from gap_agent.agent import LearnedBandit
+
+    class Flat:  # stand-in model: predicts the same rate for every strategy
+        def predict(self, X):
+            return np.ones(len(X))
+
+    g = make_graph("planted", 120, np.random.default_rng(3))
+    r = run(g, LearnedBandit(Flat()), T=1.0)
+    assert r["lo"] <= r["hi"] and r["decisions"] > 0

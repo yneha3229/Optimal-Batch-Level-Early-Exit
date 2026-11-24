@@ -176,6 +176,17 @@ def cmd_cpsat():
     (OUT / "cpsat.jsonl").write_text("\n".join(json.dumps(r) for r in rows) + "\n")
 
 
+def _time_to(r, target):
+    lo, hi = r["lo0"], r["hi0"]
+    if hi - lo <= target:
+        return 0.0
+    for t, side, v, _ in r["events"]:
+        lo, hi = (max(lo, v), hi) if side == "lo" else (lo, min(hi, v))
+        if hi - lo <= target:
+            return t
+    return None
+
+
 def cmd_report():
     rows = [json.loads(x) for x in (OUT / "bench.jsonl").read_text().splitlines()]
     names = {"prior": "**learned agent: learned prior + online**", "learned": "learned agent: offline policy (FQI)", "bandit": "online bandit (UCB)", "random": "random switching",
@@ -183,7 +194,7 @@ def cmd_report():
     keys = list(names)
     by = {(r["graph"], r["key"]): r for r in rows}
     graphs = sorted({r["graph"] for r in rows}, key=lambda x: (int(x.split("_n")[1].split("_")[0]), x))
-    lines = ["# Gap agent: results on unseen large graphs", "",
+    lines = ["# Gap agent: results on unseen very large graphs (3000-10000 receivers)", "",
              f"{len(graphs)} test graphs, 30 s each, one core, same opening and seed for every controller. "
              "Gap integral = area under gap(t)/gap(0) over the 30 s (lower is better: the gap closed sooner). "
              "All final bounds re-checked.", ""]
@@ -213,6 +224,18 @@ def cmd_report():
         if rs:
             lines.append(f"| {f} | " + " | ".join(f"{np.mean([r['share'][s] for r in rs]):.2f}" for s in STRATEGIES)
                          + " |")
+    lines += ["", "## Learned agent vs each other controller, graph by graph", "",
+              "Time to match = when the learned agent's gap first reaches the other controller's gap at 30 s.", "",
+              "| other controller | agent better on | mean difference in gap integral (± s.e.) | agent matches its 30 s gap"
+              " on | median time to match |", "|---|---|---|---|---|"]
+    for k in keys[1:]:
+        d = [by[(x, "prior")]["integral"] - by[(x, k)]["integral"] for x in graphs if (x, k) in by and (x, "prior") in by]
+        ts = [_time_to(by[(x, "prior")], by[(x, k)]["gap"]) for x in graphs if (x, k) in by and (x, "prior") in by]
+        ts = [t for t in ts if t is not None]
+        if d:
+            lines.append(f"| {names[k]} | {sum(v < 0 for v in d)}/{len(d)} | {np.mean(d):+.4f} ± "
+                         f"{np.std(d, ddof=1) / np.sqrt(len(d)):.4f} | {len(ts)}/{len(d)} | "
+                         f"{np.median(ts) if ts else float('nan'):.1f} s of 30 s |")
     cp = OUT / "cpsat.jsonl"
     if cp.exists():
         cr = [json.loads(x) for x in cp.read_text().splitlines() if x.strip()]
