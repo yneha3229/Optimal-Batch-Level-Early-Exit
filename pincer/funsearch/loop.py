@@ -21,7 +21,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from .database import ProgramDatabase
-from .evaluate import SEED_PROGRAM, evaluate, split_graphs, reference
+from .evaluate import SEED_PROGRAM, SEED_SA, evaluate, split_graphs, reference
 from .gp import GPProposer
 
 PROBLEM = '''"""Find a large acyclic induced subgraph (MAIS) of a directed graph: a lower bound on the broadcast rate of
@@ -40,7 +40,34 @@ Use int.bit_count() for popcounts. Only `math` may be imported. priority is call
 import math
 '''
 
-TRAIN = "train"  # fitness split; --train-split train_small reproduces the first GP runs
+PROBLEM_SA = '''"""Find a large acyclic induced subgraph (MAIS) of a directed graph by simulated annealing (a lower bound on the
+broadcast rate of an index-coding problem). The kept set is held as a topological order. Each move samples 5
+vertices outside the set; for each, the skeleton finds the better of two insertion slots (just after its last kept
+in-neighbour, or just before its first kept out-neighbour) and the kept vertices that would then have to leave.
+The candidate with the HIGHEST score(f) is moved (accepted if it does not shrink the set, else with probability
+exp(-delta / temp)). Score = size of the set after 40 n moves relative to a strong reference, averaged over random,
+clustered and planted digraphs with 120-250 vertices. Larger is better.
+
+f = (delta, conf_in, conf_out, in_kept, out_kept, in_deg, out_deg, kept, n, temp, step):
+  delta    = kept vertices lost - 1 at the best slot (negative = the set grows)
+  conf_in / conf_out = lost in-neighbours / out-neighbours;  in_kept / out_kept = kept in-/out-neighbours
+  in_deg / out_deg = degrees in the whole graph; kept = current set size; n; temp = temperature; step = move index
+Only `math` may be imported. score is called 5 times per move: keep it cheap.
+"""
+import math
+'''
+
+# target configuration (set by set_target)
+TRAIN, VAL, TEST = "train", "val", "test"  # --train-split train_small reproduces the first GP runs
+SEED, FN, SIG, PROBLEM_TEXT = SEED_PROGRAM, "priority", "(v, ctx)", None
+
+
+def set_target(target: str, train_split: str = "train") -> None:
+    global TRAIN, VAL, SEED, FN, SIG, PROBLEM_TEXT
+    if target == "sa":
+        TRAIN, VAL, SEED, FN, SIG, PROBLEM_TEXT = "train_sa", "val_sa", SEED_SA, "score", "(f)", PROBLEM_SA
+    else:
+        TRAIN, VAL, SEED, FN, SIG, PROBLEM_TEXT = train_split, "val", SEED_PROGRAM, "priority", "(v, ctx)", PROBLEM
 
 SYSTEM = ("You improve heuristics for combinatorial optimisation by writing Python. Reply with exactly one "
           "function definition in a ```python block, named as requested, and nothing else.")
@@ -52,27 +79,27 @@ def strip_meta(code: str) -> str:
 
 
 def build_prompt(parents, last_error: str | None) -> str:
-    parts = [PROBLEM]
+    parts = [PROBLEM_TEXT or PROBLEM]
     for k, p in enumerate(parents):
-        body = strip_meta(p.code).replace("def priority(", f"def priority_v{k}(", 1)
+        body = strip_meta(p.code).replace(f"def {FN}(", f"def {FN}_v{k}(", 1)
         parts.append(f"# score {p.score:.4f}\n{body}\n")
     k = len(parents)
-    parts.append(f"def priority_v{k}(v, ctx):\n    \"\"\"Improved version of `priority_v{k - 1}`.\"\"\"\n")
+    parts.append(f"def {FN}_v{k}{SIG}:\n    \"\"\"Improved version of `{FN}_v{k - 1}`.\"\"\"\n")
     if last_error:
         parts.append(f"# Note: the previous attempt on this island failed with:\n# "
                      + last_error.replace("\n", "\n# ")[:1200] + "\n")
-    parts.append(f"Write `priority_v{k}`.")
+    parts.append(f"Write `{FN}_v{k}`.")
     return "\n".join(parts)
 
 
 def extract(text: str) -> str | None:
     m = re.search(r"```(?:python)?\n(.*?)```", text, re.S)
     src = m.group(1) if m else text
-    m = re.search(r"^def priority_v\d+\s*\(", src, re.M)
+    m = re.search(rf"^def {FN}_v\d+\s*\(", src, re.M)
     if not m:
         return None
     src = src[m.start():]
-    src = re.sub(r"^def priority_v\d+\s*\(", "def priority(", src, count=1)
+    src = re.sub(rf"^def {FN}_v\d+\s*\(", f"def {FN}(", src, count=1)
     # keep the def and everything indented below it (drop trailing prose)
     out = []
     for i, line in enumerate(src.splitlines()):
@@ -96,10 +123,10 @@ def run(proposer, iterations: int, out: Path, parallel: int = 1, seed: int = 0, 
     out.mkdir(parents=True, exist_ok=True)
     log = (out / "log.jsonl").open("a")
     db = ProgramDatabase(seed=seed)
-    seed_res = evaluate(SEED_PROGRAM, TRAIN)
+    seed_res = evaluate(SEED, TRAIN)
     if seed_res.score is None:
         raise RuntimeError(f"seed program fails: {seed_res.error}")
-    db.register(SEED_PROGRAM, seed_res.score, seed_res.per_graph, None, 0, meta={"seed": True})
+    db.register(SEED, seed_res.score, seed_res.per_graph, None, 0, meta={"seed": True})
     lock = threading.Lock()
     last_error: dict[int, str | None] = {}
     stats = {"evaluated": 0, "failed": 0, "duplicates": 0, "start": time.time()}
@@ -118,7 +145,7 @@ def run(proposer, iterations: int, out: Path, parallel: int = 1, seed: int = 0, 
         except Exception as e:  # LLM/API failure: log and move on
             code, gen_err = None, f"proposer error: {e}"
         else:
-            gen_err = None if code else "no `def priority_vK` found in the reply"
+            gen_err = None if code else f"no `def {FN}_vK` found in the reply"
         gen_s = time.perf_counter() - t0
         rec = {"it": it, "island": island, "parents": [round(p.score, 4) for p in parents], "gen_s": round(gen_s, 2)}
         if code is None:
@@ -168,20 +195,20 @@ def select_and_report(db: ProgramDatabase, name: str, iterations: int, stats: di
     for p in sorted(db.all, key=lambda p: -p.score):
         uniq.setdefault(p.code, p)
     cands = [p.code for p in list(uniq.values())[:top_val]]
-    if SEED_PROGRAM not in cands:
-        cands.append(SEED_PROGRAM)
-    val = [(evaluate(c, "val").score or 0.0, c) for c in cands]
+    if SEED not in cands:
+        cands.append(SEED)
+    val = [(evaluate(c, VAL).score or 0.0, c) for c in cands]
     best_val, best_code = max(val, key=lambda t: t[0])
     train_best = max(p.score for p in db.all)
     test_best = evaluate(best_code, "test")
-    test_seed = evaluate(SEED_PROGRAM, "test")
+    test_seed = evaluate(SEED, "test")
     (out / "best.py").write_text(best_code)
     summary = {"proposer": name, "iterations": iterations, **stats,
                "wall_s": round(time.time() - stats.get("start", time.time())),
                "train_seed": train_seed, "train_best": train_best,
                "train_selected": evaluate(best_code, TRAIN).score, "train_split": TRAIN,
-               "val_seed": evaluate(SEED_PROGRAM, "val").score, "val_selected": best_val,
-               "selected_is_seed": best_code == SEED_PROGRAM,
+               "val_seed": evaluate(SEED, VAL).score, "val_selected": best_val, "val_split": VAL,
+               "selected_is_seed": best_code == SEED,
                "val_top_by_train": [round(v, 4) for v, _ in val[:-1]],
                "test_selected": test_best.score, "test_seed": test_seed.score,
                "test_per_graph_selected": test_best.per_graph, "test_per_graph_seed": test_seed.per_graph,
@@ -192,8 +219,8 @@ def select_and_report(db: ProgramDatabase, name: str, iterations: int, stats: di
 def reselect(run_dir: Path, top_val: int = 8) -> dict:
     """Rebuild the database from OUT/log.jsonl and redo the selection (no new proposals)."""
     db = ProgramDatabase()
-    seed = evaluate(SEED_PROGRAM, TRAIN)
-    db.register(SEED_PROGRAM, seed.score, seed.per_graph, None, 0)
+    seed = evaluate(SEED, TRAIN)
+    db.register(SEED, seed.score, seed.per_graph, None, 0)
     n = 0
     import gzip
 
@@ -225,20 +252,21 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--out", required=True)
     ap.add_argument("--refs-only", action="store_true", help="compute the reference values and exit")
     ap.add_argument("--train-split", default="train", choices=["train", "train_small"])
+    ap.add_argument("--target", default="greedy", choices=["greedy", "sa"],
+                    help="greedy: deletion priority of greedy FVS; sa: candidate choice inside simulated annealing")
     ap.add_argument("--reselect", action="store_true", help="redo val selection / test report of --out and exit")
     a = ap.parse_args(argv)
+    set_target(a.target, a.train_split)
     if a.refs_only:
-        for sp in ("train", "val", "test"):
+        for sp in (TRAIN, VAL, "test"):
             for g in split_graphs(sp):
                 print(sp, g.name, reference(g), flush=True)
         return
-    global TRAIN
-    TRAIN = a.train_split
     if a.reselect:
         s = reselect(Path(a.out))
         print(json.dumps({k: v for k, v in s.items() if not k.startswith("test_per") and k != "test_graphs"}, indent=1))
         return
-    prop = GPProposer(a.seed) if a.proposer == "gp" else LLMProposer(make_backend(a.proposer))
+    prop = GPProposer(a.seed, a.target) if a.proposer == "gp" else LLMProposer(make_backend(a.proposer))
     s = run(prop, a.iterations, Path(a.out), a.parallel, a.seed)
     print(json.dumps({k: v for k, v in s.items() if not k.startswith("test_per")}, indent=1))
 

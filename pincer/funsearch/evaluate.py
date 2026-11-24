@@ -31,6 +31,8 @@ from minrank.exact.lower import is_acyclic_induced
 
 HERE = Path(__file__).resolve().parent
 RUNNER = HERE / "sandbox_runner.py"
+SA_RUNNER = HERE / "sandbox_sa.py"
+SA_MOVES_PER_VERTEX = 40  # target "sa": SA move budget per graph = 40 n (deterministic, load-independent)
 REF_FILE = HERE / "reference.json"
 
 FORBIDDEN = [r"\bopen\s*\(", r"\bos\b", r"\bsys\b", r"subprocess", r"__", r"\beval\s*\(", r"\bexec\s*\(",
@@ -39,7 +41,7 @@ FORBIDDEN = [r"\bopen\s*\(", r"\bos\b", r"\bsys\b", r"subprocess", r"__", r"\bev
 ALLOWED_IMPORTS = {"math"}
 
 
-def static_check(code: str) -> str | None:
+def static_check(code: str, target: str = "greedy") -> str | None:
     for pat in FORBIDDEN:
         if re.search(pat, code):
             return f"forbidden pattern {pat!r}"
@@ -47,7 +49,10 @@ def static_check(code: str) -> str | None:
         mod = m.group(1) or m.group(2)
         if mod not in ALLOWED_IMPORTS:
             return f"import not allowed: {mod} (only math)"
-    if not re.search(r"^def priority\s*\(\s*v\s*,\s*ctx\s*\)\s*:", code, re.M):
+    if target == "sa":
+        if not re.search(r"^def score\s*\(\s*f\s*\)\s*:", code, re.M):
+            return "no top-level `def score(f):`"
+    elif not re.search(r"^def priority\s*\(\s*v\s*,\s*ctx\s*\)\s*:", code, re.M):
         return "no top-level `def priority(v, ctx):`"
     if len(code) > 6000:
         return "program longer than 6000 characters"
@@ -61,6 +66,14 @@ def static_check(code: str) -> str | None:
 def split_graphs(split: str) -> list[Graph]:
     from ..bench import clustered
 
+    if split in ("train_sa", "val_sa"):  # harder graphs: SA saturates the n <= 100 ones in a fraction of a second
+        gs = []
+        for s in ((0, 10) if split == "train_sa" else (2, 3)):
+            for n, p in [(150, 0.05), (150, 0.15), (250, 0.03), (250, 0.1)]:
+                gs.append(gen.gnp(n, p, s, True))
+            gs.append(clustered(10, 15, 0.5, 0.1, 0.001, s))
+            gs.append(gen.planted(120, 14, 0.03, s, True))
+        return gs
     if split in ("train", "train_small", "val"):
         seeds = {"train": (0, 1, 10, 11, 12, 13), "train_small": (0, 1), "val": (2, 3)}[split]
         gs = []
@@ -117,23 +130,34 @@ def code_key(code: str) -> str:
     return hashlib.sha1(norm.encode()).hexdigest()[:16]
 
 
-def evaluate(code: str, split: str = "train", timeout: float = 60.0, graphs: list[Graph] | None = None,
+def evaluate(code: str, split: str = "train", timeout: float | None = None, graphs: list[Graph] | None = None,
              refs: list[int] | None = None) -> EvalResult:
-    key = (code_key(code), split)
+    target = "sa" if re.search(r"^def score\s*\(\s*f\s*\)\s*:", code, re.M) else "greedy"
+    key = (code_key(code), split, target)
     if graphs is None and key in _CACHE:
         return _CACHE[key]
     t0 = time.perf_counter()
-    err = static_check(code)
+    err = static_check(code, target)
     if err:
         return EvalResult(None, error=err)
     gs = graphs if graphs is not None else split_graphs(split)
     rs = refs if refs is not None else [reference(g) for g in gs]
-    job = json.dumps({"graphs": [{"n": g.n, "out": list(g.out)} for g in gs], "mem_mb": 2048})
+    if target == "sa":
+        from ..mais import greedy_fvs
+
+        runner = SA_RUNNER
+        job = json.dumps({"graphs": [{"n": g.n, "out": list(g.out), "init": greedy_fvs(g)} for g in gs],
+                          "moves_per_vertex": SA_MOVES_PER_VERTEX, "seed": 0, "mem_mb": 2048})
+        timeout = timeout or 60.0 + 8.0 * len(gs)
+    else:
+        runner = RUNNER
+        job = json.dumps({"graphs": [{"n": g.n, "out": list(g.out)} for g in gs], "mem_mb": 2048})
+        timeout = timeout or 60.0
     with tempfile.NamedTemporaryFile("w", suffix=".py", delete=False) as f:
         f.write(code)
         path = f.name
     try:
-        p = subprocess.run([sys.executable, "-I", str(RUNNER), path], input=job, capture_output=True, text=True,
+        p = subprocess.run([sys.executable, "-I", str(runner), path], input=job, capture_output=True, text=True,
                            timeout=timeout)
     except subprocess.TimeoutExpired:
         return EvalResult(None, error=f"timeout after {timeout:.0f} s (priority too slow?)",
@@ -163,6 +187,17 @@ SEED_PROGRAM = '''import math
 def priority(v, ctx):
     """Vertex to delete next (highest first) when breaking cycles. Classic rule: in-degree x out-degree."""
     return ctx.in_deg(v) * ctx.out_deg(v)
+'''
+
+
+SEED_SA = '''import math
+
+
+def score(f):
+    """Which of 5 sampled outside vertices SA tries to insert (highest first). f = (delta, conf_in, conf_out,
+    in_kept, out_kept, in_deg, out_deg, kept, n, temp, step); delta = vertices lost - 1 at the best slot.
+    Seed: fewest conflicts first (= pincer.mais.sa_order with tournament=5)."""
+    return -f[0]
 '''
 
 

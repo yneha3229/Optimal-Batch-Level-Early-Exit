@@ -1,4 +1,9 @@
 {
+ "004466f67dec3b62": {
+  "name": "dnp_n250_p0.03_s3",
+  "ref": 144,
+  "seconds": 20.0
+ },
  "00e1d898fc081e75": {
   "name": "dnp_n40_p0.3_s3",
   "ref": 14,
@@ -14,9 +19,19 @@
   "ref": 182,
   "seconds": 20.0
  },
+ "17e5dc3683d84983": {
+  "name": "dnp_n250_p0.1_s10",
+  "ref": 68,
+  "seconds": 20.0
+ },
  "1df03a75e9f721df": {
   "name": "dnp_n100_p0.1_s2",
   "ref": 49,
+  "seconds": 20.0
+ },
+ "200a3944ebe2251e": {
+  "name": "planted_d_n120_r14_e0.03_s3",
+  "ref": 13,
   "seconds": 20.0
  },
  "269102dd85e1687d": {
@@ -39,6 +54,16 @@
   "ref": 15,
   "seconds": 20.0
  },
+ "2c41cbcf3cb53d90": {
+  "name": "dnp_n250_p0.03_s2",
+  "ref": 151,
+  "seconds": 20.0
+ },
+ "325891681bd8af59": {
+  "name": "dnp_n150_p0.05_s2",
+  "ref": 88,
+  "seconds": 20.0
+ },
  "379a120db61ab9fa": {
   "name": "planted_d_n60_r10_e0.05_s1",
   "ref": 10,
@@ -47,6 +72,11 @@
  "38685a59671fb294": {
   "name": "dnp_n60_p0.4_s0",
   "ref": 14,
+  "seconds": 20.0
+ },
+ "3cc352755f03849e": {
+  "name": "dnp_n250_p0.1_s0",
+  "ref": 69,
   "seconds": 20.0
  },
  "3f5455daebf8347d": {
@@ -79,6 +109,11 @@
   "ref": 24,
   "seconds": 20.0
  },
+ "46730b3a0b29fb1d": {
+  "name": "dnp_n150_p0.05_s0",
+  "ref": 87,
+  "seconds": 20.0
+ },
  "48229bdda4a7e2ec": {
   "name": "planted_d_n60_r10_e0.05_s0",
   "ref": 10,
@@ -99,6 +134,11 @@
   "ref": 10,
   "seconds": 20.0
  },
+ "54cfcfe08a67f97d": {
+  "name": "dnp_n150_p0.15_s0",
+  "ref": 42,
+  "seconds": 20.0
+ },
  "577b93ece6e8fea9": {
   "name": "clustered_k6_m12_pb0.002_s13",
   "ref": 33,
@@ -109,6 +149,11 @@
   "ref": 49,
   "seconds": 20.0
  },
+ "5bf9ee435b5c3404": {
+  "name": "dnp_n150_p0.15_s2",
+  "ref": 44,
+  "seconds": 20.0
+ },
  "5ca7d135a08249ef": {
   "name": "dnp_n100_p0.25_s1",
   "ref": 26,
@@ -117,6 +162,11 @@
  "60f8792b3c4d5064": {
   "name": "dnp_n100_p0.25_s6",
   "ref": 24,
+  "seconds": 20.0
+ },
+ "62b515d1ef69d056": {
+  "name": "planted_d_n120_r14_e0.03_s10",
+  "ref": 13,
   "seconds": 20.0
  },
  "632218ed6418be30": {
@@ -139,6 +189,11 @@
   "ref": 35,
   "seconds": 20.0
  },
+ "69509e86ab0abbee": {
+  "name": "clustered_k10_m15_pb0.001_s3",
+  "ref": 69,
+  "seconds": 20.0
+ },
  "69637df525c2ee9b": {
   "name": "dnp_n40_p0.3_s0",
   "ref": 15,
@@ -149,9 +204,19 @@
   "ref": 14,
   "seconds": 20.0
  },
+ "6e6705f6dc0cc605": {
+  "name": "dnp_n250_p0.03_s0",
+  "ref": 149,
+  "seconds": 20.0
+ },
  "70efda7f190305d9": {
   "name": "clustered_k6_m12_pb0.002_s12",
   "ref": 34,
+  "seconds": 20.0
+ },
+ "718b9ecf8d43a919": {
+  "name": "clustered_k10_m15_pb0.001_s10",
+  "ref": 69,
   "seconds": 20.0
  },
  "73eceab20544d3a2": {
@@ -179,6 +244,21 @@
   "ref": 49,
   "seconds": 20.0
  },
+ "7dfa684ec5a88991": {
+  "name": "dnp_n150_p0.05_s3",
+  "ref": 87,
+  "seconds": 20.0
+ },
+ "81a2ad47a1a40616": {
+  "name": "clustered_k10_m15_pb0.001_s0",
+  "ref": 69,
+  "seconds": 20.0
+ },
+ "8638677a8c8789cc": {
+  "name": "dnp_n150_p0.15_s10",
+  "ref": 42,
+  "seconds": 20.0
+ },
  "89c2ba37e1b1c994": {
   "name": "dnp_n60_p0.4_s11",
   "ref": 14,
@@ -204,6 +284,11 @@
   "ref": 31,
   "seconds": 20.0
  },
+ "99518cca84bae0b5": {
+  "name": "planted_d_n120_r14_e0.03_s0",
+  "ref": 13,
+  "seconds": 20.0
+ },
  "9b889c541f2587f7": {
   "name": "dnp_n100_p0.25_s13",
   "ref": 26,
@@ -219,14 +304,34 @@
   "ref": 34,
   "seconds": 20.0
  },
+ "acad30e59b5db8b4": {
+  "name": "dnp_n250_p0.1_s2",
+  "ref": 69,
+  "seconds": 20.0
+ },
  "acbc809dbb5696c5": {
   "name": "dnp_n60_p0.4_s1",
   "ref": 13,
   "seconds": 20.0
  },
+ "aebc1f93b2f37069": {
+  "name": "clustered_k10_m15_pb0.001_s2",
+  "ref": 69,
+  "seconds": 20.0
+ },
+ "b10dba997a6c0e86": {
+  "name": "dnp_n250_p0.03_s10",
+  "ref": 147,
+  "seconds": 20.0
+ },
  "b96d21e8a16924a2": {
   "name": "dnp_n40_p0.3_s1",
   "ref": 15,
+  "seconds": 20.0
+ },
+ "bc5d7f25157c1db5": {
+  "name": "dnp_n150_p0.05_s10",
+  "ref": 88,
   "seconds": 20.0
  },
  "bfdfac7211096d2b": {
@@ -274,6 +379,11 @@
   "ref": 47,
   "seconds": 20.0
  },
+ "dbd752300139a02f": {
+  "name": "planted_d_n120_r14_e0.03_s2",
+  "ref": 12,
+  "seconds": 20.0
+ },
  "dca3b8d1db19ffcd": {
   "name": "planted_d_n120_r14_e0.03_s5",
   "ref": 12,
@@ -297,6 +407,11 @@
  "e2901dbd8b03bf79": {
   "name": "dnp_n40_p0.3_s2",
   "ref": 15,
+  "seconds": 20.0
+ },
+ "e32f0eff9b56958c": {
+  "name": "dnp_n150_p0.15_s3",
+  "ref": 42,
   "seconds": 20.0
  },
  "e615848b1315cf54": {
@@ -347,6 +462,11 @@
  "fa3e6667cf0c7866": {
   "name": "dnp_n100_p0.1_s13",
   "ref": 48,
+  "seconds": 20.0
+ },
+ "fc96014a4440115c": {
+  "name": "dnp_n250_p0.1_s3",
+  "ref": 69,
   "seconds": 20.0
  },
  "fdf912aee0fc8b0d": {
