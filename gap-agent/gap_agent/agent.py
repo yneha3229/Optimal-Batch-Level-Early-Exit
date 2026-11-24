@@ -183,3 +183,33 @@ class LearnedAgent:
 
 def is_lower(a: int) -> bool:
     return STRATEGIES[a] in LOWER
+
+
+class LearnedBandit:
+    """Learned prior + online adaptation. For each strategy, the offline model predicts its gain rate in the next
+    slice from the current state; the prediction counts as k0 pseudo-observations and is combined with the rates
+    actually observed in this run (last `window` uses), plus a UCB exploration bonus."""
+    name = "learned agent (learned prior + online)"
+
+    def __init__(self, model, k0: float = 2.0, c: float = 0.3, window: int = 8):
+        self.model, self.k0, self.c, self.window = model, k0, c, window
+        self.eye = np.eye(A, dtype=np.float32)
+
+    def reset(self, g):
+        self.hist = [[] for _ in range(A)]
+        self.n = 0
+
+    def feedback(self, a, gain, dt):
+        self.hist[a] = (self.hist[a] + [gain / max(dt, 1e-3)])[-self.window:]
+        self.n += 1
+
+    def choose(self, obs, st, s):
+        from .learn import SCALE
+
+        prior = np.maximum(self.model.predict(np.hstack([np.repeat(obs[None], A, 0), self.eye])) / SCALE, 0.0)
+        cnt = np.array([len(h) for h in self.hist], dtype=float)
+        tot = np.array([sum(h) for h in self.hist])
+        est = (self.k0 * prior + tot) / (self.k0 + cnt)
+        scale = max(est.max(), 1e-9)
+        bonus = self.c * scale * np.sqrt(np.log(self.n + 2) / (self.k0 + cnt))
+        return int(np.argmax(est + bonus))

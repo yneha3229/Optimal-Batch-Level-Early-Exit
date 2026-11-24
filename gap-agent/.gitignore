@@ -3,3 +3,4 @@ __pycache__/
 data/
 models/round*.pkl
 models/val_*.pkl
+models/rate.pkl
