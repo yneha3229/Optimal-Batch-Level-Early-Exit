@@ -1,0 +1,146 @@
+n= 7 p= 2  rank(I+D)=  21  alpha=  15  rank M=  21  rank B=  8  hit=False  all checks ok
+n= 7 p= 3  rank(I+D)=  20  alpha=  15  rank M=  21  rank B=  7  hit=False  (p=3: not covered by the proof)
+n= 7 p= 5  rank(I+D)=  21  alpha=  15  rank M=  21  rank B=  8  hit=False  all checks ok
+n= 7 p= 7  rank(I+D)=  21  alpha=  15  rank M=  21  rank B=  8  hit=False  all checks ok
+n= 7 p=11  rank(I+D)=  21  alpha=  15  rank M=  21  rank B=  8  hit=False  all checks ok
+n= 7 p=13  rank(I+D)=  21  alpha=  15  rank M=  21  rank B=  8  hit=False  all checks ok
+n= 7 p=17  rank(I+D)=  21  alpha=  15  rank M=  21  rank B=  8  hit=False  all checks ok
+n= 7 p=19  rank(I+D)=  21  alpha=  15  rank M=  21  rank B=  8  hit=False  all checks ok
+n= 7 p=23  rank(I+D)=  21  alpha=  15  rank M=  21  rank B=  8  hit=False  all checks ok
+n= 8 p= 2  rank(I+D)=  22  alpha=  21  rank M=  28  rank B=  3  hit=False  all checks ok
+n= 8 p= 3  rank(I+D)=  28  alpha=  21  rank M=  28  rank B=  9  hit=False  (p=3: not covered by the proof)
+n= 8 p= 5  rank(I+D)=  28  alpha=  21  rank M=  28  rank B=  9  hit=False  all checks ok
+n= 8 p= 7  rank(I+D)=  28  alpha=  21  rank M=  28  rank B=  9  hit=False  all checks ok
+n= 8 p=11  rank(I+D)=  27  alpha=  21  rank M=  28  rank B=  8  hit=False  all checks ok
+n= 8 p=13  rank(I+D)=  28  alpha=  21  rank M=  28  rank B=  9  hit=False  all checks ok
+n= 8 p=17  rank(I+D)=  28  alpha=  21  rank M=  28  rank B=  9  hit=False  all checks ok
+n= 8 p=19  rank(I+D)=  28  alpha=  21  rank M=  28  rank B=  9  hit=False  all checks ok
+n= 8 p=23  rank(I+D)=  28  alpha=  21  rank M=  28  rank B=  9  hit=False  all checks ok
+n= 9 p= 2  rank(I+D)=  36  alpha=  28  rank M=  36  rank B= 10  hit=False  all checks ok
+n= 9 p= 3  rank(I+D)=  28  alpha=  28  rank M=  36  rank B=  2  hit=True   (p=3: not covered by the proof)
+n= 9 p= 5  rank(I+D)=  36  alpha=  28  rank M=  36  rank B= 10  hit=False  all checks ok
+n= 9 p= 7  rank(I+D)=  36  alpha=  28  rank M=  36  rank B= 10  hit=False  all checks ok
+n= 9 p=11  rank(I+D)=  36  alpha=  28  rank M=  36  rank B= 10  hit=False  all checks ok
+n= 9 p=13  rank(I+D)=  36  alpha=  28  rank M=  36  rank B= 10  hit=False  all checks ok
+n= 9 p=17  rank(I+D)=  36  alpha=  28  rank M=  36  rank B= 10  hit=False  all checks ok
+n= 9 p=19  rank(I+D)=  36  alpha=  28  rank M=  36  rank B= 10  hit=False  all checks ok
+n= 9 p=23  rank(I+D)=  36  alpha=  28  rank M=  36  rank B= 10  hit=False  all checks ok
+n=10 p= 2  rank(I+D)=  36  alpha=  36  rank M=  45  rank B=  2  hit=True   all checks ok
+n=10 p= 3  rank(I+D)=  44  alpha=  36  rank M=  45  rank B= 10  hit=False  (p=3: not covered by the proof)
+n=10 p= 5  rank(I+D)=  45  alpha=  36  rank M=  45  rank B= 11  hit=False  all checks ok
+n=10 p= 7  rank(I+D)=  45  alpha=  36  rank M=  45  rank B= 11  hit=False  all checks ok
+n=10 p=11  rank(I+D)=  45  alpha=  36  rank M=  45  rank B= 11  hit=False  all checks ok
+n=10 p=13  rank(I+D)=  45  alpha=  36  rank M=  45  rank B= 11  hit=False  all checks ok
+n=10 p=17  rank(I+D)=  45  alpha=  36  rank M=  45  rank B= 11  hit=False  all checks ok
+n=10 p=19  rank(I+D)=  45  alpha=  36  rank M=  45  rank B= 11  hit=False  all checks ok
+n=10 p=23  rank(I+D)=  45  alpha=  36  rank M=  45  rank B= 11  hit=False  all checks ok
+n=11 p= 2  rank(I+D)=  55  alpha=  45  rank M=  55  rank B= 12  hit=False  all checks ok
+n=11 p= 3  rank(I+D)=  55  alpha=  45  rank M=  55  rank B= 12  hit=False  (p=3: not covered by the proof)
+n=11 p= 5  rank(I+D)=  45  alpha=  45  rank M=  55  rank B=  2  hit=True   all checks ok
+n=11 p= 7  rank(I+D)=  55  alpha=  45  rank M=  55  rank B= 12  hit=False  all checks ok
+n=11 p=11  rank(I+D)=  55  alpha=  45  rank M=  55  rank B= 12  hit=False  all checks ok
+n=11 p=13  rank(I+D)=  55  alpha=  45  rank M=  55  rank B= 12  hit=False  all checks ok
+n=11 p=17  rank(I+D)=  55  alpha=  45  rank M=  55  rank B= 12  hit=False  all checks ok
+n=11 p=19  rank(I+D)=  54  alpha=  45  rank M=  55  rank B= 11  hit=False  all checks ok
+n=11 p=23  rank(I+D)=  55  alpha=  45  rank M=  55  rank B= 12  hit=False  all checks ok
+n=12 p= 2  rank(I+D)=  56  alpha=  55  rank M=  66  rank B=  3  hit=False  all checks ok
+n=12 p= 3  rank(I+D)=  55  alpha=  55  rank M=  66  rank B=  2  hit=True   (p=3: not covered by the proof)
+n=12 p= 5  rank(I+D)=  66  alpha=  55  rank M=  66  rank B= 13  hit=False  all checks ok
+n=12 p= 7  rank(I+D)=  66  alpha=  55  rank M=  66  rank B= 13  hit=False  all checks ok
+n=12 p=11  rank(I+D)=  66  alpha=  55  rank M=  66  rank B= 13  hit=False  all checks ok
+n=12 p=13  rank(I+D)=  66  alpha=  55  rank M=  66  rank B= 13  hit=False  all checks ok
+n=12 p=17  rank(I+D)=  65  alpha=  55  rank M=  66  rank B= 12  hit=False  all checks ok
+n=12 p=19  rank(I+D)=  66  alpha=  55  rank M=  66  rank B= 13  hit=False  all checks ok
+n=12 p=23  rank(I+D)=  66  alpha=  55  rank M=  66  rank B= 13  hit=False  all checks ok
+n=13 p= 2  rank(I+D)=  78  alpha=  66  rank M=  78  rank B= 14  hit=False  all checks ok
+n=13 p= 3  rank(I+D)=  77  alpha=  66  rank M=  78  rank B= 13  hit=False  (p=3: not covered by the proof)
+n=13 p= 5  rank(I+D)=  78  alpha=  66  rank M=  78  rank B= 14  hit=False  all checks ok
+n=13 p= 7  rank(I+D)=  66  alpha=  66  rank M=  78  rank B=  2  hit=True   all checks ok
+n=13 p=11  rank(I+D)=  77  alpha=  66  rank M=  78  rank B= 13  hit=False  all checks ok
+n=13 p=13  rank(I+D)=  78  alpha=  66  rank M=  78  rank B= 14  hit=False  all checks ok
+n=13 p=17  rank(I+D)=  78  alpha=  66  rank M=  78  rank B= 14  hit=False  all checks ok
+n=13 p=19  rank(I+D)=  78  alpha=  66  rank M=  78  rank B= 14  hit=False  all checks ok
+n=13 p=23  rank(I+D)=  78  alpha=  66  rank M=  78  rank B= 14  hit=False  all checks ok
+n=14 p= 2  rank(I+D)=  78  alpha=  78  rank M=  91  rank B=  2  hit=True   all checks ok
+n=14 p= 3  rank(I+D)=  91  alpha=  78  rank M=  91  rank B= 15  hit=False  (p=3: not covered by the proof)
+n=14 p= 5  rank(I+D)=  91  alpha=  78  rank M=  91  rank B= 15  hit=False  all checks ok
+n=14 p= 7  rank(I+D)=  91  alpha=  78  rank M=  91  rank B= 15  hit=False  all checks ok
+n=14 p=11  rank(I+D)=  91  alpha=  78  rank M=  91  rank B= 15  hit=False  all checks ok
+n=14 p=13  rank(I+D)=  91  alpha=  78  rank M=  91  rank B= 15  hit=False  all checks ok
+n=14 p=17  rank(I+D)=  91  alpha=  78  rank M=  91  rank B= 15  hit=False  all checks ok
+n=14 p=19  rank(I+D)=  91  alpha=  78  rank M=  91  rank B= 15  hit=False  all checks ok
+n=14 p=23  rank(I+D)=  91  alpha=  78  rank M=  91  rank B= 15  hit=False  all checks ok
+n=15 p= 2  rank(I+D)= 105  alpha=  91  rank M= 105  rank B= 16  hit=False  all checks ok
+n=15 p= 3  rank(I+D)=  91  alpha=  91  rank M= 105  rank B=  2  hit=True   (p=3: not covered by the proof)
+n=15 p= 5  rank(I+D)= 105  alpha=  91  rank M= 105  rank B= 16  hit=False  all checks ok
+n=15 p= 7  rank(I+D)= 105  alpha=  91  rank M= 105  rank B= 16  hit=False  all checks ok
+n=15 p=11  rank(I+D)= 105  alpha=  91  rank M= 105  rank B= 16  hit=False  all checks ok
+n=15 p=13  rank(I+D)= 105  alpha=  91  rank M= 105  rank B= 16  hit=False  all checks ok
+n=15 p=17  rank(I+D)= 104  alpha=  91  rank M= 105  rank B= 15  hit=False  all checks ok
+n=15 p=19  rank(I+D)= 105  alpha=  91  rank M= 105  rank B= 16  hit=False  all checks ok
+n=15 p=23  rank(I+D)= 105  alpha=  91  rank M= 105  rank B= 16  hit=False  all checks ok
+n=16 p= 2  rank(I+D)= 106  alpha= 105  rank M= 120  rank B=  3  hit=False  all checks ok
+n=16 p= 3  rank(I+D)= 119  alpha= 105  rank M= 120  rank B= 16  hit=False  (p=3: not covered by the proof)
+n=16 p= 5  rank(I+D)= 105  alpha= 105  rank M= 120  rank B=  2  hit=True   all checks ok
+n=16 p= 7  rank(I+D)= 120  alpha= 105  rank M= 120  rank B= 17  hit=False  all checks ok
+n=16 p=11  rank(I+D)= 120  alpha= 105  rank M= 120  rank B= 17  hit=False  all checks ok
+n=16 p=13  rank(I+D)= 120  alpha= 105  rank M= 120  rank B= 17  hit=False  all checks ok
+n=16 p=17  rank(I+D)= 120  alpha= 105  rank M= 120  rank B= 17  hit=False  all checks ok
+n=16 p=19  rank(I+D)= 120  alpha= 105  rank M= 120  rank B= 17  hit=False  all checks ok
+n=16 p=23  rank(I+D)= 120  alpha= 105  rank M= 120  rank B= 17  hit=False  all checks ok
+n=17 p= 2  rank(I+D)= 136  alpha= 120  rank M= 136  rank B= 18  hit=False  all checks ok
+n=17 p= 3  rank(I+D)= 136  alpha= 120  rank M= 136  rank B= 18  hit=False  (p=3: not covered by the proof)
+n=17 p= 5  rank(I+D)= 136  alpha= 120  rank M= 136  rank B= 18  hit=False  all checks ok
+n=17 p= 7  rank(I+D)= 136  alpha= 120  rank M= 136  rank B= 18  hit=False  all checks ok
+n=17 p=11  rank(I+D)= 120  alpha= 120  rank M= 136  rank B=  2  hit=True   all checks ok
+n=17 p=13  rank(I+D)= 136  alpha= 120  rank M= 136  rank B= 18  hit=False  all checks ok
+n=17 p=17  rank(I+D)= 136  alpha= 120  rank M= 136  rank B= 18  hit=False  all checks ok
+n=17 p=19  rank(I+D)= 136  alpha= 120  rank M= 136  rank B= 18  hit=False  all checks ok
+n=17 p=23  rank(I+D)= 136  alpha= 120  rank M= 136  rank B= 18  hit=False  all checks ok
+n=18 p= 2  rank(I+D)= 136  alpha= 136  rank M= 153  rank B=  2  hit=True   all checks ok
+n=18 p= 3  rank(I+D)= 136  alpha= 136  rank M= 153  rank B=  2  hit=True   (p=3: not covered by the proof)
+n=18 p= 5  rank(I+D)= 153  alpha= 136  rank M= 153  rank B= 19  hit=False  all checks ok
+n=18 p= 7  rank(I+D)= 153  alpha= 136  rank M= 153  rank B= 19  hit=False  all checks ok
+n=18 p=11  rank(I+D)= 153  alpha= 136  rank M= 153  rank B= 19  hit=False  all checks ok
+n=18 p=13  rank(I+D)= 153  alpha= 136  rank M= 153  rank B= 19  hit=False  all checks ok
+n=18 p=17  rank(I+D)= 153  alpha= 136  rank M= 153  rank B= 19  hit=False  all checks ok
+n=18 p=19  rank(I+D)= 152  alpha= 136  rank M= 153  rank B= 18  hit=False  all checks ok
+n=18 p=23  rank(I+D)= 153  alpha= 136  rank M= 153  rank B= 19  hit=False  all checks ok
+n=19 p= 2  rank(I+D)= 171  alpha= 153  rank M= 171  rank B= 20  hit=False  all checks ok
+n=19 p= 3  rank(I+D)= 170  alpha= 153  rank M= 171  rank B= 19  hit=False  (p=3: not covered by the proof)
+n=19 p= 5  rank(I+D)= 171  alpha= 153  rank M= 171  rank B= 20  hit=False  all checks ok
+n=19 p= 7  rank(I+D)= 171  alpha= 153  rank M= 171  rank B= 20  hit=False  all checks ok
+n=19 p=11  rank(I+D)= 170  alpha= 153  rank M= 171  rank B= 19  hit=False  all checks ok
+n=19 p=13  rank(I+D)= 153  alpha= 153  rank M= 171  rank B=  2  hit=True   all checks ok
+n=19 p=17  rank(I+D)= 171  alpha= 153  rank M= 171  rank B= 20  hit=False  all checks ok
+n=19 p=19  rank(I+D)= 171  alpha= 153  rank M= 171  rank B= 20  hit=False  all checks ok
+n=19 p=23  rank(I+D)= 171  alpha= 153  rank M= 171  rank B= 20  hit=False  all checks ok
+n=20 p= 2  rank(I+D)= 172  alpha= 171  rank M= 190  rank B=  3  hit=False  all checks ok
+n=20 p= 3  rank(I+D)= 190  alpha= 171  rank M= 190  rank B= 21  hit=False  (p=3: not covered by the proof)
+n=20 p= 5  rank(I+D)= 190  alpha= 171  rank M= 190  rank B= 21  hit=False  all checks ok
+n=20 p= 7  rank(I+D)= 171  alpha= 171  rank M= 190  rank B=  2  hit=True   all checks ok
+n=20 p=11  rank(I+D)= 190  alpha= 171  rank M= 190  rank B= 21  hit=False  all checks ok
+n=20 p=13  rank(I+D)= 190  alpha= 171  rank M= 190  rank B= 21  hit=False  all checks ok
+n=20 p=17  rank(I+D)= 190  alpha= 171  rank M= 190  rank B= 21  hit=False  all checks ok
+n=20 p=19  rank(I+D)= 190  alpha= 171  rank M= 190  rank B= 21  hit=False  all checks ok
+n=20 p=23  rank(I+D)= 190  alpha= 171  rank M= 190  rank B= 21  hit=False  all checks ok
+n=21 p= 2  rank(I+D)= 210  alpha= 190  rank M= 210  rank B= 22  hit=False  all checks ok
+n=21 p= 3  rank(I+D)= 190  alpha= 190  rank M= 210  rank B=  2  hit=True   (p=3: not covered by the proof)
+n=21 p= 5  rank(I+D)= 190  alpha= 190  rank M= 210  rank B=  2  hit=True   all checks ok
+n=21 p= 7  rank(I+D)= 210  alpha= 190  rank M= 210  rank B= 22  hit=False  all checks ok
+n=21 p=11  rank(I+D)= 210  alpha= 190  rank M= 210  rank B= 22  hit=False  all checks ok
+n=21 p=13  rank(I+D)= 210  alpha= 190  rank M= 210  rank B= 22  hit=False  all checks ok
+n=21 p=17  rank(I+D)= 210  alpha= 190  rank M= 210  rank B= 22  hit=False  all checks ok
+n=21 p=19  rank(I+D)= 210  alpha= 190  rank M= 210  rank B= 22  hit=False  all checks ok
+n=21 p=23  rank(I+D)= 210  alpha= 190  rank M= 210  rank B= 22  hit=False  all checks ok
+n=22 p= 2  rank(I+D)= 210  alpha= 210  rank M= 231  rank B=  2  hit=True   all checks ok
+n=22 p= 3  rank(I+D)= 230  alpha= 210  rank M= 231  rank B= 22  hit=False  (p=3: not covered by the proof)
+n=22 p= 5  rank(I+D)= 231  alpha= 210  rank M= 231  rank B= 23  hit=False  all checks ok
+n=22 p= 7  rank(I+D)= 231  alpha= 210  rank M= 231  rank B= 23  hit=False  all checks ok
+n=22 p=11  rank(I+D)= 231  alpha= 210  rank M= 231  rank B= 23  hit=False  all checks ok
+n=22 p=13  rank(I+D)= 231  alpha= 210  rank M= 231  rank B= 23  hit=False  all checks ok
+n=22 p=17  rank(I+D)= 231  alpha= 210  rank M= 231  rank B= 23  hit=False  all checks ok
+n=22 p=19  rank(I+D)= 231  alpha= 210  rank M= 231  rank B= 23  hit=False  all checks ok
+n=22 p=23  rank(I+D)= 231  alpha= 210  rank M= 231  rank B= 23  hit=False  all checks ok
+corollary arithmetic ok for 9 <= n <= 1000000
+ALL CHECKS PASSED: n = 7..22, primes [2, 3, 5, 7, 11, 13, 17, 19, 23]
