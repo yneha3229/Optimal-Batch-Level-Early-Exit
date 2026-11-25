@@ -69,16 +69,17 @@ So 20 of the 24 graphs that both encodings attempted are proven by the new encod
 
 | family | values |
 |---|---|
-| Mycielski M3..M6 | 3, 6, 12, 24 (= alpha + 1); M7 in [47, 48], decided by the reduction of section 10 (running) |
+| Mycielski M3..M6 | 3, 6, 12, 24 (= alpha + 1; M6 also by the rank-free reduction of section 10, 1,401 s); M7 in [47, 48], decided by the reduction (running) |
 | Paley P5, P13, P17 | 3, 5, 6 (= cover) |
-| Paley 29, 37, 41, 53, 61 | [7,8], [7,10], [8,9], [8,11], [8,13] (portfolio running) |
+| Paley 29, 37, 41, 53, 61 | [7,8], [8,10] (rank 7 UNSAT, DRAT check pending), [8,9], [8,11], [8,13] (portfolio running) |
 | orthogonality graphs k = 4..7 | 4, 5, 6, 7 |
 | cycle powers C_n^2, C_n^3 (n = 9..31 odd) | all proven, 28 graphs (`families.csv`) |
-| circulant C_41(1,5,8) | [13, 21] (portfolio running) |
+| circulant C_41(1,5,8) | [17, 21] (ranks 13–16 UNSAT, DRAT check pending; portfolio running) |
 | Johnson J(m,2), m = 6..9 | m - 2 (= cover) |
 | Johnson J(7,3) | 9 (= cover) |
-| Johnson J(8,3) | [11, 12] |
+| Johnson J(8,3) | 12 (= cover; rank 11 UNSAT in 2,780 s, DRAT check pending) |
 | generalized Kneser (|A ∩ B| ≤ 1): (7,3), (8,3), (9,3) | 6, 7, 7 (cover; alpha = cover for (9,3)) |
+| generalized Kneser (|A ∩ B| ≤ 1): (9,4), (10,4) | [22, 35] (rank 21 UNSAT, DRAT-verified), [28, 42]; cover 42 |
 | odd graph O_3 = K(7,3) | 18 |
 | co-Kneser (7,3), (8,3) | 3, 4 (= cover) |
 | hypercubes Q3..Q6, H(3,3), H(2,4), distance graphs of Q4, Q5 | = cover |
@@ -106,12 +107,15 @@ here where minrank beats the cover.
 - **beta(K(8,3)).** It is 21 or 22. Pincer's symmetric Shannon LP enumerates 2^n subsets, so it is limited to
   n ≤ 16; K(8,3) has 56 vertices. Undecided.
 
-## 4. Still open (24 Nov)
+## 4. Still open (25 Nov)
+
+The 24 Nov portfolio was killed by a server reboot after about 2.5 h, before any 8 h call ended; only the UNSAT CNFs
+of finished calls survived (C_41(1,5,8) ranks 13–16, Paley 37 rank 7). It was restarted on 25 Nov with those floors and
+per-call progress files (`families.py --progress`), so another reboot loses only the calls in flight.
 
 - K(9,4), K(10,4), K(11,3), K(13,3), Paley 29–61, C_41(1,5,8): portfolio of 4 solver/mode members, 8 h per call
   (`scripts/minrank/11_open_portfolio.sh`, `minrank/results/open_portfolio/`).
 - M7: the reduction runs with an 8 h limit (`logs/minrank_mycielski_red_M7.log`).
-- J(8,3) at rank 11.
 - K(n,3) for n ≡ 0 (mod 4), n ≥ 12, 3 ∤ n (K(16,3), K(20,3)): alpha or alpha + 1. SAT is infeasible at this size;
   a proof would need the involution structure of section 9.
 - beta(K(8,3)): 21 or 22.
