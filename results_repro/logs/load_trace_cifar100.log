@@ -1,0 +1,28 @@
+trace 0: 3000 batches, 83156 inputs, B quantiles [1, 1, 4, 15, 128]
+trace 1: 3000 batches, 84981 inputs, B quantiles [1, 1, 5, 17, 128]
+trace 2: 3000 batches, 83278 inputs, B quantiles [1, 1, 5, 16, 128]
+           family  tuning  speedup  drop_pts  speedup[B<=4]  speedup[5-32]  speedup[33-96]  speedup[97-128]  drop_pts[B<=4]  drop_pts[5-32]  drop_pts[33-96]  drop_pts[97-128]
+             full       -    1.000     0.000          1.000          1.000           1.000            1.000           0.000           0.000            0.000             0.000
+         majority once@64    1.048     0.680          1.046          0.983           1.042            1.065           0.624           1.196            0.383             0.613
+         majority  once@8    0.962     0.045          0.971          0.889           0.956            0.978           0.252           0.304            0.000             0.000
+         majority   per_B    1.078     0.690          1.278          0.941           1.042            1.065           2.204           0.872            0.383             0.613
+random_collective once@64    1.324     0.761          1.181          0.949           1.458            1.515           0.737           0.767            0.732             0.761
+random_collective  once@8    1.208     0.209          1.067          0.962           1.320            1.338           0.153           0.289            0.287             0.194
+random_collective   per_B    1.336     0.722          1.189          0.983           1.458            1.515           0.688           0.474            0.704             0.761
+           theory once@64    1.239     0.485          1.075          0.975           1.317            1.389           0.313           0.366            0.265             0.518
+           theory  once@8    1.320     0.746          1.164          1.026           1.422            1.475           0.448           0.603            0.565             0.785
+           theory   per_B    1.323     0.750          1.165          1.046           1.383            1.473           0.497           0.704            0.456             0.778
+      theory+plan once@64    1.394     0.747          1.285          1.118           1.483            1.516           0.788           1.121            0.732             0.688
+      theory+plan  once@8    1.138     0.341          1.142          1.045           1.121            1.161           0.297           0.168            0.251             0.373
+      theory+plan   per_B    1.358     0.692          1.323          1.098           1.443            1.446           0.582           0.461            0.556             0.736
+        threshold once@64    1.330     0.807          1.186          0.951           1.465            1.523           0.777           0.805            0.760             0.809
+        threshold  once@8    1.330     0.807          1.186          0.951           1.465            1.523           0.777           0.805            0.760             0.809
+        threshold   per_B    1.330     0.807          1.186          0.951           1.465            1.523           0.777           0.805            0.760             0.809
+   threshold+plan once@64    1.274     0.436          1.192          1.016           1.375            1.380           0.264           0.453            0.412             0.440
+   threshold+plan  once@8    1.152     0.504          1.163          1.087           1.138            1.166           0.591           0.345            0.306             0.533
+   threshold+plan   per_B    1.379     0.680          1.305          1.111           1.417            1.488           0.511           0.375            0.649             0.734
+          unified once@64    1.000     0.000          1.000          1.000           1.000            1.000           0.000           0.000            0.000             0.000
+          unified  once@8    1.000     0.000          1.000          1.000           1.000            1.000           0.000           0.000            0.000             0.000
+          unified   per_B    1.000     0.000          1.000          1.000           1.000            1.000           0.000           0.000            0.000             0.000
+theory once@64: 1.239x; best per-B heuristic 1.379x (ratio 0.898, pass >= 0.95); best tuned-once heuristic 1.330x (ahead: False)
+theory+plan once@64: 1.394x; best per-B heuristic 1.379x (ratio 1.010, pass >= 0.95); best tuned-once heuristic 1.330x (ahead: True)

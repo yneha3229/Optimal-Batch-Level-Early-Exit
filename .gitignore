@@ -24,3 +24,4 @@ results/bandit_*_10seeds.csv
 
 # reproduce_cpu.sh shadow tree (code copies, inputs, 25 MB bandit traces)
 results_repro/.root/
+results_repro/.gpu_root/
