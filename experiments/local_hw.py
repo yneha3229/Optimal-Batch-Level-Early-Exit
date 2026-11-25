@@ -618,9 +618,15 @@ class GraphDevice(Device):
                 b2 = self._buf(nb2)
                 if len(keep) < n:                             # compaction: gather the kept rows into bucket nb2
                     k = self._pad(keep, nb2)
-                    torch.index_select(h_out, 0, k, out=b2["h"])
-                    if mask_out is not None:
-                        torch.index_select(mask_out, 0, k, out=b2["mask"])
+                    # after the first segment, mask_out IS the static mask buffer of bucket nb; when nb2 == nb the
+                    # gather would read and write the same memory, so go through a temporary in that case
+                    for src, dst in ((h_out, b2["h"]), (mask_out, b2["mask"])):
+                        if src is None:
+                            continue
+                        if src.data_ptr() == dst.data_ptr():
+                            dst.copy_(src.index_select(0, k))
+                        else:
+                            torch.index_select(src, 0, k, out=dst)
                     ids = ids[keep]
                 else:                                         # same rows, same bucket: hand the state over
                     b2["h"].copy_(h_out)
