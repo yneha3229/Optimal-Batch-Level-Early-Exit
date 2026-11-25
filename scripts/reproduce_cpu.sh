@@ -10,6 +10,10 @@
 # Usage:   scripts/reproduce_cpu.sh                    all groups (about 4-6 h on 6 free cores; cert is 2-3 h of it)
 #          ONLY="theory gtx a6000" scripts/reproduce_cpu.sh     selected groups
 #          W=12 scripts/reproduce_cpu.sh               more worker processes (default 6)
+#          RESUME=0 scripts/reproduce_cpu.sh           rerun every step (default: skip steps logged OK in timing.tsv,
+#                                                      so the same command continues after a crash or reboot)
+# Detached (survives the shell that started it):
+#          setsid nohup scripts/reproduce_cpu.sh > results_repro/run.log 2>&1 < /dev/null &
 # Groups (in run order): theory gtx a6000 delta load robust bandit theory58 transfer cert report
 # Output:  results_repro/<file> (regenerated files), results_repro/logs/<step>.log, results_repro/timing.tsv,
 #          results_repro/diff_summary.csv and results_repro/DIFF.md (MATCH / CLOSE / MISMATCH / MISSING per file).
@@ -39,6 +43,10 @@ DIFF_ITEMS=()
 # step NAME GROUP "OUTPUT FILES (relative to results/)" COMMAND...
 step() {
   local name=$1 group=$2 outs=$3; shift 3
+  if [ "${RESUME:-1}" = 1 ] && awk -F'\t' -v s="$name" '$1 == s && $2 == "OK" {f = 1} END {exit !f}' "$TIMING"; then
+    for f in $outs; do DIFF_ITEMS+=("$group:$f"); [ -e "$SH/results/$f" ] && cp "$SH/results/$f" "$OUT/$f"; done
+    echo "$(date +%T) skip $name (OK in timing.tsv)"; return
+  fi
   for f in $outs; do rm -f "$SH/results/$f"; DIFF_ITEMS+=("$group:$f"); done
   local t0=$SECONDS st=OK
   ( cd "$SH" && nice -n 10 "$@" ) > "$OUT/logs/$name.log" 2>&1 || st=FAIL
