@@ -29,6 +29,18 @@ def one(rec):
     return {"name": rec["name"], "family": rec["family"], "digits": rec["digits"], "runs": res}
 
 
+def _sub(rec):
+    import subprocess
+
+    try:
+        p = subprocess.run([sys.executable, __file__, "job", json.dumps(rec)], capture_output=True, text=True,
+                           timeout=LIMIT * 6 + 60)
+        line = p.stdout.strip().splitlines()[-1] if p.stdout.strip() else ""
+        return json.loads(line) if line.startswith("{") else {**rec, "error": p.stderr[-300:]}
+    except subprocess.TimeoutExpired:
+        return {**rec, "error": "watchdog"}
+
+
 def cmd_run():
     nums = json.loads((HERE / "numbers.json").read_text())
     done = set()
@@ -36,7 +48,10 @@ def cmd_run():
         done = {json.loads(x)["name"] for x in OUT.read_text().splitlines() if x.strip()}
     todo = [r for r in nums if r["name"] not in done]
     with ThreadPoolExecutor(3) as ex, open(OUT, "a") as f:
-        for r in ex.map(one, todo):
+        for r in ex.map(_sub, todo):
+            if "error" in r:
+                print(r["name"], "ERROR", r["error"][-200:], flush=True)
+                continue
             f.write(json.dumps(r) + "\n")
             f.flush()
             print(r["name"], r["digits"], {m: (v["s"] if v["ok"] else "x") for m, v in r["runs"].items()}, flush=True)
@@ -72,4 +87,7 @@ def cmd_report():
 
 
 if __name__ == "__main__":
-    {"run": cmd_run, "report": cmd_report}[sys.argv[1]]()
+    if sys.argv[1] == "job":
+        print(json.dumps(one(json.loads(sys.argv[2]))))
+    else:
+        {"run": cmd_run, "report": cmd_report}[sys.argv[1]]()
