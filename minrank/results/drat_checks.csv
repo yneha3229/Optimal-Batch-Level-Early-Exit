@@ -102,3 +102,4 @@ minrank/results/planted_n100_check/cnf/planted_n100_r10_e0.1_s5_r9_indep.cnf.gz,
 minrank/results/planted_n100_check/cnf/planted_n100_r10_e0.1_s6_r9_indep.cnf.gz,b1ea4f2acf98b21303efc451627d9e6c2d6c75a149152a955e1a3bdf6fabe6c9,79728,275202,UNSAT,4.798025991,VERIFIED,2.473802641,3
 minrank/results/planted_n100_check/cnf/planted_n100_r10_e0.1_s2_r9_indep.cnf.gz,b08494e31f114e71f5fa1c167525d99e51756b46660a6ec069fc4d8cc9e4e69b,80476,277824,UNSAT,2.793705949,VERIFIED,2.289173949,3
 minrank/results/unsat_cnf/families_new/odd_3_r17_indep.cnf.gz,726dfd807bde1de7db3af22994a058482d361ff2dd37a3274b4d02c96be8ac4a,36995,126370,UNSAT,50.806755551,VERIFIED,104.511711364,38
+minrank/results/unsat_cnf/families_new/gkneser_9_4_1_r21_indep.cnf.gz,ed13f5d4c6710f108a9c12637d10cc1e413e390d8dcb60a438c2c477731cf515,423738,1470546,UNSAT,1872.389243768,VERIFIED,3356.686184477,542

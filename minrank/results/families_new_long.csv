@@ -1,0 +1,2 @@
+spec,graph,n,family,directed,alpha,alpha_proven,cover,lower,upper,proven,seconds,mode,solver,time_per_call,indep,log
+"johnson:8,3",johnson_8_3,56,johnson,False,8,True,12,12,12,True,2791.3,indep,cadical153,28800.0,2 8 14 25 28 41 46 55,"[[11, ""unsat"", 2779.74]]"
