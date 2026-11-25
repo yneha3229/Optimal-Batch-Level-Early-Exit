@@ -1,0 +1,4 @@
+2026-11-25_05:40:16 START cifar100 gpu=5
+2026-11-25_05:41:03 OK   logs/server_profile_cifar100_a6000_T197.log
+2026-11-25_05:41:34 OK   logs/server_select_cifar100_a6000_T197.log
+2026-11-25_05:41:40 OK   logs/server_front_cifar100_a6000_T197.log

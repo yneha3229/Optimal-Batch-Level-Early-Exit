@@ -1,0 +1,4 @@
+1. predictions: 144 (batch, policy) pairs compared, all equal
+2. confidences vs eager forward: max |diff| = 1.79e-07 (ok, atol 1e-4)
+3. captures during time_pass: 0 (ok); 100 graphs in total
+ALL CHECKS PASSED

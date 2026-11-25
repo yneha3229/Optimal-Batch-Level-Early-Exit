@@ -43,7 +43,8 @@ from simulator import policies as P  # noqa: E402
 from simulator.simulator import Cost, Traces, load_traces  # noqa: E402
 
 LAYERS = [2, 4, 6, 8, 10, 12]            # exit layers; set_task() replaces them from traces/<task>_val.meta.json
-NUM_LABELS = {"mnli": 3, "qqp": 2}
+NUM_LABELS = {"mnli": 3, "qqp": 2, "cifar100": 100}
+VISION = {"cifar100"}                  # ViT-B/16 tasks: 224 x 224 images, 197 tokens, no attention mask
 META: dict = {}                          # trace meta of the current task ({} for the RoBERTa tasks)
 FRONT_ALPHAS = [0.0025, 0.005, 0.0075, 0.01, 0.0125, 0.015, 0.02, 0.03]
 ALPHA, DELTA = 0.01, 0.10          # accuracy budget (drop vs full model) and failure probability
@@ -309,13 +310,19 @@ class Device:
         from simulator.exit_model import build
         self.torch, self.dev, self.T = torch, device, seq_len
         torch.manual_seed(0)
-        cfg = dict(kind="text", backbone="roberta-base", exit_layers=LAYERS, num_labels=NUM_LABELS[task])
-        self.model = build(cfg, load_backbone_weights=False).to(device).float().eval()   # fp32: fp16 is 4x slower on GTX 16xx
-        ids = torch.randint(5, 50000, (n_inputs, seq_len))
-        ids[:, 0] = 0
-        lens = torch.randint(seq_len // 4, seq_len + 1, (n_inputs,))
-        am = (torch.arange(seq_len)[None, :] < lens[:, None]).long()
-        self.inp = {"input_ids": ids.to(device), "attention_mask": am.to(device)}
+        if task in VISION:     # timing does not depend on weights or pixels: decisions are replayed from traces
+            cfg = dict(kind="vision", backbone="google/vit-base-patch16-224-in21k", exit_layers=LAYERS,
+                       num_labels=NUM_LABELS[task])
+            self.model = build(cfg, load_backbone_weights=False).to(device).float().eval()
+            self.inp = {"pixel_values": torch.randn(n_inputs, 3, 224, 224).to(device)}
+        else:
+            cfg = dict(kind="text", backbone="roberta-base", exit_layers=LAYERS, num_labels=NUM_LABELS[task])
+            self.model = build(cfg, load_backbone_weights=False).to(device).float().eval()   # fp32: fp16 is 4x slower on GTX 16xx
+            ids = torch.randint(5, 50000, (n_inputs, seq_len))
+            ids[:, 0] = 0
+            lens = torch.randint(seq_len // 4, seq_len + 1, (n_inputs,))
+            am = (torch.arange(seq_len)[None, :] < lens[:, None]).long()
+            self.inp = {"input_ids": ids.to(device), "attention_mask": am.to(device)}
         self.host = torch.empty(4096, dtype=torch.float32, pin_memory=device == "cuda")
 
     def sync(self) -> None:
@@ -358,7 +365,7 @@ class Device:
                 if len(keep) < n:
                     k = torch.from_numpy(keep).to(self.dev)
                     h = h.index_select(0, k)
-                    mask = mask.index_select(0, k)
+                    mask = mask.index_select(0, k) if mask is not None else None     # ViT: no mask
                     ids = ids[keep]
             self.sync()
         return out
@@ -514,15 +521,15 @@ class GraphDevice(Device):
         self.record: list | None = None   # if a list, run_batch appends (exit, device confidences of the live rows)
         with torch.inference_mode():
             h, mask = self.model.embed({k: v[:1] for k, v in self.inp.items()})
-        self.hshape, self.mshape, self.hdtype = tuple(h.shape[1:]), tuple(mask.shape[1:]), h.dtype
+        self.hshape, self.hdtype = tuple(h.shape[1:]), h.dtype
+        self.mshape = None if mask is None else tuple(mask.shape[1:])      # ViT has no attention mask
 
     def _buf(self, nb: int) -> dict:
         if nb not in self.bufs:
             t, d = self.torch, self.dev
-            self.bufs[nb] = {"ids": t.zeros((nb, self.T), dtype=self.inp["input_ids"].dtype, device=d),
-                             "am": t.ones((nb, self.T), dtype=self.inp["attention_mask"].dtype, device=d),
+            self.bufs[nb] = {"in": {k: t.zeros((nb, *v.shape[1:]), dtype=v.dtype, device=d) for k, v in self.inp.items()},
                              "h": t.zeros((nb, *self.hshape), dtype=self.hdtype, device=d),
-                             "mask": t.zeros((nb, *self.mshape), dtype=self.hdtype, device=d)}
+                             "mask": None if self.mshape is None else t.zeros((nb, *self.mshape), dtype=self.hdtype, device=d)}
         return self.bufs[nb]
 
     def _graph(self, nb: int, lo: int | None, e: int):
@@ -533,7 +540,7 @@ class GraphDevice(Device):
 
         def seg():
             if lo is None:
-                h, mask = m.embed({"input_ids": b["ids"], "attention_mask": b["am"]})
+                h, mask = m.embed(b["in"])
                 start = 0
             else:
                 h, mask, start = b["h"], b["mask"], lo
@@ -583,8 +590,8 @@ class GraphDevice(Device):
             nb = bucket(B)
             b = self._buf(nb)
             st = self._pad(np.asarray(slot, np.int64), nb)
-            torch.index_select(self.inp["input_ids"], 0, st, out=b["ids"])
-            torch.index_select(self.inp["attention_mask"], 0, st, out=b["am"])
+            for k, v in self.inp.items():
+                torch.index_select(v, 0, st, out=b["in"][k])
             ids = np.arange(B)
             out = np.empty(B, np.int64)
             lo = None
@@ -611,12 +618,19 @@ class GraphDevice(Device):
                 b2 = self._buf(nb2)
                 if len(keep) < n:                             # compaction: gather the kept rows into bucket nb2
                     k = self._pad(keep, nb2)
-                    torch.index_select(h_out, 0, k, out=b2["h"])
-                    torch.index_select(mask_out, 0, k, out=b2["mask"])
+                    # after the first segment, mask_out IS the static mask buffer of bucket nb; when nb2 == nb the
+                    # gather would read and write the same memory, so go through a temporary in that case
+                    for src, dst in ((h_out, b2["h"]), (mask_out, b2["mask"])):
+                        if src is None:
+                            continue
+                        if src.data_ptr() == dst.data_ptr():
+                            dst.copy_(src.index_select(0, k))
+                        else:
+                            torch.index_select(src, 0, k, out=dst)
                     ids = ids[keep]
                 else:                                         # same rows, same bucket: hand the state over
                     b2["h"].copy_(h_out)
-                    if mask_out.data_ptr() != b2["mask"].data_ptr():
+                    if mask_out is not None and mask_out.data_ptr() != b2["mask"].data_ptr():
                         b2["mask"].copy_(mask_out)
                 nb, lo = nb2, LAYERS[e]
             self.sync()
@@ -643,7 +657,7 @@ def tag(args) -> str:
 
 
 def cost_path(args) -> Path:
-    model = "_" + args.task.split("_", 1)[1] if is_llm() else ""       # an LLM's cost is its own: one file per model
+    model = "_" + args.task.split("_", 1)[1] if is_llm() else ("_vit" if args.task in VISION else "")   # one cost file per model
     return ROOT / f"results/local_cost_{tag(args)}{model}.json"
 
 
@@ -654,7 +668,7 @@ def load_cost(args, kind: str | None = None) -> TCost:
 # ------------------------------------------------------------------------------------------ subcommands
 def cmd_profile(args) -> None:
     import torch
-    dv = make_device(args.task if is_llm() else "mnli", args.device, args.seq_len, 512, args.exec)
+    dv = make_device(args.task if (is_llm() or args.task in VISION) else "mnli", args.device, args.seq_len, 512, args.exec)
     zero = Cost("none", 0.0, 0.0, 0.0)
     E = len(LAYERS)
     conf, pred = np.zeros((256, E)), np.zeros((256, E), np.int64)
@@ -686,7 +700,7 @@ def cmd_profile(args) -> None:
     head = float(np.median((d.heads_ms - d.full_ms) / (E - 1)))
     fit = a12 + b * d.B
     out = {"device": args.device, "exec": args.exec, "seq_len": args.seq_len, "dtype": "bf16" if is_llm() else "fp32",
-           "model": META.get("model", "roberta-base"), "exit_layers": list(LAYERS),
+           "model": META.get("model", "vit-base-patch16-224" if args.task in VISION else "roberta-base"), "exit_layers": list(LAYERS),
            "a": float(max(a12, 0) / LAYERS[-1]), "b": float(b / LAYERS[-1]), "head": max(head, 0.0), "head_raw": head,
            "rho8": float(a12 / b / 8), "rho64": float(a12 / b / 64),
            "affine_max_rel_err": float(np.max(np.abs(fit - d.full_ms) / d.full_ms)), "points": rows,
