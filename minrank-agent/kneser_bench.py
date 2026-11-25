@@ -161,7 +161,10 @@ def f2_minrank_sat(A, alpha, S, limit):
         left = limit - (time.perf_counter() - t0)
         if left <= 0.05:
             return None, r - 1 if lower_proven else None
-        res = minrank_sat(d, r, left, S)
+        try:
+            res = minrank_sat(d, r, left, S)
+        except Exception:            # the solver process died (e.g. out of memory on a huge CNF)
+            return None, (r - 1 if lower_proven else None)
         if res is None:              # timeout: r unresolved
             return None, (r - 1 if lower_proven else None)
         if res is False:
@@ -202,9 +205,19 @@ def agent(A, limit):
                 return {"lower": a, "upper": U, "field": field, "fields_tried": tried, "exact": True,
                         "s": time.perf_counter() - t0}
             lower = max(lower, a or 0)
-    a, S, opt = cpsat_alpha(A, max(0.1, limit - (time.perf_counter() - t0)))
-    return {"lower": max(lower, a or 0), "upper": U, "field": field, "fields_tried": tried,
-            "exact": (a or 0) >= U, "s": time.perf_counter() - t0}
+    # the codes did not close the gap: fall back on the standard bounds too, so the agent is never worse
+    left = lambda: max(0.1, limit - (time.perf_counter() - t0))  # noqa: E731
+    a, S, opt = cpsat_alpha(A, left() / 3)
+    lower = max(lower, a or 0)
+    by = "code F%s" % field
+    cc, _ = cpsat_cover(A, left() / 2)
+    if cc is not None and cc < U:
+        U, by = cc, "clique cover"
+    fc, _ = frac_cover(A, left())
+    if fc < U - 1e-9:
+        U, by = fc, "fractional cover"
+    return {"lower": lower, "upper": U, "field": field, "fields_tried": tried, "upper_by": by,
+            "exact": lower >= U - 1e-9, "s": time.perf_counter() - t0}
 
 
 # ------------------------------------------------------------------------------------------------ harness
