@@ -1,0 +1,27 @@
+112 QPs (1 errors)
+
+== target relative KKT <= 0.0001  (shifted geometric mean, shift 1 s; failures = 60 s)
+  clarabel  solved 111/112  sgm 0.156 s
+  highs     solved  86/112  sgm 2.321 s
+  osqp      solved  94/112  sgm 1.806 s
+  piqp      solved 112/112  sgm 0.139 s
+  proxqp    solved  90/112  sgm 2.536 s
+  scs       solved 112/112  sgm 0.275 s
+  best single: piqp 0.139 s; oracle 0.075 s (x1.85); oracle solves 112/112
+  fastest per instance: {'piqp': 87, 'proxqp': 9, 'osqp': 5, 'clarabel': 4, 'highs': 4, 'scs': 3}
+  oracle time in [0,0.1) s: 102 QPs | best single piqp 0.015s vs oracle 0.014s | total: best single piqp 1.6s vs oracle 1.5s
+  oracle time in [0.1,1) s:   6 QPs | best single piqp 0.237s vs oracle 0.201s | total: best single piqp 1.4s vs oracle 1.2s
+  oracle time in [1,1e+09) s:   4 QPs | best single clarabel 3.758s vs oracle 3.007s | total: best single clarabel 16.1s vs oracle 13.8s
+
+== target relative KKT <= 1e-08  (shifted geometric mean, shift 1 s; failures = 60 s)
+  clarabel  solved 111/112  sgm 0.163 s
+  highs     solved  28/112  sgm 24.421 s
+  osqp      solved  74/112  sgm 4.394 s
+  piqp      solved 111/112  sgm 0.151 s
+  proxqp    solved  90/112  sgm 2.507 s
+  scs       solved 106/112  sgm 0.697 s
+  best single: piqp 0.151 s; oracle 0.082 s (x1.83); oracle solves 112/112
+  fastest per instance: {'piqp': 87, 'proxqp': 15, 'scs': 3, 'osqp': 3, 'clarabel': 2, 'highs': 2}
+  oracle time in [0,0.1) s: 101 QPs | best single piqp 0.015s vs oracle 0.014s | total: best single piqp 1.5s vs oracle 1.4s
+  oracle time in [0.1,1) s:   7 QPs | best single piqp 0.239s vs oracle 0.200s | total: best single piqp 1.7s vs oracle 1.4s
+  oracle time in [1,1e+09) s:   4 QPs | best single clarabel 4.604s vs oracle 3.673s | total: best single clarabel 19.2s vs oracle 16.6s
