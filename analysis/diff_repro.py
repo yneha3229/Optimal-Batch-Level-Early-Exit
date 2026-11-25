@@ -43,10 +43,13 @@ def cmp_csv(p: Path, q: Path) -> tuple[str, str]:
     if key:
         a = a.sort_values(key + num, kind="mergesort").reset_index(drop=True)
         b = b.sort_values(key + num, kind="mergesort").reset_index(drop=True)
-        bad = [c for c in key if not a[c].astype(str).equals(b[c].astype(str))]
+        s = lambda col: col.astype(object).where(col.notna(), "<NA>").astype(str).to_numpy()   # pandas 3: NaN stays NaN
+        bad = [c for c in key if (s(a[c]) != s(b[c])).any()]
         if bad:
-            i = int(np.flatnonzero(a[bad[0]].astype(str).values != b[bad[0]].astype(str).values)[0])
-            return "MISMATCH", f"column {bad[0]} row {i}: {a[bad[0]][i]!r} vs {b[bad[0]][i]!r} committed"
+            c = bad[0]
+            i = int(np.flatnonzero(s(a[c]) != s(b[c]))[0])
+            na = f" ({int(a[c].isna().sum())} empty vs {int(b[c].isna().sum())} committed)" if a[c].isna().sum() != b[c].isna().sum() else ""
+            return "MISMATCH", f"column {c} row {i}: {s(a[c])[i]!r} vs {s(b[c])[i]!r} committed{na}"
     worst, where = 0.0, ""
     for c in num:
         x, y = a[c].to_numpy(float), b[c].to_numpy(float)
