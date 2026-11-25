@@ -9,7 +9,10 @@ H \;=\; I + (-1)^{k-1} D, \qquad H_{A,B} = \binom{|A\cap B|-1}{k-1},
 ```
 
 fits $`K(n,k)`$ over every field. It is the matrix used by Golovnev–Haviv and by Haviv for upper bounds on minrank.
-We prove:
+
+Here $`\alpha(G)`$ is the independence number (the largest set of pairwise non-adjacent vertices). For every graph and
+every field, $`\alpha(G)\le\mathrm{minrk}_{\mathbb F}(G)`$; this lower bound is standard. For Kneser graphs
+$`\alpha(K(n,k))=\binom{n-1}{k-1}`$ (Erdős–Ko–Rado). We show that the lower bound is attained over suitable prime fields:
 
 > **Main Theorem.** Let $`p`$ be a prime and let $`q`$ be the smallest power of $`p`$ with $`q \ge k`$.
 > If $`q \mid n-2k`$, then
@@ -18,8 +21,23 @@ We prove:
 > ```
 > and therefore $`\mathrm{minrk}_{\mathbb F_p}(K(n,k)) = \alpha(K(n,k))`$.
 
-> **Corollary.** For every $`k \ge 2`$ and all but finitely many $`n`$, the Haemers bound is tight on $`K(n,k)`$:
-> $`\min_{\mathbb F}\mathrm{minrk}_{\mathbb F}(K(n,k)) = \alpha(K(n,k)) = \Theta(K(n,k))`$.
+**What is new, precisely.**
+
+- The lower bound $`\alpha\le\mathrm{minrk}`$ and the matrix $`H`$ are known. The new part is the exact value of
+  $`\mathrm{rank}_{\mathbb F_p}H`$; earlier work bounded it only by $`\sum_{i<k}\binom ni`$.
+- The equality $`\mathrm{minrk}=\alpha`$ was **already known when $`k\mid n`$**, over every field: Baranyai's theorem gives
+  a clique cover of size $`\alpha`$ (§6). The Main Theorem overlaps with this. Its new content is the cases with
+  $`k\nmid n`$, where no clique cover reaches $`\alpha`$. There are infinitely many such $`n`$ for every $`k`$
+  (Corollary 6.2), e.g. $`K(10,3)`$ and $`K(14,3)`$ over $`\mathbb F_2`$, $`K(11,3)`$ over $`\mathbb F_5`$, $`K(17,4)`$ over
+  $`\mathbb F_3`$.
+- The statement is field-specific and one-directional: it says nothing about other fields, and it does not prove
+  $`\mathrm{minrk}>\alpha`$ when $`q\nmid n-2k`$.
+
+> **Corollary.** For every $`k \ge 2`$ and all but finitely many $`n`$, some prime field $`\mathbb F_p`$ has
+> $`\mathrm{minrk}_{\mathbb F_p}(K(n,k)) = \alpha(K(n,k))`$ (by the Main Theorem, or by Baranyai when $`k\mid n`$).
+> The exceptions for small $`k`$ are listed in §6.
+
+The Shannon capacity plays no role in the theorem or its proof; the consequence for Haemers' bound is a remark (§7).
 
 ---
 
@@ -35,17 +53,18 @@ The minrank $`\mathrm{minrk}_{\mathbb F}(G)`$ is the minimum rank of a matrix th
 
 **Standard facts.**
 
-1. $`\alpha(G)\le \mathrm{minrk}_{\mathbb F}(G)`$. The principal submatrix on an independent set is diagonal
-   with nonzero diagonal.
-2. $`\mathrm{minrk}_{\mathbb F}(G)\le \bar\chi(G)`$, the clique cover number.
-3. (Haemers) $`\Theta(G)\le \mathrm{minrk}_{\mathbb F}(G)`$, where $`\Theta`$ is the Shannon capacity.
+1. $`\alpha(G)\le \mathrm{minrk}_{\mathbb F}(G)`$. The principal submatrix of a fitting matrix on an independent set is
+   diagonal with nonzero diagonal, hence of full rank.
+2. $`\mathrm{minrk}_{\mathbb F}(G)\le \bar\chi(G)`$, the clique cover number (sum of the all-ones blocks of a cover).
 
 **Kneser graphs.** The vertices of $`K(n,k)`$ are the $`k`$-subsets of $`[n]`$, and $`A\sim B`$ iff $`A\cap B=\emptyset`$.
-By Erdős–Ko–Rado and Lovász, for $`n\ge 2k`$,
+An independent set is a pairwise-intersecting family, so by Erdős–Ko–Rado, for $`n\ge 2k`$,
 
 ```math
-\alpha(K(n,k)) = \Theta(K(n,k)) = \binom{n-1}{k-1}.
+\alpha(K(n,k)) = \binom{n-1}{k-1},
 ```
+
+attained by the star of all $`k`$-sets containing a fixed element.
 
 **The matrix $`H`$.** Put $`\varepsilon = (-1)^{k-1}`$ and $`H = I + \varepsilon D`$. Then $`H_{AA}=1`$ and $`H_{AB}=0`$ when
 $`0<|A\cap B|<k`$, so $`H`$ fits $`K(n,k)`$ over every field.
@@ -260,21 +279,29 @@ Hence equality holds. $`\blacksquare`$
 
 ## 6. Corollaries
 
-**Corollary 6.1** (Haemers bound). If $`q_p(k)\mid n-2k`$ for some prime $`p`$ (where $`q_p(k)`$ is the least power of
-$`p`$ that is $`\ge k`$), or $`k\mid n`$, then
+**Proposition 6.0** (known: the case $`k\mid n`$). If $`k\mid n`$, then $`\mathrm{minrk}_{\mathbb F}(K(n,k))=\alpha`$ over
+**every** field.
+
+*Proof.* Baranyai's theorem partitions the $`k`$-subsets of $`[n]`$ into $`\binom{n-1}{k-1}`$ parallel classes. Each class
+is a clique of $`K(n,k)`$, so $`\bar\chi=\alpha`$. Combine facts 1–2 of §1. $`\square`$
+
+**Corollary 6.1.** If $`q_p(k)\mid n-2k`$ for some prime $`p`$ (where $`q_p(k)`$ is the least power of $`p`$ that is
+$`\ge k`$), or $`k\mid n`$, then
 
 ```math
-\min_{\mathbb F}\mathrm{minrk}_{\mathbb F}(K(n,k))=\alpha(K(n,k))=\Theta(K(n,k)).
+\min_{p}\ \mathrm{minrk}_{\mathbb F_p}(K(n,k))=\alpha(K(n,k)).
 ```
 
-*Proof.*
+*Proof.* The Main Theorem, or Proposition 6.0. $`\square`$
 
-- The first case is the Main Theorem.
-- If $`k\mid n`$, Baranyai's theorem partitions the $`k`$-subsets of $`[n]`$ into $`\binom{n-1}{k-1}`$ parallel classes.
-  Each class is a clique of $`K(n,k)`$, so $`\bar\chi=\alpha`$.
-- Combine with facts 1–3 of §1. $`\square`$
+**Corollary 6.2** (infinitely many new cases). For every $`k\ge2`$ there are infinitely many $`n`$ with $`k\nmid n`$ to
+which the Main Theorem applies. For these, $`\mathrm{minrk}_{\mathbb F_p}=\alpha<\bar\chi`$ (Corollary 6.4), so the
+equality does not follow from any clique cover.
 
-**Corollary 6.2** (finitely many exceptions). For fixed $`k`$, the set of $`n>2k`$ not covered by Corollary 6.1 is
+*Proof.* Take a prime $`p>k`$, so $`q=p`$ and $`\gcd(p,k)=1`$. For $`n=2k+pt`$ with $`t\equiv1\pmod k`$, we have
+$`n\equiv p\not\equiv0\pmod k`$ and $`p\mid n-2k`$. $`\square`$
+
+**Corollary 6.3** (finitely many exceptions). For fixed $`k`$, the set of $`n>2k`$ not covered by Corollary 6.1 is
 finite.
 
 *Proof.* Suppose $`N=n-2k`$ is not covered. For every prime $`p`$, $`v_p(N)<c_p`$, where $`p^{c_p}=q_p(k)`$. For $`p\ge k`$,
@@ -290,7 +317,7 @@ The exceptional $`n`$ for small $`k`$ are:
 | 5 | 11, 12, 13, 14, 16, 22 |
 | 6 | 13, 14, 15, 16, 17, 22, 27, 32 |
 
-**Corollary 6.3** (strictly below the clique cover). Each clique of $`K(n,k)`$ has at most $`\lfloor n/k\rfloor`$
+**Corollary 6.4** (strictly below the clique cover). Each clique of $`K(n,k)`$ has at most $`\lfloor n/k\rfloor`$
 vertices, so $`\bar\chi(K(n,k))\ge\binom nk/\lfloor n/k\rfloor`$. This exceeds
 $`\alpha=\binom nk\cdot\tfrac kn`$ exactly when $`k\nmid n`$.
 
@@ -315,6 +342,16 @@ $`\mathbb F_p`$ given by $`H`$ is optimal among *all* index codes for $`K(n,k)`$
    $`\mathrm{minrk}_{\mathbb F_2}=18`$ and $`22`$, above $`\alpha=15,21`$. Other fields are open.
 3. **Dependence on [DEGJPP].** Only Theorem 2.1 is imported. Sections 3–5 are self-contained. For $`k=3`$, the
    Appendix gives an independent elementary proof.
+4. **Field dependence.** The equality is over $`\mathbb F_p`$ for the particular $`p`$. For example
+   $`\mathrm{minrk}_{\mathbb F_2}(K(10,3))=36=\alpha`$, while $`\mathrm{rank}_{\mathbb F_3}H=44`$ and
+   $`\mathrm{minrk}_{\mathbb F_3}(K(10,3))`$ is not determined here.
+5. **The case $`k=2`$.** For $`k=2`$ the new cases are odd $`n`$ with an odd prime $`p\mid n-4`$ (e.g. $`K(7,2)`$ over
+   $`\mathbb F_3`$). $`K(n,2)`$ is the complement of the line graph of $`K_n`$ and is well studied; these values should be
+   checked against the literature before being called new.
+6. **Shannon capacity (not used).** By Haemers, $`\Theta(G)\le\mathrm{minrk}_{\mathbb F}(G)`$, and by Lovász
+   $`\Theta(K(n,k))=\alpha`$. So in every case of Corollary 6.1 Haemers' bound over some $`\mathbb F_p`$ meets the Shannon
+   capacity. This is a consequence, not part of the theorem; it also re-derives $`\Theta=\alpha`$ for these $`n`$ without
+   the Lovász theta function.
 
 ---
 
@@ -327,6 +364,7 @@ All statements were checked numerically with ranks computed by FLINT (`python-fl
 | `minrank/analysis/verify_kneser_proof.py` | the $`k=3`$ appendix step by step: Gram identity, $`\mathrm{rank}_p M`$, explicit bases of $`C^\perp`$, closed-form Gram matrices, the rank reduction, the iff; 128 $`(n,p)`$ cases; Corollary 6.1 arithmetic for $`k=3`$ up to $`n=10^6`$; agreement with Theorem 2.1 |
 | `minrank/analysis/verify_general_k.py` | Lemma 4.1 ($`m\le40`$, $`p\le31`$); Corollary 2.2 against direct ranks ($`k=2..5`$); the theorem for $`p>k`$ on 56 full matrices and 439 block cases |
 | `minrank/analysis/verify_all_primes.py` | Lemma 4.2 ($`m\le64`$); Lemma 4.3; Lemma 3.4; the iff in 6666 cases; new full-matrix predictions, e.g. $`K(17,4)`$ over $`\mathbb F_3`$ $`=560=\alpha`$ and $`K(18,5)`$ over $`\mathbb F_2`$ $`=2380=\alpha`$ |
+| `minrank/analysis/verify_independent.py` | a check sharing no code with the above: for every $`(n,k,p)`$ with $`q\mid n-2k`$ and $`\binom nk\le3500`$ ($`k\le6`$), that $`H`$ fits $`K(n,k)`$, that the star is independent of size $`\binom{n-1}{k-1}`$, and that $`\mathrm{rank}_pH=\alpha`$, by a separate Gaussian elimination mod $`p`$ and by FLINT. **82 cases, all equal; 43 have $`k\mid n`$ (Baranyai), 39 do not.** Log: `logs/verify_independent.log` |
 
 ---
 

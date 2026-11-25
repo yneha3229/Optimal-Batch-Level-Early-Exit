@@ -1,0 +1,43 @@
+82 cases, all rank = alpha, both methods agree (202s)
+43 cases have k | n (already = alpha by Baranyai's clique cover); 39 have k not dividing n:
+  K(7,2) over GF(3) [q=3]: 21x21, rank 6 = alpha 6
+  K(9,2) over GF(5) [q=5]: 36x36, rank 8 = alpha 8
+  K(11,2) over GF(7) [q=7]: 55x55, rank 10 = alpha 10
+  K(13,2) over GF(3) [q=3]: 78x78, rank 12 = alpha 12
+  K(15,2) over GF(11) [q=11]: 105x105, rank 14 = alpha 14
+  K(17,2) over GF(13) [q=13]: 136x136, rank 16 = alpha 16
+  K(19,2) over GF(3) [q=3]: 171x171, rank 18 = alpha 18
+  K(19,2) over GF(5) [q=5]: 171x171, rank 18 = alpha 18
+  K(21,2) over GF(17) [q=17]: 210x210, rank 20 = alpha 20
+  K(23,2) over GF(19) [q=19]: 253x253, rank 22 = alpha 22
+  K(25,2) over GF(3) [q=3]: 300x300, rank 24 = alpha 24
+  K(25,2) over GF(7) [q=7]: 300x300, rank 24 = alpha 24
+  K(27,2) over GF(23) [q=23]: 351x351, rank 26 = alpha 26
+  K(29,2) over GF(5) [q=5]: 406x406, rank 28 = alpha 28
+  K(31,2) over GF(3) [q=3]: 465x465, rank 30 = alpha 30
+  K(33,2) over GF(29) [q=29]: 528x528, rank 32 = alpha 32
+  K(35,2) over GF(31) [q=31]: 595x595, rank 34 = alpha 34
+  K(37,2) over GF(3) [q=3]: 666x666, rank 36 = alpha 36
+  K(37,2) over GF(11) [q=11]: 666x666, rank 36 = alpha 36
+  K(39,2) over GF(5) [q=5]: 741x741, rank 38 = alpha 38
+  K(39,2) over GF(7) [q=7]: 741x741, rank 38 = alpha 38
+  K(10,3) over GF(2) [q=4]: 120x120, rank 36 = alpha 36
+  K(11,3) over GF(5) [q=5]: 165x165, rank 45 = alpha 45
+  K(13,3) over GF(7) [q=7]: 286x286, rank 66 = alpha 66
+  K(14,3) over GF(2) [q=4]: 364x364, rank 78 = alpha 78
+  K(16,3) over GF(5) [q=5]: 560x560, rank 105 = alpha 105
+  K(17,3) over GF(11) [q=11]: 680x680, rank 120 = alpha 120
+  K(19,3) over GF(13) [q=13]: 969x969, rank 153 = alpha 153
+  K(20,3) over GF(7) [q=7]: 1140x1140, rank 171 = alpha 171
+  K(22,3) over GF(2) [q=4]: 1540x1540, rank 210 = alpha 210
+  K(23,3) over GF(17) [q=17]: 1771x1771, rank 231 = alpha 231
+  K(25,3) over GF(19) [q=19]: 2300x2300, rank 276 = alpha 276
+  K(26,3) over GF(2) [q=4]: 2600x2600, rank 300 = alpha 300
+  K(26,3) over GF(5) [q=5]: 2600x2600, rank 300 = alpha 300
+  K(28,3) over GF(11) [q=11]: 3276x3276, rank 351 = alpha 351
+  K(13,4) over GF(5) [q=5]: 715x715, rank 220 = alpha 220
+  K(15,4) over GF(7) [q=7]: 1365x1365, rank 364 = alpha 364
+  K(17,4) over GF(3) [q=9]: 2380x2380, rank 560 = alpha 560
+  K(18,4) over GF(5) [q=5]: 3060x3060, rank 680 = alpha 680
+
+[exited with code 0]
