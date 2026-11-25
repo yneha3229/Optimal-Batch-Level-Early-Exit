@@ -1,0 +1,7 @@
+experiment,run,proposer_or_policy,n,val_selected,test_selected,test_wins_vs_seed,test_ties_vs_seed,test_losses_vs_seed,mean_total_gap,failed,llm_calls,input_tokens,output_tokens,llm_seconds,fallbacks,wall_s
+funsearch,gp_i300_s0,gp,300,0.8916,0.8655,5,4,7,,0,0,0,0,0,,141
+funsearch,qwen32b_i300_s0,local:Qwen/Qwen2.5-Coder-32B-Instruct-AWQ,300,0.8873,0.8558,6,5,5,,0,300,153509,27172,927.3,,283
+controller_test2_b30,index_server,index,26,,,,,,11.667,0,0,0,0,0,,615.5
+controller_test2_b30,index_server_rep2,index,26,,,,,,11.582,0,0,0,0,0,,609.5
+controller_test2_b30,llm,llm,26,,,,,,11.825,0,282,220393,4222,260.7,10,682.3
+controller_test2_b30,llm_rep2,llm,26,,,,,,12.154,0,293,229326,4391,269.1,5,723.4

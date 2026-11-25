@@ -2,9 +2,10 @@
 
 Code: [`pincer/`](../pincer/) (built on the solvers in [`minrank/`](../minrank/)). Scripts: [`scripts/pincer/`](../scripts/pincer/).
 Proposal it implements: *Pincer — An agent that squeezes the broadcast rate of an index-coding problem between two
-certified bounds* (IE624, Nov 2026). Status as of 23 Nov 2026: everything below runs and is tested (58 tests); the
-LLM parts are implemented and tested with a scripted backend, but **no LLM has been run in the loop yet** (this
-container has no API key or GPU); see §7 for exactly what to run on the server.
+certified bounds* (IE624, Nov 2026). Status as of 25 Nov 2026: everything below runs and is tested (58 tests). A
+real LLM (Qwen2.5-Coder-32B-Instruct-AWQ on an RTX A6000) has now been run in the loop, both as the FunSearch
+proposer and as the controller. **Neither beats its non-LLM baseline** (§8). All results in §0-§5 use non-LLM
+policies.
 
 ## 0. Results in one table
 
@@ -234,3 +235,103 @@ PROPOSER=gp ITER=1500 bash scripts/pincer/02_funsearch.sh                       
 6. **DRAT** for the UNSAT records (tooling plan in WORK.md T4) so no bound is solver-trusted.
 7. **Scale study**: 300 s budgets and n = 200-500 to find where the tool mix changes.
 
+
+## 8. Real-LLM runs (25 Nov 2026, Qwen2.5-Coder-32B-Instruct-AWQ, one RTX A6000)
+
+**Setup.**
+- The model was served by vLLM 0.34 (`scripts/minrank/05_vllm_serve.sh`, max_model_len 16384) on GPU 4 of the
+  shared server, with the server process pinned to CPU cores 62-63.
+- Every Pincer job ran on cores 0-3 and 32-35. The other cores were busy with an unrelated minrank SAT run, so the
+  machine was loaded but the same for every method.
+- No `ANTHROPIC_API_KEY` was set, so the `anthropic` proposer was not run.
+- Each run used one seed (seed 0).
+- The controller comparison uses `index` runs made on the same machine under the same conditions. The `index` row
+  of §0 comes from a different machine (the 4-core container), and this server's `index` loses 0/13/13 to it, so
+  the two cannot be paired fairly.
+
+**Results.**
+
+| comparison | baseline | LLM | criterion | verdict |
+|---|---|---|---|---|
+| FunSearch, 300 evaluated programs each: val score of the selected program (seed 0.8789) | gp 0.8916 | Qwen 0.8873 (−0.0043) | ≥ gp + 0.01 | **FAIL** |
+| FunSearch: test, selected program vs seed program per graph (W/T/L of 16) | gp 5/4/7 (test 0.8655) | Qwen 6/5/5 (test 0.8558) | wins ≥ 10/16 | **FAIL** |
+| FunSearch: Qwen vs gp on test, per graph | | 4/8/4 | | tie |
+| Controller on test2 (26 graphs, 30 s each): mean total gap (minrank + β gap) | index 11.67, 11.58 (2 runs) | LLM 11.83, 12.15 (2 runs) | | LLM worse |
+| Controller: paired W/T/L on total gap, LLM vs index, all 4 pairings of 2 + 2 runs | | 6/17/3, 1/19/6, 4/15/7, 0/15/11; **sum 11/66/27** | wins > losses | **FAIL** |
+| Noise floor: index run 1 vs index run 2 | | 1/19/6 | | |
+
+The first pairing alone (6/17/3) would have passed. But two runs of the same `index` policy already differ by
+1/19/6, and the other three pairings are all losses. Against the stored container results the LLM loses 0/14/12
+and 0/11/15.
+
+**LLM behaviour.**
+- **FunSearch:**
+  - 0 of 300 LLM-written programs crashed or were rejected (crash rate 0%); 13 were duplicates.
+  - Median generation time was 3.0 s per program.
+  - The selected program is a degree formula with a log term (`pincer/funsearch/runs/qwen32b_i300_s0/best.py`).
+- **Controller:**
+  - Run 1: 282 decisions and 10 fallbacks to the index choice (3.5%). Run 2: 293 decisions and 5 fallbacks (1.7%).
+    No API errors.
+  - The LLM stopped early on 2 and 1 graphs.
+  - LLM latency took 261 s of the 682 s used in run 1 (38%) and 269 s of 723 s in run 2 (37%), about 0.9 s per
+    decision. That is time the tools did not get.
+
+**Verification.**
+- **Controller rows:** every row comes from `Pincer.run()`, which builds the certificate bundle and re-checks it
+  from scratch with `pincer.certify.verify_bundle` before returning. A failed certificate or a mismatched total
+  raises and drops the row, and all 26/26 rows of each of the 4 runs are present. As before, UNSAT records are
+  solver-trusted. The bundles themselves are not stored by `pincer.bench`.
+- **FunSearch winners:** both were re-scored from scratch with `--reselect`. Val, test and all 16 per-graph test
+  scores reproduce exactly.
+
+**Cost.**
+
+| run | LLM calls | input tokens | output tokens | LLM seconds (summed over calls) | wall time |
+|---|---|---|---|---|---|
+| FunSearch, Qwen, 300 programs (4 parallel) | 300 | 153,509 | 27,172 | 927 | 283 s (gp: 141 s) |
+| controller, test2, run 1 | 282 | 220,393 | 4,222 | 261 | 4.3 min |
+| controller, test2, run 2 | 293 | 229,326 | 4,391 | 269 | 4.7 min |
+| **total** | 875 | 603,228 | 35,785 | 1,457 | |
+
+- The GPU was held for 0.59 GPU-hours (vLLM up 08:43-09:18 UTC, including loading) and active for about
+  0.23 GPU-hours.
+- No API spend.
+
+**Commands** (from the repository root; `PY=~/venv/bin/python`; the vLLM server uses `~/venv-vllm`):
+
+```bash
+PY=~/venv/bin/python bash scripts/pincer/00_test.sh                                        # 58 passed
+HF_HUB_OFFLINE=1 GPU=4 PORT=8000 PY=~/venv-vllm/bin/python taskset -c 62-63 bash scripts/minrank/05_vllm_serve.sh
+PY=~/venv/bin/python PROPOSER=gp ITER=300 taskset -c 0-3,32-35 bash scripts/pincer/02_funsearch.sh
+#   (written to runs/gp_s0 by default, which overwrote the 1,500-program gp_s0 of §4: restored from git,
+#    and the 300-program run moved to runs/gp_i300_s0)
+PY=~/venv/bin/python RUN=qwen32b_i300_s0 ITER=300 taskset -c 0-3,32-35 \
+  PROPOSER="local:http://127.0.0.1:8000/v1|Qwen/Qwen2.5-Coder-32B-Instruct-AWQ" bash scripts/pincer/02_funsearch.sh
+PYTHONPATH=. taskset -c 0-3,32-35 python -m pincer.bench --split test2 --budget 30 --workers 3 --methods index \
+  --out pincer/results/bench_test2_b30_index_server.jsonl            # and _rep2
+PY=~/venv/bin/python LLM="local:http://127.0.0.1:8000/v1|Qwen/Qwen2.5-Coder-32B-Instruct-AWQ" \
+  taskset -c 0-3,32-35 bash scripts/pincer/03_llm_controller.sh      # -> bench_test2_b30_llm.jsonl; rep2 via pincer.bench --methods llm
+PYTHONPATH=. python -m pincer.analysis pincer/results/bench_test2_b30_index_server.jsonl pincer/results/bench_test2_b30_llm.jsonl
+PYTHONPATH=. python -m pincer.funsearch.loop --proposer gp --out pincer/funsearch/runs/<run> --reselect
+```
+
+- Outputs:
+  - `pincer/funsearch/runs/{gp_i300_s0,qwen32b_i300_s0}/`;
+  - `pincer/results/bench_test2_b30_{index_server,index_server_rep2,llm,llm_rep2}.jsonl`;
+  - `pincer/results/summary_test2_b30_llm_vs_index_server.md`, `pincer/results/llm_runs_summary.csv`;
+  - logs in `logs/pincer_*`.
+
+**What this means.**
+- **FunSearch.** At 300 evaluated programs, Qwen2.5-Coder-32B is no better a proposer than genetic programming. It
+  writes valid code every time (0% crashes), and its best training score is higher (0.894 vs 0.885). But on val it
+  is 0.004 below GP, and on test it ties GP graph by graph. Neither method gets near the 12/16 that GP reached with
+  1,500 programs (§4). The small, cheap search space of degree features does not reward a code-writing model.
+- **Controller.** The LLM mostly agrees with the index policy, whose top-10 list it reads. It pays about 0.9 s per
+  decision, a third of the budget, and ends with slightly larger gaps. Any win in a single run is within the
+  run-to-run noise of the index policy itself.
+- **Conclusion.** With this model, the LLM's place in Pincer is offline (writing tools and priors), not in the loop,
+  as §7 item 3 anticipated.
+- **Not tested:**
+  - a stronger model (Claude, which needs an API key);
+  - an LLM consulted only every k-th decision (`LLMPolicy(every=k)`), which would cut the latency cost;
+  - more seeds.
