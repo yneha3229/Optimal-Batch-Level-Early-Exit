@@ -1,0 +1,2 @@
+{"name": "fp_generic_40_0", "family": "generic", "kind": "Fp", "bits": 40, "runs": {"bsgs": {"ok": true, "s": 0.4929}, "rho": {"ok": true, "s": 1.516}, "kangaroo": {"ok": false, "s": 0.0}, "pohlig_hellman": {"ok": true, "s": 1.6172}, "pari_generic": {"ok": true, "s": 0.0516}}}
+{"name": "fp_generic_40_1", "family": "generic", "kind": "Fp", "bits": 40, "runs": {"bsgs": {"ok": true, "s": 0.5277}, "rho": {"ok": true, "s": 2.4508}, "kangaroo": {"ok": false, "s": 0.0}, "pohlig_hellman": {"ok": true, "s": 2.9285}, "pari_generic": {"ok": true, "s": 0.0544}}}
