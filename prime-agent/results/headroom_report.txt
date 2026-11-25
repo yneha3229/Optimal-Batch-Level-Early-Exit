@@ -1,0 +1,22 @@
+84 primes, limit 60 s per method (failures count 120 s); shifted geometric mean, shift 0.1 s
+
+all (84): pari_isprime 0.405s (82), pari_aprcl 0.600s (81), pari_pl 3.484s (46), pari_ecpp 1.145s (81), flint 0.346s (84)
+   best single flint 0.346s | oracle 0.214s | x1.62 | total time best single 212.7s vs oracle 140.5s | fastest: {'flint': 18, 'pari_aprcl': 21, 'pari_isprime': 15, 'pari_pl': 27, 'pari_ecpp': 3}
+
+factorial (17): pari_isprime 0.139s (17), pari_aprcl 0.158s (17), pari_pl 0.264s (14), pari_ecpp 0.436s (17), flint 0.158s (17)
+   best single pari_isprime 0.139s | oracle 0.072s | x1.93 | total time best single 32.6s vs oracle 21.3s | fastest: {'pari_isprime': 3, 'pari_pl': 10, 'pari_aprcl': 4}
+
+primorial (11): pari_isprime 1.882s (9), pari_aprcl 3.987s (8), pari_pl 4.833s (6), pari_ecpp 5.822s (8), flint 1.110s (11)
+   best single flint 1.110s | oracle 0.561s | x1.98 | total time best single 70.9s vs oracle 62.2s | fastest: {'flint': 7, 'pari_pl': 4}
+
+proth (12): pari_isprime 0.009s (12), pari_aprcl 0.622s (12), pari_pl 0.004s (12), pari_ecpp 1.162s (12), flint 0.046s (12)
+   best single pari_pl 0.004s | oracle 0.004s | x1.00 | total time best single 0.1s vs oracle 0.1s | fastest: {'pari_pl': 12}
+
+random (24): pari_isprime 0.903s (24), pari_aprcl 0.762s (24), pari_pl 22.017s (7), pari_ecpp 1.301s (24), flint 1.144s (24)
+   best single pari_aprcl 0.762s | oracle 0.723s | x1.05 | total time best single 60.4s vs oracle 53.8s | fastest: {'flint': 1, 'pari_aprcl': 13, 'pari_isprime': 6, 'pari_pl': 1, 'pari_ecpp': 3}
+
+riesel (12): pari_isprime 0.769s (12), pari_aprcl 0.658s (12), pari_pl 30.943s (3), pari_ecpp 1.425s (12), flint 0.112s (12)
+   best single flint 0.112s | oracle 0.111s | x1.01 | total time best single 1.9s vs oracle 1.9s | fastest: {'flint': 10, 'pari_aprcl': 2}
+
+safe (8): pari_isprime 0.114s (8), pari_aprcl 0.135s (8), pari_pl 9.944s (4), pari_ecpp 0.343s (8), flint 0.170s (8)
+   best single pari_isprime 0.114s | oracle 0.113s | x1.01 | total time best single 1.2s vs oracle 1.2s | fastest: {'pari_isprime': 6, 'pari_aprcl': 2}
