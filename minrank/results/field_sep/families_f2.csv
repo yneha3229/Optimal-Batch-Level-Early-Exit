@@ -1,0 +1,3 @@
+spec,graph,n,family,directed,alpha,alpha_proven,cover,lower,upper,proven,seconds,mode,solver,time_per_call,indep,log
+"kneser:11,2",kneser_11_2,55,kneser,False,10,True,11,10,11,False,3010.4,indep,cadical153,3000.0,9 18 26 33 39 44 48 51 53 54,"[[10, ""timeout"", 3000.11]]"
+"kneser:9,2",kneser_9_2,36,kneser,False,8,True,9,8,9,False,3010.4,indep,cadical153,3000.0,7 14 20 25 29 32 34 35,"[[8, ""timeout"", 3000.12]]"
