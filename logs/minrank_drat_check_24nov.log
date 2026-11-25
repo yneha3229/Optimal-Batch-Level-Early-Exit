@@ -34,3 +34,5 @@
 09:53:43 cnf_planted_n100_r10_e0.1_s6_r9_indep: UNSAT, VERIFIED
 09:53:48 cnf_planted_n100_r10_e0.1_s2_r9_indep: UNSAT, VERIFIED
 09:54:35 families_new_odd_3_r17_indep: UNSAT, VERIFIED
+11:20:58 families_new_gkneser_9_4_1_r21_indep: UNSAT, VERIFIED
+done: 104 verified, 0 not

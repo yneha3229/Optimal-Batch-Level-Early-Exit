@@ -71,5 +71,16 @@
   "seconds": 0.52,
   "solver": "cadical195",
   "time_limit": 600.0
+ },
+ {
+  "graph": "mycielski_6",
+  "n": 47,
+  "alpha": 23,
+  "vars": 2434,
+  "clauses": 7581,
+  "result": "UNSAT: minrk >= alpha + 1",
+  "seconds": 1400.66,
+  "solver": "cadical195",
+  "time_limit": 28800.0
  }
 ]
