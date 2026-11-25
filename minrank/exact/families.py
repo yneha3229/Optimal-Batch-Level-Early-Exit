@@ -11,7 +11,9 @@ so new generators need no change here. Per graph:
      per-call limit to improve the upper bound, stopping at UNSAT (upper is then optimal) or a timeout.
 `--dimacs-dir` writes the CNF of every UNSAT call (gzipped DIMACS, the exact clauses solved, with the mode and I in
 the header) for an independent DRAT check (WORK.md, task T4). One CSV row per graph; graphs already proven in `--out`
-are skipped (resumable).
+are skipped (resumable). With `--progress FILE`, every solver call is appended to FILE (JSON lines) as soon as it
+ends, and a SAT result is saved to `--certs` at once, so a crash or reboot loses at most the calls still running: on
+restart, each UNSAT at r in FILE raises that spec's floor to r + 1.
 
 Usage:
   python -m minrank.exact.families --spec kneser:8,3 mycielski:6 paley:29 --time-per-call 900 --workers 7
@@ -72,7 +74,7 @@ def write_dimacs(path: Path, cnf: list[list[int]], comments: list[str]) -> None:
 
 
 def solve_family(spec: str, cert_dir: str, lb_time: float, cover_time: float, time_per_call: float, mode: str,
-                 solver: str, dimacs_dir: str | None, seed: int, floor: int = 0) -> dict:
+                 solver: str, dimacs_dir: str | None, seed: int, floor: int = 0, progress: str | None = None) -> dict:
     """floor: a lower bound proven elsewhere (an earlier UNSAT run, or a theorem); the ascent starts there."""
     t0 = time.perf_counter()
     g = build(spec)
@@ -95,6 +97,13 @@ def solve_family(spec: str, cert_dir: str, lb_time: float, cover_time: float, ti
         res = rank_at_most_sym(g, r, time_per_call, mode=mode, indep=I, solver=solver)
         st = "timeout" if res is None else ("unsat" if res is False else "sat")
         log.append((r, st, round(time.perf_counter() - t, 2)))
+        if st == "sat":  # save at once: a long run may not reach the end
+            keep_best(Path(cert_dir), g, res, f"families[{mode}]")
+        if progress:
+            with open(progress, "a") as fp:
+                fp.write(json.dumps({"spec": spec, "graph": g.name, "r": r, "status": st, "seconds": log[-1][2],
+                                     "mode": mode, "solver": solver, "time_per_call": time_per_call,
+                                     "indep": I, "at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}) + "\n")
         if st == "unsat" and dimacs_dir and len(I) <= r:
             write_dimacs(Path(dimacs_dir) / f"{g.name}_r{r}_{mode}.cnf.gz", encode_sym(g, r, mode, indep=I),
                          [f"minrk_2({g.name}) <= {r} is UNSAT", f"mode {mode}", f"indep {' '.join(map(str, I))}",
@@ -130,6 +139,20 @@ def solve_family(spec: str, cert_dir: str, lb_time: float, cover_time: float, ti
             "time_per_call": time_per_call, "indep": " ".join(map(str, I)), "log": json.dumps(log), "_rows": rows}
 
 
+def progress_floors(path: Path | None) -> dict[str, int]:
+    """Floor per spec from a --progress file: an UNSAT call at r proves minrk > r."""
+    floors: dict[str, int] = {}
+    if path is None or not path.exists():
+        return floors
+    for line in path.read_text().splitlines():
+        if not line.strip():
+            continue
+        e = json.loads(line)
+        if e["status"] == "unsat":
+            floors[e["spec"]] = max(floors.get(e["spec"], 0), int(e["r"]) + 1)
+    return floors
+
+
 def proven_specs(path: Path) -> set[str]:
     if not path.exists() or path.stat().st_size == 0:
         return set()
@@ -155,11 +178,15 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--floor", nargs="*", default=[], metavar="SPEC=R",
                     help="known lower bounds (earlier UNSAT runs or theorems): start the ascent at R, e.g. paley:29=7")
+    ap.add_argument("--progress", type=Path, default=None,
+                    help="append every call here (JSON lines) and resume floors from it; see the module docstring")
     a = ap.parse_args(argv)
-    floors = {}
+    floors = progress_floors(a.progress)
+    if floors:
+        print(f"floors from {a.progress}: {floors}", flush=True)
     for f in a.floor:
         k, _, v = f.rpartition("=")
-        floors[k] = int(v)
+        floors[k] = max(floors.get(k, 0), int(v))
     for s in a.spec:  # fail fast on a bad spec, before starting workers
         build(s)
     done = proven_specs(a.out)
@@ -175,7 +202,8 @@ def main(argv: list[str] | None = None) -> None:
         if new:
             w.writeheader()
         futs = {ex.submit(solve_family, s, str(a.certs), a.lb_time, a.cover_time, a.time_per_call, a.mode, a.solver,
-                          str(a.dimacs_dir) if a.dimacs_dir else None, a.seed, floors.get(s, 0)): s for s in todo}
+                          str(a.dimacs_dir) if a.dimacs_dir else None, a.seed, floors.get(s, 0),
+                          str(a.progress) if a.progress else None): s for s in todo}
         for fu in as_completed(futs):
             row = fu.result()
             rows = row.pop("_rows")
