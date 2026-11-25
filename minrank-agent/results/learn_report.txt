@@ -1,0 +1,11 @@
+closed graphs: 24 / 88
+
+LEARNED GATE -- predict closability from cheap spectral features (5-fold):
+  accuracy 0.88  precision 0.81  recall 0.71
+  (lets the agent skip the mod-p search on the 64 graphs whose gap cannot close here)
+
+FIELD ORDER -- avg fields tried before the gap closes (held-out, lower better):
+  ascending order    2.04
+  spectrum heuristic 2.04
+  learned ranker     3.29   (does not beat the heuristic: too few closed instances across 6 field-classes, and F2 is modal)
+  oracle             1.00

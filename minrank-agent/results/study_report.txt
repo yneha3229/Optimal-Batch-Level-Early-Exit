@@ -1,0 +1,25 @@
+37 structured graphs. 'closed' = beta proven exactly (alpha = upper, explicit verified code).
+
+Accuracy -- how many gaps each strategy closes:
+  clique cover only           3/37
+  fixed field F2               4/37
+  fixed field F3               6/37
+  fixed field F5               5/37
+  fixed field F7               4/37
+  fixed field F11              4/37
+  fixed field F13              3/37
+  multi-field (agent/brute)  11/37
+
+Total remaining gap (sum of upper-alpha): clique-only 182, best fixed field 78, multi-field 62
+
+Among 11 closed graphs: agent tries 2.27 fields on average (ascending-order would try 3.64); brute tries all 6.
+  gap-closing field used: {3: 3, 5: 2, 7: 1, 11: 1, 2: 1, None: 3}
+
+By family (closed / count, and which fields close them):
+  cayley        0/4   fields: {}
+  comp_cycle    0/4   fields: {}
+  cycle_power   3/4   fields: {None: 3}
+  johnson       0/6   fields: {}
+  kneser        8/11  fields: {3: 3, 5: 2, 7: 1, 11: 1, 2: 1}
+  paley         0/5   fields: {}
+  random        0/3   fields: {}
