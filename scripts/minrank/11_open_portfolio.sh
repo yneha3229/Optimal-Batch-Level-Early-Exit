@@ -13,7 +13,9 @@ TPC=${TPC:-28800}
 OUT=minrank/results/open_portfolio
 mkdir -p $OUT
 SPECS="mycielski:7 paley:29 paley:37 paley:41 paley:53 paley:61 circulant:41,1,5,8 kneser:9,4 kneser:11,3 kneser:13,3 kneser:10,4"
-FLOORS="paley:29=7 paley:37=7 paley:41=8 paley:53=8 paley:61=8 kneser:9,4=57"
+# 25 Nov restart: paley:37=8 and circulant=17 come from UNSAT steps of the 24 Nov run (killed by a reboot), whose CNFs
+# survived in $OUT/unsat_cnf (DRAT-checked by 10_drat_check.sh). Each member also resumes from its --progress file.
+FLOORS="paley:29=7 paley:37=8 paley:41=8 paley:53=8 paley:61=8 kneser:9,4=57 circulant:41,1,5,8=17"
 MEMBERS="cadical153:indep:8-18 cadical195:indep:19-29 cadical195:indep_cols:40-50 glucose42:indep:51-61"
 for m in $MEMBERS; do
   IFS=: read -r solver mode cores <<< "$m"
@@ -23,8 +25,8 @@ for m in $MEMBERS; do
   DIM=""
   [ "$tagm" = "cadical195_indep" ] && DIM="--dimacs-dir $OUT/unsat_cnf"
   taskset -c $cores $PY -m minrank.exact.families --spec $SPECS --floor $FLOORS --time-per-call $TPC \
-    --mode $mode --solver $solver --workers 11 --out $OUT/$tagm.csv --certs $OUT/certs_$tagm $DIM \
-    > logs/minrank_open_$tagm.log 2>&1 &
+    --mode $mode --solver $solver --workers 11 --out $OUT/$tagm.csv --certs $OUT/certs_$tagm --progress $OUT/progress_$tagm.jsonl $DIM \
+    >> logs/minrank_open_$tagm.log 2>&1 &
   echo "started $tagm pid $! on cores $cores"
 done
 wait
