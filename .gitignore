@@ -21,3 +21,6 @@ minrank/evolve/*.tmp*
 results/bandit_*_10seeds.csv
 !results/bandit_slopes_*_10seeds.csv
 /minrank/results/unsat_cnf/families/kneser_9_4_r56_indep.cnf.gz
+
+# reproduce_cpu.sh shadow tree (code copies, inputs, 25 MB bandit traces)
+results_repro/.root/
