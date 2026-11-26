@@ -58,44 +58,8 @@
 
 \begin{frame}{Outline}
   \tableofcontents
-  \vfill
-  {\footnotesize Every abbreviation and symbol is spelled out on the next slide.}
 \end{frame}
 
-\begin{frame}{Notation and abbreviations}
-  \scriptsize
-  \begin{columns}[T]
-    \begin{column}{0.49\textwidth}
-      \textbf{Early exit}\par\smallskip
-      \begin{tabularx}{\linewidth}{@{}lL@{}}
-        QQP & Quora Question Pairs (paraphrase detection) \\
-        MNLI & Multi-Genre Natural Language Inference \\
-        RoBERTa & Robustly optimised BERT (text encoder) \\
-        ViT & Vision Transformer \\
-        CIFAR-100 & image dataset of the Canadian Institute for Advanced Research, 100 classes \\
-        LLM & large language model \\
-        LoRA & low-rank adaptation (fine-tuning) \\
-        $B$ & batch size \\
-        $c(n)$ & time of one layer with $n$ inputs still active \\
-        $\lambda$ (lambda) & weight that trades accuracy against time \\
-      \end{tabularx}
-    \end{column}
-    \begin{column}{0.49\textwidth}
-      \textbf{Index coding and the agent}\par\smallskip
-      \begin{tabularx}{\linewidth}{@{}lL@{}}
-        $\alpha(G)$ (alpha) & independence number: most receivers with no side information about each other \\
-        $\beta(G)$ (beta) & broadcast rate: fewest broadcasts per message of any index code \\
-        $\operatorname{minrk}_{F}(G)$ & minrank: length of the best linear code over the field $F$ \\
-        $K(n,k)$ & Kneser graph (defined on slide~\ref{fr:kneser}) \\
-        $\binom{n}{k}$, $C(n,k)$ & binomial coefficient, ``$n$ choose $k$'' \\
-        $\Fp$ & integers modulo a prime $p$ \\
-        SAT & Boolean satisfiability solver \\
-        CP-SAT & constraint-programming SAT solver (OR-Tools) \\
-        DRAT & a machine-checkable format for SAT proofs \\
-      \end{tabularx}
-    \end{column}
-  \end{columns}
-\end{frame}
 
 % ================================================================= 1
 \section{Batch-level early exit}
@@ -111,7 +75,7 @@
       \small
       \begin{itemize}
         \item Early-exit networks let easy inputs stop at an intermediate layer \cite{deebert}.
-        \item A GPU runs a batch layer by layer: one hard input keeps the whole batch running.
+        \item A GPU (graphics processing unit) runs a batch layer by layer: one hard input keeps the whole batch running.
         \item Here the mean exit is layer 5.5, yet the batch pays for all 12.
         \item Existing batch rules (consensus, majority, greedy) are heuristics, not derived from the cost.
       \end{itemize}
@@ -129,10 +93,10 @@
     \vspace{-0.4em}
     \[ T(\text{batch}) \;=\; \sum_i \big[(d_i - d_{i-1})\,c(n_i) + h\big] \]
     {\footnotesize $d_i$: depth of the $i$-th exit evaluated, $n_i$: inputs still active, $h$: cost of one exit head.
-     $c(n)$ has a floor ($\approx$1.8\,ms per RoBERTa layer on a GTX~1650); a straight line $a+bn$ errs by up to 41\%.}
+     $c(n)$ has a floor ($\approx$1.8\,ms per layer of RoBERTa, a BERT-style text encoder, on a GTX~1650 laptop GPU); a straight line $a+bn$ errs by up to 41\%.}
   \end{block}
-  \begin{block}{Rule: maximise accuracy $-\ \lambda\cdot$time}
-    \small
+  \begin{block}{Rule: maximise accuracy $-\ \lambda\cdot$time \quad{\footnotesize ($\lambda$, lambda: weight on time)}}
+    \footnotesize
     \begin{itemize}
       \item An input leaves alone if its expected gain from going deeper is below $\lambda\,[c(n)-c(n-1)]$.
       \item The remaining batch $R$ stops together if no later exit is worth $\lambda\,c(|R|)$.
@@ -147,7 +111,7 @@
 \begin{frame}{Results: speed at matched accuracy}
   \begin{columns}[T]
     \begin{column}{0.46\textwidth}
-      {\scriptsize\textbf{Speed-up over the full model, QQP, GTX 1650, timed}}\par
+      {\scriptsize\textbf{Speed-up over the full model, QQP (Quora Question Pairs), GTX 1650, timed}}\par
       \includegraphics[width=\linewidth]{fig/speedup.png}\par
       {\tiny
        \textcolor[HTML]{AFC0DF}{$\blacksquare$}\,per-sample threshold\ \
@@ -160,7 +124,8 @@
        (best baseline: 5).}
     \end{column}
     \begin{column}{0.52\textwidth}
-      {\scriptsize\textbf{At matched held-out accuracy (drop $\le$ 1 point), length 16}}\par\smallskip
+      {\scriptsize\textbf{At matched held-out accuracy (drop $\le$ 1 point), length 16}}\par
+      {\tiny $B$: batch size. MNLI: Multi-Genre Natural Language Inference.}\par\smallskip
       \scriptsize
       \begin{tabular}{@{}lccc@{}}
         \toprule
@@ -174,7 +139,7 @@
       \end{tabular}
       \begin{itemize}\setlength\itemsep{2pt}
         \item QQP: ahead in all 6 settings by 2--17\%; RTX A6000 with trained weights: 8--14\% ahead.
-        \item Llama-3.1-8B classifier on QQP: \ours{3.66$\times$} vs 3.50$\times$.
+        \item Llama-3.1-8B large language model (LLM) as a classifier on QQP: \ours{3.66$\times$} vs 3.50$\times$.
         \item RoBERTa on MNLI: within 2\% in 4 of 6 settings, 6.5--8.5\% behind in 2.
       \end{itemize}
     \end{column}
@@ -225,6 +190,8 @@
       {\footnotesize\[ \underbrace{\alpha(G)}_{\text{lower bound}} \le \underbrace{\beta(G)}_{\text{optimum}}
          \le \underbrace{\operatorname{minrk}_{F}(G)}_{\text{best linear code}}
          \le \underbrace{\bar\chi(G)}_{\text{clique cover}} \]}
+      {\tiny $\alpha$ (alpha): independence number, the most receivers with no side information about each other.
+       $\beta$ (beta): broadcast rate. $\operatorname{minrk}_F$: minrank over the field $F$. $\bar\chi$: clique cover number.\par}
       \begin{block}{Kneser graph $K(n,k)$}
         \footnotesize Receivers: all $k$-element subsets of $\{1,\dots,n\}$; two are adjacent iff disjoint.
         Here $\alpha=\binom{n-1}{k-1}$ (Erd\H{o}s--Ko--Rado): the sets containing 1.
@@ -242,7 +209,7 @@
 
 \begin{frame}{Our result: exact minrank of Kneser graphs}
   \begin{theorem}[ours]
-    Let $p$ be a prime and $q$ the least power of $p$ with $q \ge k$. With $D$ the disjointness matrix of $K(n,k)$,
+    Let $p$ be a prime ($\Fp$: integers modulo $p$) and $q$ the least power of $p$ with $q \ge k$. With $D$ the disjointness matrix of $K(n,k)$,
     \[ \operatorname{rank}_{\Fp}(I \pm D) = \binom{n-1}{k-1} \iff q \mid n-2k . \]
     Hence $\operatorname{minrk}_{\Fp}(K(n,k)) = \beta = \alpha$ in these cases, with an explicit optimal code: for each
     set $A \ni 1$, broadcast $x_A \pm \sum_{B \cap A = \emptyset} x_B$.
@@ -250,7 +217,7 @@
   \begin{itemize}\small
     \item $\beta(K(n,k)) = \alpha$ for all but finitely many $n$, for every $k$.
     \item The field matters: $\operatorname{minrk}(K(7,2)) = 7$ over $\mathbb{F}_2$ but $6$ over $\mathbb{F}_3$
-          (SAT, DRAT-checked).
+          (SAT: Boolean satisfiability solver; proof checked in DRAT format).
     \item New for $k \nmid n$ (for $k \mid n$ it follows from Baranyai's theorem); there even the fractional clique
           cover exceeds $\alpha$.
     \item Elementary proof (star basis and Lucas' theorem); checked by exact rank in 318 cases.
@@ -258,7 +225,7 @@
 \end{frame}
 
 % ================================================================= 3
-\section{An agent that proves $\beta$}
+\section{An agent that proves the broadcast rate}
 
 \begin{frame}{Why an agent?}
   \begin{columns}[T]
@@ -266,7 +233,7 @@
       \begin{alertblock}{Proving $\beta$ gets slow}
         \footnotesize
         \begin{itemize}
-          \item Standard methods (CP-SAT, clique cover, $\mathbb{F}_2$ SAT): \textbf{2 of 25} benchmark graphs proven in
+          \item Standard methods (CP-SAT constraint solver, clique cover, $\mathbb{F}_2$ SAT): \textbf{2 of 25} benchmark graphs proven in
                 60\,s each.
           \item One certified rank check costs $\approx N^2 r$: on $N = 14{,}950$ receivers, 54\,s.
           \item Real inputs arrive unlabelled: vertices shuffled, no family name.
@@ -500,7 +467,7 @@
     \end{column}
   \end{columns}
   \medskip
-  Checked numerically on random messages. Over $\mathbb{F}_2$ no 6-broadcast linear code exists (SAT, DRAT-checked).
+  Checked numerically on random messages. Over $\mathbb{F}_2$ no 6-broadcast linear code exists (SAT: Boolean satisfiability solver; proof checked in DRAT format).
 \end{frame}
 
 \begin{frame}{Appendix A8: Which cases are new}
