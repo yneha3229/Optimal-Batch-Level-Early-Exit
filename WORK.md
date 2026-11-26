@@ -170,4 +170,11 @@ git clone --depth 1 https://github.com/marijnheule/drat-trim && (cd drat-trim &&
 | 23 Nov 21:50 | Claude (at your request) | T3: `docs/MINRANK_LIT.md` (first pass; reading list at the end) | done |
 | 23 Nov 22:10 | Claude (at your request) | T2: `docs/MINRANK_THEORY.md`: I + D construction explains K(8,3), K(10,3); minrk_2(K(n,3)) = alpha for n = 2 mod 4 (proven n = 10, 14, 22 by rank computation); proof route via inclusion matrices | construction done, general proof open |
 | 23 Nov 22:10 | Claude | **Benchmark caveat:** all planted graphs (extra_p = 0) are solved by I + A in microseconds; see `docs/MINRANK_THEORY.md` section 5 | regenerate planted graphs with extra_p > 0 |
-| | you | T1 (new families), proof of the k = 3 pattern (T2 section 4) | open |
+| 24 Nov 10:00 | Claude (at your request) | T1: `johnson`, `generalized_kneser`/`gkneser`, `odd_graph`, `co_kneser`, `hamming` + `minrank/tests/test_generators_new.py`; 27 graphs run (`families_new.csv`) | done; all = cover except J(8,3) in [11,12] |
+| 24 Nov 10:00 | Claude | T2: star identity (n M = k M^2): minrk_2(K(n,2)) = n for odd n, K(n,k) > alpha for k even n odd; Mycielski rank-free reduction (`exact/mycielski_reduction.py`); general-k theorem of the other branch checked independently (not merged) | done; M6/M7 reduction running |
+| 24 Nov 10:00 | Claude | C5: `docs/MINRANK_RESULTS.md` | done (update when the runs below finish) |
+| 24 Nov 10:00 | Claude | Long portfolio on all open instances (`scripts/minrank/11_open_portfolio.sh`, cores 8-29, 40-61, 8 h per call) | running |
+| 24 Nov 10:00 | Claude | Planted n = 100 e0.1 undirected: Pincer's rank-10 matrices verified, rank 9 UNSAT re-proved with our encoding; DRAT on all new UNSAT CNFs | done |
+| 24 Nov 10:00 | Claude | K(9,4) DRAT at rank 56: replaced by Theorem 14.2 of docs/MINRANK_THEORY.md (no proof file needed) | done |
+| 24 Nov 10:00 | Claude | beta(K(8,3)) via Pincer LP: not possible (LP enumerates 2^56 subsets) | recorded as open |
+| | you | proof of the k = 3 pattern: done by the other session (MINRANK_THEORY.md section 6); merge decision for `feature/kneser-minrank-theorem` and Pincer | open (your decision) |

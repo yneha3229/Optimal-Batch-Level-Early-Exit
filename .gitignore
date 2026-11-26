@@ -25,3 +25,6 @@ results/bandit_*_10seeds.csv
 # reproduce_cpu.sh shadow tree (code copies, inputs, 25 MB bandit traces)
 results_repro/.root/
 results_repro/.gpu_root/
+# portfolio scratch: per-member copies of the certificates and its UNSAT CNFs (merged into minrank/certificates when done)
+minrank/results/open_portfolio/certs_*/
+minrank/results/open_portfolio/unsat_cnf/

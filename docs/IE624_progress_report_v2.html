@@ -325,8 +325,9 @@ baseline elsewhere, as in Section 4.5.<br>
 <i class='l'>Fallback:</i> if it is more than 10% behind at B ≤ 16 under CUDA graphs, report the plan as a partial fix and
 state the settings where a unified exit should be used.</p>
 <p class='fb'><i class='l'>Result (16–22 Nov, eager only):</i> run for QQP and MNLI at sequence
-lengths 128 and 32 (Tables 11–12). CUDA graphs and CIFAR-100 (ViT) are not run yet: both need changes to the timing
-device that are being made separately. On QQP at length 128 the cost rule with the exit plan is the fastest policy within budget at every
+lengths 128 and 32 (Tables 11–12). CUDA graphs and CIFAR-100 (ViT) are not run yet. The CUDA-graph timing device is written and
+checked on the CPU side (<code>experiments/check_graph_device.py</code>, <code>scripts/run_server_a6000_graph.sh</code>);
+on 23–24 Nov no A6000 could start CUDA (one needs a reset, the idle ones fail to initialise), so the run is pending. On QQP at length 128 the cost rule with the exit plan is the fastest policy within budget at every
 batch size, 1.95–2.46× at a held-out drop of 0.60–0.66 points, 8–14% ahead of
 the best baseline within budget. At length 32 and B ≤ 16 the plan's policy is 0.05 points over
 budget (so is the unified exit's), and the rule with all exits is the fastest policy within budget (1.30–1.33×). On MNLI
@@ -336,6 +337,7 @@ fastest policies within budget there are the unified exit, the threshold with an
 1.46–1.66×. At length 32 and B ≤ 16 the plan's policy is within budget but 3–5% behind
 the unified exit. Section 5.2 checks whether the MNLI overshoot is a property of this held-out half.</p>
 <table class='num'><tr><th rowspan=2>Policy</th><th colspan=4>QQP, length 128</th><th colspan=4>QQP, length 32</th></tr><tr><th>B=8</th><th>B=16</th><th>B=64</th><th>B=128</th><th>B=8</th><th>B=16</th><th>B=64</th><th>B=128</th></tr><tr class=''><td>Per-sample threshold</td><td>1.48</td><td>1.79</td><td>2.11</td><td>2.13</td><td>0.84</td><td>0.85</td><td>1.75</td><td>2.03</td></tr><tr class=''><td>Threshold + exit plan</td><td>1.90*</td><td>1.83</td><td>2.15</td><td>2.13</td><td>1.73*</td><td>1.80*</td><td>1.86</td><td>2.04</td></tr><tr class=''><td>Unified exit</td><td>1.91*</td><td>1.96*</td><td>1.99*</td><td>1.99*</td><td>1.79*</td><td>1.83*</td><td>1.97*</td><td>1.98*</td></tr><tr class=''><td>Majority vote</td><td>1.33</td><td>1.40</td><td>1.80</td><td>1.87</td><td>1.06</td><td>1.16</td><td>1.73</td><td>1.83</td></tr><tr class=''><td>Random search (150 rules)</td><td>1.77</td><td>1.99</td><td>2.11</td><td>2.26</td><td>1.09</td><td>1.14</td><td>1.75</td><td>2.34</td></tr><tr class='ours'><td>Cost rule, all exits (ours)</td><td>1.84</td><td>2.20</td><td>2.45</td><td>2.39</td><td><b>1.33</b></td><td><b>1.30</b></td><td><b>2.11</b></td><td><b>2.37</b></td></tr><tr class='ours'><td>Cost rule + exit plan (ours)</td><td><b>1.95</b></td><td><b>2.20</b></td><td><b>2.46</b></td><td><b>2.44</b></td><td>1.68*</td><td>1.76*</td><td>2.11</td><td>2.30</td></tr></table><p class='cap'><b>Table 11:</b> QQP, RTX A6000, eager PyTorch, trained RoBERTa-base checkpoint, real inputs: measured speedup of each method's certified policy on held-out inputs (2,048 per pass, 5 rounds, median paired speedup). Bold: fastest policy within the one-point budget in the column. * held-out drop above one point. <code>results/local_time_qqp_a6000_T{128,32}.csv</code>.</p><table class='num'><tr><th rowspan=2>Policy</th><th colspan=4>MNLI, length 128</th><th colspan=4>MNLI, length 32</th></tr><tr><th>B=8</th><th>B=16</th><th>B=64</th><th>B=128</th><th>B=8</th><th>B=16</th><th>B=64</th><th>B=128</th></tr><tr class=''><td>Per-sample threshold</td><td>1.33*</td><td>1.54*</td><td>1.69*</td><td>1.73*</td><td>0.85*</td><td>0.93*</td><td>1.48*</td><td>1.65*</td></tr><tr class=''><td>Threshold + exit plan</td><td>1.46</td><td><b>1.51</b></td><td><b>1.66</b></td><td>1.67*</td><td>1.38</td><td>1.41</td><td>1.47</td><td>1.63*</td></tr><tr class=''><td>Unified exit</td><td><b>1.46</b></td><td>1.49</td><td>1.50</td><td>1.50</td><td><b>1.42</b></td><td><b>1.45</b></td><td><b>1.48</b></td><td><b>1.49</b></td></tr><tr class=''><td>Majority vote</td><td>1.32*</td><td>1.40</td><td>1.48</td><td><b>1.51</b></td><td>1.05*</td><td>1.20</td><td>1.44</td><td>1.49</td></tr><tr class=''><td>Random search (150 rules)</td><td>1.44</td><td>1.66*</td><td>1.80*</td><td>1.83*</td><td>1.01</td><td>1.22*</td><td>1.71*</td><td>1.79*</td></tr><tr class='ours'><td>Cost rule, all exits (ours)</td><td>1.47*</td><td>1.63*</td><td>1.72*</td><td>1.71*</td><td>1.07</td><td>1.20*</td><td>1.61*</td><td>1.67*</td></tr><tr class='ours'><td>Cost rule + exit plan (ours)</td><td>1.54*</td><td>1.65*</td><td>1.71*</td><td>1.72*</td><td>1.35</td><td>1.40</td><td>1.65*</td><td>1.69*</td></tr></table><p class='cap'><b>Table 12:</b> MNLI, same layout. <code>results/local_time_mnli_a6000_T{128,32}.csv</code>.</p>
+<p class='fb'><i class='l'>Pending:</i> the CUDA-graph and CIFAR-100 (ViT) timings. The code and scripts are ready (<code>scripts/run_server_a6000_graph.sh</code>, <code>scripts/run_server_a6000_vit.sh</code>), and <code>scripts/wait_gpu_then_graph.sh</code> starts them as soon as an A6000 can initialise CUDA.</p>
 <h3>5.2 Tighten the certificate (13–15 Nov)</h3>
 <p>Replace the <i class='v'>t</i>-test with a finite-sample bound for bounded batch losses (Hoeffding–Bentkus), add the
 label-free version that controls disagreement with the full model, and repeat the re-split check on CIFAR-100. In
@@ -461,6 +463,35 @@ diminish with depth. For a general non-decreasing <i class='v'>c</i>(<i class='v
 floor-shaped cost, and at a bound on what rule (2) loses by overestimating its saving.</p>
 <p class='fb'><i class='l'>Expected:</i> a proof for the affine case and a counterexample or a bound for the floor case.<br>
 <i class='l'>Fallback:</i> clearly labelled proof sketches. The word "optimal" stays out of the title unless the proof is complete.</p>
+<p class='fb'><i class='l'>Result (24 Nov):</i> proofs and exact checks in <code>theory/THEORY_58.md</code>.
+All statements assume exact calibration, inputs that are independent given their confidences, and expected gains
+that are not negative (which the clipping in the rule imposes). <b>(i) Collective stop.</b> With the active set fixed,
+the latency of each segment is deterministic, and rule (3) is the lookahead to every later exit. In the monotone case
+this lookahead equals the one-step lookahead and is optimal, <i>for any cost</i> <i class='v'>c</i>(<i class='v'>n</i>): the cost shape
+matters only through individual exits. <b>(ii) Affine cost, the two limits.</b> At ρ = 0 the problem splits into one
+stopping problem per input, and at ρ = ∞ it is pure collective stopping. At ρ = 0 rule (2) is <i>not</i> the optimal
+per-input rule: it compares only with the last exit, so in the monotone case it never leaves later than the optimum
+but can leave earlier. Its expected loss is below λ<i class='v'>b</i>(L − <i class='v'>d</i><sub>τ+1</sub>)/<i class='v'>F</i>, the cost of the
+layers after the next exit. The optimal per-input rule tests every later exit, as (3) does. <b>(iii) Floor
+cost.</b> Below the knee an individual exit saves nothing and can only lose accuracy, so there the rule is optimal in
+the monotone case; this proves the regime switch inside a draining batch. Above the knee, rule (2) prices every
+leaving input at today's marginal cost and over-counts the saving by <i class='v'>b</i>·max(0, <i class='v'>k</i> − (<i class='v'>n</i> −
+<i class='v'>n</i><sub>k</sub>)) per layer when <i class='v'>k</i> inputs leave together. An instance with 8 easy inputs and one hard
+one attains the bound (-6.99 in units of λ<i class='v'>b</i>(L − <i class='v'>d</i><sub>e</sub>)/<i class='v'>F</i>). Leaving one at a time, each priced at its own marginal cost,
+fixes it (+0.001). <b>Exact checks</b> (dynamic programming on small instances,
+<code>results/theory58_checks.json</code>): rule (3) is optimal in all 210 monotone instances and
+suboptimal in 17 of 190 non-monotone ones. The all-exits per-input rule is optimal in all
+301 monotone single-input instances, while rule (2) is suboptimal in 165, never late, and within the
+bound in all 31 instances where it applies. For 0 &lt; ρ &lt; ∞ there is no theorem: in the joint problem
+with 150 instances of B = 3, rules (2)+(3) are optimal in 122 (affine cost) and
+109 (floor cost), with mean gaps in the objective of 0.4 and 0.9
+points. <b>On real traces</b> (QQP and MNLI; GTX 1650 and A6000 cost tables; B = 8–128; 40 settings;
+<code>results/theory58_front_*.csv</code>) the all-exits rule (2) is +2.7% faster at the
+one-point certified target, but it spends more of the budget (held-out drop 0.99 vs
+0.91 points). At matched held-out drop (≤ 1 point) it is -1.4% on average
+(13 wins, 21 losses): re-tuning λ absorbs the difference, so
+the implemented rule is kept. Not proved: optimality for 0 &lt; ρ &lt; ∞ and above the knee, and whether the real
+calibration tables are monotone. "Optimal" stays out of the title.</p>
 <h3>5.9 Timeline</h3>
 <table><tr><th>Dates</th><th>Work</th></tr>
 <tr><td>13–15 Nov</td><td>Local timing, matched-accuracy fronts and re-split check (done, Sections 4.4–4.6); finite-sample certificate; label-free certificate</td></tr>
@@ -469,7 +500,7 @@ floor-shaped cost, and at a bound on what rule (2) loses by overestimating its s
 <tr><td>22–23 Nov</td><td>Bandit with ten seeds; robustness at low ρ</td></tr>
 <tr><td>24–26 Nov</td><td>Theory write-up, final figures, presentation</td></tr>
 <tr><td>When a server GPU is free</td><td>LLM second attempt, first three steps of the runbook (about 4 GPU-hours, estimate). It does not take time from the server rerun</td></tr></table>
-<h3>5.10 Claims and their status (23 November)</h3>
+<h3>5.10 Claims and their status (24 November)</h3>
 <table><tr><th>Claim</th><th>Status</th><th>Evidence, and what is still missing</th></tr>
 <tr><td>Which rule is fastest flips with batch size, execution mode and sequence length</td><td><span class='tag'>HOLDS</span> on two GPUs</td><td>Sections 4.2, 4.4, 5.1. CUDA-graph rerun on the A6000 still missing</td></tr>
 <tr><td>The per-layer cost is a floor plus a linear part, not affine</td><td><span class='tag'>HOLDS</span> on the GTX 1650; Qwen2.5-1.5B on the A6000 has a floor up to B = 4</td><td>Section 4.3; <code>results/local_cost_a6000_T128_qwen.json</code></td></tr>
@@ -480,6 +511,7 @@ floor-shaped cost, and at a bound on what rule (2) loses by overestimating its s
 <tr><td>The MNLI held-out overshoot is an unlucky split</td><td><span class='tag'>PARTLY</span> consistent: the re-split violation rate is within δ, and δ = 2% fixes B ≤ 64 at about 10% less speed</td><td>Section 5.2; not proved, one fixed split</td></tr>
 <tr><td>Under fluctuating load, one tuning of the rule is enough</td><td><span class='tag'>HOLDS</span> on QQP; CIFAR-100 only with the plan; <span class='tag'>FAILS</span> on MNLI (budget)</td><td>Table 14 (cost-table replay, not timed)</td></tr>
 <tr><td>The label-free bandit learns the rule (secondary)</td><td><span class='tag'>HOLDS</span> ten seeds, sublinear regret</td><td>Section 5.4; slopes are not a rate proof</td></tr>
+<tr><td>The rule is optimal</td><td><span class='tag'>PARTLY</span> proved in the monotone case for the collective stop (any cost), at the two limits of the affine cost and below the knee of the floor cost; rule (2) is not the optimal per-input rule (never late, loss bounded)</td><td>Section 5.8, <code>theory/THEORY_58.md</code>. Open for 0 &lt; ρ &lt; ∞ and above the knee; monotonicity of the real tables not checked; the fix does not help at matched accuracy</td></tr>
 <tr><td>Bounded damage from slowdown inputs</td><td><span class='tag'>HOLDS</span> 0 violations of the bound; majority and consensus collapse. The per-sample threshold is also robust, and trimming buys little</td><td>Section 5.5</td></tr>
 <tr><td>Benefit on LLMs</td><td><span class='tag'>FAILED</span> for decoding; <span class='tag'>HOLDS</span> for classification on Llama-3.1-8B (both tasks) and Qwen2.5-1.5B QQP, mixed on Qwen MNLI</td><td>Section 5.7, Tables 15–16</td></tr></table>
 

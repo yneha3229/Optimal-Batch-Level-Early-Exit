@@ -56,6 +56,8 @@ def build(spec: str) -> Graph:
     fn = getattr(generators, name, None)
     if fn is None or name.startswith("_"):
         raise ValueError(f"no generator {name!r} in minrank.bench.generators")
+    if name == "circulant":                         # circulant:41,1,5,8 -> circulant(41, (1, 5, 8))
+        return fn(args[0], tuple(args[1:]))
     return fn(*args)
 
 
@@ -70,7 +72,8 @@ def write_dimacs(path: Path, cnf: list[list[int]], comments: list[str]) -> None:
 
 
 def solve_family(spec: str, cert_dir: str, lb_time: float, cover_time: float, time_per_call: float, mode: str,
-                 solver: str, dimacs_dir: str | None, seed: int) -> dict:
+                 solver: str, dimacs_dir: str | None, seed: int, floor: int = 0) -> dict:
+    """floor: a lower bound proven elsewhere (an earlier UNSAT run, or a theorem); the ascent starts there."""
     t0 = time.perf_counter()
     g = build(spec)
     lb = mais(g, lb_time)
@@ -98,8 +101,9 @@ def solve_family(spec: str, cert_dir: str, lb_time: float, cover_time: float, ti
                           f"graph digest {g.digest()}"])
         return st, res
 
-    lower, proven = lb.value, upper <= lb.value
-    r = lb.value
+    lower = max(lb.value, floor)
+    proven = upper <= lower
+    r = lower
     while not proven and r < upper:
         st, res = call(r)
         if st == "sat":
@@ -149,7 +153,13 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--certs", type=Path, default=ROOT / "certificates")
     ap.add_argument("--dimacs-dir", type=Path, default=None, help="write the CNF of every UNSAT call here")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--floor", nargs="*", default=[], metavar="SPEC=R",
+                    help="known lower bounds (earlier UNSAT runs or theorems): start the ascent at R, e.g. paley:29=7")
     a = ap.parse_args(argv)
+    floors = {}
+    for f in a.floor:
+        k, _, v = f.rpartition("=")
+        floors[k] = int(v)
     for s in a.spec:  # fail fast on a bad spec, before starting workers
         build(s)
     done = proven_specs(a.out)
@@ -165,7 +175,7 @@ def main(argv: list[str] | None = None) -> None:
         if new:
             w.writeheader()
         futs = {ex.submit(solve_family, s, str(a.certs), a.lb_time, a.cover_time, a.time_per_call, a.mode, a.solver,
-                          str(a.dimacs_dir) if a.dimacs_dir else None, a.seed): s for s in todo}
+                          str(a.dimacs_dir) if a.dimacs_dir else None, a.seed, floors.get(s, 0)): s for s in todo}
         for fu in as_completed(futs):
             row = fu.result()
             rows = row.pop("_rows")

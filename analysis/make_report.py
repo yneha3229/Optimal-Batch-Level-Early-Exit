@@ -187,6 +187,48 @@ def timed_grid(groups: list[tuple[str, pd.DataFrame]]) -> str:
     return f"<table class='num'>{h}{body}</table>"
 
 
+def timed_extra() -> str:
+    """5.1 runs that need a working A6000: CUDA graphs (RoBERTa) and CIFAR-100 (ViT-B/16, eager and graphs).
+    Rendered from results/local_time_{qqp,mnli}_a6000_graph_T*.csv and results/local_time_cifar100_a6000[_graph]_T197.csv
+    when they exist; otherwise a pending note."""
+    def load(pattern):
+        fs = sorted(ROOT.glob(pattern))
+        return pd.concat([pd.read_csv(f).assign(src=f.name) for f in fs], ignore_index=True) if fs else None
+    html, have = "", []
+    g = load("results/local_time_*_a6000_graph_T*.csv")
+    rob_g = None if g is None else g[g.task.isin(["qqp", "mnli"])]
+    if rob_g is not None and len(rob_g):
+        rob_g = rob_g.assign(T=rob_g.device.str.extract(r"_T(\d+)$")[0].astype(int))
+        groups = [(f"{t.upper()}, length {T}", rob_g[(rob_g.task == t) & (rob_g["T"] == T)])
+                  for t in ("qqp", "mnli") for T in sorted(rob_g["T"].unique()) if len(rob_g[(rob_g.task == t) & (rob_g["T"] == T)])]
+        html += (timed_grid(groups) + "<p class='cap'><b>Table 11b:</b> the same as Tables 11–12 under CUDA graphs "
+                 "(<code>--exec graph</code>: every segment replayed as a captured graph, rows padded to fixed buckets). "
+                 "<code>results/local_time_{qqp,mnli}_a6000_graph_T*.csv</code>.</p>")
+        have.append("CUDA graphs")
+    c = load("results/local_time_cifar100_a6000*_T197.csv")
+    if c is not None and len(c):
+        groups = [(("CUDA graphs" if "graph" in dv else "eager"), c[c.device == dv]) for dv in sorted(c.device.unique())]
+        html += (timed_grid(groups) + "<p class='cap'><b>Table 12b:</b> CIFAR-100, ViT-B/16 (197 tokens), RTX A6000, "
+                 "same protocol. <code>results/local_time_cifar100_a6000[_graph]_T197.csv</code>.</p>")
+        have.append("CIFAR-100")
+    if not have:
+        return ("<p class='fb'><i class='l'>Pending:</i> the CUDA-graph and CIFAR-100 (ViT) timings. The code and scripts "
+                "are ready (<code>scripts/run_server_a6000_graph.sh</code>, <code>scripts/run_server_a6000_vit.sh</code>), "
+                "and <code>scripts/wait_gpu_then_graph.sh</code> starts them as soon as an A6000 can initialise CUDA.</p>")
+    rows = []
+    for name, d in (("graph", rob_g), ("cifar", c)):
+        if d is None or not len(d):
+            continue
+        for k, gg in d[d.family.isin(FAMS)].groupby(["task", "device", "B"]):
+            ok = gg[gg.ho_drop_pts <= 1.0]
+            o, b = ok[ok.family.isin(OURS)], ok[ok.family.isin(BASE)]
+            if len(o) and len(b):
+                rows.append(100 * (o.real_speedup.max() / b.real_speedup.max() - 1))
+    summ = (f" Within the one-point budget, the cost rule is ahead of the best baseline in {sum(r > 0 for r in rows)} "
+            f"of {len(rows)} columns where both have a certified policy (median {np.median(rows):+.0f}%)." if rows else "")
+    return html + f"<p class='fb'><i class='l'>Result ({' and '.join(have)}):</i> Tables above.{summ}</p>"
+
+
 def in_budget_best(d: pd.DataFrame) -> pd.DataFrame:
     """Per (model, task, T, B): fastest of ours and fastest baseline within the 1-pt budget (held-out, timed)."""
     rows = []
@@ -316,6 +358,7 @@ def section5() -> dict:
                   "* held-out drop above one point. <code>results/local_time_qqp_a6000_T{128,32}.csv</code>.</p>"
                   + timed_grid([(f"MNLI, length {T}", rob[(rob.task == "mnli") & (rob["T"] == T)]) for T in (128, 32)])
                   + "<p class='cap'><b>Table 12:</b> MNLI, same layout. <code>results/local_time_mnli_a6000_T{128,32}.csv</code>.</p>")
+    out["t51x"] = timed_extra()
     q = s[(s.model == "roberta") & (s.task == "qqp") & (s["T"] == 128)]
     m = s[(s.model == "roberta") & (s.task == "mnli") & (s["T"] == 128)]
     q32 = s[(s.model == "roberta") & (s.task == "qqp") & (s["T"] == 32) & (s.B <= 16)]
@@ -328,8 +371,8 @@ def section5() -> dict:
     rc_over = rm[(rm.family == "random_collective") & (rm.B >= 16)]
     assert (rc_over.ho_drop_pts > 1.0).all()
     out["r51"] = f"""<p class='fb'><i class='l'>Result (16–22 Nov, eager only):</i> run for QQP and MNLI at sequence
-lengths 128 and 32 (Tables 11–12). CUDA graphs and CIFAR-100 (ViT) are not run yet: both need changes to the timing
-device that are being made separately. On QQP at length 128 the cost rule with the exit plan is the fastest policy within budget at every
+lengths 128 and 32 (Tables 11–12). CUDA graphs and CIFAR-100 (ViT) are reported separately after the tables: both needed a working A6000, and
+on 23–24 Nov none could start CUDA (one needed a reset, the idle ones failed to initialise). On QQP at length 128 the cost rule with the exit plan is the fastest policy within budget at every
 batch size, {rng(q.ours, unit='×')} at a held-out drop of {rng(rq.ho_drop_pts)} points, {rng(q.gain, '{:.0f}')}% ahead of
 the best baseline within budget. At length 32 and B ≤ 16 the plan's policy is {rng(p32.ho_drop_pts - 1)} points over
 budget (so is the unified exit's), and the rule with all exits is the fastest policy within budget ({rng(q32.ours, unit='×')}). On MNLI
@@ -486,7 +529,53 @@ the device's predictions agree with the traces on {100 * agree:.0f}–100% of in
                               f"MNLI, strongest on the LLM classifiers ({rng(pd.concat([lq.gain, lm.gain]), '{:.0f}')}% "
                               f"ahead on Llama). Exceptions: RoBERTa MNLI (over budget on the fixed split) and Qwen MNLI "
                               f"(needs the plan; {pct(qm)} at B = 8, 16, 64, 128)")
+    out["r58"] = theory58()
     return out
+
+
+def theory58() -> str:
+    """Item 5.8 from theory/THEORY_58.md: results/theory58_checks.json (exact DP on small instances) and
+    results/theory58_front_*.csv (the corrected rule (2) on real traces, cost-table replay)."""
+    v = lambda x: f"<i class='v'>{x}</i>"
+    ck = json.loads((ROOT / "results/theory58_checks.json").read_text())
+    d = pd.concat([pd.read_csv(f) for f in sorted(ROOT.glob("results/theory58_front_*.csv"))], ignore_index=True)
+    k = ["task", "device", "B"]
+    at1 = d[d.alpha_pts == 1.0].pivot_table(index=k, columns="family", values="ho_speedup")
+    dr1 = d[d.alpha_pts == 1.0].pivot_table(index=k, columns="family", values="ho_drop_pts")
+    best = d[d.ho_drop_pts <= 1.0].groupby(k + ["family"]).ho_speedup.max().unstack()
+    r_cert = at1.theory_la / at1.theory - 1
+    r_match = (best.theory_la / best.theory - 1).dropna()
+    t1, t2, p3, ja, jf = ck["T1"], ck["T2"], ck["P3"], ck["J_affine"], ck["J_floor"]
+    assert t1["mono_gap"] == 0 and t2["la_gap"] == 0 and t2["r2_late"] == 0 and t2["bound_viol"] == 0
+    return f"""<p class='fb'><i class='l'>Result (24 Nov):</i> proofs and exact checks in <code>theory/THEORY_58.md</code>.
+All statements assume exact calibration, inputs that are independent given their confidences, and expected gains
+that are not negative (which the clipping in the rule imposes). <b>(i) Collective stop.</b> With the active set fixed,
+the latency of each segment is deterministic, and rule (3) is the lookahead to every later exit. In the monotone case
+this lookahead equals the one-step lookahead and is optimal, <i>for any cost</i> {v('c')}({v('n')}): the cost shape
+matters only through individual exits. <b>(ii) Affine cost, the two limits.</b> At ρ = 0 the problem splits into one
+stopping problem per input, and at ρ = ∞ it is pure collective stopping. At ρ = 0 rule (2) is <i>not</i> the optimal
+per-input rule: it compares only with the last exit, so in the monotone case it never leaves later than the optimum
+but can leave earlier. Its expected loss is below λ{v('b')}(L − {v('d')}<sub>τ+1</sub>)/{v('F')}, the cost of the
+layers after the next exit. The optimal per-input rule tests every later exit, as (3) does. <b>(iii) Floor
+cost.</b> Below the knee an individual exit saves nothing and can only lose accuracy, so there the rule is optimal in
+the monotone case; this proves the regime switch inside a draining batch. Above the knee, rule (2) prices every
+leaving input at today's marginal cost and over-counts the saving by {v('b')}·max(0, {v('k')} − ({v('n')} −
+{v('n')}<sub>k</sub>)) per layer when {v('k')} inputs leave together. An instance with {p3['n_k']} easy inputs and one hard
+one attains the bound ({p3['simultaneous']:.2f} in units of λ{v('b')}(L − {v('d')}<sub>e</sub>)/{v('F')}). Leaving one at a time, each priced at its own marginal cost,
+fixes it ({p3['sequential']:+.3f}). <b>Exact checks</b> (dynamic programming on small instances,
+<code>results/theory58_checks.json</code>): rule (3) is optimal in all {t1['mono']} monotone instances and
+suboptimal in {t1['nonmono_gap']} of {t1['nonmono']} non-monotone ones. The all-exits per-input rule is optimal in all
+{t2['mono']} monotone single-input instances, while rule (2) is suboptimal in {t2['r2_gap']}, never late, and within the
+bound in all {t2['bound_n']} instances where it applies. For 0 &lt; ρ &lt; ∞ there is no theorem: in the joint problem
+with {ja['n']} instances of B = 3, rules (2)+(3) are optimal in {ja['rules_optimal']} (affine cost) and
+{jf['rules_optimal']} (floor cost), with mean gaps in the objective of {100 * ja['gap_mean']:.1f} and {100 * jf['gap_mean']:.1f}
+points. <b>On real traces</b> (QQP and MNLI; GTX 1650 and A6000 cost tables; B = 8–128; {len(r_cert)} settings;
+<code>results/theory58_front_*.csv</code>) the all-exits rule (2) is {100 * r_cert.mean():+.1f}% faster at the
+one-point certified target, but it spends more of the budget (held-out drop {dr1.theory_la.mean():.2f} vs
+{dr1.theory.mean():.2f} points). At matched held-out drop (≤ 1 point) it is {100 * r_match.mean():+.1f}% on average
+({int((r_match > 0.005).sum())} wins, {int((r_match < -0.005).sum())} losses): re-tuning λ absorbs the difference, so
+the implemented rule is kept. Not proved: optimality for 0 &lt; ρ &lt; ∞ and above the knee, and whether the real
+calibration tables are monotone. "Optimal" stays out of the title.</p>"""
 
 
 CSS = """
@@ -791,6 +880,7 @@ baseline elsewhere, as in Section 4.5.<br>
 state the settings where a unified exit should be used.</p>
 {r5['r51']}
 {r5['t51']}
+{r5['t51x']}
 <h3>5.2 Tighten the certificate (13–15 Nov)</h3>
 <p>Replace the {v('t')}-test with a finite-sample bound for bounded batch losses (Hoeffding–Bentkus), add the
 label-free version that controls disagreement with the full model, and repeat the re-split check on CIFAR-100. In
@@ -856,6 +946,7 @@ diminish with depth. For a general non-decreasing {v('c')}({v('n')}) we aim only
 floor-shaped cost, and at a bound on what rule (2) loses by overestimating its saving.</p>
 <p class='fb'><i class='l'>Expected:</i> a proof for the affine case and a counterexample or a bound for the floor case.<br>
 <i class='l'>Fallback:</i> clearly labelled proof sketches. The word "optimal" stays out of the title unless the proof is complete.</p>
+{r5['r58']}
 <h3>5.9 Timeline</h3>
 <table><tr><th>Dates</th><th>Work</th></tr>
 <tr><td>13–15 Nov</td><td>Local timing, matched-accuracy fronts and re-split check (done, Sections 4.4–4.6); finite-sample certificate; label-free certificate</td></tr>
@@ -864,7 +955,7 @@ floor-shaped cost, and at a bound on what rule (2) loses by overestimating its s
 <tr><td>22–23 Nov</td><td>Bandit with ten seeds; robustness at low ρ</td></tr>
 <tr><td>24–26 Nov</td><td>Theory write-up, final figures, presentation</td></tr>
 <tr><td>When a server GPU is free</td><td>LLM second attempt, first three steps of the runbook (about 4 GPU-hours, estimate). It does not take time from the server rerun</td></tr></table>
-<h3>5.10 Claims and their status (23 November)</h3>
+<h3>5.10 Claims and their status (24 November)</h3>
 <table><tr><th>Claim</th><th>Status</th><th>Evidence, and what is still missing</th></tr>
 <tr><td>Which rule is fastest flips with batch size, execution mode and sequence length</td><td><span class='tag'>HOLDS</span> on two GPUs</td><td>Sections 4.2, 4.4, 5.1. CUDA-graph rerun on the A6000 still missing</td></tr>
 <tr><td>The per-layer cost is a floor plus a linear part, not affine</td><td><span class='tag'>HOLDS</span> on the GTX 1650; Qwen2.5-1.5B on the A6000 has a floor up to B = 4</td><td>Section 4.3; <code>results/local_cost_a6000_T128_qwen.json</code></td></tr>
@@ -875,6 +966,7 @@ floor-shaped cost, and at a bound on what rule (2) loses by overestimating its s
 <tr><td>The MNLI held-out overshoot is an unlucky split</td><td><span class='tag'>PARTLY</span> consistent: the re-split violation rate is within δ, and δ = 2% fixes B ≤ 64 at about 10% less speed</td><td>Section 5.2; not proved, one fixed split</td></tr>
 <tr><td>Under fluctuating load, one tuning of the rule is enough</td><td><span class='tag'>HOLDS</span> on QQP; CIFAR-100 only with the plan; <span class='tag'>FAILS</span> on MNLI (budget)</td><td>Table 14 (cost-table replay, not timed)</td></tr>
 <tr><td>The label-free bandit learns the rule (secondary)</td><td><span class='tag'>HOLDS</span> ten seeds, sublinear regret</td><td>Section 5.4; slopes are not a rate proof</td></tr>
+<tr><td>The rule is optimal</td><td><span class='tag'>PARTLY</span> proved in the monotone case for the collective stop (any cost), at the two limits of the affine cost and below the knee of the floor cost; rule (2) is not the optimal per-input rule (never late, loss bounded)</td><td>Section 5.8, <code>theory/THEORY_58.md</code>. Open for 0 &lt; ρ &lt; ∞ and above the knee; monotonicity of the real tables not checked; the fix does not help at matched accuracy</td></tr>
 <tr><td>Bounded damage from slowdown inputs</td><td><span class='tag'>HOLDS</span> 0 violations of the bound; majority and consensus collapse. The per-sample threshold is also robust, and trimming buys little</td><td>Section 5.5</td></tr>
 <tr><td>Benefit on LLMs</td><td><span class='tag'>FAILED</span> for decoding; <span class='tag'>HOLDS</span> for classification on Llama-3.1-8B (both tasks) and Qwen2.5-1.5B QQP, mixed on Qwen MNLI</td><td>Section 5.7, Tables 15–16</td></tr></table>
 

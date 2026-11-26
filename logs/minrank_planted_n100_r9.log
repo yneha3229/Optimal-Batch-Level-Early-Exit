@@ -1,0 +1,8 @@
+6 specs, 0 already proven, 6 to run
+planted_n100_r10_e0.1_s2: alpha=8 cover=13 minrk in [10, 10] proven=True (21.1 s) [[9, "unsat", 5.3]]
+planted_n100_r10_e0.1_s5: alpha=8 cover=13 minrk in [10, 10] proven=True (22.6 s) [[9, "unsat", 6.16]]
+planted_n100_r10_e0.1_s1: alpha=8 cover=13 minrk in [10, 10] proven=True (27.4 s) [[9, "unsat", 13.19]]
+planted_n100_r10_e0.1_s7: alpha=8 cover=13 minrk in [10, 10] proven=True (15.8 s) [[9, "unsat", 1.92]]
+planted_n100_r10_e0.1_s6: alpha=9 cover=13 minrk in [10, 10] proven=True (20.0 s) [[9, "unsat", 3.91]]
+planted_n100_r10_e0.1_s4: alpha=8 cover=13 minrk in [10, 10] proven=True (41.2 s) [[9, "unsat", 25.49]]
+wrote minrank/results/planted_n100_check/r9.csv

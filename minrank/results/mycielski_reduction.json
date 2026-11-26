@@ -1,0 +1,75 @@
+[
+ {
+  "graph": "mycielski_3",
+  "n": 5,
+  "alpha": 2,
+  "vars": 17,
+  "clauses": 35,
+  "result": "UNSAT: minrk >= alpha + 1",
+  "seconds": 0.0,
+  "solver": "cadical195"
+ },
+ {
+  "graph": "mycielski_4",
+  "n": 11,
+  "alpha": 5,
+  "vars": 94,
+  "clauses": 237,
+  "result": "UNSAT: minrk >= alpha + 1",
+  "seconds": 0.0,
+  "solver": "cadical195"
+ },
+ {
+  "graph": "mycielski_5",
+  "n": 23,
+  "alpha": 11,
+  "vars": 480,
+  "clauses": 1375,
+  "result": "UNSAT: minrk >= alpha + 1",
+  "seconds": 0.05,
+  "solver": "cadical195"
+ },
+ {
+  "graph": "mycielski_6",
+  "n": 47,
+  "alpha": 23,
+  "vars": 2434,
+  "clauses": 7581,
+  "result": "UNSAT: minrk >= alpha + 1",
+  "seconds": 1335.65,
+  "solver": "cadical195"
+ },
+ {
+  "graph": "mycielski_3",
+  "n": 5,
+  "alpha": 2,
+  "vars": 17,
+  "clauses": 35,
+  "result": "UNSAT: minrk >= alpha + 1",
+  "seconds": 1.0,
+  "solver": "cadical195",
+  "time_limit": 600.0
+ },
+ {
+  "graph": "mycielski_4",
+  "n": 11,
+  "alpha": 5,
+  "vars": 94,
+  "clauses": 237,
+  "result": "UNSAT: minrk >= alpha + 1",
+  "seconds": 0.54,
+  "solver": "cadical195",
+  "time_limit": 600.0
+ },
+ {
+  "graph": "mycielski_5",
+  "n": 23,
+  "alpha": 11,
+  "vars": 480,
+  "clauses": 1375,
+  "result": "UNSAT: minrk >= alpha + 1",
+  "seconds": 0.52,
+  "solver": "cadical195",
+  "time_limit": 600.0
+ }
+]

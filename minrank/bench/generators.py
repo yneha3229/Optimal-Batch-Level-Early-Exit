@@ -127,3 +127,55 @@ def planted(n: int, r: int, extra_p: float, seed: int, directed: bool = True) ->
     kind = "planted_d" if directed else "planted"
     return Graph.from_adjacency(adj, directed, f"{kind}_n{n}_r{r}_e{extra_p}_s{seed}", kind,
                                 {"planted_rank": r, "extra_p": extra_p, "seed": seed})
+
+
+# ------------------------------------------------------------------ set systems and codes (WORK.md T1, 24 Nov)
+def _subset_graph(m: int, k: int, adjacent, name: str, family: str, params: dict) -> Graph:
+    verts = [frozenset(c) for c in combinations(range(m), k)]
+    edges = [(a, b) for a, b in combinations(range(len(verts)), 2) if adjacent(len(verts[a] & verts[b]))]
+    return Graph.from_edges(len(verts), edges, False, name, family, params)
+
+
+def johnson(m: int, k: int) -> Graph:
+    """Johnson graph J(m, k): k-subsets of [m], adjacent iff |A & B| = k - 1."""
+    if not 1 <= k < m:
+        raise ValueError("need 1 <= k < m")
+    return _subset_graph(m, k, lambda s: s == k - 1, f"johnson_{m}_{k}", "johnson", {"m": m, "k": k})
+
+
+def generalized_kneser(m: int, k: int, s: int) -> Graph:
+    """Generalized Kneser graph: k-subsets of [m], adjacent iff |A & B| <= s (s = 0 is K(m, k))."""
+    if not (1 <= k <= m and 0 <= s < k):
+        raise ValueError("need 1 <= k <= m and 0 <= s < k")
+    return _subset_graph(m, k, lambda t: t <= s, f"gkneser_{m}_{k}_{s}", "generalized_kneser",
+                         {"m": m, "k": k, "s": s})
+
+
+def gkneser(m: int, k: int, s: int) -> Graph:
+    """Short alias of generalized_kneser for family specs (gkneser:9,3,1)."""
+    return generalized_kneser(m, k, s)
+
+
+def odd_graph(k: int) -> Graph:
+    """Odd graph O_k = K(2k + 1, k)."""
+    if k < 1:
+        raise ValueError("k >= 1")
+    return _subset_graph(2 * k + 1, k, lambda t: t == 0, f"odd_{k}", "odd", {"k": k, "m": 2 * k + 1})
+
+
+def co_kneser(m: int, k: int) -> Graph:
+    """Complement of K(m, k): k-subsets of [m], adjacent iff they intersect (and differ)."""
+    if not 1 <= k <= m:
+        raise ValueError("need 1 <= k <= m")
+    return _subset_graph(m, k, lambda t: t > 0, f"cokneser_{m}_{k}", "co_kneser", {"m": m, "k": k})
+
+
+def hamming(d: int, q: int, dist: int) -> Graph:
+    """Words of Z_q^d, adjacent iff their Hamming distance equals dist (dist = 1: the Hamming graph H(d, q);
+    q = 2, dist = 1: the hypercube Q_d; q = 2, dist = d: a perfect matching)."""
+    if not (d >= 1 and q >= 2 and 1 <= dist <= d and q ** d <= 4096):
+        raise ValueError("need d >= 1, q >= 2, 1 <= dist <= d, q^d <= 4096")
+    words = np.array(np.unravel_index(np.arange(q ** d), (q,) * d)).T  # (q^d, d)
+    hd = (words[:, None, :] != words[None, :, :]).sum(-1)  # (q^d, q^d)
+    adj = hd == dist
+    return Graph.from_adjacency(adj, False, f"hamming_{d}_{q}_{dist}", "hamming", {"d": d, "q": q, "dist": dist})
