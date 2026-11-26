@@ -1,0 +1,22 @@
+{"t": 0.001, "ev": "input", "graph": "K_53_2_s0_opus-low-full", "receivers": 1378, "llm": "chat", "family_rule": true}
+{"t": 0.016, "ev": "start", "tool": "describe"}
+{"t": 0.017, "ev": "start", "tool": "indep"}
+{"t": 0.017, "ev": "start", "tool": "cover"}
+{"t": 0.077, "ev": "board", "side": "lower", "value": 52, "tool": "greedy independent set", "bracket": [52, 1378]}
+{"t": 0.089, "ev": "board", "side": "upper", "value": 57, "tool": "clique_cover", "bracket": [52, 57]}
+{"t": 0.357, "ev": "done", "tool": "describe", "seconds": 0.321}
+{"t": 0.357, "ev": "summary", "summary": {"receivers": 1378, "edges": 878475, "degree_min": 1275, "degree_max": 1275, "regular": true, "common_neighbours_adjacent": [1176], "common_neighbours_nonadjacent": [1225], "triangles_through_sampled_vertex": 749700, "spectrum_integral": true, "eigenvalues": [[1275, 1], [1, 1325], [-50, 52]], "distinct_eigenvalues": 3, "seconds": 0.321}}
+{"t": 0.357, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 19.068, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.8, "evidence": ["regular with degree 1275 on 1378 receivers", "spectrum integral with 3 distinct eigenvalues 1275, 1, -50", "lower bound 52 equals multiplicity of eigenvalue -50 (52)"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) before any Kneser claim"}, {"tool": "family_rule", "args": {"n": 53, "k": 2}, "why": "query structural rule for the likely K(53,2); adjust if binomial_match differs"}, {"tool": "spectral", "args": {"top": 5}, "why": "generic fallback code search from integer spectrum"}], "notes": "Hypothesis K(n,2)-type strongly regular graph; params to be copied from binomial_match."}}
+{"t": 19.069, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 24.271, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 24.271, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) before any Kneser claim"}, {"tool": "family_rule", "args": {"n": 53, "k": 2}, "why": "query structural rule for the likely K(53,2); adjust if binomial_match differs"}, {"tool": "spectral", "args": {"top": 5}, "why": "generic fallback code search from integer spectrum"}], "hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.8, "evidence": ["regular with degree 1275 on 1378 receivers", "spectrum integral with 3 distinct eigenvalues 1275, 1, -50", "lower bound 52 equals multiplicity of eigenvalue -50 (52)"]}, "critic_rounds": 1}
+{"t": 24.272, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 53, "k": 2}]}]}
+{"t": 24.272, "ev": "rule", "tool": "family_rule", "args": {"n": 53, "k": 2}, "result": {"p": 7, "c": 6}}
+{"t": 24.28, "ev": "start", "tool": "code", "p": 7, "c": 6, "why": "family rule"}
+{"t": 24.338, "ev": "done", "tool": "code", "p": 7, "c": 6, "rank": 52, "seconds": 0.065}
+{"t": 24.338, "ev": "board", "side": "upper", "value": 52, "tool": "linear_code", "bracket": [52, 52]}
+{"t": 24.338, "ev": "event", "name": "bracket_closed", "bracket": [52, 52]}
+{"t": 24.444, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 30.648, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "beta = 52 is proven: an independent set of size 52 (check passed) meets a linear code M = I + 6A over F_7 of length 52 (code_fits, factorization and decoding checks all passed), found with 1 code tried. Compute took only 0.427 s, but wall time was 24.338 s, almost all of it LLM time (23.911 s). On accuracy the agent matches the kushagra_agent baseline (exact, field 7), but that baseline took 0.683 s, so the agent was about 35x slower in wall time. It beats the CP-SAT cover (62, unproven), the fractional cover (59.98, unproven) and f2_minrank_sat (lower bound 51 only). CP-SAT alpha confirmed 52 in 90.7 s. One weak point: the hypothesis left params empty. Nothing suspicious."}}
+{"t": 30.648, "ev": "verdict", "verdict": "proven", "bracket": [52, 52], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
