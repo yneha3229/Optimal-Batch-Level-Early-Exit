@@ -73,7 +73,7 @@
     \end{column}
     \begin{column}{0.51\textwidth}
       \small
-      \begin{itemize}
+      \begin{itemize}\setlength\itemsep{1pt}
         \item Early-exit networks let easy inputs stop at an intermediate layer \cite{deebert}.
         \item A GPU (graphics processing unit) runs a batch layer by layer: one hard input keeps the whole batch running.
         \item Here the mean exit is layer 5.5, yet the batch pays for all 12.
@@ -81,10 +81,14 @@
       \end{itemize}
     \end{column}
   \end{columns}
+  \vspace{-0.4em}
   \begin{block}{Questions}
-    \small (1) When should a batch stop, and which exits are worth evaluating?
-    (2) Can the rule be tuned with an accuracy guarantee?
-    (3) Can slowdown attacks be bounded?
+    \small
+    \begin{enumerate}\setlength\itemsep{0pt}
+      \item When should a batch stop, and which exits are worth evaluating?
+      \item Can the rule be tuned with an accuracy guarantee?
+      \item Can slowdown attacks be bounded?
+    \end{enumerate}
   \end{block}
 \end{frame}
 
