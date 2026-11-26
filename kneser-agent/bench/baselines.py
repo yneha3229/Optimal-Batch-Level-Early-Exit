@@ -1,6 +1,6 @@
 """Baselines on exactly the same (relabelled) graphs the agent sees.
 
-    python bench/baselines.py run [--limit 60] [--par 2] [specs...]   -> results/baselines.jsonl
+    python bench/baselines.py run [--limit 60] [--par 2] [--out results/X.jsonl] [specs...]   -> results/baselines.jsonl
 Methods (each in its own forked process, one thread, LIMIT seconds; same rules as minrank-agent/kneser_bench.py):
   standard methods  cpsat_alpha (lower), cpsat_cover, frac_cover, f2_minrank_sat (upper)
   kushagra_agent    Kushagra's theory-guided script (recognise (n,k) -> rule prime -> one rank -> greedy star),
@@ -103,6 +103,7 @@ def _sub(spec, seed, limit):
 
 
 def cmd_run(argv):
+    global OUT
     limit, par, specs = 60.0, 2, []
     it = iter(argv)
     for x in it:
@@ -110,6 +111,8 @@ def cmd_run(argv):
             limit = float(next(it))
         elif x == "--par":
             par = int(next(it))
+        elif x == "--out":
+            OUT = ROOT / next(it)
         else:
             specs.append(x)
     specs = specs or json.loads((HERE / "specs.json").read_text())["benchmark"]
