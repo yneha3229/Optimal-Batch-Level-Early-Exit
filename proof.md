@@ -1,286 +1,175 @@
-# The $`p`$-rank of the Golovnev–Haviv matrix and exact minrank of Kneser graphs
+# Exact minrank of Kneser graphs over prime fields, and an explicit optimal index code
 
 ## Summary
 
-For integers $`n > 2k \ge 4`$, let $`K(n,k)`$ be the Kneser graph and $`D`$ its adjacency matrix. The integer matrix
+For integers $`n > 2k \ge 4`$, let $`K(n,k)`$ be the Kneser graph (vertices: the $`k`$-subsets of $`[n]`$; edges: disjoint
+pairs) and $`D`$ its adjacency matrix. Put $`\varepsilon=(-1)^{k-1}`$ and
 
 ```math
-H \;=\; I + (-1)^{k-1} D, \qquad H_{A,B} = \binom{|A\cap B|-1}{k-1},
+H \;=\; I + \varepsilon D, \qquad H_{A,B} = \binom{|A\cap B|-1}{k-1}.
 ```
 
-fits $`K(n,k)`$ over every field. It is the matrix used by Golovnev–Haviv and by Haviv for upper bounds on minrank.
-We prove:
+$`H`$ fits $`K(n,k)`$ over every field; it is the matrix of Golovnev–Haviv, who bounded its rank by $`\sum_{i<k}\binom ni`$.
 
-> **Main Theorem.** Let $`p`$ be a prime and let $`q`$ be the smallest power of $`p`$ with $`q \ge k`$.
-> If $`q \mid n-2k`$, then
+Here $`\alpha(G)`$ is the independence number. For every graph and field $`\alpha(G)\le\mathrm{minrk}_{\mathbb F}(G)`$, and
+$`\alpha(K(n,k))=\binom{n-1}{k-1}`$ (Erdős–Ko–Rado). Write $`q=q_p(k)`$ for the smallest power of the prime $`p`$ with
+$`q\ge k`$.
+
+> **Theorem 1.** For every prime $`p`$:
 > ```math
-> \mathrm{rank}_{\mathbb F_p} H \;=\; \binom{n-1}{k-1} \;=\; \alpha(K(n,k)),
+> \mathrm{rank}_{\mathbb F_p} H = \binom{n-1}{k-1} \iff q_p(k) \mid n-2k .
 > ```
-> and therefore $`\mathrm{minrk}_{\mathbb F_p}(K(n,k)) = \alpha(K(n,k))`$.
+> In particular, if $`q_p(k)\mid n-2k`$ then $`\mathrm{minrk}_{\mathbb F_p}(K(n,k))=\alpha(K(n,k))`$.
 
-> **Corollary.** For every $`k \ge 2`$ and all but finitely many $`n`$, the Haemers bound is tight on $`K(n,k)`$:
-> $`\min_{\mathbb F}\mathrm{minrk}_{\mathbb F}(K(n,k)) = \alpha(K(n,k)) = \Theta(K(n,k))`$.
+> **Theorem 2 (explicit optimal index code).** If $`q_p(k)\mid n-2k`$, the following scalar linear index code over $`\mathbb F_p`$
+> for the side-information graph $`K(n,k)`$ uses $`\alpha=\binom{n-1}{k-1}`$ transmissions, which is optimal among **all**
+> (also non-linear) index codes. For every $`k`$-set $`A`$ containing the element $`1`$, broadcast
+> ```math
+> y_A \;=\; x_A + \varepsilon \sum_{B\cap A=\emptyset} x_B .
+> ```
+> A receiver $`A\ni1`$ decodes $`x_A`$ from $`y_A`$. A receiver $`A'\not\ni1`$ computes
+> $`\varepsilon\sum_{A\ni 1,\,A\cap A'=\emptyset} y_A = x_{A'}+\varepsilon\sum_{B\cap A'=\emptyset}x_B`$ and subtracts its side information.
+
+> **Corollary 3 (broadcast rate).** For every $`k\ge2`$ and all but finitely many $`n`$, the broadcast rate of the index
+> coding problem on $`K(n,k)`$ is $`\beta = \binom{n-1}{k-1}`$, attained by a scalar linear code over a suitable prime
+> field. The field cannot be fixed in advance: $`\mathrm{minrk}_{\mathbb F_2}(K(7,2)) = 7 > 6 = \mathrm{minrk}_{\mathbb F_3}(K(7,2))`$.
+
+**What is new, precisely.**
+
+- Known: the lower bound $`\alpha\le\mathrm{minrk}`$, the matrix $`H`$, and the equality $`\mathrm{minrk}=\alpha`$ when
+  $`k\mid n`$ (over every field, via Baranyai's clique cover, Proposition 4.1).
+- New: the exact $`p`$-rank of $`H`$ with an if-and-only-if condition; the explicit code and decoder; infinitely many $`n`$
+  with $`k\nmid n`$, where no clique cover (even fractional) reaches $`\alpha`$, for every $`k`$ (Corollary 4.3); and the
+  resulting broadcast rate.
+- The proof (§2) is elementary and self-contained: about one page. A second, independent proof through the integer
+  diagonal forms of Ducey et al. is in Appendix A, and a third for $`k=3`$ in Appendix B.
+- Not claimed: anything about fields other than the $`\mathbb F_p`$ in question, or $`\mathrm{minrk}>\alpha`$ when
+  $`q\nmid n-2k`$ (Theorem 1 says only that $`H`$ itself misses $`\alpha`$ then).
+
+The Shannon capacity plays no role; see Remark 5.4.
 
 ---
 
-## 1. Definitions and notation
+## 1. Definitions
 
-**Minrank.** Let $`G`$ be a graph on vertex set $`V`$ and let $`\mathbb F`$ be a field. A matrix $`M\in\mathbb F^{V\times V}`$
-*fits* $`G`$ if
+**Minrank.** A matrix $`M\in\mathbb F^{V\times V}`$ *fits* a graph $`G`$ if $`M_{vv}\neq0`$ for all $`v`$ and $`M_{uv}=0`$
+whenever $`u\neq v`$ are non-adjacent. $`\mathrm{minrk}_{\mathbb F}(G)`$ is the least rank of a fitting matrix.
 
-- $`M_{vv}\neq 0`$ for all $`v`$, and
-- $`M_{uv}=0`$ whenever $`u\neq v`$ are non-adjacent.
-
-The minrank $`\mathrm{minrk}_{\mathbb F}(G)`$ is the minimum rank of a matrix that fits $`G`$.
-
-**Standard facts.**
-
-1. $`\alpha(G)\le \mathrm{minrk}_{\mathbb F}(G)`$. The principal submatrix on an independent set is diagonal
+1. $`\alpha(G)\le\mathrm{minrk}_{\mathbb F}(G)`$: on an independent set a fitting matrix restricts to a diagonal matrix
    with nonzero diagonal.
-2. $`\mathrm{minrk}_{\mathbb F}(G)\le \bar\chi(G)`$, the clique cover number.
-3. (Haemers) $`\Theta(G)\le \mathrm{minrk}_{\mathbb F}(G)`$, where $`\Theta`$ is the Shannon capacity.
+2. $`\mathrm{minrk}_{\mathbb F}(G)\le\bar\chi(G)`$, the clique cover number.
 
-**Kneser graphs.** The vertices of $`K(n,k)`$ are the $`k`$-subsets of $`[n]`$, and $`A\sim B`$ iff $`A\cap B=\emptyset`$.
-By Erdős–Ko–Rado and Lovász, for $`n\ge 2k`$,
+**Index coding.** In the index coding problem with side-information graph $`G`$, receiver $`v`$ wants $`x_v`$ and knows
+$`x_u`$ for every neighbour $`u`$. The optimal length of a scalar linear code over $`\mathbb F`$ is
+$`\mathrm{minrk}_{\mathbb F}(G)`$ (Bar-Yossef–Birk–Jayram–Kol), and the broadcast rate $`\beta(G)`$ over all codes
+satisfies $`\alpha(G)\le\beta(G)\le\mathrm{minrk}_{\mathbb F}(G)`$.
 
-```math
-\alpha(K(n,k)) = \Theta(K(n,k)) = \binom{n-1}{k-1}.
-```
+**Kneser graphs.** By Erdős–Ko–Rado, the largest independent sets of $`K(n,k)`$ (intersecting families) have size
+$`\binom{n-1}{k-1}`$; one is the star $`\mathcal S=\{A: 1\in A\}`$.
 
-**The matrix $`H`$.** Put $`\varepsilon = (-1)^{k-1}`$ and $`H = I + \varepsilon D`$. Then $`H_{AA}=1`$ and $`H_{AB}=0`$ when
-$`0<|A\cap B|<k`$, so $`H`$ fits $`K(n,k)`$ over every field.
+**The matrix $`H`$.** $`H_{AA}=1`$; $`H_{AB}=\varepsilon`$ if $`A\cap B=\emptyset`$; $`H_{AB}=0`$ otherwise. Equivalently
+$`H_{AB}=\binom{t-1}{k-1}`$ with $`t=|A\cap B|`$, since $`\binom{-1}{k-1}=\varepsilon`$, $`\binom{t-1}{k-1}=0`$ for
+$`1\le t\le k-1`$ and $`\binom{k-1}{k-1}=1`$. So $`H`$ fits $`K(n,k)`$.
 
-Moreover $`H_{A,B} = q(|A\cap B|)`$ with $`q(x)=\binom{x-1}{k-1}`$:
-
-- $`q(0)=\binom{-1}{k-1}=(-1)^{k-1}`$;
-- $`q(1)=\dots=q(k-1)=0`$;
-- $`q(k)=1`$.
-
-This is the matrix of Golovnev–Haviv [GH, Thm 3.2] (and, up to the scalar $`(k-1)!`$, of Haviv [H, Prop 4.3]). Those
-papers bound its rank from above by $`\sum_{i<k}\binom ni`$, respectively $`\binom n{k-1}`$ for $`p>k`$.
-
-**Conventions.**
-
-- $`\binom{x}{r} = x(x-1)\cdots(x-r+1)/r!`$ for any integer $`x`$ and $`r\ge 0`$; $`\binom{x}{r}=0`$ for $`r<0`$.
-- $`\mathrm{rank}_p`$ means rank over $`\mathbb F_p`$.
-- $`\theta_j = (-1)^j\binom{n-k-j}{k-j}`$ for $`0\le j\le k`$ (these are the eigenvalues of $`D`$).
-- $`\mu_s = \binom ns - \binom n{s-1}`$ for $`s \ge 0`$, and $`\mu_{-1}=0`$.
+**Conventions.** $`\binom xr=x(x-1)\cdots(x-r+1)/r!`$ for every integer $`x`$ and $`r\ge0`$. $`N=n-2k\ge1`$.
+$`\mathrm{rank}_p`$ is rank over $`\mathbb F_p`$.
 
 ---
 
-## 2. A cited reduction: Ducey et al.
+## 2. Proof of Theorem 1
 
-A *diagonal form* of an integer matrix $`L`$ is a diagonal matrix $`\Delta = ELF`$ with $`E,F`$ unimodular over
-$`\mathbb Z`$. Reducing mod $`p`$ keeps $`E,F`$ invertible, so
+**Lemma 2.1 (the star is a basis candidate).** $`H[\mathcal S,\mathcal S]=I`$. Hence the $`\alpha`$ rows of $`H`$ indexed by
+$`\mathcal S`$ are linearly independent over every field, and $`\mathrm{rank}\,H\ge\alpha`$.
+
+*Proof.* Two distinct members of $`\mathcal S`$ share the element 1, so $`H_{AB}=0`$; and $`H_{AA}=1`$. $`\square`$
+
+**Lemma 2.2 (the decoding identity).** For $`A'\notin\mathcal S`$ and any $`k`$-set $`B`$, let
+$`R(A',B)=\sum_{A\in\mathcal S,\ A\cap A'=\emptyset}H_{A,B}`$ (an integer). Then
+
+- if $`1\in B`$: $`\varepsilon R(A',B)=H_{A',B}`$;
+- if $`1\notin B`$: $`\varepsilon R(A',B)=\binom{N-1+t}{k-1}`$, where $`t=|A'\cap B|`$, while $`H_{A',B}=\binom{t-1}{k-1}`$.
+
+*Proof.* $`R(A',B)=[\,B\in\mathcal S,\ B\cap A'=\emptyset\,]+\varepsilon\,\#\{A\in\mathcal S: A\cap(A'\cup B)=\emptyset\}`$.
+
+- If $`1\in B`$, the count is $`0`$, so $`\varepsilon R=\varepsilon[B\cap A'=\emptyset]`$. As $`B\neq A'`$, this is $`H_{A',B}`$.
+- If $`1\notin B`$, the first term is $`0`$. Since $`1\notin A'\cup B`$ and $`|A'\cup B|=2k-t`$, the count is
+  $`\binom{n-1-(2k-t)}{k-1}=\binom{N-1+t}{k-1}`$, and $`\varepsilon^2=1`$. $`\square`$
+
+**Proposition 2.3.** Over any field $`\mathbb F_p`$, $`\mathrm{rank}_pH=\alpha`$ if and only if
 
 ```math
-\mathrm{rank}_p L = \#\{\text{diagonal entries of }\Delta\text{ not divisible by }p\}. \tag{2.1}
+\binom{N-1+t}{k-1}\equiv\binom{t-1}{k-1}\pmod p\qquad\text{for } t=0,1,\dots,k. \tag{2.1}
 ```
 
-**Theorem 2.1** (Ducey, Engelthaler, Gathje, Jones, Pfaff, Plute [DEGJPP, Def. 3.1, Thm 3.4, Lemma 4.10]).
-Let $`n \ge 3k-1`$, $`\lambda\in\mathbb Z`$, and $`L = D-\lambda I`$ for the Kneser graph $`K(n,k)`$. For $`0\le s\le k`$ let
-$`M_s`$ be the $`(k-s+1)\times(k-s+1)`$ integer matrix with rows and columns indexed by $`s\le i,j\le k`$ and
+*Proof.*
 
-```math
-M_s(i,j) = -\lambda\,\delta_{ij} + \binom{j-s}{i-s}(-1)^i\binom{n-k-j}{k-j}.
-```
+- ($`\Leftarrow`$) By Lemma 2.2 and (2.1), every row $`A'\notin\mathcal S`$ equals $`\varepsilon\sum_{A\in\mathcal S,\,A\cap A'=\emptyset}`$
+  (row $`A`$). So the rows of $`\mathcal S`$ span the row space, and $`\mathrm{rank}_pH\le\alpha`$. Lemma 2.1 gives equality.
+- ($`\Rightarrow`$) If $`\mathrm{rank}_pH=\alpha`$, the independent rows of $`\mathcal S`$ (Lemma 2.1) form a basis of the row space.
+  Write row $`A'`$ as $`\sum_{A\in\mathcal S}c_A\,(\text{row }A)`$. Restricting to the columns in $`\mathcal S`$, where
+  $`H[\mathcal S,\mathcal S]=I`$, gives $`c_A=H_{A',A}=\varepsilon[A\cap A'=\emptyset]`$. So the identity of Lemma 2.2 holds
+  for every $`B`$. Every $`t\in\{0,\dots,k\}`$ occurs as $`|A'\cap B|`$ with $`1\notin A'\cup B`$, because
+  $`|A'\cup B|=2k-t\le n-1`$. This gives (2.1). $`\square`$
 
-Then $`L`$ has a diagonal form made of diagonal forms of the $`M_s`$, where $`M_s`$ occurs
-$`\binom ns-2\binom n{s-1}+\binom n{s-2} = \mu_s-\mu_{s-1}`$ times.
+**Lemma 2.4 (arithmetic).** (2.1) holds if and only if $`q_p(k)\mid N`$.
 
-**Corollary 2.2.** For $`n\ge 3k-1`$ and every prime $`p`$:
+*Proof.* Let $`g(x)=\binom{x+N}{k-1}-\binom{x}{k-1}`$. By Vandermonde,
+$`g(x)=\sum_{i=1}^{k-1}\binom Ni\binom{x}{k-1-i}`$, and (2.1) says $`g(x)\equiv0\pmod p`$ for $`x=-1,0,\dots,k-1`$.
 
-```math
-\mathrm{rank}_p L = \sum_{s=0}^{k} (\mu_s-\mu_{s-1})\,\mathrm{rank}_p M_s.
-```
+- ($`\Leftarrow`$) Let $`q=p^c\mid N`$. The lowest $`c`$ base-$`p`$ digits of $`N`$ are $`0`$, and every $`0<i<q`$ has a
+  nonzero digit among them, so $`\binom Ni\equiv0\pmod p`$ by Lucas' theorem. Since $`k-1<q`$, every term of $`g`$
+  vanishes mod $`p`$ for every integer $`x`$.
+- ($`\Rightarrow`$) The coefficients of $`g`$ in the basis $`\binom xj`$ are its forward differences at $`0`$:
+  $`\binom N{k-1-j}=\Delta^jg(0)=\sum_{i=0}^{j}(-1)^{j-i}\binom ji g(i)`$, for $`0\le j\le k-2`$. These use
+  $`g(0),\dots,g(k-2)`$ only, which are $`\equiv0`$. So $`\binom Ni\equiv0\pmod p`$ for $`1\le i\le k-1`$.
+  By minimality of $`q=p^c`$, $`p^{a}\le k-1`$ for $`0\le a\le c-1`$. Lucas' theorem gives $`\binom N{p^a}\equiv N_a\pmod p`$,
+  where $`N_a`$ is the $`a`$-th base-$`p`$ digit of $`N`$. So $`N_0=\dots=N_{c-1}=0`$, i.e. $`p^c\mid N`$. $`\square`$
 
-*Proof.* Combine Theorem 2.1 with (2.1), applied to $`L`$ and to each $`M_s`$. $`\square`$
+*Proof of Theorem 1.* Proposition 2.3 and Lemma 2.4. If $`q\mid N`$, then $`H`$ fits $`K(n,k)`$ with rank $`\alpha`$,
+so $`\mathrm{minrk}_{\mathbb F_p}\le\alpha`$; the reverse inequality is fact 1 of §1. $`\blacksquare`$
 
-We apply this with $`\lambda = -\varepsilon`$. Then $`D-\lambda I = D+\varepsilon I = \varepsilon H`$, so
-$`\mathrm{rank}_p H = \mathrm{rank}_p L`$.
+*Remark.* The proof of Lemma 2.4 uses only $`t=1,\dots,k-1`$ in (2.1); the cases $`t=0`$ and $`t=k`$ then follow.
 
 ---
 
-## 3. Simplifying the blocks
+## 3. Proof of Theorem 2
 
-Fix $`s`$ and write $`T`$ for the upper-triangular Pascal matrix $`T(i,j)=\binom{j-s}{i-s}`$, and
-$`\Lambda = \mathrm{diag}((-1)^i)`$, both indexed by $`s\le i,j\le k`$.
+Let $`z_A=\sum_BH_{A,B}x_B=x_A+\varepsilon\sum_{B\cap A=\emptyset}x_B`$, so $`y_A=z_A`$ for $`A\in\mathcal S`$.
 
-**Lemma 3.1** (Pascal inversion). $`T^{-1} = \Lambda T\Lambda`$. Consequently $`T\Lambda T = \Lambda`$.
+- A receiver $`A\in\mathcal S`$ knows every $`x_B`$ with $`B\cap A=\emptyset`$ (its neighbours), so it reads off $`x_A`$.
+- For $`A'\notin\mathcal S`$, the row identity proved in Proposition 2.3 gives
+  $`z_{A'}=\varepsilon\sum_{A\in\mathcal S,\,A\cap A'=\emptyset}z_A`$ over $`\mathbb F_p`$. The receiver computes this from the
+  broadcast, using $`\binom{n-k-1}{k-1}`$ transmissions, and subtracts the known $`\varepsilon\sum_{B\cap A'=\emptyset}x_B`$.
 
-*Proof.* Put $`u=i-s`$, $`v=j-s`$. The inverse of $`\big(\binom vu\big)_{u,v}`$ is
-$`\big((-1)^{u+v}\binom vu\big)_{u,v}`$, because $`\sum_{u\le w\le v}(-1)^{w+v}\binom wu\binom vw = \delta_{uv}`$.
-Also $`(-1)^{u+v}=(-1)^{i+j}`$. Multiplying $`T^{-1}=\Lambda T\Lambda`$ on the left by $`T`$ and on the right by $`\Lambda`$
-gives $`\Lambda = T\Lambda T`$. $`\square`$
-
-**Lemma 3.2.** With $`\lambda=-\varepsilon`$:
-$`\mathrm{rank}_p M_s = \mathrm{rank}_p\big(T + \mathrm{diag}(\varepsilon\theta_s,\dots,\varepsilon\theta_k)\big)`$.
-
-*Proof.*
-
-- Write $`a_j = \binom{n-k-j}{k-j}`$ and $`\mathcal A = \mathrm{diag}(a_j)`$. Then
-  $`M_s = \varepsilon I + \Lambda T\mathcal A`$.
-- By Lemma 3.1, $`TM_s = \varepsilon T + T\Lambda T \mathcal A = \varepsilon T + \Lambda\mathcal A`$.
-- Multiply by $`\varepsilon=\pm1`$: $`\varepsilon T M_s = T + \varepsilon\Lambda\mathcal A = T + \mathrm{diag}(\varepsilon\theta_j)`$.
-- $`T`$ is unimodular. $`\square`$
-
-**Lemma 3.3.** Let $`w = 2k-n-1`$. Then $`\varepsilon\theta_j = -\binom{w}{k-j}`$ for $`0\le j\le k`$.
-
-*Proof.*
-
-- For any integer $`x`$ and $`r\ge0`$: $`(-1)^r\binom xr=\binom{r-x-1}{r}`$.
-- Put $`r=k-j`$ and $`x = n-k-j`$. Then $`r-x-1 = w`$.
-- Hence $`\varepsilon\theta_j = (-1)^{k-1+j}\binom{n-k-j}{k-j} = -(-1)^{r}\binom{x}{r} = -\binom{w}{r}`$. $`\square`$
-
-So, re-indexing by $`v = j-s\in\{0,\dots,m-1\}`$ with $`m=k-s+1`$ and $`r = k-j = m-1-v`$, the block is (up to unimodular
-equivalence)
-
-```math
-B_s \;=\; P_m - \mathrm{diag}\Big(\tbinom{w}{m-1-v}\Big)_{v=0}^{m-1},
-\qquad P_m(u,v)=\tbinom vu. \tag{3.1}
-```
-
-**Lemma 3.4** (periodicity). Let $`q=p^c`$ and $`0\le r<q`$. Then $`\binom{x+q}{r}\equiv\binom xr \pmod p`$ for every
-integer $`x`$. In particular, if $`x\equiv-1\pmod q`$ then $`\binom xr\equiv\binom{-1}{r}=(-1)^r\pmod p`$.
-
-*Proof.*
-
-- Vandermonde's identity holds as a polynomial identity in $`x`$:
-  $`\binom{x+q}{r}=\sum_{i=0}^{r}\binom qi\binom{x}{r-i}`$.
-- For $`0<i\le r<q`$, $`p\mid\binom{q}{i}`$ (Kummer; $`q`$ is a power of $`p`$).
-- Each $`\binom{x}{r-i}`$ is an integer.
-- Iterate the congruence in both directions. $`\square`$
-
-**Corollary 3.5.** Assume $`q\mid n-2k`$, where $`q`$ is the least power of $`p`$ with $`q\ge k`$. Then $`w\equiv-1\pmod q`$,
-and modulo $`p`$:
-
-```math
-B_s \equiv N_m := P_m - \mathrm{diag}\big((-1)^{m-1-v}\big)_{v=0}^{m-1}
-```
-
-with **one possible exception**. If $`k=q`$ (i.e. $`k`$ is itself a power of $`p`$), the entry in block $`s=0`$ at position
-$`(0,0)`$ (where $`r=k`$) may differ from that of $`N_{k+1}`$.
-
-*Proof.* $`w = 2k-n-1\equiv -1\pmod q`$. All $`r`$ in (3.1) satisfy $`r\le k\le q`$, and $`r<q`$ unless $`r=k=q`$. Since
-$`r=k`$ means $`j=0`$, this happens only for $`s=0`$, $`v=0`$. Apply Lemma 3.4. $`\square`$
+The code has $`|\mathcal S|=\alpha`$ transmissions, and $`\beta(G)\ge\alpha(G)`$ for every index code. $`\blacksquare`$
 
 ---
 
-## 4. The rank of $`N_m`$
+## 4. Which cases are new, and the broadcast rate
 
-Let $`\mathbb F`$ be a field and $`V_m`$ the space of polynomials in $`\mathbb F[x]`$ of degree $`<m`$, with basis
-$`x^0,\dots,x^{m-1}`$. Let $`(Ef)(x) = f(x+1)`$ and $`(Rf)(x)=f(-x)`$. Then
+**Proposition 4.1 (known: $`k\mid n`$).** If $`k\mid n`$, then $`\mathrm{minrk}_{\mathbb F}(K(n,k))=\alpha`$ over every field.
 
-- column $`v`$ of $`P_m`$ holds the coefficients of $`(x+1)^v=\sum_u\binom vu x^u`$, so $`P_m`$ is the matrix of $`E`$;
-- $`\mathrm{diag}((-1)^{m-1-v}) = \sigma\mathrm{diag}((-1)^v)`$ with $`\sigma=(-1)^{m-1}`$, which is the
-  matrix of $`\sigma R`$.
+*Proof.* Baranyai partitions the $`k`$-sets into $`\binom{n-1}{k-1}`$ parallel classes; each is a clique, so
+$`\bar\chi=\alpha`$. $`\square`$
 
-Hence $`N_m`$ is the matrix of $`E-\sigma R`$ on $`V_m`$.
+**Corollary 4.2.** If $`q_p(k)\mid n-2k`$ for some prime $`p`$, or $`k\mid n`$, then
+$`\beta(K(n,k))=\min_p\mathrm{minrk}_{\mathbb F_p}(K(n,k))=\alpha(K(n,k))`$.
 
-**Lemma 4.1** ($`\mathrm{char}\mathbb F\ne2`$). $`\mathrm{rank} N_m = \lfloor m/2\rfloor`$.
+**Corollary 4.3 (infinitely many new cases).** For every $`k\ge2`$ there are infinitely many $`n`$ with $`k\nmid n`$ covered
+by Theorem 1. For them $`\mathrm{minrk}_{\mathbb F_p}=\alpha<\bar\chi_f\le\bar\chi`$, where $`\bar\chi_f=\binom nk/\lfloor n/k\rfloor`$ is the
+fractional clique cover number. So no (fractional) clique-cover code is optimal there.
 
-*Proof.*
+*Proof.* Take a prime $`p>k`$ (so $`q=p`$, $`\gcd(p,k)=1`$) and $`n=2k+pt`$ with $`t\equiv1\pmod k`$. Then $`n\equiv p\not\equiv0`$.
+Cliques of $`K(n,k)`$ have at most $`\lfloor n/k\rfloor`$ vertices and $`K(n,k)`$ is vertex-transitive, so
+$`\bar\chi_f=\binom nk/\lfloor n/k\rfloor>\binom nk\cdot\frac kn=\alpha`$ when $`k\nmid n`$. $`\square`$
 
-- $`f\in\ker(E-\sigma R)`$ iff $`f(x+1)=\sigma f(-x)`$ for all $`x`$, i.e. iff $`f(u)=\sigma f(1-u)`$.
-- Since $`2`$ is invertible, put $`g(z) = f(z+\tfrac12)`$, which preserves degree. The condition becomes
-  $`g(z)=\sigma g(-z)`$.
-- If $`m`$ is odd, then $`\sigma=1`$ and $`g`$ is even of degree $`\le m-1`$: the span of $`z^0,z^2,\dots,z^{m-1}`$, of
-  dimension $`\tfrac{m+1}{2}`$.
-- If $`m`$ is even, then $`\sigma=-1`$ and $`g`$ is odd: the span of $`z^1,z^3,\dots,z^{m-1}`$, of dimension $`\tfrac m2`$.
-- Either way $`\dim\ker = \lceil m/2\rceil`$, so the rank is $`\lfloor m/2\rfloor`$. $`\square`$
+Examples: $`K(10,3)`$ over $`\mathbb F_2`$ ($`36`$ vs. $`\bar\chi_f=40`$); $`K(13,4)`$ over $`\mathbb F_5`$ ($`220`$ vs. $`238.3`$);
+$`K(15,4)`$ over $`\mathbb F_7`$ ($`364`$ vs. $`455`$); $`K(7,2)`$ over $`\mathbb F_3`$ ($`6`$ vs. $`7`$).
 
-**Lemma 4.2** ($`\mathrm{char}\mathbb F = 2`$). $`\mathrm{rank} N_m = \lfloor m/2\rfloor`$.
+**Corollary 4.4 (finitely many exceptions).** For fixed $`k`$, only finitely many $`n>2k`$ are not covered by Corollary 4.2.
 
-*Proof.*
-
-- In characteristic 2, $`N_m = P_m + I`$ is the matrix of $`f\mapsto f(x+1)+f(x)`$, so
-  $`\ker = \{f\in V_m: f(x+1)=f(x)\}`$.
-- Let $`y = x^2+x`$. Then $`x`$ is a root of the monic polynomial $`X^2+X+y`$ over $`\mathbb F[y]`$, so
-  $`\mathbb F[x]=\mathbb F[y]\oplus x\,\mathbb F[y]`$.
-- The substitution $`x\mapsto x+1`$ fixes $`y`$. Writing $`f=a(y)+x\,b(y)`$, we get $`f(x+1)+f(x)=b(y)`$.
-- So $`\ker = \mathbb F[y]\cap V_m`$. Since $`\deg_x a(y)=2\deg_y a`$, it consists of the $`a(y)`$ with
-  $`\deg_y a\le\lfloor (m-1)/2\rfloor`$, of dimension $`\lceil m/2\rceil`$. $`\square`$
-
-**Lemma 4.3** (the exceptional entry). Let $`m\ge 3`$, let $`k=m-1`$ be a power of $`p`$, and let $`N'`$ be obtained from
-$`N_m`$ (over $`\mathbb F_p`$) by replacing the $`(0,0)`$ entry by an arbitrary $`c\in\mathbb F_p`$. Then
-$`\mathrm{rank}N' = \mathrm{rank}N_m`$.
-
-*Proof.*
-
-- In both $`N_m`$ and $`N'`$, column $`0`$ is a multiple of $`e_0`$, the coefficient vector of the constant $`1`$.
-- Column 1 is the image of $`x`$: $`(x+1)-\sigma(-x) = 1+(1+\sigma)x`$ with $`\sigma=(-1)^{m-1}=(-1)^k`$.
-- If $`p=2`$, then $`1+\sigma=0`$ in $`\mathbb F_2`$. If $`p`$ is odd, then $`k=p^c`$ is odd, $`\sigma=-1`$, and again
-  $`1+\sigma=0`$. So column 1 equals $`e_0`$.
-- Therefore column 0 lies in the span of column 1 in both matrices, and both column spaces equal the span of
-  columns $`1,\dots,m-1`$, which the two matrices share. $`\square`$
-
-**Corollary 4.4.** Under the hypothesis of Corollary 3.5, $`\mathrm{rank}_p B_s = \lfloor (k-s+1)/2\rfloor`$ for
-every $`0\le s\le k`$.
-
-*Proof.* Use Lemma 4.1 or 4.2 according to $`p`$, and Lemma 4.3 for the exceptional entry. That entry occurs only for
-$`s=0`$, where $`m=k+1\ge3`$. $`\square`$
-
----
-
-## 5. Proof of the Main Theorem
-
-Assume $`q\mid n-2k`$, where $`q`$ is the least power of $`p`$ with $`q\ge k`$, and $`n>2k`$.
-
-**Step 1: the reduction applies.** $`n-2k`$ is a positive multiple of $`q`$, so $`n-2k\ge q\ge k`$ and $`n\ge 3k\ge3k-1`$.
-By Corollary 2.2 (with $`\lambda=-\varepsilon`$), Lemma 3.2 and Corollary 4.4:
-
-```math
-\mathrm{rank}_p H=\sum_{s=0}^{k}(\mu_s-\mu_{s-1})\,g(s),\qquad g(s)=\Big\lfloor\frac{k-s+1}{2}\Big\rfloor .
-```
-
-**Step 2: summation by parts.** Since $`g(k)=0`$,
-
-```math
-\sum_{s=0}^{k}(\mu_s-\mu_{s-1})g(s)=\sum_{s=0}^{k-1}\mu_s\big(g(s)-g(s+1)\big).
-```
-
-With $`t=k-s\ge1`$, $`g(s)-g(s+1)=\lfloor\tfrac{t+1}2\rfloor-\lfloor\tfrac t2\rfloor`$, which is $`1`$ if $`t`$ is odd and
-$`0`$ if $`t`$ is even. Hence
-
-```math
-\mathrm{rank}_p H=\sum_{\substack{0\le s\le k-1\\ k-s\text{ odd}}}\Big(\tbinom ns-\tbinom n{s-1}\Big)
-=\sum_{j=0}^{k-1}(-1)^j\binom{n}{k-1-j}=\binom{n-1}{k-1}.
-```
-
-The last equality is the coefficient of $`x^{k-1}`$ in $`(1+x)^n(1+x)^{-1}=(1+x)^{n-1}`$.
-
-**Step 3: conclusion.**
-
-- $`H`$ fits $`K(n,k)`$, so $`\mathrm{minrk}_{\mathbb F_p}\le\binom{n-1}{k-1}`$.
-- $`\alpha(K(n,k))=\binom{n-1}{k-1}\le\mathrm{minrk}_{\mathbb F_p}`$.
-
-Hence equality holds. $`\blacksquare`$
-
----
-
-## 6. Corollaries
-
-**Corollary 6.1** (Haemers bound). If $`q_p(k)\mid n-2k`$ for some prime $`p`$ (where $`q_p(k)`$ is the least power of
-$`p`$ that is $`\ge k`$), or $`k\mid n`$, then
-
-```math
-\min_{\mathbb F}\mathrm{minrk}_{\mathbb F}(K(n,k))=\alpha(K(n,k))=\Theta(K(n,k)).
-```
-
-*Proof.*
-
-- The first case is the Main Theorem.
-- If $`k\mid n`$, Baranyai's theorem partitions the $`k`$-subsets of $`[n]`$ into $`\binom{n-1}{k-1}`$ parallel classes.
-  Each class is a clique of $`K(n,k)`$, so $`\bar\chi=\alpha`$.
-- Combine with facts 1–3 of §1. $`\square`$
-
-**Corollary 6.2** (finitely many exceptions). For fixed $`k`$, the set of $`n>2k`$ not covered by Corollary 6.1 is
-finite.
-
-*Proof.* Suppose $`N=n-2k`$ is not covered. For every prime $`p`$, $`v_p(N)<c_p`$, where $`p^{c_p}=q_p(k)`$. For $`p\ge k`$,
-$`c_p=1`$, so $`p\nmid N`$. Hence $`N`$ divides $`\prod_{p<k}p^{\,c_p-1}`$. $`\square`$
-
-The exceptional $`n`$ for small $`k`$ are:
+*Proof.* If $`N=n-2k`$ is not covered, $`v_p(N)<c_p`$ for every prime $`p`$, where $`p^{c_p}=q_p(k)`$. For $`p\ge k`$,
+$`c_p=1`$, so $`p\nmid N`$. Hence $`N\mid\prod_{p<k}p^{c_p-1}`$. $`\square`$
 
 | $`k`$ | exceptional $`n`$ |
 |---|---|
@@ -290,118 +179,117 @@ The exceptional $`n`$ for small $`k`$ are:
 | 5 | 11, 12, 13, 14, 16, 22 |
 | 6 | 13, 14, 15, 16, 17, 22, 27, 32 |
 
-**Corollary 6.3** (strictly below the clique cover). Each clique of $`K(n,k)`$ has at most $`\lfloor n/k\rfloor`$
-vertices, so $`\bar\chi(K(n,k))\ge\binom nk/\lfloor n/k\rfloor`$. This exceeds
-$`\alpha=\binom nk\cdot\tfrac kn`$ exactly when $`k\nmid n`$.
+**Proposition 4.5 (the field matters).** $`\mathrm{minrk}_{\mathbb F_2}(K(7,2))=7`$ while $`\mathrm{minrk}_{\mathbb F_3}(K(7,2))=6`$.
 
-So whenever the Main Theorem applies and $`k\nmid n`$, the linear code from $`H`$ is strictly shorter than every
-clique-cover code. Examples:
+*Proof.* $`\mathbb F_3`$: Theorem 1 ($`q_3(2)=3\mid 7-4`$). $`\mathbb F_2`$: $`7`$ is a clique cover; rank $`\le6`$ is refuted by
+SAT, with the unsatisfiability proof checked by DRAT (`minrank/results/unsat_cnf/families/kneser_7_2_r6_indep.cnf.gz`,
+`minrank/results/drat_checks.csv`). $`\square`$
 
-- $`K(10,3)`$ over $`\mathbb F_2`$: $`36<40`$;
-- $`K(13,4)`$ over $`\mathbb F_5`$: $`220<239`$;
-- $`K(15,4)`$ over $`\mathbb F_7`$: $`364<455`$.
-
-**Index coding.** Since $`\beta(G)\ge\alpha(G)`$ for the broadcast rate, the scalar linear index code over
-$`\mathbb F_p`$ given by $`H`$ is optimal among *all* index codes for $`K(n,k)`$ whenever the Main Theorem applies.
+So the optimal scalar linear code for $`K(7,2)`$ exists over $`\mathbb F_3`$ but not over $`\mathbb F_2`$.
 
 ---
 
-## 7. Remarks
+## 5. Remarks
 
-1. **Sharpness for $`H`$ (computational).** For $`k\le12`$, $`3k-1\le n\le120`$ and $`p\le13`$ (6666 cases), Corollary 2.2
-   gives $`\mathrm{rank}_p H=\alpha`$ **if and only if** $`q\mid n-2k`$. The "only if" direction is not proven
-   here. It also concerns only $`H`$: other fitting matrices might reach $`\alpha`$.
-2. **Small open cases.** For $`(n,k)=(7,3)`$ and $`(8,3)`$, SAT with DRAT-checked certificates gives
-   $`\mathrm{minrk}_{\mathbb F_2}=18`$ and $`22`$, above $`\alpha=15,21`$. Other fields are open.
-3. **Dependence on [DEGJPP].** Only Theorem 2.1 is imported. Sections 3–5 are self-contained. For $`k=3`$, the
-   Appendix gives an independent elementary proof.
+1. **Field dependence.** Theorem 1 concerns one field at a time. For example $`\mathrm{rank}_{\mathbb F_3}H=44>36`$ for
+   $`K(10,3)`$, and $`\mathrm{minrk}_{\mathbb F_3}(K(10,3))`$ is not determined here.
+2. **Small open cases.** SAT with DRAT-checked certificates gives $`\mathrm{minrk}_{\mathbb F_2}(K(7,3))=18`$ and
+   $`\mathrm{minrk}_{\mathbb F_2}(K(8,3))=22`$, above $`\alpha=15,21`$.
+3. **The case $`k=2`$.** $`K(n,2)`$ is the complement of the line graph of $`K_n`$. Theorem 1 gives $`\mathrm{minrk}_{\mathbb F_p}=n-1`$
+   for odd $`n`$ and odd $`p\mid n-4`$. These should be compared with the literature on that graph before being called new.
+4. **Shannon capacity (not used).** By Haemers $`\Theta\le\mathrm{minrk}_{\mathbb F}`$, and by Lovász $`\Theta(K(n,k))=\alpha`$.
+   So in the cases of Corollary 4.2 Haemers' bound over some $`\mathbb F_p`$ meets the capacity. Theorem 1 with
+   $`\alpha\le\Theta`$ also re-derives $`\Theta(K(n,k))=\alpha`$ for these $`n`$ without the theta function.
+5. **Literature check (25 Nov 2026).** A web search found no exact minrank or broadcast-rate values for Kneser graphs.
+   Related but different: Golovnev–Haviv and Haviv (upper bounds on minrank of generalized Kneser graphs); Ducey et al.
+   (integer diagonal forms, Appendix A); Brouwer–van Eijl and Brouwer–Haemers (p-ranks of $`A-aI`$ for strongly regular and
+   related graphs); Hu–Tang, arXiv:2607.06480 (symmetric minimum rank of the *complement* of $`K(n,k)`$ over *infinite*
+   fields, a different parameter). Full texts of the last two could not be fetched from this environment and should be read
+   before submission.
 
 ---
 
-## 8. Verification
+## 6. Verification
 
-All statements were checked numerically with ranks computed by FLINT (`python-flint`), independently of the proof:
+Ranks computed with FLINT (`python-flint`) and, where stated, with a separate Gaussian elimination.
 
 | Script | What it checks |
 |---|---|
-| `minrank/analysis/verify_kneser_proof.py` | the $`k=3`$ appendix step by step: Gram identity, $`\mathrm{rank}_p M`$, explicit bases of $`C^\perp`$, closed-form Gram matrices, the rank reduction, the iff; 128 $`(n,p)`$ cases; Corollary 6.1 arithmetic for $`k=3`$ up to $`n=10^6`$; agreement with Theorem 2.1 |
-| `minrank/analysis/verify_general_k.py` | Lemma 4.1 ($`m\le40`$, $`p\le31`$); Corollary 2.2 against direct ranks ($`k=2..5`$); the theorem for $`p>k`$ on 56 full matrices and 439 block cases |
-| `minrank/analysis/verify_all_primes.py` | Lemma 4.2 ($`m\le64`$); Lemma 4.3; Lemma 3.4; the iff in 6666 cases; new full-matrix predictions, e.g. $`K(17,4)`$ over $`\mathbb F_3`$ $`=560=\alpha`$ and $`K(18,5)`$ over $`\mathbb F_2`$ $`=2380=\alpha`$ |
+| `minrank/analysis/verify_star_basis.py` | Lemma 2.4 for $`k\le12`$, $`p\le13`$, $`N\le400`$; the row identity of Proposition 2.3 $`\iff`$ $`\mathrm{rank}_pH=\alpha`$ $`\iff`$ $`q\mid n-2k`$ in 318 $`(n,k,p)`$ cases with $`\binom nk\le2000`$ |
+| `minrank/analysis/verify_independent.py` | for all $`(n,k,p)`$ with $`q\mid n-2k`$, $`\binom nk\le3500`$, $`k\le6`$: $`H`$ fits, the star is independent of size $`\alpha`$, $`\mathrm{rank}_pH=\alpha`$ by two methods. 82 cases; 43 with $`k\mid n`$, 39 without |
+| `minrank/analysis/verify_all_primes.py` | Appendix A: Lemmas A.6–A.8, the block formula against Theorem 1 in 6666 cases ($`k\le12`$, $`n\le120`$, $`p\le13`$), full-matrix predictions such as $`K(17,4)/\mathbb F_3`$ and $`K(18,5)/\mathbb F_2`$ |
+| `minrank/analysis/verify_general_k.py` | Appendix A for $`p>k`$; the reduction against direct ranks |
+| `minrank/analysis/verify_kneser_proof.py` | Appendix B step by step |
 
 ---
 
-## Appendix: an elementary proof for $`k=3`$ (no use of Theorem 2.1)
+## Appendix A: a second proof via integer diagonal forms (Ducey et al.)
 
-Let $`k=3`$. Index $`\mathbb F^N`$, $`N=1+n+\binom n2`$, by the subsets $`X\subseteq[n]`$ with $`|X|\le2`$. Let $`M`$ be the
-$`N\times\binom n3`$ matrix $`M_{X,S}=[X\subseteq S]`$ and let $`C`$ be its column space. Inclusion–exclusion gives the
-integer identity
+Notation: $`\theta_j=(-1)^j\binom{n-k-j}{k-j}`$ ($`0\le j\le k`$) are the eigenvalues of $`D`$; $`\mu_s=\binom ns-\binom n{s-1}`$, $`\mu_{-1}=0`$.
 
-```math
-[S\cap T=\emptyset] = 1-j+\tbinom j2-\tbinom j3\quad(j=|S\cap T|),
-\qquad\text{so}\qquad H=I+D=M^{\mathsf T}QM,
-```
+**Theorem A.1** (Ducey, Engelthaler, Gathje, Jones, Pfaff, Plute [DEGJPP, Def. 3.1, Thm 3.4, Lemma 4.10]). Let $`n\ge3k-1`$,
+$`\lambda\in\mathbb Z`$ and $`L=D-\lambda I`$. For $`0\le s\le k`$ let $`M_s`$ be the integer matrix indexed by $`s\le i,j\le k`$ with
+$`M_s(i,j)=-\lambda\delta_{ij}+\binom{j-s}{i-s}(-1)^i\binom{n-k-j}{k-j}`$. Then $`L`$ has a diagonal form made of diagonal forms of the
+$`M_s`$, with $`M_s`$ occurring $`\mu_s-\mu_{s-1}`$ times. Hence $`\mathrm{rank}_pL=\sum_s(\mu_s-\mu_{s-1})\mathrm{rank}_pM_s`$.
 
-with $`Q=\mathrm{diag}(+1,-1,+1)`$ on levels $`|X|=0,1,2`$. Mod 2, $`Q=I`$.
+Take $`\lambda=-\varepsilon`$, so $`L=\varepsilon H`$. If $`q\mid N`$ then $`n\ge3k`$ and the theorem applies.
 
-**Reduction.** For $`Q`$ nondegenerate, the map $`y\mapsto Qy`$ shows
+**Lemma A.2** (Pascal inversion). With $`T(i,j)=\binom{j-s}{i-s}`$ and $`\Lambda=\mathrm{diag}((-1)^i)`$: $`T\Lambda T=\Lambda`$.
 
-```math
-\mathrm{rank}(M^{\mathsf T}QM)=\dim C-\big(\dim C^\perp-\mathrm{rank} B_Q|_{C^\perp}\big),
-\qquad B_Q(g,g')=g^{\mathsf T}Qg'.
-```
+**Lemma A.3.** $`\mathrm{rank}_pM_s=\mathrm{rank}_p\big(T+\mathrm{diag}(\varepsilon\theta_j)\big)`$, since $`\varepsilon TM_s=T+\varepsilon\Lambda\,\mathrm{diag}\binom{n-k-j}{k-j}`$ and $`T`$ is unimodular.
 
-**$`\mathbb F_2`$, Lemma A.1.** $`C^\perp=\{f: f(\emptyset)=a,\ f(\{i\})=b,\ f(\{i,j\})=a+b+x_i+x_j\}`$, and
-$`\dim C^\perp=n+1`$.
+**Lemma A.4.** With $`w=2k-n-1`$: $`\varepsilon\theta_j=-\binom w{k-j}`$. So each block is equivalent to
+$`B_s=P_m-\mathrm{diag}\big(\binom w{m-1-v}\big)_{v<m}`$, $`m=k-s+1`$, $`P_m(u,v)=\binom vu`$.
 
-*Proof.*
+**Lemma A.5** (periodicity). For $`q=p^c`$ and $`0\le r<q`$: $`\binom{x+q}r\equiv\binom xr\pmod p`$. If $`q\mid N`$ then $`w\equiv-1\pmod q`$,
+so $`B_s\equiv N_m:=P_m-\mathrm{diag}((-1)^{m-1-v})`$, except possibly the $`(0,0)`$ entry of $`B_0`$ when $`k=q`$.
 
-- The condition $`f \perp`$ (column $`S`$) says $`\delta g=h`$, where $`g`$ is $`f`$ on pairs viewed as a 1-cochain on the
-  full simplex, and $`h(S)=f(\emptyset)+\sum_{i\in S}f(i)`$.
-- Then $`\delta h=0`$, i.e. $`\sum_{i\in Q'}f(i)=0`$ for every 4-set $`Q'`$. For $`n\ge5`$ this forces $`f(i)\equiv b`$, so $`h`$
-  is the constant $`a+b`$.
-- Since $`H^1`$ of the simplex vanishes, the solutions are $`g=(a+b)+\delta x`$. Here $`x`$ is defined modulo the
-  all-ones vector. $`\square`$
+**Lemma A.6** (char $`\ne2`$). $`N_m`$ is the matrix of $`f(x)\mapsto f(x+1)-\sigma f(-x)`$, $`\sigma=(-1)^{m-1}`$, on polynomials of degree $`<m`$.
+Its kernel, after $`g(z)=f(z+\frac12)`$, is the even ($`m`$ odd) or odd ($`m`$ even) polynomials: $`\mathrm{rank}N_m=\lfloor m/2\rfloor`$.
 
-**$`\mathbb F_2`$, Lemma A.2.** With $`c=a+b`$, $`X=\sum x_i`$ and $`P=\langle x,x'\rangle`$, the form $`B`$ on $`C^\perp`$ is
+**Lemma A.7** (char $`2`$). $`N_m=P_m+I`$ has kernel $`\mathbb F_2[x^2+x]\cap V_m`$, of dimension $`\lceil m/2\rceil`$: $`\mathrm{rank}N_m=\lfloor m/2\rfloor`$.
 
-```math
-B=aa'+n\,bb'+\tbinom n2cc'+(n-1)(cX'+c'X)+(n-2)P+XX'.
-```
+**Lemma A.8** (the exceptional entry). If $`k=m-1`$ is a power of $`p`$, changing the $`(0,0)`$ entry of $`N_m`$ does not change its rank (column 1 equals $`e_0`$).
 
-It has rank $`2`$ if $`n\equiv2`$, rank $`3`$ if $`n\equiv0`$, and rank $`n+1`$ if $`n`$ is odd $`(\bmod 4)`$.
+**Conclusion.** $`\mathrm{rank}_pH=\sum_{s=0}^k(\mu_s-\mu_{s-1})\lfloor\frac{k-s+1}2\rfloor=\sum_{j=0}^{k-1}(-1)^j\binom n{k-1-j}=\binom{n-1}{k-1}`$
+(summation by parts; the last sum is the coefficient of $`x^{k-1}`$ in $`(1+x)^{n-1}`$).
 
-Hence $`\mathrm{rank}_2 H=\binom{n-1}{2}`$, $`\binom{n-1}2+1`$ or $`\binom n2`$ respectively.
+This proof gives only the "if" direction; the "only if" direction was checked through the block formula in 6666 cases
+before the proof of §2 was found.
 
-**$`\mathbb F_p`$, $`p\ge5`$.**
+---
 
-- Wilson's rank formula [W] gives $`\mathrm{rank}_pW_{2,3}=\binom n2`$.
-- Summing rows of $`W_2`$ gives $`3W_0`$ and $`2W_1`$, so $`\dim C=\binom n2`$.
-- $`C^\perp`$ is parametrised by $`g(\emptyset)=-3(t+c)`$, $`g(\{i\})=t-2x_i`$, $`g(\{i,j\})=c+x_i+x_j`$, modulo
-  $`(c,t,x)\sim(c-2s,t+2s,x+s\mathbf 1)`$.
-- Then
-  ```math
-  B_Q=9(t+c)(t'+c')-\big[n\,tt'-2(tX'+t'X)+4P\big]+\tbinom n2cc'+(n-1)(cX'+c'X)+(n-2)P+XX'.
-  ```
-- The coefficient of $`P`$ is $`n-6`$. If $`p\mid n-6`$, then $`B_Q`$ factors through the 3-dimensional space of
-  $`(c,t,X)`$, which contains the gauge direction in its radical. So $`\mathrm{rank}B_Q\le2`$ and
-  $`\mathrm{rank}_pH\le\binom n2-(n-1)=\alpha`$.
-- Conversely, if $`p\nmid n-6`$, the restriction of $`B_Q`$ to $`\{c=t=0,\ X=0\}`$ is $`(n-6)P`$, of rank $`\ge n-2`$, so
-  $`\mathrm{rank}_pH>\alpha`$.
+## Appendix B: an elementary proof for $`k=3`$ via inclusion matrices
 
-This reproves the Main Theorem for $`k=3`$ (where $`q=4`$ for $`p=2`$, and $`q=p`$ for $`p\ge5`$).
+Index $`\mathbb F^{1+n+\binom n2}`$ by the subsets $`X\subseteq[n]`$ with $`|X|\le2`$, and let $`M_{X,S}=[X\subseteq S]`$ for
+3-sets $`S`$. Inclusion–exclusion gives $`[S\cap T=\emptyset]=1-j+\binom j2-\binom j3`$ ($`j=|S\cap T|`$), so
+$`H=I+D=M^{\mathsf T}QM`$ with $`Q=\mathrm{diag}(+1,-1,+1)`$ on levels $`0,1,2`$. Then
+$`\mathrm{rank}(M^{\mathsf T}QM)=\dim C-(\dim C^\perp-\mathrm{rank}B_Q|_{C^\perp})`$, with $`C`$ the column space of $`M`$.
+
+- Over $`\mathbb F_2`$: $`C^\perp=\{f(\emptyset)=a,\ f(\{i\})=b,\ f(\{i,j\})=a+b+x_i+x_j\}`$ has dimension $`n+1`$, and the form
+  $`B=aa'+nbb'+\binom n2cc'+(n-1)(cX'+c'X)+(n-2)P+XX'`$ ($`c=a+b`$, $`X=\sum x_i`$, $`P=\langle x,x'\rangle`$) has rank $`2,3,n+1`$
+  for $`n\equiv2,0,`$ odd $`\pmod4`$. Hence $`\mathrm{rank}_2H=\binom{n-1}2,\binom{n-1}2+1,\binom n2`$.
+- Over $`\mathbb F_p`$, $`p\ge5`$: by Wilson's rank formula $`\dim C=\binom n2`$; the coefficient of $`P`$ in $`B_Q|_{C^\perp}`$ is
+  $`n-6`$, and $`\mathrm{rank}_pH=\alpha`$ iff $`p\mid n-6`$.
 
 ---
 
 ## References
 
+- **[BBJK]** Z. Bar-Yossef, Y. Birk, T. S. Jayram, T. Kol, *Index coding with side information*, IEEE Trans. Inform.
+  Theory 57 (2011) 1479–1494.
+- **[BvE]** A. E. Brouwer, C. A. van Eijl, *On the p-rank of the adjacency matrices of strongly regular graphs*, J.
+  Algebraic Combin. 1 (1992) 329–346.
 - **[DEGJPP]** J. E. Ducey, L. Engelthaler, J. Gathje, B. Jones, I. Pfaff, J. Plute, *Integer diagonal forms for
-  subset intersection relations*, arXiv:2310.09227 (Algebraic Combinatorics).
+  subset intersection relations*, arXiv:2310.09227.
+- **[EKR]** P. Erdős, C. Ko, R. Rado, *Intersection theorems for systems of finite sets*, Quart. J. Math. 12 (1961).
 - **[GH]** A. Golovnev, I. Haviv, *The (generalized) orthogonality dimension of (generalized) Kneser graphs: bounds
-  and applications*, arXiv:2002.08580; Theory of Computing 18 (2022).
-- **[H]** I. Haviv, *On minrank and the Lovász theta function*, APPROX/RANDOM 2018, arXiv:1802.03920.
+  and applications*, Theory of Computing 18 (2022); arXiv:2002.08580.
+- **[H]** I. Haviv, *On minrank and the Lovász theta function*, APPROX/RANDOM 2018; arXiv:1802.03920.
 - **[Hae]** W. Haemers, *On some problems of Lovász concerning the Shannon capacity of a graph*, IEEE Trans. Inform.
   Theory 25 (1979) 231–232.
+- **[HT]** T. Hu, Q. Tang, *Minimum rank of complements of Kneser graphs*, arXiv:2607.06480 (2026).
 - **[L]** L. Lovász, *On the Shannon capacity of a graph*, IEEE Trans. Inform. Theory 25 (1979) 1–7.
-- **[W]** R. M. Wilson, *A diagonal form for the incidence matrices of $`t`$-subsets vs. $`k`$-subsets*, European J.
-  Combin. 11 (1990) 609–615.
-- Baranyai's theorem; Erdős–Ko–Rado theorem.
+- **[W]** R. M. Wilson, *A diagonal form for the incidence matrices of t-subsets vs. k-subsets*, European J. Combin. 11
+  (1990) 609–615.
+- Z. Baranyai, *On the factorization of the complete uniform hypergraph* (1975).

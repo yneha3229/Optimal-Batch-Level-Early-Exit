@@ -1,0 +1,4 @@
+2 specs, 0 already proven, 2 to run
+kneser_11_2: alpha=10 cover=11 minrk in [10, 11] proven=False (3010.4 s) [[10, "timeout", 3000.11]]
+kneser_9_2: alpha=8 cover=9 minrk in [8, 9] proven=False (3010.4 s) [[8, "timeout", 3000.12]]
+wrote minrank/results/field_sep/families_f2.csv

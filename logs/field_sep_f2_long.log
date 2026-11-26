@@ -1,0 +1,5 @@
+3 specs, 0 already proven, 3 to run
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 5 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+=== restart after the 25 Nov 20:16 UTC reboot, 2026-11-26T02:40:41Z
+3 specs, 0 already proven, 3 to run

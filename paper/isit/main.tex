@@ -1,0 +1,171 @@
+% ISIT-style draft (IEEEtran conference, 5 pages + references). Compile with pdflatex (e.g. on Overleaf).
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{cite}
+\usepackage{booktabs}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\minrk}{\operatorname{minrk}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\cS}{\mathcal{S}}
+
+\begin{document}
+\title{Optimal Linear Index Codes for Kneser Graphs\\ over Prime Fields}
+\author{\IEEEauthorblockN{Divyanshu Gupta, Kushagra Gupta, Neha Yadav}
+\IEEEauthorblockA{Indian Institute of Technology Bombay}}
+\maketitle
+
+\begin{abstract}
+We study index coding with side information given by the Kneser graph $K(n,k)$, whose receivers are the $k$-subsets of
+$[n]$ and each receiver knows the messages of all subsets disjoint from its own. We determine exactly when the
+matrix $I+(-1)^{k-1}D$, with $D$ the adjacency matrix, has rank $\binom{n-1}{k-1}$ over $\F_p$: this happens if and only
+if $q\mid n-2k$, where $q$ is the least power of $p$ with $q\ge k$. Since $\binom{n-1}{k-1}$ is the independence number,
+this gives $\minrk_{\F_p}(K(n,k))=\alpha(K(n,k))$ and an explicit scalar linear index code over $\F_p$ whose length meets
+the broadcast rate. Consequently, for every fixed $k$ and all but finitely many $n$, the broadcast rate of $K(n,k)$ equals
+$\binom{n-1}{k-1}$, including infinitely many $n$ where every (fractional) clique-cover code is strictly longer. The field
+matters: for $K(7,2)$ the optimal linear length is $6$ over $\F_3$ but $7$ over $\F_2$. The proof is elementary.
+\end{abstract}
+
+\section{Introduction}
+In index coding~\cite{BBJK}, a server broadcasts to receivers $v\in V$; receiver $v$ wants $x_v$ and knows $x_u$ for every
+neighbour $u$ in a side-information graph $G$. The optimal length of a scalar linear code over a field $\F$ is the minrank
+$\minrk_\F(G)$~\cite{BBJK}, the least rank of a matrix $M$ with $M_{vv}\ne0$ and $M_{uv}=0$ for distinct non-adjacent $u,v$.
+The broadcast rate $\beta(G)$ over all codes satisfies $\alpha(G)\le\beta(G)\le\minrk_\F(G)$~\cite{BKL}. Minrank is
+NP-hard~\cite{Peeters}, and exact values are known for few families.
+
+Kneser graphs $K(n,k)$ (vertices: $k$-subsets of $[n]$; edges: disjoint pairs) are a standard test family. Their
+independence number is $\binom{n-1}{k-1}$ (Erd\H{o}s--Ko--Rado), and Golovnev and Haviv~\cite{GH} and Haviv~\cite{Haviv} gave
+upper bounds on their minrank through the matrix $H=I+(-1)^{k-1}D$, bounding its rank by $\sum_{i<k}\binom ni$. When
+$k\mid n$, Baranyai's theorem gives a clique cover of size $\binom{n-1}{k-1}$, so $\minrk=\alpha$ over every field.
+
+\textbf{Contributions.} (i) The exact $\F_p$-rank criterion for $H$ (Theorem~\ref{thm:main}), with a one-page elementary
+proof. (ii) An explicit optimal code with a one-line decoder (Theorem~\ref{thm:code}). (iii) The broadcast rate of $K(n,k)$
+for all but finitely many $n$, including infinitely many $n$ beyond clique covers (Corollaries~\ref{cor:rate},
+\ref{cor:new}). (iv) A field separation for $K(7,2)$ (Proposition~\ref{prop:sep}).
+
+\section{Main result}
+Let $n>2k\ge4$, $N=n-2k$, $\varepsilon=(-1)^{k-1}$, and $H=I+\varepsilon D$. Then $H_{AA}=1$, $H_{AB}=\varepsilon$ if
+$A\cap B=\emptyset$, and $0$ otherwise; equivalently $H_{AB}=\binom{t-1}{k-1}$ with $t=|A\cap B|$. Thus $H$ fits $K(n,k)$.
+Let $\cS=\{A:1\in A\}$, so $|\cS|=\binom{n-1}{k-1}=\alpha$. For a prime $p$ let $q_p(k)$ be the least power of $p$ that is
+at least $k$.
+
+\begin{theorem}\label{thm:main}
+$\rank_{\F_p}H=\binom{n-1}{k-1}$ if and only if $q_p(k)\mid n-2k$. In that case $\minrk_{\F_p}(K(n,k))=\alpha(K(n,k))$.
+\end{theorem}
+
+\begin{lemma}\label{lem:star}
+$H[\cS,\cS]=I$, so the rows of $\cS$ are independent over every field and $\rank H\ge\alpha$.
+\end{lemma}
+\begin{proof}
+Distinct members of $\cS$ intersect.
+\end{proof}
+
+\begin{lemma}\label{lem:id}
+For $A'\notin\cS$ and a $k$-set $B$ put $R=\sum_{A\in\cS,\,A\cap A'=\emptyset}H_{AB}$. If $1\in B$ then $\varepsilon R=H_{A'B}$.
+If $1\notin B$ then $\varepsilon R=\binom{N-1+t}{k-1}$ with $t=|A'\cap B|$.
+\end{lemma}
+\begin{proof}
+$R=[B\in\cS,\,B\cap A'=\emptyset]+\varepsilon\,\#\{A\in\cS:A\cap(A'\cup B)=\emptyset\}$. If $1\in B$ the count is $0$ and
+$B\ne A'$. If $1\notin B$ the first term is $0$ and the count is $\binom{n-1-(2k-t)}{k-1}$.
+\end{proof}
+
+\begin{proposition}\label{prop:cong}
+$\rank_{\F_p}H=\alpha$ iff $\binom{N-1+t}{k-1}\equiv\binom{t-1}{k-1}\pmod p$ for $t=0,\dots,k$.
+\end{proposition}
+\begin{proof}
+If the congruences hold, Lemma~\ref{lem:id} shows that each row $A'\notin\cS$ equals $\varepsilon\sum_{A\in\cS,A\cap A'=\emptyset}$
+(row $A$), so $\rank H\le\alpha$; Lemma~\ref{lem:star} gives equality. Conversely, if $\rank H=\alpha$, the rows of $\cS$
+form a basis; writing row $A'$ in it and restricting to the columns $\cS$ (where $H$ is the identity) forces the
+coefficients $\varepsilon[A\cap A'=\emptyset]$, so the identity of Lemma~\ref{lem:id} holds for all $B$. Every
+$t\in\{0,\dots,k\}$ is realised with $1\notin A'\cup B$ since $2k-t\le n-1$.
+\end{proof}
+
+\begin{lemma}\label{lem:arith}
+The congruences of Proposition~\ref{prop:cong} hold iff $q_p(k)\mid N$.
+\end{lemma}
+\begin{proof}
+Let $g(x)=\binom{x+N}{k-1}-\binom x{k-1}=\sum_{i=1}^{k-1}\binom Ni\binom x{k-1-i}$. The congruences say $g\equiv0$ at
+$x=-1,\dots,k-1$. If $q=p^c\mid N$, Lucas' theorem gives $\binom Ni\equiv0$ for $0<i<q$, and $k-1<q$. Conversely, the
+coefficient $\binom N{k-1-j}$ of $\binom xj$ in $g$ equals $\Delta^jg(0)=\sum_{i\le j}(-1)^{j-i}\binom jig(i)\equiv0$ for
+$j\le k-2$, so $p\mid\binom Ni$ for $1\le i\le k-1$. By minimality of $q$, $p^a\le k-1$ for $a<c$, and
+$\binom N{p^a}\equiv N_a$ (the $a$-th base-$p$ digit) by Lucas; hence $p^c\mid N$.
+\end{proof}
+
+Theorem~\ref{thm:main} follows from Proposition~\ref{prop:cong}, Lemma~\ref{lem:arith}, and $\alpha\le\minrk$.
+
+\section{An explicit optimal code}
+\begin{theorem}\label{thm:code}
+Let $q_p(k)\mid n-2k$. Over $\F_p$, broadcast $y_A=x_A+\varepsilon\sum_{B\cap A=\emptyset}x_B$ for each $A\ni1$.
+Receiver $A\ni1$ reads $x_A$ off $y_A$; receiver $A'\not\ni1$ computes $\varepsilon\sum_{A\ni1,A\cap A'=\emptyset}y_A=
+x_{A'}+\varepsilon\sum_{B\cap A'=\emptyset}x_B$ and subtracts its side information. The code has length
+$\binom{n-1}{k-1}=\beta(K(n,k))$.
+\end{theorem}
+\begin{proof}
+$y_A=(Hx)_A$, and the row identity from the proof of Proposition~\ref{prop:cong} gives the decoding rule.
+Optimality: $\beta\ge\alpha$.
+\end{proof}
+Each receiver outside the star combines $\binom{n-k-1}{k-1}$ transmissions.
+
+\section{Broadcast rate and new cases}
+\begin{corollary}\label{cor:rate}
+If $q_p(k)\mid n-2k$ for some prime $p$, or $k\mid n$, then $\beta(K(n,k))=\binom{n-1}{k-1}$. For fixed $k$ this covers
+all but finitely many $n$; the exceptions are $n=5$ ($k=2$), $n\in\{7,8\}$ ($k=3$), $n\in\{9,10,11,14\}$ ($k=4$).
+\end{corollary}
+\begin{proof}
+Theorem~\ref{thm:code}, or Baranyai for $k\mid n$. If $N$ is uncovered then $v_p(N)<\log_pq_p(k)$ for all $p$, and
+$p\nmid N$ for $p\ge k$, so $N$ divides a constant depending on $k$.
+\end{proof}
+
+\begin{corollary}\label{cor:new}
+For every $k\ge2$, infinitely many $n$ with $k\nmid n$ satisfy Theorem~\ref{thm:main}. For them
+$\beta=\alpha<\binom nk/\lfloor n/k\rfloor$, the fractional clique cover number, so no clique-cover scheme is optimal.
+\end{corollary}
+\begin{proof}
+Take a prime $p>k$ and $n=2k+pt$ with $t\equiv1\pmod k$. As $K(n,k)$ is vertex-transitive with clique number
+$\lfloor n/k\rfloor$, its fractional clique cover number is $\binom nk/\lfloor n/k\rfloor>\binom nk\frac kn=\alpha$.
+\end{proof}
+
+\begin{table}[t]\centering\caption{Examples beyond clique covers}\label{tab:ex}
+\begin{tabular}{lccc}\toprule
+Graph & field & $\beta=\alpha$ & frac.\ clique cover\\\midrule
+$K(7,2)$ & $\F_3$ & 6 & 7\\
+$K(10,3)$ & $\F_2$ & 36 & 40\\
+$K(11,3)$ & $\F_5$ & 45 & 55\\
+$K(13,4)$ & $\F_5$ & 220 & 238.3\\
+$K(17,4)$ & $\F_3$ & 560 & 595\\\bottomrule
+\end{tabular}\end{table}
+
+\begin{proposition}\label{prop:sep}
+$\minrk_{\F_2}(K(7,2))=7$ while $\minrk_{\F_3}(K(7,2))=6$.
+\end{proposition}
+\begin{proof}
+$\F_3$: Theorem~\ref{thm:main}. $\F_2$: a clique cover of size 7 exists; rank $\le6$ is refuted by a SAT solver, and the
+refutation was checked with a DRAT proof checker.
+\end{proof}
+Thus the optimal scalar linear code for $K(7,2)$ needs $\F_3$; over $\F_2$ the best scalar linear code is suboptimal.
+
+\section{Verification and discussion}
+All statements were also checked numerically: the criterion of Theorem~\ref{thm:main} on 318 full matrices
+($\binom nk\le2000$, $p\le13$), Lemma~\ref{lem:arith} for $k\le12$, $N\le400$, and $\rank H=\alpha$ on 82 further matrices
+up to $3276\times3276$ by two independent implementations. An independent second proof follows from the integer
+diagonal forms of Ducey et al.~\cite{Ducey}.
+
+Open questions: $\minrk_{\F}(K(n,k))$ over fields not covered by Theorem~\ref{thm:main} (e.g.\ $K(10,3)$ over $\F_3$, where
+$\rank H=44$); the exceptional $n$ (we know $\minrk_{\F_2}(K(7,3))=18$, $\minrk_{\F_2}(K(8,3))=22$ by SAT); and vector-linear
+codes over $\F_2$ for the cases where only odd characteristic is optimal.
+
+\begin{thebibliography}{9}
+\bibitem{BBJK} Z.~Bar-Yossef, Y.~Birk, T.~S.~Jayram, T.~Kol, ``Index coding with side information,'' \emph{IEEE Trans.\ Inf.\ Theory}, 57(3):1479--1494, 2011.
+\bibitem{BKL} A.~Blasiak, R.~Kleinberg, E.~Lubetzky, ``Broadcasting with side information: bounding and approximating the broadcast rate,'' \emph{IEEE Trans.\ Inf.\ Theory}, 59(9):5811--5823, 2013.
+\bibitem{Peeters} R.~Peeters, ``Orthogonal representations over finite fields and the chromatic number of graphs,'' \emph{Combinatorica}, 16:417--431, 1996.
+\bibitem{GH} A.~Golovnev, I.~Haviv, ``The (generalized) orthogonality dimension of (generalized) Kneser graphs: bounds and applications,'' \emph{Theory of Computing}, 18(22), 2022.
+\bibitem{Haviv} I.~Haviv, ``On minrank and the Lov\'asz theta function,'' APPROX/RANDOM 2018.
+\bibitem{Ducey} J.~E.~Ducey et al., ``Integer diagonal forms for subset intersection relations,'' arXiv:2310.09227.
+\bibitem{Haemers} W.~Haemers, ``On some problems of Lov\'asz concerning the Shannon capacity of a graph,'' \emph{IEEE Trans.\ Inf.\ Theory}, 25(2):231--232, 1979.
+\end{thebibliography}
+\end{document}

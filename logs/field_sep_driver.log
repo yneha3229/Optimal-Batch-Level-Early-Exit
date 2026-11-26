@@ -1,0 +1,12 @@
+2026-11-25T13:47:20Z waiting for the sanity case (pid 168512)
+2026-11-25T14:34:50Z sanity K(7,2) F_3 r=6: TIMEOUT
+2026-11-25T14:34:50Z sanity case is not SAT: the one-hot encoding is too slow; task B stopped
+2026-11-25T14:34:50Z committed 1101cc3
+2026-11-25T14:34:52Z pushed
+2026-11-25T17:34:54Z commit: nothing new
+=== restart after the 25 Nov 20:16 UTC reboot
+2026-11-26T02:40:44Z waiting for the sanity case (pid 999999999)
+2026-11-26T02:40:44Z sanity K(7,2) F_3 r=6: TIMEOUT
+2026-11-26T02:40:44Z sanity case is not SAT: the one-hot encoding is too slow; task B stopped
+2026-11-26T02:40:44Z committed 9976690
+2026-11-26T02:40:46Z pushed

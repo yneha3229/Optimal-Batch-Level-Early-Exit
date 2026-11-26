@@ -440,3 +440,35 @@ above alpha. Whether some other field reaches alpha there is open.
 - full-matrix ranks for new predictions: K(17,4) over F_3 = 560 = alpha (q = 9), K(18,5) over F_2 = 2380 = alpha
   (q = 8), K(12,4), K(16,4) and K(20,4) over F_2 = alpha, and K(11,4), K(14,4) over F_3, K(18,4) over F_2 > alpha,
   as predicted.
+
+## 13. Field separation runs (25 Nov 2026, shared 64-core server, CPU only)
+
+Goal: proofs that minrk_{F_r}(K(n,k)) > alpha for a prime r while Theorem 1 of `proof.md` gives alpha over another
+prime p (q_p(k) | n - 2k). For k = 2 and odd n, Theorem 1 gives alpha over every prime p | n - 4 and never over F_2,
+so an F_2 UNSAT at r = alpha (cover = alpha + 1) is a separation. Only a VERIFIED DRAT row counts as proven.
+
+Setup: at most 12 cores used (other users and the minrank portfolio share the machine): task A on cores 0-3, the F_3
+sanity case on core 4, DRAT on cores 37-39. Jobs run detached (`setsid nohup`), driven by
+`scripts/minrank/12_field_sep.sh` (log `logs/field_sep_driver.log`), which also commits partial results.
+
+| graph | field | r | result | seconds | DRAT | meaning |
+|---|---|---|---|---|---|---|
+| K(7,2) | F_3 | 6 | TIMEOUT | 3600 | n/a | sanity case: Theorem 1 gives an explicit rank-6 matrix (checked: rank_3(I - D) = 6), yet the one-hot SAT encoding did not find one in 1 h. Task B stopped, as specified. |
+| K(9,2) | F_2 | 8 | run 1 killed by the 25 Nov 20:16 UTC server reboot after ~24,000 s, no answer; run 2 started 26 Nov 02:40 UTC (36000 s limit) | | | Theorem 1: minrk_5 = 8; UNSAT would give minrk_2 = 9 (separation) |
+| K(11,2) | F_2 | 10 | as K(9,2): run 1 killed after ~24,000 s, run 2 running | | | Theorem 1: minrk_7 = 10 |
+| K(13,2) | F_2 | 12 | as K(9,2): run 1 killed after ~24,000 s, run 2 running | | | Theorem 1: minrk_3 = 12 |
+
+Not run (task B, stopped by the sanity rule): K(9,2) F_3 r = 8, K(11,2) F_3 r = 10, K(11,2) F_5 r = 10,
+K(7,2) F_5 r = 6. The one-hot encoding (8,379 variables, 31,737 clauses for K(7,2), r = 6, q = 3) cannot even find a
+known solution on the smallest case in an hour, so 36000 s runs on 36- and 55-vertex graphs would very likely time
+out too. A better F_q encoding (e.g. fixing the alpha x alpha identity block on a maximum independent set, as the F_2
+`indep` mode does, or a log/order encoding of field elements) is the prerequisite.
+
+Commands:
+
+```bash
+python -m minrank.exact.families --spec kneser:9,2 kneser:11,2 kneser:13,2 --time-per-call 36000 --lb-time 60 \
+  --workers 3 --out minrank/results/field_sep/families_f2_long.csv --dimacs-dir minrank/results/unsat_cnf/field_sep
+python -m minrank.exact.field_sep --case 7,2,3,6 --time-limit 3600       # sanity case
+bash scripts/minrank/10_drat_check.sh minrank/results/unsat_cnf/field_sep
+```
