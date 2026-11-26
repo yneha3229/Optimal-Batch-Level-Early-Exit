@@ -10,7 +10,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 specs = json.loads((HERE / "specs.json").read_text())
 base = {}
-for l in (ROOT / "results" / "baselines.jsonl").read_text().splitlines():
+for l in (ROOT / "results" / ("baselines.jsonl" if (ROOT / "results" / "baselines.jsonl").exists() else "baselines_container.jsonl")).read_text().splitlines():
     if l.strip():
         r = json.loads(l)
         base[r["spec"]] = r
@@ -70,14 +70,14 @@ if sp_std:
 if sp_kus:
     L.append(f"- agent vs Kushagra's script where both exact ({len(sp_kus)}): median time ratio "
              f"x{np.median(sp_kus):.2f} (>1 means the agent is faster)")
-chats = [r for r in runs if r["llm"] == "chat"]
+chats = [r for r in runs if r["llm"] != "none"]
 if chats:
-    L += ["", "## Runs with an LLM in the loop (chat backend: the assistant in the conversation answered as the agents)", "",
-          "| graph | verdict | bracket | wall | of which LLM | compute | LLM calls | critic rounds | hypothesis | truth |",
-          "|---|---|---|---|---|---|---|---|---|---|"]
+    L += ["", "## Runs with an LLM in the loop (llm = chat: the assistant in the conversation answered as the agents; otherwise the named model)", "",
+          "| graph | llm | rule | verdict | bracket | wall | of which LLM | compute | LLM calls | critic rounds | hypothesis | truth |",
+          "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in chats:
         h = r.get("hypothesis") or {}
-        L.append(f"| {r['graph']} | {r['verdict']} | {r['bracket']} | {r['wall_s']:.1f} s | {r['llm_s']:.1f} s | "
+        L.append(f"| {r['graph']} | {r['llm']} | {'yes' if r['family_rule_allowed'] else 'no'} | {r['verdict']} | {r['bracket']} | {r['wall_s']:.1f} s | {r['llm_s']:.1f} s | "
                  f"{r['compute_s']:.2f} s | {r['llm_calls']} | {r['critic_rounds']} | {h.get('name', '-')} {h.get('params', '')} | "
                  f"{r['truth'].get('family')} {r['truth'].get('n', '')},{r['truth'].get('k', '')} |")
 (ROOT / "RESULTS.md").write_text("\n".join(L) + "\n")

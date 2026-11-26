@@ -66,7 +66,9 @@ class Run:
         self.A = graphs.load(self.path)
         self.N = self.A.shape[0]
         self.backend = LLM.make(llm)
-        self.llm_name = llm
+        import re
+        self.llm_name = (re.sub(r"[^A-Za-z0-9.-]+", "_", llm.split("|")[-1].split("/")[-1]) if "|" in llm
+                         else ("Qwen2.5-Coder-32B-Instruct-AWQ" if llm == "local" else llm))
         self.events = []
         self.live = live
         self.t0 = time.perf_counter()
