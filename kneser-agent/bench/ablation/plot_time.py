@@ -1,4 +1,4 @@
-"""Time to prove β per graph, by method -> time_to_prove.png (left: compute seconds; right: LLM seconds).
+"""Time to prove β per graph, by method -> time_to_prove.png (LLM agents: compute + LLM seconds).
 
 One chart; each legend entry says in brackets where it ran. Container, one core per pipeline: standard methods +
 Kushagra's Kneser agent, no LLM (minrank-agent kneser_agent.py; results/baselines_ctr.jsonl), the agent without LLM (tag "ctr"), the blind Claude agents (tag
@@ -84,67 +84,47 @@ std_c, kus_c = baseline_pts(ROOT / "results" / "baselines_ctr.jsonl")
 CTR, GPU = "container, 1 core", "GPU server"
 series = [("std", f"standard methods [{CTR}]", std_c), ("kus", f"Kneser agent (no LLM) [{CTR}]", kus_c),
           ("none", f"multi-agent pipeline, no LLM [{CTR}]", agent_pts(tagged("ctr")))]
-series += [(c, f"{lab} [{CTR}]", agent_pts(tagged(c + "-full"))) for c, lab in CLAUDE]
-series += [("qwen", f"agent + Qwen 32B [{GPU}]", agent_pts(server_qwen))]
-
-llm_series = [(c, lab, agent_pts(tagged(c + "-full"), "llm_s", False)) for c, lab in CLAUDE]
-llm_series += [("qwen", "agent + Qwen 32B", agent_pts(server_qwen, "llm_s", False))]
+# LLM agents: total time = compute + LLM seconds (wall_s); the label says what the LLM part is
+series += [(c, f"{lab} (compute + LLM) [{CTR}]", agent_pts(tagged(c + "-full"), "wall_s"))
+           for c, lab in CLAUDE]
+series += [("qwen", f"agent + Qwen 32B (compute + LLM) [{GPU}]", agent_pts(server_qwen, "wall_s"))]
 
 TXT, SUB, GRID = "#191919", "#666666", "#e6e6e6"
 plt.rcParams.update({"font.size": 10, "axes.edgecolor": GRID, "xtick.color": SUB, "ytick.color": SUB})
-fig, (ax, ax2) = plt.subplots(1, 2, figsize=(18, 7.4), dpi=200, sharex=True, gridspec_kw={"width_ratios": [3, 2]})
-
-
-def draw(ax, key, lab, pts):
+fig, ax = plt.subplots(figsize=(12.5, 7.6), dpi=200)
+for key, lab, pts in series:
+    med = sorted(v for _, v in pts)[len(pts) // 2] if pts else 0
+    lab = f"{lab}: {len(pts)}/{len(SPECS)} proven, median {med:.2g} s"
+    print(lab)
     if not pts:
         ax.plot([], [], color=COL[key], label=lab)
-        return
+        continue
     x, y = zip(*pts)
     if key == "std":
         ax.scatter(x, y, marker="s", s=48, color=COL[key], edgecolor="white", linewidth=1, zorder=4, label=lab)
     else:
         ax.plot(x, y, color=COL[key], lw=2, marker=MARK[key], ms=7, mec="white", mew=1, zorder=3, label=lab,
                 ls="--" if key == "qwen" else "-")
-
-
-def style(ax, ylabel, title):
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.grid(True, which="major", color=GRID, zorder=0)
-    for sp in ("top", "right"):
-        ax.spines[sp].set_visible(False)
-    ax.set_xlabel("receivers (vertices of the side-information graph)", color=SUB)
-    ax.set_ylabel(ylabel, color=SUB)
-    ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:,.0f}"))
-    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:g}"))
-    ax.set_title(title, loc="left", color=TXT, fontsize=11)
-
-
-for key, lab, pts in series:
-    lab = f"{lab}: {len(pts)}/{len(SPECS)} proven"
-    print(lab)
-    draw(ax, key, lab, pts)
-style(ax, "seconds (log)", "Compute seconds to prove β (only graphs each method proves)")
-ax.legend(loc="upper left", frameon=False, fontsize=8.5, labelcolor=TXT)
-
-for key, lab, pts in llm_series:
-    med = sorted(v for _, v in pts)[len(pts) // 2] if pts else 0
-    where = GPU if key == "qwen" else "Claude Code agent"
-    lab = f"{lab} [{where}]: median {med:.0f} s/graph"
-    print(lab)
-    draw(ax2, key, lab, pts)
-style(ax2, "seconds (log)", "LLM seconds per graph (every run, proven or not)")
-ax2.legend(loc="upper left", frameon=False, fontsize=8.5, labelcolor=TXT)
-ax2.set_ylim(5, 300)
-
-fig.suptitle("Time to prove β", x=0.01, ha="left", color=TXT, fontsize=13, fontweight="bold")
+ax.set_xscale("log")
+ax.set_yscale("log")
+ax.grid(True, which="major", color=GRID, zorder=0)
+for sp in ("top", "right"):
+    ax.spines[sp].set_visible(False)
+ax.set_xlabel("receivers (vertices of the side-information graph)", color=SUB)
+ax.set_ylabel("seconds to prove β (log)", color=SUB)
+ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:,.0f}"))
+ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:g}"))
+ax.set_ylim(top=150)
+ax.legend(loc="lower right", frameon=False, fontsize=8, labelcolor=TXT, ncol=1)
+ax.set_title("Time to prove β, LLM seconds included (only graphs each method proves)", loc="left", color=TXT,
+             fontsize=13, fontweight="bold", pad=12)
 note = ("Where each line ran is in brackets. Graphs: the 20 benchmark graphs plus K(20,4), K(17,5), K(23,4), seed 0. "
-        "Left: compute time (wall minus LLM seconds). Right: seconds spent waiting for the LLM (Solver, Critic, Verifier).\n"
-        "Claude agents answer blind, one fresh agent per graph, same isolation prompt; their LLM seconds are wall time of a "
-        "Claude Code agent (tool calls and file writes included), so they overstate pure model time.\nQwen 32B: vLLM on "
-        "the GPU server, prompts v3 (dashed: different machine). Standard methods: best certified pair as if run in "
-        "parallel, 60 s per method (120 s on the large graphs).")
+        "LLM agents: total time = compute + LLM seconds (Solver, Critic, Verifier);\nmethods without an LLM: compute "
+        "only. Claude LLM seconds are wall time of a blind Claude Code agent (one fresh agent per graph, tool calls and "
+        "file writes included), so they overstate pure model time;\nQwen 32B LLM seconds are vLLM on the GPU server "
+        "(prompts v3; dashed: different machine). Standard methods: best certified pair as if run in parallel, 60 s per "
+        "method (120 s on the large graphs).")
 fig.text(0.01, 0.01, note, color=SUB, fontsize=7.5)
-fig.tight_layout(rect=(0, 0.08, 1, 0.95))
+fig.tight_layout(rect=(0, 0.08, 1, 1))
 fig.savefig(HERE / "time_to_prove.png", facecolor="white")
 print("wrote", HERE / "time_to_prove.png")
