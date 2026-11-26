@@ -21,7 +21,7 @@ sys.path.insert(0, str(ROOT / "bench"))
 from baselines import standard_best  # noqa: E402
 
 specs = json.loads((ROOT / "bench" / "specs.json").read_text())
-SPECS = specs["benchmark"] + specs["large"]
+SPECS = specs["benchmark"] + specs["large"] + specs.get("xlarge", [])
 runs = [json.loads(l) for l in (ROOT / "results" / "runs.jsonl").read_text().splitlines() if l.strip()]
 
 
@@ -81,6 +81,8 @@ COL = {"std": "#257de0", "kus": "#f47230", "none": "#00b894", "qwen": "#f2a600",
 MARK = {"kus": "D", "none": "o", "qwen": "^", "sonnet-med": "P", "opus-low": "v", "opus-med": "s", "opus-high": "X"}
 
 std_c, kus_c = baseline_pts(ROOT / "results" / "baselines_ctr.jsonl")
+_s, _k = baseline_pts(ROOT / "results" / "baselines_ctr_xl.jsonl")   # K(24,4), K(26,4): Kneser agent only
+std_c, kus_c = sorted(std_c + _s), sorted(dict((x, (x, y)) for x, y in kus_c + _k).values())
 CTR, GPU = "container, 1 core", "GPU server"
 series = [("std", f"standard methods [{CTR}]", std_c), ("kus", f"Kneser agent (no LLM) [{CTR}]", kus_c),
           ("none", f"multi-agent pipeline, no LLM [{CTR}]", agent_pts(tagged("ctr")))]
