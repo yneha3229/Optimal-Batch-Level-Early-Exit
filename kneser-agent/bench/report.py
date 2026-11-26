@@ -226,6 +226,22 @@ head = ["# Kneser agent benchmark", "",
         "LLM seconds is in brackets. Every agent bound is re-checked by the independent verifier. Bold = proven exact "
         "(lower = upper). '(rule)' = the family rule may be used (only an LLM hypothesis can invoke it, so without an "
         "LLM it makes no difference); '(generic only)' = --no-family-rule.", ""]
+# ------------------------------------------------------------------------------------------------ model ablation
+A = []
+sc = HERE / "ablation" / "scores.jsonl"
+if sc.exists():
+    rows = [json.loads(line) for line in sc.read_text().splitlines() if line.strip()]
+    A += ["", "## Model ablation: blind agents on the three reference cases (bench/ablation/)", "",
+          "Each run gives the Solver, Critic and Verifier roles to one model answering blind (bench/ablation/README.md). "
+          "Claude rows: fixed code (d22d46c). Qwen rows: GPU server, prompts v3, code before d22d46c. One run per cell; "
+          "false objections labelled by hand (bench/ablation/false_objections.json).", "",
+          "![model ablation](bench/ablation/model_ablation.png)", "",
+          "| graph | model | verdict | bracket | LLM calls | invalid | fallbacks | (n, k) in first reply | Critic objections | false | safety net | codes tried |",
+          "|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    for r in rows:
+        A.append(f"| {r['graph']} | {r['config']} | {r['verdict']} | {r['bracket']} | {r['llm_calls']} | {r['invalid']} | "
+                 f"{r['fallback']} | {'yes' if r['first_reply_names_nk'] else 'no'} | {r['critic_objections']} | "
+                 f"{r['false_objections']} | {'yes' if r['safety_net'] else 'no'} | {r['codes_tried']} |")
 analysis = (HERE / "analysis.md").read_text().strip().splitlines() + [""] if (HERE / "analysis.md").exists() else []
-(ROOT / "RESULTS.md").write_text("\n".join(head + analysis + S + ["", "## Per-graph results", ""] + L + X) + "\n")
+(ROOT / "RESULTS.md").write_text("\n".join(head + analysis + S + ["", "## Per-graph results", ""] + L + A + X) + "\n")
 print("\n".join(S))

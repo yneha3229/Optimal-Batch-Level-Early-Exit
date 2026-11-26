@@ -39,4 +39,10 @@ ablation could not run: from 18:59 UTC, `cuInit` failed on every GPU of the serv
   exceptions both reach the same brackets ([84, 93], [286, 287], [495, 507]), on the 3 controls the agent's brackets
   are tighter (e.g. K(16,4)-del0.01: [455, 534] vs [0, 1818]). With prompts v1, Qwen lost to the no-LLM agent on
   K(14,4) ([286, 299] vs [286, 287]); the scheduler's safety net fixed this.
+- **Model ablation (bench/ablation/, three reference cases, one run each):** every model, Qwen 32B and five Claude
+  configurations (Haiku 5.5 medium, Sonnet 5.5 medium, Opus 5.5 low/medium/high), ends with the same certified
+  brackets ([455, 455], [455, 534], [286, 287]), so the model changes the dialogue, not the result. The Claude
+  Solvers named the right (n, k) in the first reply on 14 of 15 runs (Haiku missed the perturbed graph), Qwen on 0 of
+  3; Qwen's Critic made 5 false objections, the Claude Critics none; Qwen needed 24 LLM calls over the three graphs,
+  the Claude configurations 11-13. Caveat: the Claude rows ran on the fixed code (d22d46c), the Qwen rows before it.
 - **32B vs 4B:** not run (GPU failure above).
