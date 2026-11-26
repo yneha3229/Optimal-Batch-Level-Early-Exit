@@ -1,0 +1,11 @@
+{"t": 0.001, "ev": "input", "graph": "K_30_3-del0.01_s0", "receivers": 4060, "llm": "none", "family_rule": true}
+{"t": 0.008, "ev": "start", "tool": "describe"}
+{"t": 0.008, "ev": "start", "tool": "indep"}
+{"t": 0.008, "ev": "start", "tool": "cover"}
+{"t": 0.208, "ev": "board", "side": "lower", "value": 406, "tool": "greedy independent set", "bracket": [406, 4060]}
+{"t": 0.223, "ev": "done", "tool": "describe", "seconds": 0.172}
+{"t": 0.223, "ev": "summary", "summary": {"receivers": 4060, "edges": 5878578, "degree_min": 2877, "degree_max": 2914, "regular": false, "common_neighbours_adjacent": [1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969], "common_neighbours_nonadjacent": [1970, 1971, 1972, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982], "triangles_through_sampled_vertex": 2888684, "spectrum": "not computed (N > 4000)", "seconds": 0.172}}
+{"t": 0.223, "ev": "plan_accepted", "plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []}, "critic_rounds": 0}
+{"t": 0.223, "ev": "event", "name": "checkpoint"}
+{"t": 0.657, "ev": "board", "side": "upper", "value": 442, "tool": "clique_cover", "bracket": [406, 442]}
+{"t": 0.658, "ev": "verdict", "verdict": "gap", "bracket": [406, 442], "checks": {"independent_set": true}}

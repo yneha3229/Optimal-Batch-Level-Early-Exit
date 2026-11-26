@@ -1,0 +1,135 @@
+{
+ "K_12_3_s0": {
+  "N": 220,
+  "family": "kneser",
+  "k": 3,
+  "n": 12,
+  "seed": 0
+ },
+ "K_13_3_s0": {
+  "N": 286,
+  "family": "kneser",
+  "k": 3,
+  "n": 13,
+  "seed": 0
+ },
+ "K_13_4_s0": {
+  "N": 715,
+  "family": "kneser",
+  "k": 4,
+  "n": 13,
+  "seed": 0
+ },
+ "K_14_4_s0": {
+  "N": 1001,
+  "family": "kneser",
+  "k": 4,
+  "n": 14,
+  "seed": 0
+ },
+ "K_15_4_s0": {
+  "N": 1365,
+  "family": "kneser",
+  "k": 4,
+  "n": 15,
+  "seed": 0
+ },
+ "K_15_5_s0": {
+  "N": 3003,
+  "family": "kneser",
+  "k": 5,
+  "n": 15,
+  "seed": 0
+ },
+ "K_16_3_s0": {
+  "N": 560,
+  "family": "kneser",
+  "k": 3,
+  "n": 16,
+  "seed": 0
+ },
+ "K_16_4-del0.01_s0": {
+  "deleted_frac": 0.01,
+  "family": "kneser with deleted edges",
+  "k": 4,
+  "n": 16,
+  "seed": 0
+ },
+ "K_16_4_s0": {
+  "N": 1820,
+  "family": "kneser",
+  "k": 4,
+  "n": 16,
+  "seed": 0
+ },
+ "K_16_4_s3": {
+  "N": 1820,
+  "family": "kneser",
+  "k": 4,
+  "n": 16,
+  "seed": 3
+ },
+ "K_17_4_s0": {
+  "N": 2380,
+  "family": "kneser",
+  "k": 4,
+  "n": 17,
+  "seed": 0
+ },
+ "K_18_3_s0": {
+  "N": 816,
+  "family": "kneser",
+  "k": 3,
+  "n": 18,
+  "seed": 0
+ },
+ "K_21_2_s0": {
+  "N": 210,
+  "family": "kneser",
+  "k": 2,
+  "n": 21,
+  "seed": 0
+ },
+ "K_21_3_s0": {
+  "N": 1330,
+  "family": "kneser",
+  "k": 3,
+  "n": 21,
+  "seed": 0
+ },
+ "K_29_2_s0": {
+  "N": 406,
+  "family": "kneser",
+  "k": 2,
+  "n": 29,
+  "seed": 0
+ },
+ "K_30_3-del0.01_s0": {
+  "deleted_frac": 0.01,
+  "family": "kneser with deleted edges",
+  "k": 3,
+  "n": 30,
+  "seed": 0
+ },
+ "K_40_2_s0": {
+  "N": 780,
+  "family": "kneser",
+  "k": 2,
+  "n": 40,
+  "seed": 0
+ },
+ "K_53_2_s0": {
+  "N": 1378,
+  "family": "kneser",
+  "k": 2,
+  "n": 53,
+  "seed": 0
+ },
+ "K_9_2_s0": {
+  "N": 36,
+  "family": "kneser",
+  "k": 2,
+  "n": 9,
+  "seed": 0
+ }
+}
