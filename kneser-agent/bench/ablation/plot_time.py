@@ -83,7 +83,7 @@ MARK = {"kus": "D", "none": "o", "qwen": "^", "sonnet-med": "P", "opus-low": "v"
 std_c, kus_c = baseline_pts(ROOT / "results" / "baselines_ctr.jsonl")
 CTR, GPU = "container, 1 core", "GPU server"
 series = [("std", f"standard methods [{CTR}]", std_c), ("kus", f"Kneser agent (no LLM) [{CTR}]", kus_c),
-          ("none", f"agent, no LLM [{CTR}]", agent_pts(tagged("ctr")))]
+          ("none", f"multi-agent pipeline, no LLM [{CTR}]", agent_pts(tagged("ctr")))]
 series += [(c, f"{lab} [{CTR}]", agent_pts(tagged(c + "-full"))) for c, lab in CLAUDE]
 series += [("qwen", f"agent + Qwen 32B [{GPU}]", agent_pts(server_qwen))]
 
