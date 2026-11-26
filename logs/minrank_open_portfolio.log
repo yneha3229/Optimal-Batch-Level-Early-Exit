@@ -2,3 +2,11 @@ started cadical153_indep pid 225909 on cores 8-18
 started cadical195_indep pid 225912 on cores 19-29
 started cadical195_indep_cols pid 225915 on cores 40-50
 started glucose42_indep pid 225920 on cores 51-61
+started cadical153_indep pid 369874 on cores 8-18
+started cadical195_indep pid 369877 on cores 19-29
+started cadical195_indep_cols pid 369880 on cores 40-50
+started glucose42_indep pid 369883 on cores 51-61
+started cadical153_indep pid 4665 on cores 8-18
+started cadical195_indep pid 4680 on cores 19-29
+started cadical195_indep_cols pid 4683 on cores 40-50
+started glucose42_indep pid 4686 on cores 51-61

@@ -1,0 +1,7 @@
+B=8 round 0: full=5.39s heads_only=5.57s threshold=3.73s threshold+plan=3.66s majority=5.45s random_collective=3.76s theory=3.91s theory+plan=3.80s
+B=8 round 1: full=5.52s heads_only=5.69s threshold=3.81s threshold+plan=3.74s majority=5.56s random_collective=3.84s theory=3.97s theory+plan=3.84s
+B=8 round 2: full=5.59s heads_only=5.76s threshold=3.84s threshold+plan=3.77s majority=5.61s random_collective=3.84s theory=3.98s theory+plan=3.88s
+B=8 round 3: full=5.63s heads_only=5.79s threshold=3.86s threshold+plan=3.79s majority=5.64s random_collective=3.87s theory=4.00s theory+plan=3.91s
+B=8 round 4: full=5.66s heads_only=5.81s threshold=3.87s threshold+plan=3.80s majority=5.65s random_collective=3.88s theory=4.02s theory+plan=3.91s
+B=16 round 0: full=5.39s heads_only=5.47s threshold=3.55s threshold+plan=3.51s majority=5.00s random_collective=3.54s theory=3.65s theory+plan=3.78s
+B=16 round 1: full=5.39s heads_only=5.46s threshold=3.55s threshold+plan=3.51s majority=5.00s random_collective=3.54s theory=3.65s theory+plan=3.78s

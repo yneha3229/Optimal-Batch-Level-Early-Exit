@@ -1,0 +1,4 @@
+spec,graph,n,family,directed,alpha,alpha_proven,cover,lower,upper,proven,seconds,mode,solver,time_per_call,indep,log
+paley:29,paley_29,29,paley,False,4,True,8,7,8,False,28810.5,indep,cadical195,28800.0,7 18 26 28,"[[7, ""timeout"", 28800.4]]"
+paley:41,paley_41,41,paley,False,5,True,9,8,9,False,28810.5,indep,cadical195,28800.0,11 14 26 33 40,"[[8, ""timeout"", 28800.43]]"
+mycielski:7,mycielski_7,95,mycielski,False,47,True,48,47,48,False,28811.2,indep,cadical195,28800.0,47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93,"[[47, ""timeout"", 28801.02]]"

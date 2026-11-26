@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/neha/ie624/experiments/check_graph_device.py", line 101, in <module>
+    main()
+  File "/home/neha/ie624/experiments/check_graph_device.py", line 61, in main
+    pg = graph.run_batch(s, plan, decide, ho.conf[rows], ho.pred[rows], cost)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/neha/ie624/experiments/local_hw.py", line 623, in run_batch
+    torch.index_select(mask_out, 0, k, out=b2["mask"])
+RuntimeError: unsupported operation: some elements of the input tensor and the written-to tensor refer to a single memory location. Please clone() the tensor before performing the operation.
