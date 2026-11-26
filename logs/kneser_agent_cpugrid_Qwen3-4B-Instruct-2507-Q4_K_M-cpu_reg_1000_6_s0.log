@@ -1,0 +1,23 @@
+[    0.00s] input            {"graph": "reg_1000_6_s0", "receivers": 1000, "llm": "Qwen3-4B-Instruct-2507-Q4_K_M-cpu", "family_rule": true}
+[    0.29s] start            {"tool": "describe"}
+[    0.29s] start            {"tool": "indep"}
+[    0.29s] start            {"tool": "cover"}
+[    0.73s] board            {"side": "lower", "value": 327, "tool": "greedy independent set", "bracket": [327, 1000]}
+[    3.84s] board            {"side": "upper", "value": 537, "tool": "clique_cover", "bracket": [327, 537]}
+[   28.57s] done             {"tool": "describe", "seconds": 28.197}
+[   28.57s] summary          {}
+[   28.57s] llm_request      {"agent": "solver", "attempt": 0}
+[  384.54s] llm_reply        solver: {"family_hypothesis": {"name": "none", "params": {}, "confidence": 0.95, "evidence": ["receivers: 1000, degree_min: 6, degree_max: 6, regular: true", "common_neighbours_adjacent: [0,1], common_neighbours_nonadjacent: [0,1,2] implies non-regular local structure", "spectrum_integral: false, eigenvalue
+[  384.54s] llm_request      {"agent": "critic", "attempt": 0}
+[  785.76s] llm_invalid      {"agent": "critic", "error": "Unterminated string starting at: line 7 column 5 (char 2253)", "raw": "{\n  \"verdict\": \"challenge\",\n  \"objections\": [\n    
+[  785.76s] llm_request      {"agent": "critic", "attempt": 1}
+[ 1161.45s] llm_invalid      {"agent": "critic", "error": "Unterminated string starting at: line 9 column 5 (char 2152)", "raw": "{\n  \"verdict\": \"challenge\",\n  \"objections\": [\n    
+[ 1161.45s] llm_fallback     {"agent": "critic"}
+[ 1161.45s] plan_accepted    {"plan": [{"tool": "binomial_match", "args": {}, "why": "Check if 1000 receivers match C(n,k) for some (n,k) with degree C(n-k,k) = 6; if so, consider Kneser fa
+[ 1161.45s] checks           {"results": [{"tool": "binomial_match", "result": []}]}
+[ 1161.45s] start            {"tool": "indep"}
+[ 1161.54s] board            {"side": "lower", "value": 330, "tool": "greedy independent set", "bracket": [330, 537]}
+[ 1161.54s] start            {"tool": "code", "p": 2, "c": 1, "why": "First explicit code check over F_2 with c=1; length of code may give upper bound; cheap and likely to be informative"}
+[ 1161.68s] done             {"tool": "code", "p": 2, "c": 1, "rank": null, "seconds": 0.137, "rank_above": 536}
+[ 1161.68s] event            {"name": "checkpoint"}
+[ 1161.68s] llm_request      {"agent": "solver", "attempt": 0}

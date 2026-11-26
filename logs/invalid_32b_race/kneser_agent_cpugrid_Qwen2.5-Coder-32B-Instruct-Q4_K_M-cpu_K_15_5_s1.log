@@ -1,0 +1,38 @@
+[    0.00s] input            {"graph": "K_15_5_s1", "receivers": 3003, "llm": "Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu", "family_rule": true}
+[    0.09s] start            {"tool": "describe"}
+[    0.09s] start            {"tool": "indep"}
+[    0.09s] start            {"tool": "cover"}
+[    1.11s] board            {"side": "lower", "value": 1001, "tool": "greedy independent set", "bracket": [1001, 3003]}
+[   13.53s] board            {"side": "upper", "value": 1219, "tool": "clique_cover", "bracket": [1001, 1219]}
+[   28.26s] done             {"tool": "describe", "seconds": 27.994}
+[   28.26s] summary          {}
+[   28.26s] llm_request      {"agent": "solver", "attempt": 0}
+[   28.29s] llm_invalid      {"agent": "solver", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   28.29s] llm_request      {"agent": "solver", "attempt": 1}
+[   28.29s] llm_invalid      {"agent": "solver", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   28.29s] llm_fallback     {"agent": "solver"}
+[   28.29s] llm_request      {"agent": "critic", "attempt": 0}
+[   28.29s] llm_invalid      {"agent": "critic", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   28.29s] llm_request      {"agent": "critic", "attempt": 1}
+[   28.29s] llm_invalid      {"agent": "critic", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   28.29s] llm_fallback     {"agent": "critic"}
+[   28.29s] plan_accepted    {"plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []}, "critic
+[   28.30s] start            {"tool": "code", "p": 7, "c": 1, "why": "spectral pred 455"}
+[   28.30s] start            {"tool": "code", "p": 5, "c": 1, "why": "spectral pred 1001"}
+[   28.30s] start            {"tool": "code", "p": 2, "c": 1, "why": "spectral pred 1015"}
+[   28.30s] start            {"tool": "code", "p": 3, "c": 1, "why": "spectral pred 1275"}
+[   28.30s] start            {"tool": "code", "p": 19, "c": 1, "why": "spectral pred 1275"}
+[   28.30s] start            {"tool": "code", "p": 11, "c": 1, "why": "spectral pred 1364"}
+[   28.30s] start            {"tool": "code", "p": 23, "c": 1, "why": "spectral pred 1364"}
+[   28.30s] start            {"tool": "code", "p": 13, "c": 1, "why": "spectral pred 1365"}
+[   31.51s] done             {"tool": "code", "p": 5, "c": 1, "rank": 1001, "seconds": 3.203}
+[   31.51s] board            {"side": "upper", "value": 1001, "tool": "linear_code", "bracket": [1001, 1001]}
+[   31.51s] event            {"name": "bracket_closed", "bracket": [1001, 1001]}
+[   31.71s] done             {"tool": "code", "p": 2, "c": 1, "rank": null, "seconds": 3.407, "rank_above": 1218}
+[   31.71s] event            {"name": "bracket_closed", "bracket": [1001, 1001]}
+[   33.47s] llm_request      {"agent": "verifier", "attempt": 0}
+[   33.47s] llm_invalid      {"agent": "verifier", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   33.47s] llm_request      {"agent": "verifier", "attempt": 1}
+[   33.47s] llm_invalid      {"agent": "verifier", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   33.47s] llm_fallback     {"agent": "verifier"}
+[   33.47s] verdict          {"verdict": "proven", "bracket": [1001, 1001], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

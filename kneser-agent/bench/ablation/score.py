@@ -20,7 +20,7 @@ PILOT = ("K_16_4_s3", "K_16_4-del0.01_s0", "K_14_4_s0")
 CONFIGS = {"Qwen2.5-32B": "{g}_ref_Qwen2.5-Coder-32B-Instruct-AWQ.jsonl", "Qwen3-4B": "{g}_Qwen3-4B-Instruct-2507.jsonl",
            # Qwen 32B on CPU (llama.cpp, GGUF Q4_K_M), fixed code (d22d46c), run while the GPUs failed cuInit
            "Qwen2.5-32B-cpu": "{g}_Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu.jsonl",
-           "Qwen3-4B-cpu": "{g}_Qwen3-4B-Instruct-2507-Q4_K_M-cpu.jsonl"}
+           "Qwen3-4B-cpu": "{g}_Qwen3-4B-Instruct-2507-Q4_K_M-cpu-1500.jsonl"}
 for c in ("haiku-med", "sonnet-med", "opus-low", "opus-med", "opus-high"):
     CONFIGS[c] = "{g}_%s_chat.jsonl" % c
 BIN = re.compile(r"C\((\d+)\s*,\s*(\d+)\)\s*=\s*(\d+)")

@@ -1,0 +1,96 @@
+[    0.00s] input            {"graph": "K_14_4_s1", "receivers": 1001, "llm": "Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu", "family_rule": true}
+[    0.12s] start            {"tool": "describe"}
+[    0.12s] start            {"tool": "indep"}
+[    0.12s] start            {"tool": "cover"}
+[    0.39s] board            {"side": "lower", "value": 286, "tool": "greedy independent set", "bracket": [286, 1001]}
+[    2.13s] board            {"side": "upper", "value": 345, "tool": "clique_cover", "bracket": [286, 345]}
+[   21.98s] done             {"tool": "describe", "seconds": 21.81}
+[   21.98s] summary          {}
+[   21.98s] llm_request      {"agent": "solver", "attempt": 0}
+[   22.11s] llm_invalid      {"agent": "solver", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   22.11s] llm_request      {"agent": "solver", "attempt": 1}
+[   22.11s] llm_invalid      {"agent": "solver", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   22.11s] llm_fallback     {"agent": "solver"}
+[   22.11s] llm_request      {"agent": "critic", "attempt": 0}
+[   22.11s] llm_invalid      {"agent": "critic", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   22.11s] llm_request      {"agent": "critic", "attempt": 1}
+[   22.12s] llm_invalid      {"agent": "critic", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   22.12s] llm_fallback     {"agent": "critic"}
+[   22.12s] plan_accepted    {"plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []}, "critic
+[   22.12s] start            {"tool": "code", "p": 2, "c": 1, "why": "spectral pred 91"}
+[   22.12s] start            {"tool": "code", "p": 3, "c": 2, "why": "spectral pred 287"}
+[   22.12s] start            {"tool": "code", "p": 5, "c": 4, "why": "spectral pred 351"}
+[   22.12s] start            {"tool": "code", "p": 17, "c": 16, "why": "spectral pred 351"}
+[   22.12s] start            {"tool": "code", "p": 11, "c": 10, "why": "spectral pred 363"}
+[   22.12s] start            {"tool": "code", "p": 19, "c": 18, "why": "spectral pred 363"}
+[   22.12s] start            {"tool": "code", "p": 7, "c": 6, "why": "spectral pred 364"}
+[   22.12s] start            {"tool": "code", "p": 13, "c": 12, "why": "spectral pred 364"}
+[   22.52s] done             {"tool": "code", "p": 5, "c": 4, "rank": null, "seconds": 0.39, "rank_above": 344}
+[   22.81s] done             {"tool": "code", "p": 17, "c": 16, "rank": null, "seconds": 0.288, "rank_above": 344}
+[   23.08s] done             {"tool": "code", "p": 11, "c": 10, "rank": null, "seconds": 0.26, "rank_above": 344}
+[   23.19s] done             {"tool": "code", "p": 3, "c": 2, "rank": 287, "seconds": 1.064}
+[   23.19s] board            {"side": "upper", "value": 287, "tool": "linear_code", "bracket": [286, 287]}
+[   23.19s] event            {"name": "near_miss", "p": 3, "rank": 287}
+[   23.19s] start            {"tool": "code", "p": 3, "c": 1, "why": "near miss"}
+[   23.28s] done             {"tool": "code", "p": 2, "c": 1, "rank": 299, "seconds": 1.159}
+[   23.38s] done             {"tool": "code", "p": 19, "c": 18, "rank": null, "seconds": 0.292, "rank_above": 344}
+[   23.50s] done             {"tool": "code", "p": 7, "c": 6, "rank": null, "seconds": 0.307, "rank_above": 344}
+[   23.54s] done             {"tool": "code", "p": 13, "c": 12, "rank": null, "seconds": 0.254, "rank_above": 344}
+[   23.56s] done             {"tool": "code", "p": 3, "c": 1, "rank": null, "seconds": 0.189, "rank_above": 286}
+[   23.56s] event            {"name": "checkpoint"}
+[   23.56s] llm_request      {"agent": "solver", "attempt": 0}
+[   23.56s] llm_invalid      {"agent": "solver", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   23.56s] llm_request      {"agent": "solver", "attempt": 1}
+[   23.56s] llm_invalid      {"agent": "solver", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   23.56s] llm_fallback     {"agent": "solver"}
+[   23.57s] start            {"tool": "code", "p": 23, "c": 22, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 29, "c": 28, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 31, "c": 30, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 37, "c": 36, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 41, "c": 40, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 43, "c": 42, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 47, "c": 46, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 53, "c": 52, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 59, "c": 58, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 61, "c": 60, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 67, "c": 66, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 71, "c": 70, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 73, "c": 72, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 79, "c": 78, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 83, "c": 82, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 89, "c": 88, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 97, "c": 96, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 101, "c": 100, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 103, "c": 102, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 107, "c": 106, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 109, "c": 108, "why": "spectral pred 364"}
+[   23.57s] start            {"tool": "code", "p": 113, "c": 112, "why": "spectral pred 364"}
+[   23.81s] done             {"tool": "code", "p": 23, "c": 22, "rank": null, "seconds": 0.242, "rank_above": 286}
+[   23.82s] done             {"tool": "code", "p": 29, "c": 28, "rank": null, "seconds": 0.24, "rank_above": 286}
+[   23.82s] done             {"tool": "code", "p": 31, "c": 30, "rank": null, "seconds": 0.239, "rank_above": 286}
+[   24.05s] done             {"tool": "code", "p": 37, "c": 36, "rank": null, "seconds": 0.235, "rank_above": 286}
+[   24.06s] done             {"tool": "code", "p": 41, "c": 40, "rank": null, "seconds": 0.233, "rank_above": 286}
+[   24.06s] done             {"tool": "code", "p": 43, "c": 42, "rank": null, "seconds": 0.236, "rank_above": 286}
+[   24.29s] done             {"tool": "code", "p": 53, "c": 52, "rank": null, "seconds": 0.238, "rank_above": 286}
+[   24.30s] done             {"tool": "code", "p": 47, "c": 46, "rank": null, "seconds": 0.246, "rank_above": 286}
+[   24.31s] done             {"tool": "code", "p": 59, "c": 58, "rank": null, "seconds": 0.246, "rank_above": 286}
+[   24.53s] done             {"tool": "code", "p": 67, "c": 66, "rank": null, "seconds": 0.232, "rank_above": 286}
+[   24.54s] done             {"tool": "code", "p": 61, "c": 60, "rank": null, "seconds": 0.241, "rank_above": 286}
+[   24.55s] done             {"tool": "code", "p": 71, "c": 70, "rank": null, "seconds": 0.236, "rank_above": 286}
+[   24.78s] done             {"tool": "code", "p": 73, "c": 72, "rank": null, "seconds": 0.24, "rank_above": 286}
+[   24.78s] done             {"tool": "code", "p": 79, "c": 78, "rank": null, "seconds": 0.233, "rank_above": 286}
+[   24.79s] done             {"tool": "code", "p": 83, "c": 82, "rank": null, "seconds": 0.242, "rank_above": 286}
+[   25.01s] done             {"tool": "code", "p": 97, "c": 96, "rank": null, "seconds": 0.237, "rank_above": 286}
+[   25.02s] done             {"tool": "code", "p": 89, "c": 88, "rank": null, "seconds": 0.247, "rank_above": 286}
+[   25.03s] done             {"tool": "code", "p": 101, "c": 100, "rank": null, "seconds": 0.241, "rank_above": 286}
+[   25.25s] done             {"tool": "code", "p": 103, "c": 102, "rank": null, "seconds": 0.24, "rank_above": 286}
+[   25.26s] done             {"tool": "code", "p": 107, "c": 106, "rank": null, "seconds": 0.24, "rank_above": 286}
+[   25.26s] done             {"tool": "code", "p": 109, "c": 108, "rank": null, "seconds": 0.236, "rank_above": 286}
+[   25.36s] done             {"tool": "code", "p": 113, "c": 112, "rank": null, "seconds": 0.104, "rank_above": 286}
+[   25.36s] event            {"name": "safety_net", "plan": [{"tool": "spectral", "args": {"top": 30}, "why": "fallback"}]}
+[   25.36s] llm_request      {"agent": "verifier", "attempt": 0}
+[   25.37s] llm_invalid      {"agent": "verifier", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   25.37s] llm_request      {"agent": "verifier", "attempt": 1}
+[   25.37s] llm_invalid      {"agent": "verifier", "error": "local LLM call failed: HTTP Error 503: Service Unavailable", "raw": ""}
+[   25.37s] llm_fallback     {"agent": "verifier"}
+[   25.37s] verdict          {"verdict": "gap", "bracket": [286, 287], "checks": {"independent_set": true, "code_fits": true}}

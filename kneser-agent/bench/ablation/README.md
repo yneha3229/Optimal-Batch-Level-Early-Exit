@@ -30,3 +30,16 @@ Agent prompt (folder filled in):
 
 Caveats: the Claude agents run inside Claude Code (not a plain API call), so their LLM seconds include agent overhead
 and are not compared with vLLM; one run per cell.
+
+## 26 Nov evening: the 12-cell grid
+
+- Cells: K(16,4) s3/s1, K(16,4)-del0.01 s0/s1, K(14,4) s0/s1, K(13,4) s0/s1, K(15,5) s0/s1, reg(1000,6) s0/s1
+  (`start_cells.sh CONFIG` starts the 9 new pipelines of one configuration; the agent prompt is unchanged).
+- Qwen on CPU: `cpu_grid.sh MODEL.gguf NAME PARALLEL` (llama.cpp b12780, cores 16-29, pipelines on 30-31, budget
+  21,600 s because one reply takes minutes). Qwen3-4B runs with KAGENT_MAX_TOKENS=1500 (trace suffix `-cpu-1500`):
+  at the default 600 its replies were cut off (see the analysis in RESULTS.md).
+- A first 32B grid start hit a race (the previous server still answered /health): 9 runs got HTTP 503 and fell back
+  to default plans; they were deleted, not scored (logs in logs/invalid_32b_race/), and cpu_grid.sh now waits for the
+  port and checks /v1/models.
+- Labels: `labels.py` -> `label_detail.json` (one record per objection, with the reason); `score.py` counts from it.
+- The chart shows per-run rates; the Qwen GPU bar is the 3-run pilot on the old code.

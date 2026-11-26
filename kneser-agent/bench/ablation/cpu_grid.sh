@@ -6,10 +6,12 @@ cd "$(dirname "$0")/../.."
 M=$1; NAME=$2; PAR=${3:-6}
 LS=$HOME/llm_cpu/llamacpp/llama-b12780/llama-server
 LOG=../logs; PORT=8002
-taskset -c 16-29 "$LS" -m "$M" --host 127.0.0.1 --port $PORT -t 14 --parallel "$PAR" -c $((PAR * 8192)) \
+while curl -s -o /dev/null http://127.0.0.1:$PORT/health; do echo "port $PORT busy, waiting"; sleep 5; done
+taskset -c 16-29 "$LS" -m "$M" --host 127.0.0.1 --port $PORT -t 14 --parallel "$PAR" -c $((PAR * 8192)) --alias "$NAME" \
   > "$LOG/kneser_agent_llamacpp_${NAME}.log" 2>&1 &
 SRV=$!; echo $SRV > "$LOG/kneser_agent_llamacpp.pid"
-until curl -sf http://127.0.0.1:$PORT/health >/dev/null; do sleep 5; kill -0 $SRV || { echo "server died"; exit 1; }; done
+until curl -sf http://127.0.0.1:$PORT/health >/dev/null && curl -s http://127.0.0.1:$PORT/v1/models | grep -q "$NAME"; do
+  sleep 5; kill -0 $SRV || { echo "server died"; exit 1; }; done      # the right model, loaded (not an old server)
 echo "server ready $(date -u)"
 export KAGENT_LLM_TIMEOUT=6000 HF_HUB_OFFLINE=1
 PIDS=""
@@ -23,5 +25,5 @@ for c in "K(16,4) 3" "K(16,4) 1" "K(16,4)-del0.01 0" "K(16,4)-del0.01 1" "K(14,4
   PIDS="$PIDS $!"
 done
 for p in $PIDS; do wait $p; done
-kill $SRV
+kill $SRV; wait $SRV 2>/dev/null
 echo "grid done $(date -u)"
