@@ -454,9 +454,9 @@ sanity case on core 4, DRAT on cores 37-39. Jobs run detached (`setsid nohup`), 
 | graph | field | r | result | seconds | DRAT | meaning |
 |---|---|---|---|---|---|---|
 | K(7,2) | F_3 | 6 | TIMEOUT | 3600 | n/a | sanity case: Theorem 1 gives an explicit rank-6 matrix (checked: rank_3(I - D) = 6), yet the one-hot SAT encoding did not find one in 1 h. Task B stopped, as specified. |
-| K(9,2) | F_2 | 8 | running (36000 s limit, started 13:35 UTC) | | | Theorem 1: minrk_5 = 8; UNSAT would give minrk_2 = 9 (separation) |
-| K(11,2) | F_2 | 10 | running (36000 s limit) | | | Theorem 1: minrk_7 = 10 |
-| K(13,2) | F_2 | 12 | running (36000 s limit) | | | Theorem 1: minrk_3 = 12 |
+| K(9,2) | F_2 | 8 | run 1 killed by the 25 Nov 20:16 UTC server reboot after ~24,000 s, no answer; run 2 started 26 Nov 02:40 UTC (36000 s limit) | | | Theorem 1: minrk_5 = 8; UNSAT would give minrk_2 = 9 (separation) |
+| K(11,2) | F_2 | 10 | as K(9,2): run 1 killed after ~24,000 s, run 2 running | | | Theorem 1: minrk_7 = 10 |
+| K(13,2) | F_2 | 12 | as K(9,2): run 1 killed after ~24,000 s, run 2 running | | | Theorem 1: minrk_3 = 12 |
 
 Not run (task B, stopped by the sanity rule): K(9,2) F_3 r = 8, K(11,2) F_3 r = 10, K(11,2) F_5 r = 10,
 K(7,2) F_5 r = 6. The one-hot encoding (8,379 variables, 31,737 clauses for K(7,2), r = 6, q = 3) cannot even find a
