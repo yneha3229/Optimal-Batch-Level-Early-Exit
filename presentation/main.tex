@@ -250,7 +250,7 @@
         \begin{itemize}
           \item An LLM reads a numeric summary of the graph, guesses its structure and plans which certified checks
                 to run.
-          \item Worker processes run the checks in parallel; the run stops the moment lower bound $=$ upper bound.
+          \item A pool of worker processes runs the checks; the run stops the moment lower bound $=$ upper bound.
           \item Only certified results count; an independent verifier re-checks the final code.
         \end{itemize}
       \end{block}
@@ -273,7 +273,7 @@
     Input & adjacency matrix & same matrix, vertices shuffled; the LLM sees only a numeric summary \\
     Decision & 5 fixed steps & Solver LLM: hypothesis $+$ plan; Critic LLM challenges it (up to 3 rounds) \\
     Field choice & from the theorem only & theorem as one tool, plus a generic rule from the eigenvalues and any $(p,c)$ \\
-    Execution & one step after another & scheduler with 3 worker processes; retargets on new bounds, stops when they meet \\
+    Execution & one step after another & worker pool (3 processes); stops as soon as the bounds meet \\
     Wrong guess & fall back to the general solver & checkpoint: the Solver sees the results and revises the plan \\
     Rank check & full exact rank, $O(N^3)$ & rank factorisation with early stop, $O(N^2 r)$ \\
     Checking & certificates re-checked in the same code & independent verifier code (shares nothing with the tools) \\
@@ -286,46 +286,42 @@
   \centering
   \begin{tikzpicture}[
       x=1cm, y=1cm, font=\scriptsize, >={Stealth[length=2mm]},
-      box/.style={rounded corners=2pt, minimum width=2.5cm, minimum height=1.45cm, align=center, text width=2.35cm,
+      box/.style={rounded corners=2pt, minimum width=1.95cm, minimum height=1.35cm, align=center, text width=1.85cm,
                   inner sep=2pt},
       llm/.style={box, fill=structure.fg, text=white},
       code/.style={box, fill=structure.fg!7, draw=structure.fg!70},
       res/.style={box, fill=green!40!black, text=white},
       lab/.style={font=\tiny, align=center, text=black!75}]
-    \node[code] (g)  at (0,0)     {\textbf{Graph}\\shuffled, no name};
-    \node[code] (s)  at (2.85,0)  {\textbf{Summary tools}\\receivers, degrees, eigenvalues, greedy bounds};
-    \node[llm]  (so) at (5.7,0)   {\textbf{Solver (LLM)}\\family hypothesis $+$ plan of tool calls};
-    \node[llm]  (cr) at (8.55,0)  {\textbf{Critic (LLM)}\\checks every number; accept or challenge};
-    \node[code] (w)  at (2.85,-2.3) {\textbf{3 workers}\\codes $I+cA$ over $\Fp$, independent sets, covers};
-    \node[code] (sc) at (5.7,-2.3)  {\textbf{Scheduler}\\new bound $\to$ retarget; near miss $\to$ more $c$};
-    \node[code] (bd) at (8.55,-2.3) {\textbf{Bound board}\\certified lower $\le \beta \le$ upper};
-    \node[llm]  (ve) at (8.55,-4.6) {\textbf{Verifier}\\own code re-checks; LLM writes report};
-    \node[res]  (o)  at (5.7,-4.6)  {\textbf{$\beta$ $+$ optimal code}\\verdict from the checks};
-    \draw[->] (g) -- (s);
-    \draw[->] (s) -- (so);
+    \node[code] (g)  at (0,0)    {\textbf{Graph}\\unlabelled, vertices shuffled};
+    \node[llm]  (so) at (2.3,0)  {\textbf{Solver}\\guesses the structure, plans checks};
+    \node[llm]  (cr) at (4.6,0)  {\textbf{Critic}\\checks the guess (up to 3 rounds)};
+    \node[code] (t)  at (6.9,0)  {\textbf{Tools}\\run the checks (pool of 3 processes)};
+    \node[code] (bd) at (9.2,0)  {\textbf{Bound board}\\certified\\lower $\le\beta\le$ upper};
+    \node[llm]  (ve) at (9.2,-2.6) {\textbf{Verifier}\\independent code re-checks the result};
+    \node[res]  (o)  at (6.9,-2.6) {\textbf{$\beta$ $+$\\optimal code}};
+    \draw[->] (g) -- (so);
     \draw[->] ([yshift=2mm]so.east) -- ([yshift=2mm]cr.west);
     \draw[->] ([yshift=-2mm]cr.west) -- ([yshift=-2mm]so.east);
-    \node[lab] at (7.125,0.95) {up to 3 rounds};
-    \draw[->] ([xshift=-4mm]so.south) -- node[lab, left] {accepted plan} ([xshift=-4mm]sc.north);
-    \draw[->] ([yshift=2mm]sc.west) -- ([yshift=2mm]w.east);
-    \draw[->] ([yshift=-2mm]w.east) -- ([yshift=-2mm]sc.west);
-    \draw[->] (sc) -- node[lab, above] {results} (bd);
-    \draw[->, dashed] ([xshift=-8mm]bd.north) -- node[lab, right, pos=0.5, xshift=1mm] {plan exhausted: checkpoint} ([xshift=8mm]so.south);
-    \draw[->] (bd) -- node[lab, right] {bounds meet} (ve);
+    \draw[->] (cr) -- (t);
+    \draw[->] (t) -- (bd);
+    \draw[->] (bd) -- node[lab, right] {lower $=$ upper} (ve);
     \draw[->] (ve) -- (o);
-    \node[anchor=north west, text width=4.6cm, font=\scriptsize] at (-1.25,-3.95)
+    \draw[->, dashed] (bd.north) to[out=150, in=30] node[lab, above] {bounds still apart: the Solver revises the plan} (so.north);
+    \node[anchor=north west, text width=5.6cm, font=\scriptsize] at (-1.05,-1.75)
       {\tikz\fill[structure.fg] (0,0) rectangle (0.25,0.18);\ LLM agent\quad
-       \tikz{\fill[structure.fg!7] (0,0) rectangle (0.25,0.18); \draw[structure.fg!70] (0,0) rectangle (0.25,0.18);}\ code\\[3pt]
-       The LLMs never write a number to the board: only certified tool results enter.};
+       \tikz{\fill[structure.fg!7] (0,0) rectangle (0.25,0.18); \draw[structure.fg!70] (0,0) rectangle (0.25,0.18);}\ code\\[4pt]
+       The LLMs only decide \emph{what to check}. Every number on the board is a certificate computed by code,
+       and the verdict comes from the checks, not from an LLM.};
   \end{tikzpicture}
 \end{frame}
 
 \begin{frame}{Results: time to prove $\beta$ (container, one CPU core per run)}
   \centering
-  \includegraphics[width=0.80\linewidth]{fig/time_to_prove_beamer.png}\par
+  \includegraphics[width=0.74\linewidth]{fig/time_to_prove_beamer.png}\par
   \vspace{-0.2em}
   {\tiny Time until the certified bounds meet, LLM time included; 20 benchmark graphs $+$ 5 large Kneser graphs, seed 0.
-   Claude LLM time is the wall time of a Claude Code agent (tool calls included), so it overstates pure model time.\par}
+   Claude LLM time is the wall time of a Claude Code agent (tool calls included), so it overstates pure model time.
+   All workers shared one CPU core: the gain comes from the right code and a cheaper rank check, not parallelism.\par}
   \vspace{0.2em}
   \begin{alertblock}{Takeaway}
     \scriptsize LLM thinking stays at $\approx$20--40\,s while compute grows. Below $\approx$9{,}000 receivers the script
