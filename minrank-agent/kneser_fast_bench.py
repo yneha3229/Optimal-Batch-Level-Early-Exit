@@ -66,6 +66,7 @@ def job(n, k, part):
     rec = {"graph": g.name, "n": n, "k": k, "vertices": g.n, "part": part}
     t = time.perf_counter()
     r = solve(A, fallback=KB.agent, fallback_limit=LIMIT)
+    r.pop("code", None)                             # the explicit code (verified inside solve) is not stored
     rec["fast_agent"] = {kk: (v if not isinstance(v, (np.integer,)) else int(v)) for kk, v in r.items()}
     rec["fast_agent"]["s"] = time.perf_counter() - t
     if part == 2:                                   # standard methods, same rules, each isolated
