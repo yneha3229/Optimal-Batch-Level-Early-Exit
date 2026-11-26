@@ -1,7 +1,7 @@
 """Time to prove β per graph, by method -> time_to_prove.png.
 
 One chart; each legend entry says in brackets where it ran. Container, one core per pipeline: standard methods +
-Kushagra's script (results/baselines_ctr.jsonl), the agent without LLM (tag "ctr"), the blind Claude agents (tag
+Kushagra's Kneser agent, no LLM (minrank-agent kneser_agent.py; results/baselines_ctr.jsonl), the agent without LLM (tag "ctr"), the blind Claude agents (tag
 "<config>-full"). GPU server: agent + Qwen 32B (vLLM, prompts v3), drawn dashed. Agent times are compute only (wall minus LLM seconds): the
 Claude models answer through Claude Code agents, so their LLM seconds include agent overhead; Qwen's are vLLM.
 Only graphs a method proves (bracket closed, all checks passed) are drawn.
@@ -82,7 +82,7 @@ MARK = {"kus": "D", "none": "o", "qwen": "^", "sonnet-med": "P", "opus-low": "v"
 
 std_c, kus_c = baseline_pts(ROOT / "results" / "baselines_ctr.jsonl")
 CTR, GPU = "container, 1 core", "GPU server"
-series = [("std", f"standard methods [{CTR}]", std_c), ("kus", f"Kushagra's script [{CTR}]", kus_c),
+series = [("std", f"standard methods [{CTR}]", std_c), ("kus", f"Kneser agent (no LLM) [{CTR}]", kus_c),
           ("none", f"agent, no LLM [{CTR}]", agent_pts(tagged("ctr")))]
 series += [(c, f"{lab} [{CTR}]", agent_pts(tagged(c + "-full"))) for c, lab in CLAUDE]
 series += [("qwen", f"agent + Qwen 32B [{GPU}]", agent_pts(server_qwen))]
