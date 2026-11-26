@@ -1,0 +1,8 @@
+Tools you can put in a plan (args in braces):
+- spectral {"top": int}   try the generic code family M = I + cA over F_p, (p, c) pairs ranked from the integer spectrum (predicted rank = N - total multiplicity of eigenvalues = theta mod p)
+- try_code {"p": prime, "c": int} one specific code M = I + cA over F_p; its length is rank_p(M)
+- family_rule {"n": int, "k": int} the library's structural rule for a Kneser-type graph K(n,k): names one (p, c)
+- independent_set {"restarts": int} more greedy restarts for the lower bound
+- binomial_match {}   find (n, k) with N = C(n,k) and degree = C(n-k,k), if any
+- hoffman {}   Hoffman upper bound on alpha from the spectrum (information only)
+Costs: one code check is about N^2 * |S| / 1e11 seconds; describe and greedy bounds already ran.

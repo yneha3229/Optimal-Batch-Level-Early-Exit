@@ -1,6 +1,6 @@
 """Baselines on exactly the same (relabelled) graphs the agent sees.
 
-    python bench/baselines.py run [--limit 60] [--par 2] [--out results/X.jsonl] [specs...]   -> results/baselines.jsonl
+    python bench/baselines.py run [--limit 60] [--par 2] [--out results/X.jsonl] [--kneser-only] [specs...]   -> results/baselines.jsonl
 Methods (each in its own forked process, one thread, LIMIT seconds; same rules as minrank-agent/kneser_bench.py):
   standard methods  cpsat_alpha (lower), cpsat_cover, frac_cover, f2_minrank_sat (upper)
   kushagra_agent    Kushagra's theory-guided script (recognise (n,k) -> rule prime -> one rank -> greedy star),
@@ -52,13 +52,17 @@ def _isolated(fn, args, limit):
     return (res[1], "") if res[0] == "ok" else (None, "error: " + str(res[1]))
 
 
-def job(spec, seed, limit):
+def job(spec, seed, limit, kneser_only=False):
     import kneser_bench as KB
     from kagent import graphs
     from kushagra_kneser_agent import solve
 
     A = graphs.load(graphs.make(spec, seed)).astype(np.int64)
     rec = {"spec": spec, "seed": seed, "receivers": int(A.shape[0]), "limit": limit}
+    if kneser_only:   # graphs past 10k receivers: the standard methods already fail at 8,855 and CP-SAT runs out of memory
+        for m in ("cpsat_alpha", "cpsat_cover", "frac_cover", "f2_minrank_sat"):
+            rec[m] = {"value": None, "proven": False, "s": None, "note": "skipped (--kneser-only)"}
+        return _kneser(rec, A, KB, solve, limit)
     t = time.perf_counter()
     res, err = _isolated(KB.cpsat_alpha, (A, limit), limit)
     a, S, aopt = res if res else (None, [], False)
@@ -72,6 +76,10 @@ def job(spec, seed, limit):
     res, err = _isolated(KB.f2_minrank_sat, (A, a or 1, S, limit), limit)
     v, opt = res if res else (None, None)
     rec["f2_minrank_sat"] = {"value": v, "lower_or_proven": opt, "s": time.perf_counter() - t, "note": err}
+    return _kneser(rec, A, KB, solve, limit)
+
+
+def _kneser(rec, A, KB, solve, limit):
     t = time.perf_counter()
     res, err = _isolated(solve, (A, KB.agent, limit), 2 * limit + 30)
     r = res or {}
@@ -92,9 +100,10 @@ def standard_best(r):
     return lo, hi, None
 
 
-def _sub(spec, seed, limit):
+def _sub(spec, seed, limit, kneser_only=False):
     try:
-        p = subprocess.run([sys.executable, __file__, "job", spec, str(seed), str(limit)], capture_output=True,
+        p = subprocess.run([sys.executable, __file__, "job", spec, str(seed), str(limit)]
+                           + (["--kneser-only"] if kneser_only else []), capture_output=True,
                            text=True, timeout=limit * 8 + 300)
         line = p.stdout.strip().splitlines()[-1] if p.stdout.strip() else ""
         return json.loads(line) if line.startswith("{") else {"spec": spec, "error": p.stderr[-400:]}
@@ -104,13 +113,15 @@ def _sub(spec, seed, limit):
 
 def cmd_run(argv):
     global OUT
-    limit, par, specs = 60.0, 2, []
+    limit, par, specs, kneser_only = 60.0, 2, [], False
     it = iter(argv)
     for x in it:
         if x == "--limit":
             limit = float(next(it))
         elif x == "--par":
             par = int(next(it))
+        elif x == "--kneser-only":
+            kneser_only = True
         elif x == "--out":
             OUT = ROOT / next(it)
         else:
@@ -121,7 +132,7 @@ def cmd_run(argv):
         done = {json.loads(l)["spec"] for l in OUT.read_text().splitlines() if l.strip()}
     todo = [s for s in specs if s not in done]
     with open(OUT, "a") as f, ThreadPoolExecutor(par) as ex:
-        for r in ex.map(lambda s: _sub(s, 0, limit), todo):
+        for r in ex.map(lambda s: _sub(s, 0, limit, kneser_only), todo):
             f.write(json.dumps(r, default=str) + "\n")
             f.flush()
             print(r["spec"], standard_best(r) if "error" not in r else r["error"][:80], flush=True)
@@ -129,6 +140,7 @@ def cmd_run(argv):
 
 if __name__ == "__main__":
     if sys.argv[1] == "job":
-        print(json.dumps(job(sys.argv[2], int(sys.argv[3]), float(sys.argv[4])), default=str))
+        print(json.dumps(job(sys.argv[2], int(sys.argv[3]), float(sys.argv[4]), "--kneser-only" in sys.argv),
+                         default=str))
     else:
         cmd_run(sys.argv[2:])

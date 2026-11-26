@@ -1,0 +1,86 @@
+{"t": 0.001, "ev": "input", "graph": "K_13_5_s0_opus-med-full", "receivers": 1287, "llm": "chat", "family_rule": true}
+{"t": 0.015, "ev": "start", "tool": "describe"}
+{"t": 0.016, "ev": "start", "tool": "indep"}
+{"t": 0.016, "ev": "start", "tool": "cover"}
+{"t": 0.091, "ev": "board", "side": "lower", "value": 495, "tool": "greedy independent set", "bracket": [495, 1287]}
+{"t": 0.231, "ev": "board", "side": "upper", "value": 653, "tool": "clique_cover", "bracket": [495, 653]}
+{"t": 0.358, "ev": "done", "tool": "describe", "seconds": 0.323}
+{"t": 0.358, "ev": "summary", "summary": {"receivers": 1287, "edges": 36036, "degree_min": 56, "degree_max": 56, "regular": true, "common_neighbours_adjacent": [0], "common_neighbours_nonadjacent": [0, 1, 6, 21], "triangles_through_sampled_vertex": 0, "spectrum_integral": true, "eigenvalues": [[56, 1], [20, 65], [4, 429], [-1, 572], [-10, 208], [-35, 12]], "distinct_eigenvalues": 6, "seconds": 0.323}}
+{"t": 0.359, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 20.069, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {"n": 13, "k": 5}, "confidence": 0.8, "evidence": ["receivers = 1287, regular with degree_min = degree_max = 56", "triangles_through_sampled_vertex = 0 and common_neighbours_adjacent = [0]", "spectrum_integral = true with 6 distinct eigenvalues: 56, 20, 4, -1, -10, -35 (alternating-sign pattern typical of Kneser graphs)", "board lower = 495 (independent set), upper = 653 by clique_cover"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "Verify (n, k) with N = C(n,k) and degree = C(n-k,k) before relying on the Kneser hypothesis"}, {"tool": "family_rule", "args": {"n": 13, "k": 5}, "why": "Query the library rule for K(13,5) to get a named (p, c) code; it may be an exception"}, {"tool": "spectral", "args": {"top": 3}, "why": "Generic fallback: rank of I + cA over F_p predicted from the integral spectrum"}], "notes": "Hypothesis K(13,5) pending binomial_match confirmation. Target is to bring upper bound from 653 down to the lower bound 495."}}
+{"t": 20.069, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 24.272, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 24.272, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "Verify (n, k) with N = C(n,k) and degree = C(n-k,k) before relying on the Kneser hypothesis"}, {"tool": "family_rule", "args": {"n": 13, "k": 5}, "why": "Query the library rule for K(13,5) to get a named (p, c) code; it may be an exception"}, {"tool": "spectral", "args": {"top": 3}, "why": "Generic fallback: rank of I + cA over F_p predicted from the integral spectrum"}], "hypothesis": {"name": "Kneser", "params": {"n": 13, "k": 5}, "confidence": 0.8, "evidence": ["receivers = 1287, regular with degree_min = degree_max = 56", "triangles_through_sampled_vertex = 0 and common_neighbours_adjacent = [0]", "spectrum_integral = true with 6 distinct eigenvalues: 56, 20, 4, -1, -10, -35 (alternating-sign pattern typical of Kneser graphs)", "board lower = 495 (independent set), upper = 653 by clique_cover"]}, "critic_rounds": 1}
+{"t": 24.272, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 13, "k": 5}]}]}
+{"t": 24.272, "ev": "rule", "tool": "family_rule", "args": {"n": 13, "k": 5}, "result": null}
+{"t": 24.277, "ev": "start", "tool": "code", "p": 5, "c": 1, "why": "spectral pred 286"}
+{"t": 24.281, "ev": "start", "tool": "code", "p": 3, "c": 1, "why": "spectral pred 441"}
+{"t": 24.281, "ev": "start", "tool": "code", "p": 7, "c": 1, "why": "spectral pred 650"}
+{"t": 24.677, "ev": "done", "tool": "code", "p": 7, "c": 1, "rank": null, "seconds": 0.387, "rank_above": 652}
+{"t": 24.68, "ev": "done", "tool": "code", "p": 5, "c": 1, "rank": null, "seconds": 0.406, "rank_above": 652}
+{"t": 24.928, "ev": "done", "tool": "code", "p": 3, "c": 1, "rank": 507, "seconds": 0.65}
+{"t": 24.928, "ev": "board", "side": "upper", "value": 507, "tool": "linear_code", "bracket": [495, 507]}
+{"t": 24.928, "ev": "event", "name": "checkpoint"}
+{"t": 24.928, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 55.644, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {"n": 13, "k": 5}, "confidence": 0.95, "evidence": ["binomial_match returned (n, k) = (13, 5) for receivers = 1287 and degree = 56", "regular = true, spectrum_integral = true, eigenvalues 56, 20, 4, -1, -10, -35 with multiplicities 1, 65, 429, 572, 208, 12", "family_rule(13,5) returned null: an exception of the rule, not evidence of perturbation", "tried (p=3, c=1) gave length 507; (7,1) and (5,1) gave length above 652; board lower = 495"]}, "plan": [{"tool": "hoffman", "args": {}, "why": "Confirm whether the lower bound 495 already equals the Hoffman bound, so remaining gap 507 vs 495 must be closed from the code side"}, {"tool": "try_code", "args": {"p": 3, "c": 2}, "why": "Other nonzero c over F_3, the only field that has given a short code (507) so far"}, {"tool": "try_code", "args": {"p": 2, "c": 1}, "why": "Characteristic 2: 1 + theta vanishes mod 2 for the odd eigenvalues -1 (mult 572) and -35 (mult 12)"}, {"tool": "try_code", "args": {"p": 17, "c": 1}, "why": "1 + c*theta vanishes for theta = -1 and theta = -35 (1 - 35 = -34) over F_17"}, {"tool": "spectral", "args": {"top": 8}, "why": "Generic step: explore further (p, c) pairs ranked from the integral spectrum, skipping already tried ones"}], "notes": "Bracket is 495..507 with the code from (p=3, c=1). family_rule names no field for K(13,5), so search generically over fields; if nothing beats 507, stop and report [495, 507]."}}
+{"t": 55.644, "ev": "checks", "results": [{"tool": "hoffman", "result": 495.0}]}
+{"t": 55.649, "ev": "start", "tool": "code", "p": 3, "c": 2, "why": "Other nonzero c over F_3, the only field that has given a short code (507) so far"}
+{"t": 55.72, "ev": "done", "tool": "code", "p": 3, "c": 2, "rank": null, "seconds": 0.075, "rank_above": 506}
+{"t": 55.72, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "Characteristic 2: 1 + theta vanishes mod 2 for the odd eigenvalues -1 (mult 572) and -35 (mult 12)"}
+{"t": 55.8, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": null, "seconds": 0.079, "rank_above": 506}
+{"t": 55.8, "ev": "start", "tool": "code", "p": 17, "c": 1, "why": "1 + c*theta vanishes for theta = -1 and theta = -35 (1 - 35 = -34) over F_17"}
+{"t": 55.89, "ev": "done", "tool": "code", "p": 17, "c": 1, "rank": null, "seconds": 0.089, "rank_above": 506}
+{"t": 55.89, "ev": "start", "tool": "code", "p": 7, "c": 5, "why": "spectral pred 650"}
+{"t": 55.89, "ev": "start", "tool": "code", "p": 19, "c": 1, "why": "spectral pred 714"}
+{"t": 55.89, "ev": "start", "tool": "code", "p": 11, "c": 1, "why": "spectral pred 715"}
+{"t": 56.133, "ev": "done", "tool": "code", "p": 7, "c": 5, "rank": null, "seconds": 0.234, "rank_above": 506}
+{"t": 56.151, "ev": "done", "tool": "code", "p": 19, "c": 1, "rank": null, "seconds": 0.254, "rank_above": 506}
+{"t": 56.153, "ev": "done", "tool": "code", "p": 11, "c": 1, "rank": null, "seconds": 0.252, "rank_above": 506}
+{"t": 56.154, "ev": "event", "name": "safety_net", "plan": [{"tool": "spectral", "args": {"top": 30}, "why": "fallback"}]}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 13, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 23, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 29, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 31, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 37, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 41, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 43, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 47, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 53, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 59, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 61, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 67, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 71, "c": 1, "why": "spectral pred 715"}
+{"t": 56.154, "ev": "start", "tool": "code", "p": 73, "c": 1, "why": "spectral pred 715"}
+{"t": 56.155, "ev": "start", "tool": "code", "p": 79, "c": 1, "why": "spectral pred 715"}
+{"t": 56.155, "ev": "start", "tool": "code", "p": 83, "c": 1, "why": "spectral pred 715"}
+{"t": 56.155, "ev": "start", "tool": "code", "p": 89, "c": 1, "why": "spectral pred 715"}
+{"t": 56.155, "ev": "start", "tool": "code", "p": 97, "c": 1, "why": "spectral pred 715"}
+{"t": 56.155, "ev": "start", "tool": "code", "p": 101, "c": 1, "why": "spectral pred 715"}
+{"t": 56.155, "ev": "start", "tool": "code", "p": 103, "c": 1, "why": "spectral pred 715"}
+{"t": 56.155, "ev": "start", "tool": "code", "p": 107, "c": 1, "why": "spectral pred 715"}
+{"t": 56.155, "ev": "start", "tool": "code", "p": 109, "c": 1, "why": "spectral pred 715"}
+{"t": 56.413, "ev": "done", "tool": "code", "p": 13, "c": 1, "rank": null, "seconds": 0.252, "rank_above": 506}
+{"t": 56.425, "ev": "done", "tool": "code", "p": 23, "c": 1, "rank": null, "seconds": 0.266, "rank_above": 506}
+{"t": 56.441, "ev": "done", "tool": "code", "p": 29, "c": 1, "rank": null, "seconds": 0.277, "rank_above": 506}
+{"t": 56.664, "ev": "done", "tool": "code", "p": 31, "c": 1, "rank": null, "seconds": 0.257, "rank_above": 506}
+{"t": 56.701, "ev": "done", "tool": "code", "p": 37, "c": 1, "rank": null, "seconds": 0.27, "rank_above": 506}
+{"t": 56.705, "ev": "done", "tool": "code", "p": 41, "c": 1, "rank": null, "seconds": 0.267, "rank_above": 506}
+{"t": 56.911, "ev": "done", "tool": "code", "p": 43, "c": 1, "rank": null, "seconds": 0.246, "rank_above": 506}
+{"t": 56.965, "ev": "done", "tool": "code", "p": 47, "c": 1, "rank": null, "seconds": 0.267, "rank_above": 506}
+{"t": 56.985, "ev": "done", "tool": "code", "p": 53, "c": 1, "rank": null, "seconds": 0.266, "rank_above": 506}
+{"t": 57.16, "ev": "done", "tool": "code", "p": 59, "c": 1, "rank": null, "seconds": 0.249, "rank_above": 506}
+{"t": 57.233, "ev": "done", "tool": "code", "p": 61, "c": 1, "rank": null, "seconds": 0.255, "rank_above": 506}
+{"t": 57.256, "ev": "done", "tool": "code", "p": 67, "c": 1, "rank": null, "seconds": 0.267, "rank_above": 506}
+{"t": 57.414, "ev": "done", "tool": "code", "p": 71, "c": 1, "rank": null, "seconds": 0.253, "rank_above": 506}
+{"t": 57.497, "ev": "done", "tool": "code", "p": 73, "c": 1, "rank": null, "seconds": 0.27, "rank_above": 506}
+{"t": 57.533, "ev": "done", "tool": "code", "p": 79, "c": 1, "rank": null, "seconds": 0.272, "rank_above": 506}
+{"t": 57.673, "ev": "done", "tool": "code", "p": 83, "c": 1, "rank": null, "seconds": 0.254, "rank_above": 506}
+{"t": 57.765, "ev": "done", "tool": "code", "p": 89, "c": 1, "rank": null, "seconds": 0.267, "rank_above": 506}
+{"t": 57.813, "ev": "done", "tool": "code", "p": 97, "c": 1, "rank": null, "seconds": 0.271, "rank_above": 506}
+{"t": 57.941, "ev": "done", "tool": "code", "p": 101, "c": 1, "rank": null, "seconds": 0.264, "rank_above": 506}
+{"t": 58.047, "ev": "done", "tool": "code", "p": 103, "c": 1, "rank": null, "seconds": 0.285, "rank_above": 506}
+{"t": 58.088, "ev": "done", "tool": "code", "p": 107, "c": 1, "rank": null, "seconds": 0.275, "rank_above": 506}
+{"t": 58.12, "ev": "done", "tool": "code", "p": 109, "c": 1, "rank": null, "seconds": 0.182, "rank_above": 506}
+{"t": 58.123, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 63.327, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": ["own_rank"], "analysis": "Not certified: verdict is gap, bracket [495, 507]. Lower bound 495 is backed by a verified independent set (independent_set = true). Upper bound 507 comes from the linear code M = I + A over F_3 (code_fits = true, meets_lower = false). family_rule for K(13,5) named no field, so 31 codes were tried generically without beating 507. Against the baselines: CP-SAT alpha reached only 378 (unproven) in 120.7 s, cpsat_cover and f2_minrank_sat gave no upper bound, frac_cover gave 1287. kushagra_agent got the same bracket [495, 507] in 129.5 s; this run took 58.12 s wall, of which 54.6 s was LLM time and only 3.49 s compute, so it was faster but no more accurate. Nothing suspicious; own_rank requested to confirm the rank 507 independently."}}
+{"t": 68.354, "ev": "verdict", "verdict": "gap", "bracket": [495, 507], "checks": {"independent_set": true, "code_fits": true, "own_rank_equals_upper": true}}

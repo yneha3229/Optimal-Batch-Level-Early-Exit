@@ -1,0 +1,11 @@
+{"t": 0.001, "ev": "input", "graph": "K_20_4_s0_ctr", "receivers": 4845, "llm": "none", "family_rule": true}
+{"t": 0.013, "ev": "start", "tool": "describe"}
+{"t": 0.014, "ev": "start", "tool": "indep"}
+{"t": 0.014, "ev": "start", "tool": "cover"}
+{"t": 0.678, "ev": "done", "tool": "describe", "seconds": 0.534}
+{"t": 0.695, "ev": "board", "side": "lower", "value": 969, "tool": "greedy independent set", "bracket": [969, 4845]}
+{"t": 0.695, "ev": "summary", "summary": {"receivers": 4845, "edges": 4408950, "degree_min": 1820, "degree_max": 1820, "regular": true, "common_neighbours_adjacent": [495], "common_neighbours_nonadjacent": [715, 1001, 1365], "triangles_through_sampled_vertex": 450450, "spectrum": "not computed (N > 4000)", "seconds": 0.534}}
+{"t": 0.695, "ev": "plan_accepted", "plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []}, "critic_rounds": 0}
+{"t": 0.696, "ev": "event", "name": "checkpoint"}
+{"t": 2.507, "ev": "board", "side": "upper", "value": 1098, "tool": "clique_cover", "bracket": [969, 1098]}
+{"t": 2.528, "ev": "verdict", "verdict": "gap", "bracket": [969, 1098], "checks": {"independent_set": true, "clique_cover": true}}

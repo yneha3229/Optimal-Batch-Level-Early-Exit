@@ -1,0 +1,22 @@
+{"t": 0.001, "ev": "input", "graph": "K_13_3_s0_opus-low-full", "receivers": 286, "llm": "chat", "family_rule": true}
+{"t": 0.013, "ev": "start", "tool": "describe"}
+{"t": 0.014, "ev": "start", "tool": "indep"}
+{"t": 0.014, "ev": "start", "tool": "cover"}
+{"t": 0.033, "ev": "board", "side": "upper", "value": 78, "tool": "clique_cover", "bracket": [0, 78]}
+{"t": 0.034, "ev": "board", "side": "lower", "value": 66, "tool": "greedy independent set", "bracket": [66, 78]}
+{"t": 0.04, "ev": "done", "tool": "describe", "seconds": 0.023}
+{"t": 0.04, "ev": "summary", "summary": {"receivers": 286, "edges": 17160, "degree_min": 120, "degree_max": 120, "regular": true, "common_neighbours_adjacent": [35], "common_neighbours_nonadjacent": [56, 84], "triangles_through_sampled_vertex": 2100, "spectrum_integral": true, "eigenvalues": [[120, 1], [8, 65], [-1, 208], [-36, 12]], "distinct_eigenvalues": 4, "seconds": 0.023}}
+{"t": 0.04, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 24.757, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["receivers 286, regular degree 120 (degree_min = degree_max = 120)", "spectrum_integral true with 4 distinct eigenvalues 120, 8, -1, -36", "board lower 66, upper 78 by clique_cover"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 13, "k": 3}, "why": "tentative params; query rule for (p,c) if binomial_match confirms"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback code search"}, {"tool": "hoffman", "args": {}, "why": "information on alpha upper bound"}], "notes": "Graph is regular with integral spectrum, consistent with a vertex-transitive Kneser graph; params to be confirmed by binomial_match."}}
+{"t": 24.757, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 29.96, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 29.96, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 13, "k": 3}, "why": "tentative params; query rule for (p,c) if binomial_match confirms"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback code search"}, {"tool": "hoffman", "args": {}, "why": "information on alpha upper bound"}], "hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["receivers 286, regular degree 120 (degree_min = degree_max = 120)", "spectrum_integral true with 4 distinct eigenvalues 120, 8, -1, -36", "board lower 66, upper 78 by clique_cover"]}, "critic_rounds": 1}
+{"t": 29.96, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 13, "k": 3}]}]}
+{"t": 29.96, "ev": "rule", "tool": "family_rule", "args": {"n": 13, "k": 3}, "result": {"p": 7, "c": 1}}
+{"t": 29.963, "ev": "start", "tool": "code", "p": 7, "c": 1, "why": "family rule"}
+{"t": 29.967, "ev": "done", "tool": "code", "p": 7, "c": 1, "rank": 66, "seconds": 0.006}
+{"t": 29.967, "ev": "board", "side": "upper", "value": 66, "tool": "linear_code", "bracket": [66, 66]}
+{"t": 29.967, "ev": "event", "name": "bracket_closed", "bracket": [66, 66]}
+{"t": 29.986, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 36.691, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Proven beta = 66 for 286 receivers: independent set of size 66 (lower) meets a linear code M = I + A over F_7 of length 66 (upper); independent_set, code_fits, factorization and decoding checks all pass. One code tried, compute_s 0.05. Versus baselines: cpsat_alpha confirms alpha = 66 (0.70 s), but cpsat_cover (78, unproven, 120.5 s), frac_cover (71.5, 76.5 s) and f2_minrank_sat (no value) did not close the gap. kushagra_agent reached the same exact 66 in 0.041 s, far faster than this agent's wall_s 29.967, which is almost entirely LLM time (llm_s 29.917). Nothing suspicious, though the hypothesis listed no params and the plan's binomial_match was apparently not needed."}}
+{"t": 36.691, "ev": "verdict", "verdict": "proven", "bracket": [66, 66], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

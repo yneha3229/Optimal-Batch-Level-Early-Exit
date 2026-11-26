@@ -1,0 +1,25 @@
+{"t": 0.001, "ev": "input", "graph": "K_20_4_s0_opus-low-full", "receivers": 4845, "llm": "chat", "family_rule": true}
+{"t": 0.013, "ev": "start", "tool": "describe"}
+{"t": 0.014, "ev": "start", "tool": "indep"}
+{"t": 0.014, "ev": "start", "tool": "cover"}
+{"t": 0.507, "ev": "board", "side": "lower", "value": 969, "tool": "greedy independent set", "bracket": [969, 4845]}
+{"t": 0.518, "ev": "done", "tool": "describe", "seconds": 0.383}
+{"t": 0.518, "ev": "summary", "summary": {"receivers": 4845, "edges": 4408950, "degree_min": 1820, "degree_max": 1820, "regular": true, "common_neighbours_adjacent": [495], "common_neighbours_nonadjacent": [715, 1001, 1365], "triangles_through_sampled_vertex": 450450, "spectrum": "not computed (N > 4000)", "seconds": 0.383}}
+{"t": 0.519, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 15.726, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.6, "evidence": ["regular: degree_min = degree_max = 1820", "receivers 4845", "common_neighbours_adjacent [495], nonadjacent [715, 1001, 1365]", "greedy lower 969"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "check whether N and degree match C(n,k), C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 20, "k": 4}, "why": "query structural rule if binomial_match confirms (n,k)"}, {"tool": "spectral", "args": {"top": 5}, "why": "generic fallback"}], "notes": "Spectrum not computed; confirm parameters via binomial_match before relying on family rule."}}
+{"t": 15.726, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 19.929, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "challenge", "objections": ["check_history is empty: (n,k)=(20,4) for N=4845, degree 1820 is not yet confirmed by binomial_match", "family_rule (20,4) not yet queried"], "requested_checks": [{"tool": "binomial_match", "args": {}}, {"tool": "family_rule", "args": {"n": 20, "k": 4}}]}}
+{"t": 19.93, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 20, "k": 4}]}, {"tool": "family_rule", "args": {"n": 20, "k": 4}, "result": {"p": 2, "c": 1}}]}
+{"t": 19.93, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 25.634, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {"n": 20, "k": 4}, "confidence": 0.9, "evidence": ["binomial_match returned (n,k)=(20,4) for receivers 4845, degree 1820", "regular: degree_min = degree_max = 1820", "family_rule(20,4) names p=2, c=1"]}, "plan": [{"tool": "try_code", "args": {"p": 2, "c": 1}, "why": "family_rule names (p,c)=(2,1)"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback if bracket not closed"}], "notes": "Lower bound 969; try the rule's code first."}}
+{"t": 25.634, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 29.837, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 29.837, "ev": "plan_accepted", "plan": [{"tool": "try_code", "args": {"p": 2, "c": 1}, "why": "family_rule names (p,c)=(2,1)"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback if bracket not closed"}], "hypothesis": {"name": "Kneser", "params": {"n": 20, "k": 4}, "confidence": 0.9, "evidence": ["binomial_match returned (n,k)=(20,4) for receivers 4845, degree 1820", "regular: degree_min = degree_max = 1820", "family_rule(20,4) names p=2, c=1"]}, "critic_rounds": 2}
+{"t": 29.842, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "family_rule names (p,c)=(2,1)"}
+{"t": 29.857, "ev": "board", "side": "upper", "value": 1098, "tool": "clique_cover", "bracket": [969, 1098]}
+{"t": 31.551, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 969, "seconds": 1.712}
+{"t": 31.552, "ev": "board", "side": "upper", "value": 969, "tool": "linear_code", "bracket": [969, 969]}
+{"t": 31.552, "ev": "event", "name": "bracket_closed", "bracket": [969, 969]}
+{"t": 33.513, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 38.717, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Proven: beta = 969. Lower bound is an independent set of size 969 (checked); upper bound is a linear code M = I + A over F_2 of length 969 (code_fits, factorization, decoding all true). Versus baselines: CP-SAT alpha found 969 but unproven in 145 s; CP-SAT cover timed out; fractional cover gave 4841; F2 minrank SAT reached only lower 968. The kushagra_agent also proved 969 in 18.66 s, faster than this run's 31.55 s wall time, which is dominated by LLM time (29.31 s; compute only 2.24 s). Nothing suspicious: one code tried, matching the family rule for K(20,4); own_rank unavailable since N = 4845 > 2500."}}
+{"t": 38.717, "ev": "verdict", "verdict": "proven", "bracket": [969, 969], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

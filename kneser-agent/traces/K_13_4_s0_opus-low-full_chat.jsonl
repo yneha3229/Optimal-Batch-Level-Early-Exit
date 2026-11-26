@@ -1,0 +1,22 @@
+{"t": 0.001, "ev": "input", "graph": "K_13_4_s0_opus-low-full", "receivers": 715, "llm": "chat", "family_rule": true}
+{"t": 0.019, "ev": "start", "tool": "describe"}
+{"t": 0.019, "ev": "start", "tool": "indep"}
+{"t": 0.019, "ev": "start", "tool": "cover"}
+{"t": 0.083, "ev": "board", "side": "lower", "value": 220, "tool": "greedy independent set", "bracket": [220, 715]}
+{"t": 0.112, "ev": "board", "side": "upper", "value": 260, "tool": "clique_cover", "bracket": [220, 260]}
+{"t": 0.179, "ev": "done", "tool": "describe", "seconds": 0.145}
+{"t": 0.179, "ev": "summary", "summary": {"receivers": 715, "edges": 45045, "degree_min": 126, "degree_max": 126, "regular": true, "common_neighbours_adjacent": [5], "common_neighbours_nonadjacent": [15, 35, 70], "triangles_through_sampled_vertex": 315, "spectrum_integral": true, "eigenvalues": [[126, 1], [21, 65], [1, 429], [-6, 208], [-56, 12]], "distinct_eigenvalues": 5, "seconds": 0.145}}
+{"t": 0.18, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 23.897, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["receivers 715", "regular, degree 126", "spectrum_integral true with 5 distinct eigenvalues: 126, 21, 1, -6, -56", "board lower 220, upper 260"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 13, "k": 4}, "why": "candidate parameters to verify via binomial_match; get the structural (p,c)"}, {"tool": "spectral", "args": {"top": 4}, "why": "generic fallback in case the guess is wrong"}], "notes": "Params left unset until binomial_match confirms; family_rule args are tentative."}}
+{"t": 23.897, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 27.6, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 27.6, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 13, "k": 4}, "why": "candidate parameters to verify via binomial_match; get the structural (p,c)"}, {"tool": "spectral", "args": {"top": 4}, "why": "generic fallback in case the guess is wrong"}], "hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["receivers 715", "regular, degree 126", "spectrum_integral true with 5 distinct eigenvalues: 126, 21, 1, -6, -56", "board lower 220, upper 260"]}, "critic_rounds": 1}
+{"t": 27.6, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 13, "k": 4}]}]}
+{"t": 27.6, "ev": "rule", "tool": "family_rule", "args": {"n": 13, "k": 4}, "result": {"p": 5, "c": 4}}
+{"t": 27.6, "ev": "start", "tool": "code", "p": 5, "c": 4, "why": "family rule"}
+{"t": 27.642, "ev": "done", "tool": "code", "p": 5, "c": 4, "rank": 220, "seconds": 0.04}
+{"t": 27.642, "ev": "board", "side": "upper", "value": 220, "tool": "linear_code", "bracket": [220, 220]}
+{"t": 27.642, "ev": "event", "name": "bracket_closed", "bracket": [220, 220]}
+{"t": 27.723, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 34.428, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Proven: beta = 220. Lower bound from a verified independent set of 220; upper bound from a linear code M = I + 4A over F_5 of length 220, with code_fits, factorization and decoding checks all passing. Compute took 0.224 s, but wall time was 27.642 s, almost all LLM time (27.418 s, 2 calls). Against baselines: cpsat_alpha proved 220 only as a lower bound (12.23 s); cpsat_cover (604) and frac_cover (635) stayed far off after ~120 s; f2_minrank_sat gave lower 219 only. kushagra_agent reached the same exact 220 over F_5 in 0.279 s, about 100x faster than our wall time. That is a clear loss on time. Nothing suspicious, though the hypothesis carried no confirmed params."}}
+{"t": 34.428, "ev": "verdict", "verdict": "proven", "bracket": [220, 220], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

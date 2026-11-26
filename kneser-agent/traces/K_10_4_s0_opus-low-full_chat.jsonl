@@ -1,0 +1,87 @@
+{"t": 0.001, "ev": "input", "graph": "K_10_4_s0_opus-low-full", "receivers": 210, "llm": "chat", "family_rule": true}
+{"t": 0.012, "ev": "start", "tool": "describe"}
+{"t": 0.012, "ev": "start", "tool": "indep"}
+{"t": 0.012, "ev": "start", "tool": "cover"}
+{"t": 0.031, "ev": "board", "side": "upper", "value": 110, "tool": "clique_cover", "bracket": [0, 110]}
+{"t": 0.031, "ev": "board", "side": "lower", "value": 84, "tool": "greedy independent set", "bracket": [84, 110]}
+{"t": 0.034, "ev": "done", "tool": "describe", "seconds": 0.014}
+{"t": 0.034, "ev": "summary", "summary": {"receivers": 210, "edges": 1575, "degree_min": 15, "degree_max": 15, "regular": true, "common_neighbours_adjacent": [0], "common_neighbours_nonadjacent": [0, 1, 5], "triangles_through_sampled_vertex": 0, "spectrum_integral": true, "eigenvalues": [[15, 1], [6, 35], [1, 90], [-3, 75], [-10, 9]], "distinct_eigenvalues": 5, "seconds": 0.014}}
+{"t": 0.034, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 16.243, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["receivers 210, degree 15 regular", "spectrum integral with 5 distinct eigenvalues: 15,6,1,-3,-10", "triangles_through_sampled_vertex 0"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N=C(n,k)=210 and degree C(n-k,k)=15"}, {"tool": "family_rule", "args": {"n": 10, "k": 4}, "why": "query structural rule for likely K(10,4) once confirmed"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback code search"}, {"tool": "independent_set", "args": {"restarts": 50}, "why": "try to raise lower bound 84"}], "notes": "Lower 84, upper 110 by clique_cover. Hypothesis pending binomial_match."}}
+{"t": 16.243, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 20.946, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 20.946, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N=C(n,k)=210 and degree C(n-k,k)=15"}, {"tool": "family_rule", "args": {"n": 10, "k": 4}, "why": "query structural rule for likely K(10,4) once confirmed"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback code search"}, {"tool": "independent_set", "args": {"restarts": 50}, "why": "try to raise lower bound 84"}], "hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["receivers 210, degree 15 regular", "spectrum integral with 5 distinct eigenvalues: 15,6,1,-3,-10", "triangles_through_sampled_vertex 0"]}, "critic_rounds": 1}
+{"t": 20.946, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 10, "k": 4}]}]}
+{"t": 20.946, "ev": "rule", "tool": "family_rule", "args": {"n": 10, "k": 4}, "result": null}
+{"t": 20.954, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "spectral pred 44"}
+{"t": 20.954, "ev": "start", "tool": "code", "p": 5, "c": 4, "why": "spectral pred 85"}
+{"t": 20.954, "ev": "start", "tool": "code", "p": 11, "c": 10, "why": "spectral pred 111"}
+{"t": 20.966, "ev": "done", "tool": "code", "p": 11, "c": 10, "rank": null, "seconds": 0.005, "rank_above": 109}
+{"t": 20.97, "ev": "done", "tool": "code", "p": 5, "c": 4, "rank": null, "seconds": 0.012, "rank_above": 109}
+{"t": 20.973, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 93, "seconds": 0.025}
+{"t": 20.973, "ev": "board", "side": "upper", "value": 93, "tool": "linear_code", "bracket": [84, 93]}
+{"t": 20.973, "ev": "start", "tool": "indep"}
+{"t": 21.032, "ev": "event", "name": "checkpoint"}
+{"t": 21.032, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 36.74, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {"n": 10, "k": 4}, "confidence": 0.9, "evidence": ["binomial_match returned (n=10, k=4) for receivers 210, degree 15", "eigenvalues 15,-10,6,-3,1 with multiplicities 1,9,35,75,90", "family_rule(10,4) returned null: an exception, search generically"]}, "plan": [{"tool": "spectral", "args": {"top": 6}, "why": "generic search since family_rule named no field; skip tried (11,10),(5,4),(2,1)"}, {"tool": "try_code", "args": {"p": 3, "c": 2}, "why": "over F_3 c=2 kills eigenvalue 1 (multiplicity 90)"}, {"tool": "try_code", "args": {"p": 7, "c": 5}, "why": "over F_7 c=5 kills eigenvalues -3 and -10 (multiplicities 75+9)"}, {"tool": "independent_set", "args": {"restarts": 100}, "why": "lower bound 84 may be improvable; current upper 93 from (2,1)"}], "notes": "Bracket [84,93]. Best code (p=2,c=1) length 93."}}
+{"t": 36.746, "ev": "start", "tool": "code", "p": 7, "c": 6, "why": "spectral pred 119"}
+{"t": 36.75, "ev": "start", "tool": "code", "p": 3, "c": 2, "why": "spectral pred 120"}
+{"t": 36.75, "ev": "start", "tool": "code", "p": 13, "c": 12, "why": "spectral pred 120"}
+{"t": 36.75, "ev": "done", "tool": "code", "p": 7, "c": 6, "rank": null, "seconds": 0.004, "rank_above": 92}
+{"t": 36.754, "ev": "done", "tool": "code", "p": 3, "c": 2, "rank": null, "seconds": 0.008, "rank_above": 92}
+{"t": 36.755, "ev": "done", "tool": "code", "p": 13, "c": 12, "rank": null, "seconds": 0.005, "rank_above": 92}
+{"t": 36.755, "ev": "start", "tool": "code", "p": 7, "c": 5, "why": "over F_7 c=5 kills eigenvalues -3 and -10 (multiplicities 75+9)"}
+{"t": 36.759, "ev": "done", "tool": "code", "p": 7, "c": 5, "rank": null, "seconds": 0.004, "rank_above": 92}
+{"t": 36.76, "ev": "start", "tool": "indep"}
+{"t": 36.876, "ev": "event", "name": "safety_net", "plan": [{"tool": "spectral", "args": {"top": 30}, "why": "fallback"}]}
+{"t": 36.876, "ev": "start", "tool": "code", "p": 17, "c": 16, "why": "spectral pred 120"}
+{"t": 36.876, "ev": "start", "tool": "code", "p": 19, "c": 18, "why": "spectral pred 120"}
+{"t": 36.876, "ev": "start", "tool": "code", "p": 23, "c": 22, "why": "spectral pred 120"}
+{"t": 36.876, "ev": "start", "tool": "code", "p": 29, "c": 28, "why": "spectral pred 120"}
+{"t": 36.876, "ev": "start", "tool": "code", "p": 31, "c": 30, "why": "spectral pred 120"}
+{"t": 36.876, "ev": "start", "tool": "code", "p": 37, "c": 36, "why": "spectral pred 120"}
+{"t": 36.876, "ev": "start", "tool": "code", "p": 41, "c": 40, "why": "spectral pred 120"}
+{"t": 36.876, "ev": "start", "tool": "code", "p": 43, "c": 42, "why": "spectral pred 120"}
+{"t": 36.876, "ev": "start", "tool": "code", "p": 47, "c": 46, "why": "spectral pred 120"}
+{"t": 36.876, "ev": "start", "tool": "code", "p": 53, "c": 52, "why": "spectral pred 120"}
+{"t": 36.876, "ev": "start", "tool": "code", "p": 59, "c": 58, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 61, "c": 60, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 67, "c": 66, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 71, "c": 70, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 73, "c": 72, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 79, "c": 78, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 83, "c": 82, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 89, "c": 88, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 97, "c": 96, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 101, "c": 100, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 103, "c": 102, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 107, "c": 106, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 109, "c": 108, "why": "spectral pred 120"}
+{"t": 36.877, "ev": "start", "tool": "code", "p": 113, "c": 112, "why": "spectral pred 120"}
+{"t": 36.889, "ev": "done", "tool": "code", "p": 17, "c": 16, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.89, "ev": "done", "tool": "code", "p": 31, "c": 30, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.89, "ev": "done", "tool": "code", "p": 23, "c": 22, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.897, "ev": "done", "tool": "code", "p": 37, "c": 36, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.906, "ev": "done", "tool": "code", "p": 29, "c": 28, "rank": null, "seconds": 0.01, "rank_above": 92}
+{"t": 36.906, "ev": "done", "tool": "code", "p": 41, "c": 40, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.906, "ev": "done", "tool": "code", "p": 47, "c": 46, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.906, "ev": "done", "tool": "code", "p": 19, "c": 18, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.91, "ev": "done", "tool": "code", "p": 59, "c": 58, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.917, "ev": "done", "tool": "code", "p": 61, "c": 60, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.917, "ev": "done", "tool": "code", "p": 43, "c": 42, "rank": null, "seconds": 0.016, "rank_above": 92}
+{"t": 36.922, "ev": "done", "tool": "code", "p": 53, "c": 52, "rank": null, "seconds": 0.007, "rank_above": 92}
+{"t": 36.922, "ev": "done", "tool": "code", "p": 67, "c": 66, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.928, "ev": "done", "tool": "code", "p": 73, "c": 72, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.933, "ev": "done", "tool": "code", "p": 83, "c": 82, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.938, "ev": "done", "tool": "code", "p": 89, "c": 88, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.938, "ev": "done", "tool": "code", "p": 79, "c": 78, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.942, "ev": "done", "tool": "code", "p": 71, "c": 70, "rank": null, "seconds": 0.013, "rank_above": 92}
+{"t": 36.942, "ev": "done", "tool": "code", "p": 101, "c": 100, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.945, "ev": "done", "tool": "code", "p": 107, "c": 106, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.952, "ev": "done", "tool": "code", "p": 109, "c": 108, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.955, "ev": "done", "tool": "code", "p": 113, "c": 112, "rank": null, "seconds": 0.003, "rank_above": 92}
+{"t": 36.955, "ev": "done", "tool": "code", "p": 97, "c": 96, "rank": null, "seconds": 0.016, "rank_above": 92}
+{"t": 36.955, "ev": "done", "tool": "code", "p": 103, "c": 102, "rank": null, "seconds": 0.006, "rank_above": 92}
+{"t": 36.956, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 42.159, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Not closed: verdict gap, bracket [84, 93]. The lower bound of 84 is a checked independent set. The upper bound of 93 is a linear code over F_2 with c=1, and code_fits is true. Neither certificate is optimal, since the bounds do not meet. family_rule(10,4) named no field, so this graph is an exception to the rule, and 31 generic codes found nothing better. The kushagra_agent baseline got the same bracket [84, 93] in 120.9 s. The agent took 36.955 s of wall time, almost all of it LLM time (36.617 s), with 0.338 s of compute. CP-SAT reached alpha 84 and cover 121 without proving either. On accuracy the agent ties the best baseline and is about 3x faster. Nothing looks suspicious."}}
+{"t": 42.159, "ev": "verdict", "verdict": "gap", "bracket": [84, 93], "checks": {"independent_set": true, "code_fits": true}}

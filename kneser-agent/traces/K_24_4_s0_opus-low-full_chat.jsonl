@@ -1,0 +1,26 @@
+{"t": 0.001, "ev": "input", "graph": "K_24_4_s0_opus-low-full", "receivers": 10626, "llm": "chat", "family_rule": true}
+{"t": 0.014, "ev": "start", "tool": "describe"}
+{"t": 0.017, "ev": "start", "tool": "indep"}
+{"t": 0.017, "ev": "start", "tool": "cover"}
+{"t": 2.773, "ev": "board", "side": "lower", "value": 1771, "tool": "greedy independent set", "bracket": [1771, 10626]}
+{"t": 2.961, "ev": "done", "tool": "describe", "seconds": 2.282}
+{"t": 2.961, "ev": "summary", "summary": {"receivers": 10626, "edges": 25741485, "degree_min": 4845, "degree_max": 4845, "regular": true, "common_neighbours_adjacent": [1820], "common_neighbours_nonadjacent": [2380, 3060, 3876], "triangles_through_sampled_vertex": 4408950, "spectrum": "not computed (N > 4000)", "seconds": 2.282}}
+{"t": 2.961, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 23.178, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.6, "evidence": ["regular: degree_min = degree_max = 4845", "receivers = 10626", "common_neighbours_adjacent has a single value 1820, nonadjacent takes 3 values (2380, 3060, 3876), consistent with a Kneser-type association scheme", "board lower = 1771"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "check whether N=10626 and degree 4845 match C(n,k) and C(n-k,k) before relying on a Kneser hypothesis"}, {"tool": "spectral", "args": {"top": 4}, "why": "generic fallback code family in case the hypothesis is wrong"}, {"tool": "hoffman", "args": {}, "why": "information on the alpha upper bound"}], "notes": "family_rule will be queried with the (n,k) returned by binomial_match if a match exists."}}
+{"t": 23.179, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 26.381, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 26.381, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "check whether N=10626 and degree 4845 match C(n,k) and C(n-k,k) before relying on a Kneser hypothesis"}, {"tool": "spectral", "args": {"top": 4}, "why": "generic fallback code family in case the hypothesis is wrong"}, {"tool": "hoffman", "args": {}, "why": "information on the alpha upper bound"}], "hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.6, "evidence": ["regular: degree_min = degree_max = 4845", "receivers = 10626", "common_neighbours_adjacent has a single value 1820, nonadjacent takes 3 values (2380, 3060, 3876), consistent with a Kneser-type association scheme", "board lower = 1771"]}, "critic_rounds": 1}
+{"t": 26.382, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 24, "k": 4}]}]}
+{"t": 26.382, "ev": "checks", "results": [{"tool": "hoffman", "result": null}]}
+{"t": 26.383, "ev": "event", "name": "checkpoint"}
+{"t": 26.383, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 32.088, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {"n": 24, "k": 4}, "confidence": 0.85, "evidence": ["binomial_match returned n=24, k=4 for receivers = 10626 and degree 4845", "regular: degree_min = degree_max = 4845", "board lower = 1771"]}, "plan": [{"tool": "family_rule", "args": {"n": 24, "k": 4}, "why": "query the structural rule for K(24,4) before relying on it"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback in case the rule names no field"}], "notes": "No codes tried yet; spectral not computed in summary since N > 4000."}}
+{"t": 32.088, "ev": "rule", "tool": "family_rule", "args": {"n": 24, "k": 4}, "result": {"p": 2, "c": 1}}
+{"t": 32.089, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "family rule"}
+{"t": 32.147, "ev": "board", "side": "upper", "value": 1948, "tool": "clique_cover", "bracket": [1771, 1948]}
+{"t": 44.393, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 1771, "seconds": 12.299}
+{"t": 44.393, "ev": "board", "side": "upper", "value": 1771, "tool": "linear_code", "bracket": [1771, 1771]}
+{"t": 44.393, "ev": "event", "name": "bracket_closed", "bracket": [1771, 1771]}
+{"t": 58.667, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 64.374, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Proven: beta = 1771 for N = 10626 receivers. Lower bound is an independent set of size 1771 (check passed); upper bound is a linear code M = I + A over F_2 whose length meets 1771, with code_fits, factorization and decoding checks all passing. Only 1 code was tried, after binomial_match identified (24, 4). Wall time 44.393 s, of which llm_s 29.121 s (about two thirds) and compute_s 15.272 s; 3 LLM calls, 1 critic round. Baselines were not run, so no accuracy or time comparison can be made. Nothing suspicious, though the recorded hypothesis lacks params and keeps confidence 0.6 from the first round; own_rank is unavailable since N > 2500."}}
+{"t": 64.375, "ev": "verdict", "verdict": "proven", "bracket": [1771, 1771], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

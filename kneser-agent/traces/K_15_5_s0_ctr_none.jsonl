@@ -1,0 +1,23 @@
+{"t": 0.001, "ev": "input", "graph": "K_15_5_s0_ctr", "receivers": 3003, "llm": "none", "family_rule": true}
+{"t": 0.013, "ev": "start", "tool": "describe"}
+{"t": 0.013, "ev": "start", "tool": "indep"}
+{"t": 0.013, "ev": "start", "tool": "cover"}
+{"t": 0.304, "ev": "board", "side": "lower", "value": 1001, "tool": "greedy independent set", "bracket": [1001, 3003]}
+{"t": 2.546, "ev": "board", "side": "upper", "value": 1218, "tool": "clique_cover", "bracket": [1001, 1218]}
+{"t": 4.135, "ev": "done", "tool": "describe", "seconds": 4.075}
+{"t": 4.135, "ev": "summary", "summary": {"receivers": 3003, "edges": 378378, "degree_min": 252, "degree_max": 252, "regular": true, "common_neighbours_adjacent": [1], "common_neighbours_nonadjacent": [6, 21, 56, 126], "triangles_through_sampled_vertex": 126, "spectrum_integral": true, "eigenvalues": [[252, 1], [56, 90], [6, 910], [-1, 1638], [-21, 350], [-126, 14]], "distinct_eigenvalues": 6, "seconds": 4.075}}
+{"t": 4.135, "ev": "plan_accepted", "plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []}, "critic_rounds": 0}
+{"t": 4.151, "ev": "start", "tool": "code", "p": 7, "c": 1, "why": "spectral pred 455"}
+{"t": 4.151, "ev": "start", "tool": "code", "p": 5, "c": 1, "why": "spectral pred 1001"}
+{"t": 4.151, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "spectral pred 1015"}
+{"t": 4.151, "ev": "start", "tool": "code", "p": 3, "c": 1, "why": "spectral pred 1275"}
+{"t": 4.151, "ev": "start", "tool": "code", "p": 19, "c": 1, "why": "spectral pred 1275"}
+{"t": 4.151, "ev": "start", "tool": "code", "p": 11, "c": 1, "why": "spectral pred 1364"}
+{"t": 4.151, "ev": "start", "tool": "code", "p": 23, "c": 1, "why": "spectral pred 1364"}
+{"t": 4.151, "ev": "start", "tool": "code", "p": 13, "c": 1, "why": "spectral pred 1365"}
+{"t": 6.423, "ev": "done", "tool": "code", "p": 5, "c": 1, "rank": 1001, "seconds": 2.261}
+{"t": 6.423, "ev": "board", "side": "upper", "value": 1001, "tool": "linear_code", "bracket": [1001, 1001]}
+{"t": 6.423, "ev": "event", "name": "bracket_closed", "bracket": [1001, 1001]}
+{"t": 6.807, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": null, "seconds": 2.648, "rank_above": 1217}
+{"t": 6.807, "ev": "event", "name": "bracket_closed", "bracket": [1001, 1001]}
+{"t": 7.661, "ev": "verdict", "verdict": "proven", "bracket": [1001, 1001], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

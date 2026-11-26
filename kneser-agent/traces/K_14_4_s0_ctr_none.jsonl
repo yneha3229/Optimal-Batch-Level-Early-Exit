@@ -1,0 +1,75 @@
+{"t": 0.001, "ev": "input", "graph": "K_14_4_s0_ctr", "receivers": 1001, "llm": "none", "family_rule": true}
+{"t": 0.021, "ev": "start", "tool": "describe"}
+{"t": 0.022, "ev": "start", "tool": "indep"}
+{"t": 0.022, "ev": "start", "tool": "cover"}
+{"t": 0.099, "ev": "board", "side": "lower", "value": 286, "tool": "greedy independent set", "bracket": [286, 1001]}
+{"t": 0.148, "ev": "board", "side": "upper", "value": 344, "tool": "clique_cover", "bracket": [286, 344]}
+{"t": 0.264, "ev": "done", "tool": "describe", "seconds": 0.217}
+{"t": 0.264, "ev": "summary", "summary": {"receivers": 1001, "edges": 105105, "degree_min": 210, "degree_max": 210, "regular": true, "common_neighbours_adjacent": [15], "common_neighbours_nonadjacent": [35, 70, 126], "triangles_through_sampled_vertex": 1575, "spectrum_integral": true, "eigenvalues": [[210, 1], [28, 77], [1, 637], [-7, 273], [-84, 13]], "distinct_eigenvalues": 5, "seconds": 0.217}}
+{"t": 0.264, "ev": "plan_accepted", "plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []}, "critic_rounds": 0}
+{"t": 0.27, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "spectral pred 91"}
+{"t": 0.271, "ev": "start", "tool": "code", "p": 3, "c": 2, "why": "spectral pred 287"}
+{"t": 0.271, "ev": "start", "tool": "code", "p": 5, "c": 4, "why": "spectral pred 351"}
+{"t": 0.271, "ev": "start", "tool": "code", "p": 17, "c": 16, "why": "spectral pred 351"}
+{"t": 0.271, "ev": "start", "tool": "code", "p": 11, "c": 10, "why": "spectral pred 363"}
+{"t": 0.271, "ev": "start", "tool": "code", "p": 19, "c": 18, "why": "spectral pred 363"}
+{"t": 0.271, "ev": "start", "tool": "code", "p": 7, "c": 6, "why": "spectral pred 364"}
+{"t": 0.271, "ev": "start", "tool": "code", "p": 13, "c": 12, "why": "spectral pred 364"}
+{"t": 0.449, "ev": "done", "tool": "code", "p": 5, "c": 4, "rank": null, "seconds": 0.174, "rank_above": 343}
+{"t": 0.622, "ev": "done", "tool": "code", "p": 17, "c": 16, "rank": null, "seconds": 0.159, "rank_above": 343}
+{"t": 0.787, "ev": "done", "tool": "code", "p": 11, "c": 10, "rank": null, "seconds": 0.156, "rank_above": 343}
+{"t": 0.804, "ev": "done", "tool": "code", "p": 3, "c": 2, "rank": 287, "seconds": 0.532}
+{"t": 0.804, "ev": "board", "side": "upper", "value": 287, "tool": "linear_code", "bracket": [286, 287]}
+{"t": 0.804, "ev": "event", "name": "near_miss", "p": 3, "rank": 287}
+{"t": 0.804, "ev": "start", "tool": "code", "p": 3, "c": 1, "why": "near miss"}
+{"t": 0.886, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 299, "seconds": 0.609}
+{"t": 0.942, "ev": "done", "tool": "code", "p": 19, "c": 18, "rank": null, "seconds": 0.159, "rank_above": 343}
+{"t": 0.972, "ev": "done", "tool": "code", "p": 7, "c": 6, "rank": null, "seconds": 0.168, "rank_above": 343}
+{"t": 1.009, "ev": "done", "tool": "code", "p": 13, "c": 12, "rank": null, "seconds": 0.126, "rank_above": 343}
+{"t": 1.028, "ev": "done", "tool": "code", "p": 3, "c": 1, "rank": null, "seconds": 0.077, "rank_above": 286}
+{"t": 1.028, "ev": "event", "name": "checkpoint"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 23, "c": 22, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 29, "c": 28, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 31, "c": 30, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 37, "c": 36, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 41, "c": 40, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 43, "c": 42, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 47, "c": 46, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 53, "c": 52, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 59, "c": 58, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 61, "c": 60, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 67, "c": 66, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 71, "c": 70, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 73, "c": 72, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 79, "c": 78, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 83, "c": 82, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 89, "c": 88, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 97, "c": 96, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 101, "c": 100, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 103, "c": 102, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 107, "c": 106, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 109, "c": 108, "why": "spectral pred 364"}
+{"t": 1.029, "ev": "start", "tool": "code", "p": 113, "c": 112, "why": "spectral pred 364"}
+{"t": 1.158, "ev": "done", "tool": "code", "p": 23, "c": 22, "rank": null, "seconds": 0.128, "rank_above": 286}
+{"t": 1.167, "ev": "done", "tool": "code", "p": 29, "c": 28, "rank": null, "seconds": 0.128, "rank_above": 286}
+{"t": 1.174, "ev": "done", "tool": "code", "p": 31, "c": 30, "rank": null, "seconds": 0.135, "rank_above": 286}
+{"t": 1.335, "ev": "done", "tool": "code", "p": 37, "c": 36, "rank": null, "seconds": 0.168, "rank_above": 286}
+{"t": 1.343, "ev": "done", "tool": "code", "p": 41, "c": 40, "rank": null, "seconds": 0.168, "rank_above": 286}
+{"t": 1.355, "ev": "done", "tool": "code", "p": 43, "c": 42, "rank": null, "seconds": 0.173, "rank_above": 286}
+{"t": 1.516, "ev": "done", "tool": "code", "p": 47, "c": 46, "rank": null, "seconds": 0.183, "rank_above": 286}
+{"t": 1.531, "ev": "done", "tool": "code", "p": 53, "c": 52, "rank": null, "seconds": 0.181, "rank_above": 286}
+{"t": 1.543, "ev": "done", "tool": "code", "p": 59, "c": 58, "rank": null, "seconds": 0.185, "rank_above": 286}
+{"t": 1.667, "ev": "done", "tool": "code", "p": 61, "c": 60, "rank": null, "seconds": 0.141, "rank_above": 286}
+{"t": 1.67, "ev": "done", "tool": "code", "p": 67, "c": 66, "rank": null, "seconds": 0.144, "rank_above": 286}
+{"t": 1.687, "ev": "done", "tool": "code", "p": 71, "c": 70, "rank": null, "seconds": 0.139, "rank_above": 286}
+{"t": 1.843, "ev": "done", "tool": "code", "p": 73, "c": 72, "rank": null, "seconds": 0.177, "rank_above": 286}
+{"t": 1.851, "ev": "done", "tool": "code", "p": 79, "c": 78, "rank": null, "seconds": 0.173, "rank_above": 286}
+{"t": 1.866, "ev": "done", "tool": "code", "p": 83, "c": 82, "rank": null, "seconds": 0.171, "rank_above": 286}
+{"t": 1.996, "ev": "done", "tool": "code", "p": 89, "c": 88, "rank": null, "seconds": 0.155, "rank_above": 286}
+{"t": 2.006, "ev": "done", "tool": "code", "p": 97, "c": 96, "rank": null, "seconds": 0.155, "rank_above": 286}
+{"t": 2.018, "ev": "done", "tool": "code", "p": 101, "c": 100, "rank": null, "seconds": 0.145, "rank_above": 286}
+{"t": 2.141, "ev": "done", "tool": "code", "p": 103, "c": 102, "rank": null, "seconds": 0.145, "rank_above": 286}
+{"t": 2.151, "ev": "done", "tool": "code", "p": 107, "c": 106, "rank": null, "seconds": 0.143, "rank_above": 286}
+{"t": 2.158, "ev": "done", "tool": "code", "p": 109, "c": 108, "rank": null, "seconds": 0.142, "rank_above": 286}
+{"t": 2.2, "ev": "done", "tool": "code", "p": 113, "c": 112, "rank": null, "seconds": 0.057, "rank_above": 286}
+{"t": 2.201, "ev": "verdict", "verdict": "gap", "bracket": [286, 287], "checks": {"independent_set": true, "code_fits": true}}

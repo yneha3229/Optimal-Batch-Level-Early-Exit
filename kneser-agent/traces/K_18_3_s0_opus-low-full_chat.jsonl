@@ -1,0 +1,22 @@
+{"t": 0.001, "ev": "input", "graph": "K_18_3_s0_opus-low-full", "receivers": 816, "llm": "chat", "family_rule": true}
+{"t": 0.024, "ev": "start", "tool": "describe"}
+{"t": 0.025, "ev": "start", "tool": "indep"}
+{"t": 0.025, "ev": "start", "tool": "cover"}
+{"t": 0.08, "ev": "board", "side": "lower", "value": 136, "tool": "greedy independent set", "bracket": [136, 816]}
+{"t": 0.117, "ev": "board", "side": "upper", "value": 156, "tool": "clique_cover", "bracket": [136, 156]}
+{"t": 0.198, "ev": "done", "tool": "describe", "seconds": 0.152}
+{"t": 0.198, "ev": "summary", "summary": {"receivers": 816, "edges": 185640, "degree_min": 455, "degree_max": 455, "regular": true, "common_neighbours_adjacent": [220], "common_neighbours_nonadjacent": [286, 364], "triangles_through_sampled_vertex": 50050, "spectrum_integral": true, "eigenvalues": [[455, 1], [13, 135], [-1, 663], [-91, 17]], "distinct_eigenvalues": 4, "seconds": 0.152}}
+{"t": 0.198, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 26.922, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["regular with degree_min = degree_max = 455", "spectrum_integral true with 4 distinct eigenvalues (455, 13, -1, -91)", "receivers 816"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N=C(n,k) and degree=C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 18, "k": 3}, "why": "tentative; query the structural rule once (n,k) is confirmed"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback"}], "notes": "Kneser params to be confirmed by binomial_match; family_rule args provisional."}}
+{"t": 26.922, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 30.629, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 30.63, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N=C(n,k) and degree=C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 18, "k": 3}, "why": "tentative; query the structural rule once (n,k) is confirmed"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback"}], "hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["regular with degree_min = degree_max = 455", "spectrum_integral true with 4 distinct eigenvalues (455, 13, -1, -91)", "receivers 816"]}, "critic_rounds": 1}
+{"t": 30.631, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 18, "k": 3}]}]}
+{"t": 30.631, "ev": "rule", "tool": "family_rule", "args": {"n": 18, "k": 3}, "result": {"p": 2, "c": 1}}
+{"t": 30.637, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "family rule"}
+{"t": 30.78, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 136, "seconds": 0.139}
+{"t": 30.78, "ev": "board", "side": "upper", "value": 136, "tool": "linear_code", "bracket": [136, 136]}
+{"t": 30.78, "ev": "event", "name": "bracket_closed", "bracket": [136, 136]}
+{"t": 31.092, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 37.804, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Proven: beta = 136. Lower bound is an independent set of size 136 (check passed); upper bound is a linear code M = I + A over F_2 of length 136, with fit, factorization and decoding checks all passing. Baselines: CP-SAT alpha also proves 136 (8.17 s), CP-SAT/fractional covers stall at 431/411 unproven after ~121 s, F2 minrank SAT only reaches 135. The kushagra_agent baseline reached the same exact result in 0.30 s, versus this agent's 30.78 s wall time, almost all LLM time (30.43 s; compute 0.353 s). So accuracy ties the best baseline but time is about 100x worse. Note the hypothesis left params empty; nothing else suspicious."}}
+{"t": 37.804, "ev": "verdict", "verdict": "proven", "bracket": [136, 136], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
