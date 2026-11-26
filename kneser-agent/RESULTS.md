@@ -71,72 +71,73 @@ reports "GPU requires reset", which blocks CUDA machine-wide until an admin rese
 - agent + Qwen 32B vs Kushagra's script, both exact (14 graphs): median time ratio x0.92 (min x0.05, max x2.11; > 1 = the agent is faster; agent time = compute time without LLM seconds)
 - agent + Qwen 32B vs Kushagra's script, LLM seconds included, both exact (14 graphs): median time ratio x0.01 (min x0.00, max x0.15; > 1 = the agent is faster)
 - agent + Qwen 32B vs standard methods, both exact (2 graphs): median time ratio x159.77 (min x130.91, max x188.63; > 1 = the agent is faster; agent time = compute time without LLM seconds)
-- agent, no LLM vs Kushagra's script, both exact (14 graphs): median time ratio x0.61 (min x0.12, max x1.48; > 1 = the agent is faster)
-- agent, no LLM vs standard methods, both exact (2 graphs): median time ratio x134.64 (min x108.69, max x160.58; > 1 = the agent is faster)
+- agent, no LLM vs Kushagra's script, both exact (14 graphs): median time ratio x0.66 (min x0.25, max x1.26; > 1 = the agent is faster)
+- agent, no LLM vs standard methods, both exact (2 graphs): median time ratio x282.00 (min x189.17, max x374.84; > 1 = the agent is faster)
 - agent, no LLM, fast path vs Kushagra's script, both exact (14 graphs): median time ratio x0.34 (min x0.02, max x1.52; > 1 = the agent is faster)
 - agent, no LLM, fast path vs standard methods, both exact (2 graphs): median time ratio x331.80 (min x213.79, max x449.81; > 1 = the agent is faster)
 - agent + Qwen 32B: 40 runs (both rule settings); LLM seconds per run median 43.0 (max 56.3); LLM calls 296; invalid replies 14 of 336 requests, fallbacks to the default 2; Critic challenges 110; safety net ran in 13 runs
   - family guess vs bench/truth.json: first Solver reply right in 2/40, final plan right in 27/40 (wrong -> right during the dialogue: 25; right -> wrong: 0)
-  - rule allowed vs no LLM: proven only with the LLM: none; only without: none; both proven (14): no-LLM wall / LLM-run compute time, median x1.05 (> 1 = the LLM run computes less)
-  - generic only vs no LLM: proven only with the LLM: none; only without: none; both proven (14): no-LLM wall / LLM-run compute time, median x0.93 (> 1 = the LLM run computes less)
+  - rule allowed vs no LLM: proven only with the LLM: none; only without: none; both proven (14): no-LLM wall / LLM-run compute time, median x0.86 (> 1 = the LLM run computes less)
+  - generic only vs no LLM: proven only with the LLM: none; only without: none; both proven (14): no-LLM wall / LLM-run compute time, median x0.83 (> 1 = the LLM run computes less)
 
 ### Every loss of an agent run (rule allowed) to a baseline
 
-- K(21,2) | agent, no LLM: slower than Kushagra's script (0.10 s vs 0.03 s)
+- K(21,2) | agent, no LLM: slower than Kushagra's script (0.12 s vs 0.03 s)
 - K(21,2) | agent, no LLM, fast path: slower than Kushagra's script (0.14 s vs 0.03 s)
 - K(21,2) | agent + Qwen 32B: slower than Kushagra's script (0.14 s vs 0.03 s)
-- K(29,2) | agent, no LLM: slower than Kushagra's script (0.23 s vs 0.07 s)
+- K(29,2) | agent, no LLM: slower than Kushagra's script (0.11 s vs 0.07 s)
 - K(29,2) | agent, no LLM, fast path: slower than Kushagra's script (0.23 s vs 0.07 s)
 - K(29,2) | agent + Qwen 32B: slower than Kushagra's script (1.51 s vs 0.07 s)
 - K(40,2) | agent + Qwen 32B: slower than Kushagra's script (0.28 s vs 0.24 s)
-- K(53,2) | agent, no LLM: slower than Kushagra's script (1.27 s vs 0.68 s)
+- K(53,2) | agent, no LLM: slower than Kushagra's script (1.20 s vs 0.68 s)
 - K(53,2) | agent + Qwen 32B: slower than Kushagra's script (1.45 s vs 0.68 s)
-- K(12,3) | agent, no LLM: slower than Kushagra's script (0.27 s vs 0.03 s)
+- K(12,3) | agent, no LLM: slower than Kushagra's script (0.08 s vs 0.03 s)
 - K(12,3) | agent, no LLM, fast path: slower than Kushagra's script (0.07 s vs 0.03 s)
 - K(12,3) | agent + Qwen 32B: slower than Kushagra's script (0.15 s vs 0.03 s)
-- K(13,3) | agent, no LLM: slower than Kushagra's script (0.16 s vs 0.04 s)
+- K(13,3) | agent, no LLM: slower than Kushagra's script (0.11 s vs 0.04 s)
 - K(13,3) | agent, no LLM, fast path: slower than Kushagra's script (1.03 s vs 0.04 s)
 - K(13,3) | agent + Qwen 32B: slower than Kushagra's script (0.13 s vs 0.04 s)
-- K(16,3) | agent, no LLM: slower than Kushagra's script (0.47 s vs 0.13 s)
+- K(16,3) | agent, no LLM: slower than Kushagra's script (0.20 s vs 0.13 s)
 - K(16,3) | agent, no LLM, fast path: slower than Kushagra's script (7.77 s vs 0.13 s)
 - K(16,3) | agent + Qwen 32B: slower than Kushagra's script (0.23 s vs 0.13 s)
 - K(18,3) | agent, no LLM, fast path: slower than Kushagra's script (1.29 s vs 0.30 s)
 - K(21,3) | agent, no LLM, fast path: slower than Kushagra's script (2.06 s vs 0.71 s)
 - K(21,3) | agent + Qwen 32B: slower than Kushagra's script (0.72 s vs 0.71 s)
-- K(13,4) | agent, no LLM: slower than Kushagra's script (0.61 s vs 0.28 s)
 - K(13,4) | agent, no LLM, fast path: slower than Kushagra's script (0.31 s vs 0.28 s)
-- K(15,4) | agent, no LLM: slower than Kushagra's script (1.17 s vs 0.80 s)
+- K(15,4) | agent, no LLM: slower than Kushagra's script (1.54 s vs 0.80 s)
 - K(15,4) | agent, no LLM, fast path: slower than Kushagra's script (2.31 s vs 0.80 s)
 - K(16,4) | agent, no LLM, fast path: slower than Kushagra's script (1.94 s vs 1.90 s)
+- K(17,4) | agent, no LLM: slower than Kushagra's script (2.98 s vs 2.32 s)
+- K(15,5) | agent, no LLM: slower than Kushagra's script (6.81 s vs 4.38 s)
 - K(15,5) | agent, no LLM, fast path: slower than Kushagra's script (52.98 s vs 4.38 s)
 
 ## Per-graph results
 
 | graph | receivers | standard methods | time | Kushagra's script | time | agent, no LLM | time | agent, no LLM, fast path | time | agent + Qwen 32B (rule) | time | agent + Qwen 32B (generic only) | time |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| K(21,2) | 210 | [20, 21] | open | **20** | 0.03 s | **20** | 0.10 s | **20** | 0.14 s | **20** | 27.20 s (0.14) | **20** | 49.98 s (0.17) |
-| K(29,2) | 406 | [28, 29] | open | **28** | 0.07 s | **28** | 0.23 s | **28** | 0.23 s | **28** | 43.86 s (1.51) | **28** | 41.69 s (1.27) |
-| K(40,2) | 780 | **39** | 36.13 s | **39** | 0.24 s | **39** | 0.23 s | **39** | 0.17 s | **39** | 38.38 s (0.28) | **39** | 48.69 s (0.15) |
-| K(53,2) | 1378 | [52, 59.98] | open | **52** | 0.68 s | **52** | 1.27 s | **52** | 0.45 s | **52** | 55.38 s (1.45) | **52** | 42.11 s (1.04) |
-| K(12,3) | 220 | **55** | 29.24 s | **55** | 0.03 s | **55** | 0.27 s | **55** | 0.07 s | **55** | 43.74 s (0.15) | **55** | 41.77 s (0.14) |
-| K(13,3) | 286 | [66, 71.5] | open | **66** | 0.04 s | **66** | 0.16 s | **66** | 1.03 s | **66** | 42.39 s (0.13) | **66** | 35.81 s (0.10) |
-| K(16,3) | 560 | [105, 160] | open | **105** | 0.13 s | **105** | 0.47 s | **105** | 7.77 s | **105** | 28.98 s (0.23) | **105** | 41.96 s (0.36) |
-| K(18,3) | 816 | [136, 411] | open | **136** | 0.30 s | **136** | 0.23 s | **136** | 1.29 s | **136** | 44.33 s (0.27) | **136** | 40.15 s (0.45) |
-| K(21,3) | 1330 | [190, 1152] | open | **190** | 0.71 s | **190** | 0.50 s | **190** | 2.06 s | **190** | 40.44 s (0.72) | **190** | 37.45 s (0.64) |
-| K(13,4) | 715 | [220, 604] | open | **220** | 0.28 s | **220** | 0.61 s | **220** | 0.31 s | **220** | 30.15 s (0.25) | **220** | 48.80 s (0.38) |
-| K(15,4) | 1365 | [364, 1341] | open | **364** | 0.80 s | **364** | 1.17 s | **364** | 2.31 s | **364** | 29.54 s (0.52) | **364** | 50.27 s (1.95) |
-| K(16,4) | 1820 | [455, 1800] | open | **455** | 1.90 s | **455** | 1.28 s | **455** | 1.94 s | **455** | 52.97 s (0.90) | **455** | 47.33 s (1.31) |
-| K(17,4) | 2380 | [560, 2368] | open | **560** | 2.32 s | **560** | 1.68 s | **560** | 1.95 s | **560** | 40.86 s (1.90) | **560** | 49.09 s (1.99) |
-| K(15,5) | 3003 | [1001, 3003] | open | **1001** | 4.38 s | **1001** | 3.62 s | **1001** | 52.98 s | **1001** | 28.52 s (2.88) | **1001** | 40.47 s (4.10) |
-| K(10,4) (exception) | 210 | [84, 121] | open | [84, 93] | not exact | [84, 93] | 0.34 s | [84, 93] | 0.33 s | [84, 93] | 39.02 s (0.51) | [84, 93] | 48.69 s (0.52) |
-| K(14,4) (exception) | 1001 | [286, 961] | open | [286, 287] | not exact | [286, 287] | 2.08 s | [286, 287] | 2.50 s | [286, 287] | 58.70 s (2.36) | [286, 287] | 28.68 s (2.37) |
-| K(13,5) (exception) | 1287 | [378, 1287] | open | [495, 507] | not exact | [495, 507] | 3.15 s | [495, 507] | 4.30 s | [495, 507] | 58.76 s (3.44) | [495, 507] | 47.40 s (3.44) |
-| K(16,4)-del0.01 (control) | 1820 | [455, 1800] | open | [0, 1818] | not exact | [455, 534] | 0.52 s | [455, 534] | 0.84 s | [455, 534] | 45.06 s (1.21) | [455, 534] | 51.84 s (0.66) |
+| K(21,2) | 210 | [20, 21] | open | **20** | 0.03 s | **20** | 0.12 s | **20** | 0.14 s | **20** | 27.20 s (0.14) | **20** | 49.98 s (0.17) |
+| K(29,2) | 406 | [28, 29] | open | **28** | 0.07 s | **28** | 0.11 s | **28** | 0.23 s | **28** | 43.86 s (1.51) | **28** | 41.69 s (1.27) |
+| K(40,2) | 780 | **39** | 36.13 s | **39** | 0.24 s | **39** | 0.19 s | **39** | 0.17 s | **39** | 38.38 s (0.28) | **39** | 48.69 s (0.15) |
+| K(53,2) | 1378 | [52, 59.98] | open | **52** | 0.68 s | **52** | 1.20 s | **52** | 0.45 s | **52** | 55.38 s (1.45) | **52** | 42.11 s (1.04) |
+| K(12,3) | 220 | **55** | 29.24 s | **55** | 0.03 s | **55** | 0.08 s | **55** | 0.07 s | **55** | 43.74 s (0.15) | **55** | 41.77 s (0.14) |
+| K(13,3) | 286 | [66, 71.5] | open | **66** | 0.04 s | **66** | 0.11 s | **66** | 1.03 s | **66** | 42.39 s (0.13) | **66** | 35.81 s (0.10) |
+| K(16,3) | 560 | [105, 160] | open | **105** | 0.13 s | **105** | 0.20 s | **105** | 7.77 s | **105** | 28.98 s (0.23) | **105** | 41.96 s (0.36) |
+| K(18,3) | 816 | [136, 411] | open | **136** | 0.30 s | **136** | 0.29 s | **136** | 1.29 s | **136** | 44.33 s (0.27) | **136** | 40.15 s (0.45) |
+| K(21,3) | 1330 | [190, 1152] | open | **190** | 0.71 s | **190** | 0.56 s | **190** | 2.06 s | **190** | 40.44 s (0.72) | **190** | 37.45 s (0.64) |
+| K(13,4) | 715 | [220, 604] | open | **220** | 0.28 s | **220** | 0.27 s | **220** | 0.31 s | **220** | 30.15 s (0.25) | **220** | 48.80 s (0.38) |
+| K(15,4) | 1365 | [364, 1341] | open | **364** | 0.80 s | **364** | 1.54 s | **364** | 2.31 s | **364** | 29.54 s (0.52) | **364** | 50.27 s (1.95) |
+| K(16,4) | 1820 | [455, 1800] | open | **455** | 1.90 s | **455** | 1.58 s | **455** | 1.94 s | **455** | 52.97 s (0.90) | **455** | 47.33 s (1.31) |
+| K(17,4) | 2380 | [560, 2368] | open | **560** | 2.32 s | **560** | 2.98 s | **560** | 1.95 s | **560** | 40.86 s (1.90) | **560** | 49.09 s (1.99) |
+| K(15,5) | 3003 | [1001, 3003] | open | **1001** | 4.38 s | **1001** | 6.81 s | **1001** | 52.98 s | **1001** | 28.52 s (2.88) | **1001** | 40.47 s (4.10) |
+| K(10,4) (exception) | 210 | [84, 121] | open | [84, 93] | not exact | [84, 93] | 0.15 s | [84, 93] | 0.33 s | [84, 93] | 39.02 s (0.51) | [84, 93] | 48.69 s (0.52) |
+| K(14,4) (exception) | 1001 | [286, 961] | open | [286, 287] | not exact | [286, 287] | 2.20 s | [286, 287] | 2.50 s | [286, 287] | 58.70 s (2.36) | [286, 287] | 28.68 s (2.37) |
+| K(13,5) (exception) | 1287 | [378, 1287] | open | [495, 507] | not exact | [495, 507] | 4.15 s | [495, 507] | 4.30 s | [495, 507] | 58.76 s (3.44) | [495, 507] | 47.40 s (3.44) |
+| K(16,4)-del0.01 (control) | 1820 | [455, 1800] | open | [0, 1818] | not exact | [455, 534] | 0.80 s | [455, 534] | 0.84 s | [455, 534] | 45.06 s (1.21) | [455, 534] | 51.84 s (0.66) |
 | K(18,3)-del0.01 (control) | 816 | [136, 433] | open | [136, 732] | not exact | [136, 152] | 0.12 s | [136, 152] | 0.15 s | [136, 152] | 49.73 s (0.45) | [136, 152] | 50.00 s (0.44) |
-| reg(1000,6) (control) | 1000 | [294, 994] | open | [293, 998] | not exact | [327, 537] | 0.16 s | [327, 537] | 0.22 s | [332, 537] | 53.88 s (0.59) | [332, 537] | 51.76 s (0.60) |
-| K(20,4) (large) | 4845 | [969, 4841] | open | **969** | 18.66 s | [969, 1098] | 2.38 s | **969** | 5.64 s | **969** | 40.27 s (2.25) | [969, 1098] | 45.05 s (0.35) |
-| K(17,5) (large) | 6188 | [1491, 6188] | open | **1820** | 22.98 s | [1820, 2106] | 11.35 s | **1820** | 25.18 s | **1820** | 44.15 s (4.53) | [1820, 2106] | 97.28 s (53.14) |
-| K(23,4) (large) | 8855 | [-, 8855] | open | **1540** | 41.62 s | [1540, 1789] | 15.73 s | **1540** | 35.78 s | **1540** | 40.85 s (8.04) | [1540, 1771] | 111.55 s (66.54) |
+| reg(1000,6) (control) | 1000 | [294, 994] | open | [293, 998] | not exact | [327, 537] | 0.19 s | [327, 537] | 0.22 s | [332, 537] | 53.88 s (0.59) | [332, 537] | 51.76 s (0.60) |
+| K(20,4) (large) | 4845 | [969, 4841] | open | **969** | 18.66 s | [969, 1098] | 2.51 s | **969** | 5.64 s | **969** | 40.27 s (2.25) | [969, 1098] | 45.05 s (0.35) |
+| K(17,5) (large) | 6188 | [1491, 6188] | open | **1820** | 22.98 s | [1820, 2106] | 9.73 s | **1820** | 25.18 s | **1820** | 44.15 s (4.53) | [1820, 2106] | 97.28 s (53.14) |
+| K(23,4) (large) | 8855 | [-, 8855] | open | **1540** | 41.62 s | [1540, 1789] | 14.94 s | **1540** | 35.78 s | **1540** | 40.85 s (8.04) | [1540, 1771] | 111.55 s (66.54) |
 
 ## Model ablation: blind agents on the three reference cases (bench/ablation/)
 
@@ -358,3 +359,103 @@ llm = chat: an assistant answered as the agents through the file-based chat back
 | K_16_4-del0.01_s1 | Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu | v4 | yes | gap | [455, 534] | 6311.7 s | 6278.4 | 33.23 s | 8 | 0 | 3 | perturbed Kneser {} | kneser with deleted edges 16,4 |
 | K_14_4_s1 | Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu | v4 | yes | gap | [286, 287] | 6537.8 s | 6508.5 | 29.30 s | 8 | 0 | 3 | perturbed Kneser {'n': 14, 'k': 4} | kneser 14,4 |
 | reg_1000_6_s1 | Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu | v4 | yes | gap | [333, 537] | 6705.9 s | 6678.5 | 27.33 s | 10 | 2 | 3 | none {} | random regular , |
+| K_21_2_s0_opus-low-full | chat | v4 | yes | proven | [20, 20] | 31.0 s | 30.9 | 0.04 s | 2 | 0 | 0 | Kneser {'n': 21, 'k': 2} | kneser 21,2 |
+| K_21_2_s0_opus-med-full | chat | v4 | yes | proven | [20, 20] | 38.5 s | 38.4 | 0.06 s | 2 | 0 | 0 | Kneser K(n,2) (to be confirmed by binomial_match) {'n': 21, 'k': 2} | kneser 21,2 |
+| K_21_2_s0_sonnet-med-full | chat | v4 | yes | proven | [20, 20] | 31.0 s | 30.9 | 0.04 s | 2 | 0 | 0 | Kneser {'n': 21, 'k': 2} | kneser 21,2 |
+| K_21_2_s0_opus-high-full | chat | v4 | yes | proven | [20, 20] | 38.5 s | 38.4 | 0.05 s | 2 | 0 | 0 | Kneser {'n': 21, 'k': 2} | kneser 21,2 |
+| K_29_2_s0_opus-low-full | chat | v4 | yes | proven | [28, 28] | 44.9 s | 44.8 | 0.06 s | 4 | 0 | 1 | Kneser {'n': 29, 'k': 2} | kneser 29,2 |
+| K_29_2_s0_sonnet-med-full | chat | v4 | yes | proven | [28, 28] | 30.0 s | 29.9 | 0.07 s | 2 | 0 | 0 | Kneser {'n': 29, 'k': 2} | kneser 29,2 |
+| K_29_2_s0_opus-med-full | chat | v4 | yes | proven | [28, 28] | 43.0 s | 42.9 | 0.06 s | 2 | 0 | 0 | Kneser K(n,2) (to be confirmed by binomial_match) {} | kneser 29,2 |
+| K_29_2_s0_opus-high-full | chat | v4 | yes | proven | [28, 28] | 38.5 s | 38.4 | 0.07 s | 2 | 0 | 0 | Kneser graph K(n,2) (to be confirmed by binomial_match) {} | kneser 29,2 |
+| K_40_2_s0_opus-low-full | chat | v4 | yes | proven | [39, 39] | 22.5 s | 22.4 | 0.12 s | 2 | 0 | 0 | Kneser {} | kneser 40,2 |
+| K_40_2_s0_opus-med-full | chat | v4 | yes | proven | [39, 39] | 24.5 s | 24.4 | 0.13 s | 2 | 0 | 0 | Kneser K(n,2) {'n': 40, 'k': 2} | kneser 40,2 |
+| K_40_2_s0_opus-high-full | chat | v4 | yes | proven | [39, 39] | 39.3 s | 39.1 | 0.14 s | 3 | 1 | 0 | Kneser {'n': 40, 'k': 2} | kneser 40,2 |
+| K_40_2_s0_sonnet-med-full | chat | v4 | yes | proven | [39, 39] | 25.9 s | 25.8 | 0.13 s | 4 | 0 | 1 | Kneser {'n': 40, 'k': 2} | kneser 40,2 |
+| K_53_2_s0_opus-low-full | chat | v4 | yes | proven | [52, 52] | 24.3 s | 23.9 | 0.43 s | 2 | 0 | 0 | Kneser {} | kneser 53,2 |
+| K_53_2_s0_opus-med-full | chat | v4 | yes | proven | [52, 52] | 36.8 s | 36.4 | 0.37 s | 2 | 0 | 0 | Kneser K(n,2) (complement of triangular graph) {'k': 2} | kneser 53,2 |
+| K_53_2_s0_opus-high-full | chat | v4 | yes | proven | [52, 52] | 38.3 s | 37.9 | 0.39 s | 2 | 0 | 0 | Kneser K(n,2) (to be confirmed by binomial_match) {'n': 53, 'k': 2} | kneser 53,2 |
+| K_53_2_s0_sonnet-med-full | chat | v4 | yes | proven | [52, 52] | 27.4 s | 26.9 | 0.47 s | 2 | 0 | 0 | Kneser {'n': 53, 'k': 2} | kneser 53,2 |
+| K_12_3_s0_opus-low-full | chat | v4 | yes | proven | [55, 55] | 37.5 s | 37.4 | 0.05 s | 2 | 0 | 0 | Kneser {} | kneser 12,3 |
+| K_12_3_s0_opus-med-full | chat | v4 | yes | proven | [55, 55] | 37.5 s | 37.4 | 0.04 s | 2 | 0 | 0 | Kneser {'n': 12, 'k': 3} | kneser 12,3 |
+| K_12_3_s0_opus-high-full | chat | v4 | yes | proven | [55, 55] | 35.0 s | 34.9 | 0.04 s | 2 | 0 | 0 | Kneser {'n': 12, 'k': 3} | kneser 12,3 |
+| K_12_3_s0_sonnet-med-full | chat | v4 | yes | proven | [55, 55] | 31.4 s | 31.3 | 0.04 s | 4 | 0 | 1 | Kneser {'n': 12, 'k': 3} | kneser 12,3 |
+| K_13_3_s0_opus-low-full | chat | v4 | yes | proven | [66, 66] | 30.0 s | 29.9 | 0.05 s | 2 | 0 | 0 | Kneser {} | kneser 13,3 |
+| K_13_3_s0_opus-med-full | chat | v4 | yes | proven | [66, 66] | 29.5 s | 29.4 | 0.05 s | 2 | 0 | 0 | Kneser {} | kneser 13,3 |
+| K_13_3_s0_opus-high-full | chat | v4 | yes | proven | [66, 66] | 32.5 s | 32.4 | 0.05 s | 2 | 0 | 0 | Kneser graph K(n,k) {'n': 13, 'k': 3} | kneser 13,3 |
+| K_16_3_s0_opus-low-full | chat | v4 | yes | proven | [105, 105] | 25.5 s | 25.4 | 0.10 s | 2 | 0 | 0 | Kneser {} | kneser 16,3 |
+| K_13_3_s0_sonnet-med-full | chat | v4 | yes | proven | [66, 66] | 39.4 s | 39.3 | 0.06 s | 4 | 0 | 1 | Kneser {'n': 13, 'k': 3} | kneser 13,3 |
+| K_16_3_s0_opus-med-full | chat | v4 | yes | proven | [105, 105] | 30.5 s | 30.4 | 0.11 s | 2 | 0 | 0 | Kneser {'n': 16, 'k': 3} | kneser 16,3 |
+| K_16_3_s0_sonnet-med-full | chat | v4 | yes | proven | [105, 105] | 30.1 s | 29.9 | 0.14 s | 2 | 0 | 0 | Kneser {'n': 16, 'k': 3} | kneser 16,3 |
+| K_16_3_s0_opus-high-full | chat | v4 | yes | proven | [105, 105] | 37.1 s | 36.9 | 0.15 s | 2 | 0 | 0 | Kneser {'n': 16, 'k': 3} | kneser 16,3 |
+| K_18_3_s0_opus-low-full | chat | v4 | yes | proven | [136, 136] | 30.8 s | 30.4 | 0.35 s | 2 | 0 | 0 | Kneser {} | kneser 18,3 |
+| K_18_3_s0_opus-med-full | chat | v4 | yes | proven | [136, 136] | 35.5 s | 35.1 | 0.34 s | 3 | 1 | 0 | Kneser {'n': 18, 'k': 3} | kneser 18,3 |
+| K_18_3_s0_opus-high-full | chat | v4 | yes | proven | [136, 136] | 32.6 s | 32.4 | 0.21 s | 2 | 0 | 0 | Kneser K(n,k) {'n': 18, 'k': 3} | kneser 18,3 |
+| K_21_3_s0_opus-low-full | chat | v4 | yes | proven | [190, 190] | 31.0 s | 30.4 | 0.58 s | 2 | 0 | 0 | Kneser {} | kneser 21,3 |
+| K_18_3_s0_sonnet-med-full | chat | v4 | yes | proven | [136, 136] | 37.7 s | 37.4 | 0.27 s | 2 | 0 | 0 | Kneser graph K(n,k) {'n': 18, 'k': 3} | kneser 18,3 |
+| K_21_3_s0_opus-med-full | chat | v4 | yes | proven | [190, 190] | 35.9 s | 35.4 | 0.51 s | 2 | 0 | 0 | Kneser graph K(n,k) (to be confirmed by binomial_match) {} | kneser 21,3 |
+| K_21_3_s0_sonnet-med-full | chat | v4 | yes | proven | [190, 190] | 34.9 s | 34.4 | 0.52 s | 2 | 0 | 0 | Kneser {'n': 21, 'k': 3} | kneser 21,3 |
+| K_13_4_s0_opus-low-full | chat | v4 | yes | proven | [220, 220] | 27.6 s | 27.4 | 0.22 s | 2 | 0 | 0 | Kneser {} | kneser 13,4 |
+| K_21_3_s0_opus-high-full | chat | v4 | yes | proven | [190, 190] | 49.0 s | 48.4 | 0.57 s | 2 | 0 | 0 | Kneser K(n,k) {'n': 21, 'k': 3} | kneser 21,3 |
+| K_13_4_s0_opus-med-full | chat | v4 | yes | proven | [220, 220] | 44.1 s | 43.9 | 0.13 s | 2 | 0 | 0 | Kneser {} | kneser 13,4 |
+| K_13_4_s0_sonnet-med-full | chat | v4 | yes | proven | [220, 220] | 39.0 s | 38.8 | 0.16 s | 4 | 0 | 1 | Kneser {'n': 13, 'k': 4} | kneser 13,4 |
+| K_13_4_s0_opus-high-full | chat | v4 | yes | proven | [220, 220] | 41.6 s | 41.4 | 0.16 s | 2 | 0 | 0 | Kneser K(n,k) (to be confirmed by binomial_match) {'n': 13, 'k': 4} | kneser 13,4 |
+| K_15_4_s0_opus-low-full | chat | v4 | yes | proven | [364, 364] | 40.5 s | 39.9 | 0.54 s | 2 | 0 | 0 | Kneser {} | kneser 15,4 |
+| K_15_4_s0_opus-high-full | chat | v4 | yes | proven | [364, 364] | 33.5 s | 32.9 | 0.54 s | 2 | 0 | 0 | Kneser graph (tentative, pending binomial_match) {} | kneser 15,4 |
+| K_15_4_s0_opus-med-full | chat | v4 | yes | proven | [364, 364] | 44.2 s | 43.6 | 0.53 s | 3 | 1 | 0 | Kneser {'n': 15, 'k': 4} | kneser 15,4 |
+| K_16_4_s0_opus-med-full | chat | v4 | yes | proven | [455, 455] | 31.4 s | 30.4 | 0.99 s | 2 | 0 | 0 | Kneser {'n': 16, 'k': 4} | kneser 16,4 |
+| K_15_4_s0_sonnet-med-full | chat | v4 | yes | proven | [364, 364] | 50.9 s | 50.3 | 0.53 s | 4 | 0 | 1 | Kneser {'n': 15, 'k': 4} | kneser 15,4 |
+| K_16_4_s0_opus-low-full | chat | v4 | yes | proven | [455, 455] | 44.4 s | 43.3 | 1.04 s | 4 | 0 | 1 | Kneser {'n': 16, 'k': 4} | kneser 16,4 |
+| K_16_4_s0_sonnet-med-full | chat | v4 | yes | proven | [455, 455] | 31.5 s | 30.4 | 1.08 s | 2 | 0 | 0 | Kneser {'n': 16, 'k': 4} | kneser 16,4 |
+| K_17_4_s0_opus-low-full | chat | v4 | yes | proven | [560, 560] | 28.7 s | 26.9 | 1.78 s | 2 | 0 | 0 | Kneser {} | kneser 17,4 |
+| K_16_4_s0_opus-high-full | chat | v4 | yes | proven | [455, 455] | 48.9 s | 47.9 | 0.94 s | 2 | 0 | 0 | Kneser graph K(n,k) {'n': 16, 'k': 4} | kneser 16,4 |
+| K_17_4_s0_opus-med-full | chat | v4 | yes | proven | [560, 560] | 29.3 s | 27.4 | 1.85 s | 2 | 0 | 0 | Kneser {} | kneser 17,4 |
+| K_17_4_s0_opus-high-full | chat | v4 | yes | proven | [560, 560] | 33.2 s | 31.4 | 1.82 s | 2 | 0 | 0 | Kneser graph K(n,k) (parameters to be confirmed by binomial_match) {} | kneser 17,4 |
+| K_17_4_s0_sonnet-med-full | chat | v4 | yes | proven | [560, 560] | 30.7 s | 28.8 | 1.91 s | 4 | 0 | 1 | Kneser graph K(n,k) {'n': 17, 'k': 4} | kneser 17,4 |
+| K_15_5_s0_opus-low-full | chat | v4 | yes | proven | [1001, 1001] | 21.4 s | 17.4 | 4.00 s | 2 | 0 | 0 | Kneser {} | kneser 15,5 |
+| K_15_5_s0_opus-med-full | chat | v4 | yes | proven | [1001, 1001] | 26.0 s | 21.9 | 4.09 s | 2 | 0 | 0 | Kneser {} | kneser 15,5 |
+| K_15_5_s0_opus-high-full | chat | v4 | yes | proven | [1001, 1001] | 28.9 s | 24.9 | 3.97 s | 2 | 0 | 0 | Kneser {'n': 15, 'k': 5} | kneser 15,5 |
+| K_15_5_s0_sonnet-med-full | chat | v4 | yes | proven | [1001, 1001] | 22.0 s | 17.9 | 4.09 s | 2 | 0 | 0 | Kneser {'n': 15, 'k': 5} | kneser 15,5 |
+| K_10_4_s0_opus-low-full | chat | v4 | yes | gap | [84, 93] | 37.0 s | 36.6 | 0.34 s | 3 | 0 | 0 | Kneser {} | kneser 10,4 |
+| K_10_4_s0_opus-med-full | chat | v4 | yes | gap | [84, 93] | 51.4 s | 51.1 | 0.29 s | 3 | 0 | 0 | Kneser {'n': 10, 'k': 4} | kneser 10,4 |
+| K_10_4_s0_sonnet-med-full | chat | v4 | yes | gap | [84, 93] | 37.3 s | 37.1 | 0.16 s | 3 | 0 | 0 | Kneser {'n': 10, 'k': 4} | kneser 10,4 |
+| K_14_4_s0_opus-low-full | chat | v4 | yes | gap | [286, 287] | 30.4 s | 27.1 | 3.28 s | 3 | 0 | 0 | Kneser {} | kneser 14,4 |
+| K_10_4_s0_opus-high-full | chat | v4 | yes | gap | [84, 93] | 98.3 s | 98.1 | 0.16 s | 3 | 0 | 0 | Kneser {'n': 10, 'k': 4} | kneser 10,4 |
+| K_14_4_s0_opus-med-full | chat | v4 | yes | gap | [286, 287] | 48.0 s | 46.1 | 1.89 s | 3 | 0 | 0 | Kneser {} | kneser 14,4 |
+| K_14_4_s0_sonnet-med-full | chat | v4 | yes | gap | [286, 287] | 51.7 s | 48.5 | 3.22 s | 5 | 0 | 1 | Kneser {'n': 14, 'k': 4} | kneser 14,4 |
+| K_13_5_s0_opus-low-full | chat | v4 | yes | gap | [495, 507] | 39.3 s | 35.1 | 4.18 s | 3 | 0 | 0 | Kneser {} | kneser 13,5 |
+| K_14_4_s0_opus-high-full | chat | v4 | yes | gap | [286, 287] | 81.8 s | 79.8 | 1.98 s | 4 | 1 | 0 | Kneser {'n': 14, 'k': 4} | kneser 14,4 |
+| K_13_5_s0_opus-med-full | chat | v4 | yes | gap | [495, 507] | 58.1 s | 54.6 | 3.49 s | 3 | 0 | 0 | Kneser {'n': 13, 'k': 5} | kneser 13,5 |
+| K_13_5_s0_sonnet-med-full | chat | v4 | yes | gap | [495, 507] | 53.3 s | 49.1 | 4.18 s | 3 | 0 | 0 | Kneser {'n': 13, 'k': 5} | kneser 13,5 |
+| K_16_4-del0.01_s0_opus-low-full | chat | v4 | yes | gap | [455, 534] | 35.6 s | 27.6 | 7.95 s | 3 | 0 | 0 | perturbed Kneser {} | kneser with deleted edges 16,4 |
+| K_13_5_s0_opus-high-full | chat | v4 | yes | gap | [495, 507] | 100.7 s | 96.9 | 3.80 s | 4 | 1 | 0 | Kneser graph K(n,k) (to be confirmed by binomial_match; candidate K(13,5)) {'n': 13, 'k': 5} | kneser 13,5 |
+| K_16_4-del0.01_s0_opus-med-full | chat | v4 | yes | gap | [455, 534] | 40.2 s | 36.6 | 3.56 s | 3 | 0 | 0 | perturbed Kneser (not an exact vertex-transitive member) {} | kneser with deleted edges 16,4 |
+| K_16_4-del0.01_s0_opus-high-full | chat | v4 | yes | gap | [455, 534] | 56.6 s | 51.1 | 5.43 s | 3 | 0 | 0 | perturbed Kneser {'n': 16, 'k': 4} | kneser with deleted edges 16,4 |
+| K_18_3-del0.01_s0_opus-low-full | chat | v4 | yes | gap | [136, 152] | 28.3 s | 27.6 | 0.66 s | 3 | 0 | 0 | perturbed Kneser {} | kneser with deleted edges 18,3 |
+| K_16_4-del0.01_s0_sonnet-med-full | chat | v4 | yes | gap | [455, 534] | 47.1 s | 37.5 | 9.63 s | 5 | 0 | 1 | perturbed Kneser K(16,4) {'n': 16, 'k': 4} | kneser with deleted edges 16,4 |
+| K_18_3-del0.01_s0_sonnet-med-full | chat | v4 | yes | gap | [136, 152] | 37.3 s | 34.6 | 2.66 s | 3 | 0 | 0 | perturbed Kneser {'n': 18, 'k': 3} | kneser with deleted edges 18,3 |
+| K_18_3-del0.01_s0_opus-med-full | chat | v4 | yes | gap | [136, 152] | 64.7 s | 64.0 | 0.66 s | 5 | 0 | 1 | perturbed Kneser {'n': 18, 'k': 3} | kneser with deleted edges 18,3 |
+| K_18_3-del0.01_s0_opus-high-full | chat | v4 | yes | gap | [136, 152] | 73.5 s | 72.8 | 0.68 s | 4 | 1 | 0 | perturbed Kneser (edge-deleted Kneser-type graph, candidate K(18,3) pending binomial_match) {'n': 18, 'k': 3, 'perturbation': 'edge deletions'} | kneser with deleted edges 18,3 |
+| reg_1000_6_s0_opus-low-full | chat | v4 | yes | gap | [336, 537] | 33.7 s | 31.8 | 1.85 s | 4 | 1 | 0 | none (random-like 6-regular graph) {} | random regular , |
+| reg_1000_6_s0_opus-med-full | chat | v4 | yes | gap | [336, 537] | 38.6 s | 36.8 | 1.81 s | 4 | 1 | 0 | none (random-like 6-regular graph) {} | random regular , |
+| reg_1000_6_s0_opus-high-full | chat | v4 | yes | gap | [336, 537] | 41.1 s | 39.3 | 1.83 s | 4 | 1 | 0 | none (random-like 6-regular graph, not vertex-transitive family member) {} | random regular , |
+| reg_1000_6_s0_sonnet-med-full | chat | v4 | yes | gap | [336, 537] | 27.0 s | 25.1 | 1.86 s | 3 | 0 | 0 | none (sparse random-like regular graph, not an exact vertex-transitive family) {} | random regular , |
+| K_20_4_s0_opus-low-full | chat | v4 | yes | proven | [969, 969] | 31.6 s | 29.3 | 2.24 s | 4 | 0 | 1 | Kneser {'n': 20, 'k': 4} | kneser 20,4 |
+| K_20_4_s0_opus-med-full | chat | v4 | yes | proven | [969, 969] | 32.3 s | 29.9 | 2.36 s | 2 | 0 | 0 | Kneser {'n': 20, 'k': 4} | kneser 20,4 |
+| K_20_4_s0_opus-high-full | chat | v4 | yes | proven | [969, 969] | 30.9 s | 28.4 | 2.50 s | 2 | 0 | 0 | Kneser {'n': 20, 'k': 4} | kneser 20,4 |
+| K_20_4_s0_sonnet-med-full | chat | v4 | yes | proven | [969, 969] | 31.6 s | 29.3 | 2.27 s | 4 | 0 | 1 | Kneser {'n': 20, 'k': 4} | kneser 20,4 |
+| K_17_5_s0_opus-low-full | chat | v4 | yes | proven | [1820, 1820] | 34.2 s | 29.4 | 4.74 s | 2 | 0 | 0 | Kneser {} | kneser 17,5 |
+| K_17_5_s0_opus-med-full | chat | v4 | yes | proven | [1820, 1820] | 36.7 s | 31.9 | 4.76 s | 2 | 0 | 0 | Kneser K(n,k) (to be confirmed by binomial_match) {} | kneser 17,5 |
+| K_17_5_s0_opus-high-full | chat | v4 | yes | proven | [1820, 1820] | 33.7 s | 28.9 | 4.80 s | 2 | 0 | 0 | Kneser K(n,k) (tentative, to be confirmed by binomial_match) {'n': 17, 'k': 5} | kneser 17,5 |
+| K_17_5_s0_sonnet-med-full | chat | v4 | yes | proven | [1820, 1820] | 34.6 s | 29.8 | 4.75 s | 4 | 0 | 1 | Kneser K(17,5) {'n': 17, 'k': 5} | kneser 17,5 |
+| K_23_4_s0_opus-med-full | chat | v4 | yes | proven | [1540, 1540] | 27.8 s | 18.9 | 8.86 s | 2 | 0 | 0 | Kneser {} | kneser 23,4 |
+| K_23_4_s0_opus-low-full | chat | v4 | yes | proven | [1540, 1540] | 35.7 s | 26.3 | 9.40 s | 4 | 0 | 1 | Kneser {'n': 23, 'k': 4} | kneser 23,4 |
+| K_23_4_s0_sonnet-med-full | chat | v4 | yes | proven | [1540, 1540] | 30.4 s | 21.4 | 9.00 s | 2 | 0 | 0 | Kneser {'n': 23, 'k': 4} | kneser 23,4 |
+| K_23_4_s0_opus-high-full | chat | v4 | yes | proven | [1540, 1540] | 50.8 s | 40.6 | 10.14 s | 3 | 1 | 0 | Kneser {'n': 23, 'k': 4} | kneser 23,4 |
+| K_24_4_s0_opus-med-full | chat | v4 | yes | proven | [1771, 1771] | 43.1 s | 28.4 | 14.67 s | 2 | 0 | 0 | Kneser {} | kneser 24,4 |
+| K_24_4_s0_opus-low-full | chat | v4 | yes | proven | [1771, 1771] | 44.4 s | 29.1 | 15.27 s | 3 | 0 | 0 | Kneser {} | kneser 24,4 |
+| K_24_4_s0_sonnet-med-full | chat | v4 | yes | proven | [1771, 1771] | 45.5 s | 31.3 | 14.13 s | 4 | 0 | 1 | Kneser {'n': 24, 'k': 4} | kneser 24,4 |
+| K_24_4_s0_opus-high-full | chat | v4 | yes | proven | [1771, 1771] | 55.0 s | 41.5 | 13.59 s | 2 | 0 | 0 | Kneser graph K(n,k), tentatively K(24,4) pending binomial_match {'n': 24, 'k': 4} | kneser 24,4 |
+| K_26_4_s0_opus-low-full | chat | v4 | yes | proven | [2300, 2300] | 106.1 s | 28.4 | 77.63 s | 2 | 0 | 0 | Kneser (unverified) {} | kneser 26,4 |
+| K_26_4_s0_opus-med-full | chat | v4 | yes | proven | [2300, 2300] | 111.5 s | 21.9 | 89.56 s | 2 | 0 | 0 | Kneser graph (tentative, pending binomial_match) {} | kneser 26,4 |
+| K_26_4_s0_opus-high-full | chat | v4 | yes | proven | [2300, 2300] | 110.1 s | 28.9 | 81.14 s | 2 | 0 | 0 | Kneser {'n': 26, 'k': 4} | kneser 26,4 |
+| K_26_4_s0_sonnet-med-full | chat | v4 | yes | proven | [2300, 2300] | 111.8 s | 23.8 | 87.94 s | 4 | 0 | 1 | Kneser {'n': 26, 'k': 4} | kneser 26,4 |
