@@ -33,10 +33,11 @@ LARGE = specs.get("large", [])
 
 
 def pick(spec, llm, fam):
-    """Last benchmark run (seed 0; for LLM runs prompts v3) of this graph / LLM / rule setting."""
+    """Last benchmark run (seed 0; for LLM runs v4 (after the plan-results fix) if present, else v3) of this graph / LLM / rule setting."""
     m = [r for r in runs if r["spec"] == spec and r["llm"] == llm and r["family_rule_allowed"] == fam
-         and r["truth"].get("seed", 0) == 0 and (llm == "none" or r.get("prompt_version") == "v3")
+         and r["truth"].get("seed", 0) == 0 and (llm == "none" or r.get("prompt_version") in ("v3", "v4"))
          and not r["graph"].endswith("_nojsonmode")]
+    m.sort(key=lambda r: r.get("prompt_version") or "")         # stable: v4 (after the plan-results fix) wins
     return m[-1] if m else None
 
 
