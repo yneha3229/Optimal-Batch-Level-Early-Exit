@@ -32,7 +32,7 @@ from minrank.baselines.partial_cover import partial_cover_rows
 from minrank.exact.lower import mais as mais_order_cpsat
 from minrank.exact.symmetry import rank_at_most_sym
 
-from .lp import SHANNON_MAX_N, frac_clique_cover, shannon_bound
+from .lp import SHANNON_MAX_N, SHANNON_SYM_MAX_N, frac_clique_cover, shannon_bound, shannon_bound_sym
 from .mais import exact_lazy, greedy_fvs, sa_order
 from .state import CompState
 
@@ -117,16 +117,48 @@ def _partial(s: CompState, budget: float, rng: random.Random, t: float) -> str:
     return "improved" if s.offer_rows(rows, "partial_cover", t) else "no_change"
 
 
-def _fix_set(s: CompState, r: int) -> list[int]:
-    a = sorted(s.acyclic)
-    return a[:r]
+SAT_MAX_UNITS = 1_000_000  # (forbidden pairs + n) * r; ~7 clauses each. Above this the CNF needs GBs: no SAT.
+
+
+def sat_units(s: CompState, r: int) -> int:
+    """Size of the minrank CNF for rank r: one AND/XOR chain of length r per forbidden pair (and per diagonal)."""
+    if "pairs" not in s.cache:
+        g = s.comp.graph
+        s.cache["pairs"] = sum(g.forbidden(i).bit_count() + 1 for i in range(g.n))
+    return s.cache["pairs"] * max(1, r)
+
+
+def sat_base_seconds(s: CompState, r: int) -> float:
+    """First slice for a SAT question: building the CNF alone costs ~4.4 us per unit (n = 200, r = 12: 1 s), and the
+    planted n = 200 digraph needs ~4 s in all; a flat 1 s slice never got there."""
+    return 1.0 + 1.5e-5 * sat_units(s, r)
+
+
+def _sat_ok(s: CompState, r: int) -> bool:
+    return not s.mr_closed and r >= 1 and sat_units(s, r) <= SAT_MAX_UNITS
+
+
+def _fix_set(s: CompState, r: int, question: tuple, rng: random.Random) -> list[int]:
+    """The acyclic set the SAT call fixes (independent-set symmetry breaking). SAT time depends heavily on which
+    maximum set is fixed (planted n = 100, r = 10, five maximum independent sets: 1.6 s to > 60 s), so every retry
+    of the same question uses a different set of the same size when a short SA run with a new seed finds one: a
+    restart portfolio against heavy-tailed run times. Any acyclic subset is sound for the fix."""
+    k = s.sat_attempts.get(question, 0)
+    s.sat_attempts[question] = k + 1
+    best = sorted(s.acyclic)
+    if k > 0:
+        alt = sa_order(s.comp.graph, min(0.3, 0.02 * s.n), random.Random(rng.randrange(2**31)),
+                       init=greedy_fvs(s.comp.graph))
+        if len(alt) >= len(best) and sorted(alt) != best:
+            best = sorted(alt)
+    return best[:r]
 
 
 def _sat_down(s: CompState, budget: float, rng: random.Random, t: float) -> str:
     r = s.mr_hi - 1
     if r < s.mr_lo:
         return "done"
-    I = _fix_set(s, r)
+    I = _fix_set(s, r, ("down", r), rng)
     t0 = time.perf_counter()
     res = rank_at_most_sym(s.comp.graph, r, time_limit=budget, mode="indep_cols", indep=I)
     if res is None:
@@ -143,7 +175,7 @@ def _sat_up(s: CompState, budget: float, rng: random.Random, t: float) -> str:
     r = s.mr_lo
     if r >= s.mr_hi:
         return "done"
-    I = _fix_set(s, r)
+    I = _fix_set(s, r, ("up", r), rng)
     t0 = time.perf_counter()
     res = rank_at_most_sym(s.comp.graph, r, time_limit=budget, mode="indep_cols", indep=I)
     if res is None:
@@ -156,9 +188,47 @@ def _sat_up(s: CompState, budget: float, rng: random.Random, t: float) -> str:
     return "improved"
 
 
+def _shannon_child(conn, g, gens) -> None:
+    try:
+        r = shannon_bound_sym(g, gens) if gens else shannon_bound(g)
+        conn.send(("ok", (r.bound, r.y, r.mu, getattr(r, "gens", None))))
+    except BaseException as e:  # report, the parent decides
+        conn.send(("err", repr(e)))
+    finally:
+        conn.close()
+
+
 def _shannon(s: CompState, budget: float, rng: random.Random, t: float) -> str:
-    r = shannon_bound(s.comp.graph)
-    s.offer_shannon(r.bound, r.y, r.mu, "shannon", t, recheck=False)  # certified_bound already computed exactly
+    """Full LP for small asymmetric SCCs; the orbit-reduced LP when the SCC has nontrivial automorphisms (always
+    faster) or is too large for the full LP (12 < n <= 16). Runs in a child process killed after `budget` seconds
+    (the agent passes the time left), so a long LP cannot overrun the run's budget."""
+    import multiprocessing as mp
+
+    from minrank.exact.symmetry import automorphisms
+
+    g = s.comp.graph
+    gens = automorphisms(g, max_gens=16) if g.n > 3 else []
+    if not (gens and g.n <= SHANNON_SYM_MAX_N) and g.n > SHANNON_MAX_N:
+        return "done"
+    gens = gens if (gens and g.n <= SHANNON_SYM_MAX_N) else []
+    ctx = mp.get_context("forkserver")
+    parent, child = ctx.Pipe(duplex=False)
+    p = ctx.Process(target=_shannon_child, args=(child, g, gens), daemon=True)
+    p.start()
+    child.close()
+    try:
+        if not parent.poll(max(0.1, budget)):
+            p.kill()
+            return "timeout"
+        status, payload = parent.recv()
+    finally:
+        parent.close()
+        p.join()
+    if status != "ok":
+        raise RuntimeError(f"shannon child failed: {payload}")
+    bound, y, mu, rgens = payload
+    # The child is untrusted for correctness: recheck the certificate in this process.
+    s.offer_shannon(bound, y, mu, "shannon", t, recheck=True, gens=rgens or None)
     return "done"
 
 
@@ -217,12 +287,12 @@ def default_tools(include_lns: bool = False, evolved: str | None = None) -> dict
              description="TabuCol clique cover (lowers U)"),
         Tool("partial_cover", "upper", True, _partial, lambda s: s.comp.graph.directed and _upper_useful(s),
              description="clique cover plus disjoint cycles of cliques, directed graphs (lowers U)"),
-        Tool("sat_down", "upper", False, _sat_down, lambda s: not s.mr_closed,
+        Tool("sat_down", "upper", False, _sat_down, lambda s: _sat_ok(s, s.mr_hi - 1),
              description="SAT: is minrank <= U-1? SAT lowers U, UNSAT closes the minrank interval"),
-        Tool("sat_up", "lower", False, _sat_up, lambda s: not s.mr_closed,
+        Tool("sat_up", "lower", False, _sat_up, lambda s: _sat_ok(s, s.mr_lo),
              description="SAT: is minrank <= L? UNSAT raises the minrank lower bound, SAT closes it"),
         Tool("shannon", "beta_lower", False, _shannon, lambda s: not s.b_closed and s.shannon is None,
-             once=True, max_n=SHANNON_MAX_N,
+             once=True, max_n=SHANNON_SYM_MAX_N,
              description="polymatroid LP lower bound on beta (fractional; n <= 12; closes odd-cycle-type gaps)"),
         Tool("frac_cover", "beta_upper", True, _frac, lambda s: not s.b_closed,
              description="fractional clique cover upper bound on beta (vector-linear codes)"),
@@ -235,10 +305,32 @@ def default_tools(include_lns: bool = False, evolved: str | None = None) -> dict
     return {t.name: t for t in tools}
 
 
+def shannon_cost(s: CompState) -> float:
+    """Predicted seconds for the shannon tool (cached on the state). Fitted on this container: full LP about
+    0.004 * 2^(n-1); orbit-reduced LP about 1e-5 * M^2 + 0.2 with M = number of subset orbits (C13: M = 380,
+    0.5 s; C15: 1224, 9-13 s; circ(16; 1,4): 2250, 32-51 s)."""
+    if "shannon_cost" in s.cache:
+        return s.cache["shannon_cost"]
+    from minrank.exact.symmetry import automorphisms
+
+    from .lp import subset_orbits
+
+    g = s.comp.graph
+    est = math.inf
+    gens = automorphisms(g, max_gens=16) if 3 < g.n <= SHANNON_SYM_MAX_N else []
+    if gens:
+        M = len(set(subset_orbits(g.n, gens)))
+        est = 1e-5 * M * M + 0.2
+    elif g.n <= SHANNON_MAX_N:
+        est = 0.004 * 2 ** max(0, g.n - 1)
+    s.cache["shannon_cost"] = est
+    return est
+
+
 def predicted_seconds(tool: Tool, s: CompState) -> float:
-    """Rough cost model for one-shot tools (used for budget checks, not for correctness)."""
+    """Rough cost model for one-shot tools (used for scheduling, not for correctness)."""
     if tool.name == "shannon":
-        return 0.004 * 2 ** max(0, s.n - 1) if s.n <= SHANNON_MAX_N else math.inf
+        return shannon_cost(s)
     if tool.name == "quick":
         return 0.001 * s.n + 0.05
     return 0.0

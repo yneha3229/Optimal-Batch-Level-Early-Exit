@@ -74,8 +74,21 @@ def to_code(t) -> str:
     raise ValueError(op)
 
 
-def program(t) -> str:
-    return f"# expr: {t!r}\n" + PRELUDE.format(expr=to_code(t))
+SA_TERMINALS = ["delta", "ci", "co", "ik", "ok", "ideg", "odeg", "kept", "n", "temp", "step"]
+SA_PRELUDE = '''import math
+
+
+def score(f):
+    delta, ci, co, ik, ok, ideg, odeg, kept, n, temp, step = f
+    return {expr}
+'''
+TARGET_TERMINALS = {"greedy": TERMINALS, "sa": SA_TERMINALS}
+DEFAULT_TREES = {"greedy": ("*", "i", "o"), "sa": ("-", 0.5, "delta")}
+
+
+def program(t, target: str = "greedy") -> str:
+    pre = SA_PRELUDE if target == "sa" else PRELUDE
+    return f"# expr: {t!r}\n" + pre.format(expr=to_code(t))
 
 
 def parse(code: str):
@@ -89,12 +102,13 @@ def size(t) -> int:
     return 1 if not isinstance(t, tuple) else 1 + sum(size(c) for c in t[1:])
 
 
-def random_tree(rng: random.Random, depth: int):
+def random_tree(rng: random.Random, depth: int, terminals: list[str] | None = None):
+    terminals = terminals or TERMINALS
     if depth <= 0 or rng.random() < 0.3:
-        return rng.choice(TERMINALS) if rng.random() < 0.85 else rng.choice(CONSTS)
+        return rng.choice(terminals) if rng.random() < 0.85 else rng.choice(CONSTS)
     if rng.random() < 0.25:
-        return (rng.choice(UNARY), random_tree(rng, depth - 1))
-    return (rng.choice(BINARY), random_tree(rng, depth - 1), random_tree(rng, depth - 1))
+        return (rng.choice(UNARY), random_tree(rng, depth - 1, terminals))
+    return (rng.choice(BINARY), random_tree(rng, depth - 1, terminals), random_tree(rng, depth - 1, terminals))
 
 
 def _paths(t, path=()):
@@ -119,17 +133,17 @@ def _set(t, path, new):
     return tuple(lst)
 
 
-def mutate(t, rng: random.Random):
+def mutate(t, rng: random.Random, terminals: list[str] | None = None):
     p = rng.choice(list(_paths(t)))
     r = rng.random()
     sub = _get(t, p)
     if r < 0.5:
-        new = random_tree(rng, 2)
+        new = random_tree(rng, 2, terminals)
     elif r < 0.8 and isinstance(sub, tuple):  # point mutation of the operator
         ops = UNARY if sub[0] in UNARY else BINARY
         new = (rng.choice(ops),) + sub[1:]
     else:  # wrap
-        new = (rng.choice(BINARY), sub, random_tree(rng, 1))
+        new = (rng.choice(BINARY), sub, random_tree(rng, 1, terminals))
     return _set(t, p, new)
 
 
@@ -147,18 +161,20 @@ class GPProposer:
 
     name = "gp"
 
-    def __init__(self, seed: int = 0) -> None:
+    def __init__(self, seed: int = 0, target: str = "greedy") -> None:
         self.rng = random.Random(seed)
+        self.target = target
+        self.terms = TARGET_TERMINALS[target]
 
     def propose(self, parents: list) -> str:
-        trees = [parse(p.code) or DEFAULT_TREE for p in parents]
+        trees = [parse(p.code) or DEFAULT_TREES[self.target] for p in parents]
         for _ in range(50):
             if len(trees) >= 2 and self.rng.random() < 0.4:
                 t = crossover(trees[-1], trees[0], self.rng)
                 if self.rng.random() < 0.5:
-                    t = mutate(t, self.rng)
+                    t = mutate(t, self.rng, self.terms)
             else:
-                t = mutate(trees[-1], self.rng)
+                t = mutate(trees[-1], self.rng, self.terms)
             if size(t) <= MAX_NODES and t not in trees:
-                return program(t)
-        return program(random_tree(self.rng, 3))
+                return program(t, self.target)
+        return program(random_tree(self.rng, 3, self.terms), self.target)

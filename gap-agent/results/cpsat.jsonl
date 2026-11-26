@@ -1,0 +1,9 @@
+{"lo": 17, "hi": 610, "gap0": 593, "gap": 593, "integral": 1.0, "notes": ["model not built in time"], "graph": "random_n3000_0", "n": 3000, "key": "cpsat", "family": "random"}
+{"lo": 13, "hi": 498, "gap0": 485, "gap": 485, "integral": 1.0, "notes": ["model not built in time"], "graph": "random_n3000_1", "n": 3000, "key": "cpsat", "family": "random"}
+{"lo": 15, "hi": 415, "gap0": 400, "gap": 400, "integral": 1.0, "notes": ["model not built in time"], "graph": "random_n3000_2", "n": 3000, "key": "cpsat", "family": "random"}
+{"lo": 20, "hi": 469, "gap0": 449, "gap": 449, "integral": 1.0, "notes": ["model not built in time"], "graph": "planted_n3000_0", "n": 3000, "key": "cpsat", "family": "planted"}
+{"lo": 39, "hi": 632, "gap0": 593, "gap": 593, "integral": 1.0, "notes": ["model not built in time"], "graph": "planted_n3000_1", "n": 3000, "key": "cpsat", "family": "planted"}
+{"lo": 15, "hi": 390, "gap0": 375, "gap": 375, "integral": 1.0, "notes": ["model not built in time"], "graph": "planted_n3000_2", "n": 3000, "key": "cpsat", "family": "planted"}
+{"lo": 14, "hi": 385, "gap0": 371, "gap": 371, "integral": 1.0, "notes": ["model not built in time"], "graph": "layered_n3000_0", "n": 3000, "key": "cpsat", "family": "layered"}
+{"lo": 32, "hi": 626, "gap0": 594, "gap": 594, "integral": 1.0, "notes": ["model not built in time"], "graph": "layered_n3000_1", "n": 3000, "key": "cpsat", "family": "layered"}
+{"lo": 25, "hi": 567, "gap0": 542, "gap": 542, "integral": 1.0, "notes": ["model not built in time"], "graph": "layered_n3000_2", "n": 3000, "key": "cpsat", "family": "layered"}

@@ -46,6 +46,8 @@ class CompState:
     frac: dict | None = None                               # {"value": Fraction, "cliques": [...], "weights": [...]}
     unsat: list[dict] = field(default_factory=list)        # [{"r": r, "mode": ..., "indep": [...], "seconds": s}]
     sources: dict = field(default_factory=dict)            # which tool set each bound
+    sat_attempts: dict = field(default_factory=dict)       # (direction, r) -> SAT calls so far (fixed-set restarts)
+    cache: dict = field(default_factory=dict)              # per-component scratch (e.g. predicted tool costs)
     events: list[Event] = field(default_factory=list)
 
     def __post_init__(self) -> None:
@@ -124,13 +126,19 @@ class CompState:
             return True
         return False
 
-    def offer_shannon(self, bound: Fraction, y: dict, mu: dict, tool: str, t: float, recheck: bool = True) -> bool:
+    def offer_shannon(self, bound: Fraction, y: dict, mu: dict, tool: str, t: float, recheck: bool = True,
+                      gens: list[list[int]] | None = None) -> bool:
+        """`gens`: automorphism generators if the multipliers belong to the orbit-reduced LP."""
         if recheck:
-            from .lp import check_shannon_certificate
+            from .lp import check_shannon_certificate, check_shannon_sym
 
-            if check_shannon_certificate(self.comp.graph, y, mu) < bound:
+            got = check_shannon_sym(self.comp.graph, gens, y, mu) if gens else \
+                check_shannon_certificate(self.comp.graph, y, mu)
+            if got < bound:
                 raise ValueError("Shannon certificate does not reproduce the bound")
-        self.shannon = {"bound": bound, "y": y, "mu": mu}
+        if self.shannon is not None and self.shannon["bound"] >= bound:
+            return False
+        self.shannon = {"bound": bound, "y": y, "mu": mu, **({"gens": gens} if gens else {})}
         ch = self._set_b_lo(bound, tool, t)
         c = math.ceil(bound)
         if c > self.mr_lo:

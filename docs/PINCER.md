@@ -2,10 +2,12 @@
 
 Code: [`pincer/`](../pincer/) (built on the solvers in [`minrank/`](../minrank/)). Scripts: [`scripts/pincer/`](../scripts/pincer/).
 Proposal it implements: *Pincer — An agent that squeezes the broadcast rate of an index-coding problem between two
-certified bounds* (IE624, Nov 2026). Status as of 25 Nov 2026: everything below runs and is tested (58 tests). A
-real LLM (Qwen2.5-Coder-32B-Instruct-AWQ on an RTX A6000) has now been run in the loop, both as the FunSearch
-proposer and as the controller. **Neither beats its non-LLM baseline** (§8). All results in §0-§5 use non-LLM
-policies.
+certified bounds* (IE624, Nov 2026). Status as of 26 Nov 2026 (after merging `feature/pincer-llm` and
+`feature/math-search-agents`): everything below runs and is tested (66 tests; one, `test_exact_basis_duals_close_c14`,
+fails on this server because the C14 Shannon LP returns 6.999999999 instead of 7, as it does on
+`feature/math-search-agents` alone). A real LLM (Qwen2.5-Coder-32B-Instruct-AWQ on an RTX A6000) has now been run in
+the loop, both as the FunSearch proposer and as the controller. **Neither beats its non-LLM baseline** (§8). All
+results in §0-§5 use non-LLM policies; §7 lists what is still open.
 
 ## 0. Results in one table
 
@@ -34,6 +36,74 @@ simulated annealing run after it (§4). Random digraphs with n >= 80 stay wide o
 ~10 for Pincer, e.g. n = 120, p = 0.3: [21, 44] for every method): neither MAIS nor the covers get close, and SAT does not scale there yet.
 
 
+## 0b. Update, 24 Nov (third session)
+
+- **DRAT-ready certificates.** The r = 9 UNSAT steps behind minrk₂ = 10 for all 8 undirected planted n = 100 graphs are
+  exported as gzipped DIMACS (re-solved UNSAT here, 0.9-4.7 s each; header: graph digest, r, mode, fixed set):
+  `pincer/certificates/unsat_cnf/` (8.9 MB). Check them on the server with
+  `bash scripts/minrank/10_drat_check.sh pincer/certificates/unsat_cnf`. (Building CaDiCaL / drat-trim in this
+  container was not permitted, so the DRAT run itself is still to do.)
+- **Scheduling fix for slow one-shot tools.** The index policy priced the Shannon LP at its default 0.5 s slice, so
+  on C(16,2) it ran the 60 s LP before a 0.04 s fractional cover and ran out of budget with β ∈ [16/3, 6]. One-shot
+  tools are now charged their predicted run time (LP: about 1e-5·M² s for M subset orbits), skipped when they cannot
+  finish, and the LP runs in a child process killed at the time left (certificate re-checked in the parent). C(16,2)
+  and circ(16; 1,4) are now pinned by the index policy too (given ≥ 65 s; the LP alone needs ~61 s).
+- **Negative: no cheap predictor of a good SAT fixed set.** 39 maximum independent sets on two planted n = 100 graphs,
+  one call "minrk ≤ 10?" each (60 s limit): times 0.9 s to > 60 s; Spearman correlation with 7 set features
+  (degrees, coverage, private neighbours) is weak and inconsistent between the graphs (|ρ| ≤ 0.47, the one p < 0.05
+  among 14 tests is not robust). Relabelling test: the slowest set stays slow under 4 random vertex relabellings
+  (3 × > 60 s, 32 s), the fastest regresses to 3.6-13 s. So some sets are reliably bad, the rest is solver luck;
+  the restart portfolio (§0a) is the right response and a FunSearch target over set choice is not worth its cost.
+  Data: `pincer/results/fixset_*.jsonl`, scripts `pincer/fixset_{study,analysis,relabel}.py`.
+- **Scale study (n = 200-400, 120 s, 12 graphs, seeds 7-8; `pincer/results/summary_scale_b120.md`).** Pincer index
+  vs classic: mean minrank gap 32.7 vs 62.7, paired 10 wins / 2 ties / 0 losses, classic's final quality reached
+  after a median 23 s. Sparse random digraphs gain mostly on the upper bound (n = 400: 348 → 277; n = 200, p = 0.05:
+  168 → 140) and on MAIS (151 → 187). The planted n = 200 digraphs (rank 12) first stayed at [12, 38]: SAT slices
+  were a flat 1-2 s and reset whenever the lower bound rose, while building and solving that CNF takes ~4 s. SAT
+  slices now start at 1 s + 1.5e-5 s per (forbidden pair × r) unit, and SAT is not offered above 10⁶ units (an
+  n = 400, r ≈ 200 encoding was killed for memory). After the fix both close at **minrk₂ = 12 in ~40 s**; test2 is
+  unchanged within noise (14/26 closed vs 13, mean gap 5.15 vs 5.27). Still open at this size: the undirected planted
+  n = 200 graphs (one direct call "≤ 12?" took 213 s) and every random graph (no interval closes).
+
+## 0a. Update, 24 Nov (second session)
+
+Positive:
+- **New exact minranks on the minrank benchmark.** `planted_n100_r10_e0.1_s2` and `_s6` (undirected, n = 100, listed as
+  open in `minrank/results/exact_planted_e01.csv` after 300 s SAT calls) have **minrk₂ = 10**: Pincer proves it in
+  34-61 s by asking SAT *from below* (r = 6, 7, 8, 9 UNSAT in < 1 s each, then r = 10 SAT) instead of descending
+  from the clique cover (13). Cross-checked with a second solver (Glucose, different independent set): r = 9 UNSAT,
+  r = 10 SAT. Bundles: `pincer/certificates/planted_n100_r10_e0.1_s{2,6}.bundle.json`. On all 8 undirected n = 100
+  graphs Pincer's lower bound is 10 (driver: 8-9), and one direct SAT call at r = 10 then found rank-10 matrices for
+  the remaining four (s1, s4, s5, s7; 1.6-539 s). So **all 8 undirected n = 100 planted e0.1 graphs have minrk₂ = 10**
+  (6 of them were open). Every r = 9 UNSAT was re-run with Glucose and an independently found independent set;
+  matrices in `pincer/certificates/planted_n100_r10_e0.1_s{1,4,5,7}.rank10.json`.
+  Directed n = 100: both close all 8 (Pincer 7-23 s, driver 16-20 s). Table: §5.
+- **Symmetry-reduced Shannon LP with exact certificates** (`lp.shannon_bound_sym`): one variable per Aut(G)-orbit of
+  subsets; the checker re-verifies the generators and rebuilds the reduced LP. When rounded duals miss the optimum,
+  the optimal HiGHS basis is solved exactly in rational arithmetic (`lp.exact_basis_duals`, python-flint). This
+  extends exact β from n ≤ 12 to symmetric graphs with n ≤ 16. Structured split (23 graphs, 60 s,
+  `pincer/results/summary_structured_b60.md`): **minrank pinned 23/23, β pinned 21/23** (classic 2/23, satdescend
+  minrank 16/23, β 2/23). New exact values include β(C₁₃) = 13/2, β(C₁₅) = 15/2, β(C̄ₙ) = n/⌊n/2⌋ for n = 7…15,
+  β(Paley 13) = 13/3, β(Petersen) = 5, β(C(13,2)) = 13/3, β(C(16,2)) = 16/3, β(circ(16; 1,4)) = 8.
+- **Faster MAIS annealing.** Kept-neighbour bitmasks plus a 5-candidate tournament per move (found while building the
+  FunSearch "sa" target, §4b): on the 16 held-out FunSearch test graphs at equal wall time, 0.5 s: 0.936 → 0.988 of
+  the old 20 s reference; 2 s: 0.988 → 1.009 (22 wins, 26 ties, 0 losses vs plain SA). End to end the effect is
+  small (test2 index: mean minrank gap 5.35 → 5.27, vs classic 24/2/0), because at 30 s the CP-SAT MAIS models
+  supply most lower bounds there.
+
+- **SAT restart portfolio.** At a fixed rank, SAT time depends heavily on which maximum independent set is fixed
+  (planted n = 100, r = 10: 1.6 s to > 60 s across five sets). `sat_up` / `sat_down` now fix a different set of
+  the same size on each retry: undirected planted n = 100 at 120 s, the agent alone closes 5/8 (was 3/8).
+Negative:
+- **Partial clique cover gives nothing on these graphs** (0/26 test2 graphs improve on the clique cover; no merge of
+  two groups ever saves a transmission), so the planned GF(p) vector-linear upper bound (old next step 5) was not
+  built. Random digraphs keep β gap = minrank gap.
+- The index policy could lose a slow one-shot tool to the budget (C(16,2)); fixed in §0b.
+- Mycielski M5 (n = 23) and Paley 17 stay open for β (LP too large / too little symmetry found).
+- FunSearch on the SA candidate choice (§4b): GP beats its seed at a fixed move budget but not the library SA at
+  equal wall time.
+- Fixed on the way: fractional-cover certificates could carry 100-digit denominators (weights now on one grid).
+
 ---
 
 ## 1. What is computed
@@ -50,7 +120,7 @@ returns two certified intervals and a certificate bundle that a short checker re
 | bound | certificate | checker (`pincer/certify.py`) | trusted? |
 |---|---|---|---|
 | L_β, L_mr: MAIS | vertex set | Kahn's algorithm on the induced subgraph | fully checked |
-| L_β: Shannon (polymatroid) LP | rational Lagrange multipliers | exact rational weak duality, rebuilt from G | fully checked |
+| L_β: Shannon (polymatroid) LP | rational Lagrange multipliers (+ automorphism generators for the reduced LP) | exact rational weak duality, LP rebuilt from G (generators checked to be automorphisms) | fully checked |
 | L_mr: SAT UNSAT at rank r | (r, symmetry mode, fixed set) | re-run with `--recheck-unsat`; CNF exportable for DRAT (minrank/exact) | solver-trusted |
 | U_mr, U_β: fitting matrix | n bit-rows | fit pattern + exact F₂ rank | fully checked |
 | U_β: fractional clique cover | cliques + rational weights | every clique bidirected, every vertex covered ≥ 1, exactly | fully checked |
@@ -86,14 +156,14 @@ per SCC: CompState {[mr_lo, mr_hi], [b_lo, b_hi], certificates}   ← only the c
 | tool | moves | how | when it pays (measured, §5) |
 |---|---|---|---|
 | `quick` | both | greedy FVS + DSatur + cycle of cliques | always first |
-| `mais_sa` | L | simulated annealing on topological orders (Galinier et al. 2013) | larger sparse SCCs |
+| `mais_sa` | L | simulated annealing on topological orders (Galinier et al. 2013), bitmask conflicts, 5-candidate tournament | larger sparse SCCs |
 | `mais_lazy` | L, MAIS bound | CP-SAT on y_v, cycle cuts added lazily, warm start | proves MAIS on sparse SCCs (n=80: bound 24 vs 41 for the ordering model) |
 | `mais_order` | L, MAIS bound | CP-SAT ordering model (existing `minrank/exact/lower.py`) | dense SCCs |
 | `cover_tabu` | U | TabuCol on the conflict graph | mid-size undirected |
 | `partial_cover` | U | clique cover + disjoint cycles of cliques | rarely beyond `quick` |
 | `sat_down` | U, closes mr | is minrk ≤ U−1? SAT with the independent-set symmetry fix (`indep_cols`) | n ≤ ~50 |
 | `sat_up` | L_mr, closes mr | is minrk ≤ L? UNSAT raises L, SAT closes | when minrk = MAIS (planted digraph n=50: closes at 8 in 4 s; descending from the cover stalls at 13 after 60 s) |
-| `shannon` | L_β | polymatroid LP, 2ⁿ variables, HiGHS interior point + crossover, n ≤ 12 | odd cycles, Mycielski, small SCCs with fractional β |
+| `shannon` | L_β | polymatroid LP: full (2ⁿ variables, n ≤ 12) or orbit-reduced under Aut(G) (n ≤ 16); exact basis duals as fallback | odd cycles and their complements, circulants, Paley, Mycielski: β pinned on 21/23 structured graphs |
 | `frac_cover` | U_β | LP over cliques, column generation with CP-SAT max-weight-clique pricing | undirected / mutual-heavy SCCs |
 | `block_lns` | U | merge blocks of a cover, re-solve exactly by SAT (optional, `--lns`) | **never** in our tests (negative) |
 | `mais_evolved` | L | a FunSearch program (`--evolved PATH`) + SA from it | see §4 |
@@ -172,6 +242,33 @@ So the evolved construction is better, but SA erases the head start within about
 the opt-in tool `mais_evolved` (`--evolved pincer/funsearch/runs/gp42_s3/best.py`), not a default. Lesson for the
 next target (§7): score candidates **after** the downstream solver, at the deployment budget.
 
+### 4b. Second target: the candidate choice inside simulated annealing (24 Nov)
+
+Following the lesson above, the evolved object is now part of the downstream solver: `score(f)` ranks the 5
+candidates SA samples per move (`sandbox_sa.py`; f = conflicts at the best slot, kept neighbours, degrees,
+temperature, step). Fitness = set size after a fixed move budget of 40 n (load-independent) on harder graphs
+(n = 120-250, splits `train_sa` / `val_sa`), seed = fewest conflicts first.
+
+| | train | val | test (move budget) |
+|---|---|---|---|
+| seed (fewest conflicts) | 0.955 | 0.954 | 0.983 |
+| GP, 500 programs (`runs/gpsa_s0`) | 0.978 | 0.985 | 0.998 |
+| GP, 500 programs (`runs/gpsa_s1`) | 0.983 | 0.974 | 0.984 |
+
+Deployment check at equal **wall time** on the 16 test graphs × 3 seeds (`deploy_check_sa.py`, and the formula
+ported into `pincer.mais.sa_order(score=...)`):
+
+| SA seconds | library default | gpsa_s0 in the library (W/T/L) | gpsa_s1 in the library (W/T/L) |
+|---|---|---|---|
+| 0.5 | 0.987-0.989 | 0.988 (11/26/11) | 0.987 (12/26/10) |
+| 2 | 1.008 | 1.003 (4/30/14) | 1.001 (2/33/13) |
+
+Verdict: the evolved score beats its seed at a fixed move budget, but not the library at equal time; the library
+keeps the default. What this target did produce is the seed itself: building it showed that a 5-candidate
+tournament plus kept-neighbour bitmasks beats plain SA clearly (§0a), and that is now the default `mais_sa`.
+Two GP targets, two honest negatives for evolution against a tuned baseline; the LLM runs (§7.1) must clear the
+same bar (deployment budget, equal wall time).
+
 
 ## 5. Experiments
 
@@ -194,6 +291,33 @@ Tool attribution on test2 (sum of gap reduction after the quick pass, index poli
 `partial_cover` 0. `sat_up` (SAT from below with the independent-set fix) is the single most useful minrank tool;
 the Shannon LP matters only on the small structured graphs of the first test split.
 
+
+**Planted extra_p = 0.1 benchmark of `minrank/` (n = 100, planted rank 10), Pincer index at 120 s per graph vs the
+exact driver's run (`minrank/results/exact_planted_e01.csv`, 300 s per SAT call).** Raw rows:
+`pincer/results/bench_planted_e01_n100_b120.jsonl`.
+
+| graphs | exact driver | Pincer (120 s) |
+|---|---|---|
+| directed, 8 | all closed at 10, 16-20 s | all closed at 10, 7-23 s |
+| undirected s0 | 10 (UNSAT 128 s) | 10 (closed at 45 s) |
+| undirected s2, s6 | open [8, 13], [9, 13] | **10 (closed at 61 s, 34 s)** |
+| undirected s3 | 10 (UNSAT 111 s) | [10, 12] (missed the rank-10 matrix) |
+| undirected s1, s4, s5, s7 | open [8, 13] | open [10, 13]; then one direct SAT call "≤ 10?" (`pincer/probe_rank.py`, 600 s limit): **SAT in 539, 74, 14, 1.6 s → 10** |
+
+Why it works: the driver starts at the clique cover and asks "≤ 12?", which times out; Pincer's `sat_up` asks
+"≤ L?" with L the current lower bound, where the independent-set fix pins 80-90 % of the variables, so each UNSAT
+step takes < 1 s and the first SAT step (r = 10) 3-5 s. Suggestion for the driver: ascend from α instead of probing
+α once and then descending.
+
+**Structured split (23 vertex-transitive / symmetric graphs, 60 s, `pincer/results/summary_structured_b60.md`):**
+
+| method | minrank pinned | β pinned | mean β gap |
+|---|---|---|---|
+| classic | 2 | 2 | 1.22 |
+| satdescend | 16 | 2 | 1.22 |
+| Pincer round-robin | 23 | 21 | 0.14 |
+| Pincer index | 23 | 20 | 0.17 |
+
 Earlier measurements that shaped the toolbox (same container):
 
 | question | measurement |
@@ -201,13 +325,14 @@ Earlier measurements that shaped the toolbox (same container):
 | exact MAIS models | 20 s each, n=80 p=0.3: lazy cycles bound 24-26 vs ordering 41-43; p=0.6: ordering proves 9, lazy bound 10; n=300 p=0.1: SA 3 s finds 68-70 vs ordering 56-58 |
 | minrank SAT encodings | n=40 random digraph, 60 s: independent-set fix 21 → 18; original encoding (`sat_descend`) stays 21 |
 | block-minrank LNS | 400 merge attempts on 6 graphs (n 40-150): 0 accepted |
-| Shannon LP time | n=11: 2 s (interior point) vs 88 s (dual simplex); n=12: 9-17 s |
+| Shannon LP time | n=11: 2 s (interior point) vs 88 s (dual simplex); n=12: 9-17 s; orbit-reduced: C13 0.5 s, C15 9-13 s, circ(16;1,4) 32-51 s (dual simplex stalls > 300 s there, so it is only a time-limited fallback) |
+| partial clique cover | greedy group merging on the 26 test2 graphs: 0 improvements over the clique cover |
 
 
 ## 6. Reproduce
 
 ```bash
-bash scripts/pincer/00_test.sh                                   # install extras, 58 tests
+bash scripts/pincer/00_test.sh                                   # install extras, 66 tests
 PYTHONPATH=. python -m pincer.agent minrank/bench/graphs/cycle_5.json --budget 20 --out /tmp/c5_bundle.json
 PYTHONPATH=. python -m pincer.certify minrank/bench/graphs/cycle_5.json /tmp/c5_bundle.json
 SPLIT=train METHODS=roundrobin CALIBRATE=1 bash scripts/pincer/01_bench.sh      # priors for the index policy
@@ -221,19 +346,21 @@ PROPOSER=gp ITER=1500 bash scripts/pincer/02_funsearch.sh                       
    `PROPOSER="local:http://127.0.0.1:8000/v1|Qwen/Qwen2.5-Coder-32B-Instruct-AWQ" ITER=300 bash scripts/pincer/02_funsearch.sh`
    and `PROPOSER=anthropic ITER=300 ...`; compare with `PROPOSER=gp ITER=300` (same number of evaluated programs).
    Pass: val_selected ≥ gp's + 0.01 and test wins on ≥ 10/16 graphs. Cost: log `llm_usage` from summary.json.
-2. **Re-target FunSearch at deployment conditions.** Score = acyclic set after greedy + 1 s SA (or the SA move
-   selection itself), and a minrank target: the choice of the symmetry-breaking set / column order for `sat_up`,
-   scored by SAT time to decide r = L on the hard planted/random graphs of `minrank/`. Pass: beats the default on
-   val at the deployment budget.
+2. ~~Re-target FunSearch at deployment conditions~~ done for SA (§4b, negative for GP). The fixed-set choice for
+   SAT was studied instead of evolved (§0b): mostly solver luck, so no target there.
 3. **LLM controller**: `bash scripts/pincer/03_llm_controller.sh` (test2; the budget includes LLM latency). Pass: paired total-gap wins > losses against `index`. If not, the LLM's place is offline (writing
    tools and priors), not in the loop.
-4. **Bigger Shannon LPs**: restrict to Aut(G)-invariant solutions (orbit variables) and expand the dual back for the
-   certificate; target SCCs with n ≤ 20 (structured graphs). Pass: C11, C13, Mycielski M5 certified exactly.
-5. **Upper bounds on β for digraphs**: vector-linear partial clique cover over GF(p) with an explicit code
-   certificate (general decodability checker: rank of B restricted to unknown columns). On random digraphs the β
-   gap equals the minrank gap today.
-6. **DRAT** for the UNSAT records (tooling plan in WORK.md T4) so no bound is solver-trusted.
-7. **Scale study**: 300 s budgets and n = 200-500 to find where the tool mix changes.
+4. ~~Bigger Shannon LPs~~ done for n ≤ 16 (§0a); M5 (n = 23) needs an LP over fewer inequalities (e.g. only
+   inequalities on orbit representatives of small sets) — open.
+5. ~~Partial clique cover over GF(p)~~ measured, no gain (§0a). Better β upper bounds for random digraphs need
+   minrk over other fields (`minrank/exact/sat_fq.py`) or composite / vector codes — open.
+6. **DRAT** for the exported CNFs: `bash scripts/minrank/10_drat_check.sh pincer/certificates/unsat_cnf` on the
+   server (§0b).
+7. **Ascending SAT search in the minrank driver** (done by hand here for the n = 100 planted graphs: all 8 settled);
+   in Pincer, let `sat_up` keep a long slice when its question is r = L and the lower bound has just risen.
+8. ~~Scale study~~ first pass done (§0b). Next at scale: an anytime SAT that keeps its learnt state across slices
+   (incremental solving with assumptions) instead of restarting each slice, and MAIS bounds beyond CP-SAT for
+   n ≥ 200 (both are where the n = 200-400 gaps sit).
 
 
 ## 8. Real-LLM runs (25 Nov 2026, Qwen2.5-Coder-32B-Instruct-AWQ, one RTX A6000)

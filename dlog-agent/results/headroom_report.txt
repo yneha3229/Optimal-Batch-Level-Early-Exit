@@ -1,0 +1,81 @@
+48 discrete-log instances, 60s per method (failure = 120s); shifted geometric mean of time, shift 0.1s. A run counts only if g^x = h was verified.
+
+all (48):
+    bsgs            solved 22/48  sgm  16.883s
+    rho             solved 21/48  sgm  24.157s
+    kangaroo        solved  6/48  sgm  77.508s
+    pohlig_hellman  solved 33/48  sgm   4.905s
+    pari_generic    solved 44/48  sgm   0.764s
+  best single: pari_generic 0.764s (solves 44) | oracle 0.727s solves 44 | speedup x1.1 | fastest-correct: {'pari_generic': 38, 'kangaroo': 2, 'pohlig_hellman': 2, 'rho': 1, 'bsgs': 1}
+
+Fp/generic (6):
+    bsgs            solved  4/6  sgm  10.192s
+    rho             solved  4/6  sgm  15.439s
+    kangaroo        solved  0/6  sgm 120.000s
+    pohlig_hellman  solved  4/6  sgm  16.063s
+    pari_generic    solved  6/6  sgm   0.096s
+  best single: pari_generic 0.096s (solves 6) | oracle 0.096s solves 6 | speedup x1.0 | fastest-correct: {'pari_generic': 6}
+
+Fp/index_calculus (6):
+    bsgs            solved  0/6  sgm 120.000s
+    rho             solved  0/6  sgm 120.000s
+    kangaroo        solved  0/6  sgm 120.000s
+    pohlig_hellman  solved  0/6  sgm 120.000s
+    pari_generic    solved  6/6  sgm   0.583s
+  best single: pari_generic 0.583s (solves 6) | oracle 0.583s solves 6 | speedup x1.0 | fastest-correct: {'pari_generic': 6}
+
+Fp/interval (6):
+    bsgs            solved  0/6  sgm 120.000s
+    rho             solved  0/6  sgm 120.000s
+    kangaroo        solved  2/6  sgm  78.053s
+    pohlig_hellman  solved  0/6  sgm 120.000s
+    pari_generic    solved  2/6  sgm  89.380s
+  best single: kangaroo 78.053s (solves 2) | oracle 76.444s solves 2 | speedup x1.0 | fastest-correct: {'pari_generic': 1, 'kangaroo': 1}
+
+Fp/partial_smooth (6):
+    bsgs            solved  0/6  sgm 120.000s
+    rho             solved  0/6  sgm 120.000s
+    kangaroo        solved  0/6  sgm 120.000s
+    pohlig_hellman  solved  6/6  sgm   5.765s
+    pari_generic    solved  6/6  sgm   1.884s
+  best single: pari_generic 1.884s (solves 6) | oracle 1.884s solves 6 | speedup x1.0 | fastest-correct: {'pari_generic': 6}
+
+Fp/smooth (6):
+    bsgs            solved  0/6  sgm 120.000s
+    rho             solved  0/6  sgm 120.000s
+    kangaroo        solved  0/6  sgm 120.000s
+    pohlig_hellman  solved  6/6  sgm   0.066s
+    pari_generic    solved  6/6  sgm   0.043s
+  best single: pari_generic 0.043s (solves 6) | oracle 0.043s solves 6 | speedup x1.0 | fastest-correct: {'pari_generic': 6}
+
+EC/generic (6):
+    bsgs            solved  6/6  sgm   5.024s
+    rho             solved  5/6  sgm   9.106s
+    kangaroo        solved  0/6  sgm 120.000s
+    pohlig_hellman  solved  5/6  sgm   9.131s
+    pari_generic    solved  6/6  sgm   2.129s
+  best single: pari_generic 2.129s (solves 6) | oracle 2.049s solves 6 | speedup x1.0 | fastest-correct: {'rho': 1, 'pari_generic': 4, 'bsgs': 1}
+
+EC/interval (4):
+    bsgs            solved  4/4  sgm   0.967s
+    rho             solved  4/4  sgm   3.299s
+    kangaroo        solved  4/4  sgm   1.113s
+    pohlig_hellman  solved  4/4  sgm   3.169s
+    pari_generic    solved  4/4  sgm   0.336s
+  best single: pari_generic 0.336s (solves 4) | oracle 0.247s solves 4 | speedup x1.4 | fastest-correct: {'kangaroo': 1, 'pari_generic': 3}
+
+EC/partial_smooth (4):
+    bsgs            solved  4/4  sgm   0.448s
+    rho             solved  4/4  sgm   1.109s
+    kangaroo        solved  0/4  sgm 120.000s
+    pohlig_hellman  solved  4/4  sgm   0.073s
+    pari_generic    solved  4/4  sgm   0.036s
+  best single: pari_generic 0.036s (solves 4) | oracle 0.036s solves 4 | speedup x1.0 | fastest-correct: {'pari_generic': 4}
+
+EC/smooth (4):
+    bsgs            solved  4/4  sgm   0.757s
+    rho             solved  4/4  sgm   1.866s
+    kangaroo        solved  0/4  sgm 120.000s
+    pohlig_hellman  solved  4/4  sgm   0.044s
+    pari_generic    solved  4/4  sgm   0.040s
+  best single: pari_generic 0.040s (solves 4) | oracle 0.039s solves 4 | speedup x1.0 | fastest-correct: {'pohlig_hellman': 2, 'pari_generic': 2}

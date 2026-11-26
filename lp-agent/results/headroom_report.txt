@@ -1,0 +1,23 @@
+663 instances: 625 solved LPs, 37 skipped (infeasible/unbounded/limit), 1 errors
+
+== target relative KKT <= 0.0001  (shifted geometric mean of time, failures = 60 s)
+  dual_simplex    solved  625/625  sgm 0.103 s
+  ipm             solved  621/625  sgm 0.103 s
+  ipm_crossover   solved  625/625  sgm 0.094 s
+  pdlp_highs      solved  603/625  sgm 0.487 s
+  pdlp_ortools    solved  609/625  sgm 0.378 s
+  primal_simplex  solved  623/625  sgm 0.169 s
+  best single method: ipm_crossover (0.094 s); per-instance oracle: 0.040 s -> headroom x2.32; oracle solves 625
+  fastest method per instance: {'dual_simplex': 206, 'primal_simplex': 173, 'ipm': 102, 'pdlp_highs': 75, 'pdlp_ortools': 65, 'ipm_crossover': 4}
+  on the 22 instances with >= 100k nonzeros: best single dual_simplex 0.61 s, oracle 0.43 s -> x1.41
+
+== target relative KKT <= 1e-08  (shifted geometric mean of time, failures = 60 s)
+  dual_simplex    solved  625/625  sgm 0.103 s
+  ipm             solved  619/625  sgm 0.130 s
+  ipm_crossover   solved  625/625  sgm 0.094 s
+  pdlp_highs      solved  485/625  sgm 2.202 s
+  pdlp_ortools    solved  587/625  sgm 0.744 s
+  primal_simplex  solved  623/625  sgm 0.169 s
+  best single method: ipm_crossover (0.094 s); per-instance oracle: 0.047 s -> headroom x2.00; oracle solves 625
+  fastest method per instance: {'dual_simplex': 233, 'primal_simplex': 189, 'ipm': 87, 'pdlp_ortools': 54, 'pdlp_highs': 52, 'ipm_crossover': 10}
+  on the 22 instances with >= 100k nonzeros: best single dual_simplex 0.61 s, oracle 0.52 s -> x1.17

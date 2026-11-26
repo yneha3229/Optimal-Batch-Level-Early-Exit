@@ -233,3 +233,40 @@ def test_extract_llm_reply():
     reply = "Here you go:\n```python\ndef priority_v2(v, ctx):\n    x = ctx.in_deg(v)\n    return x * 2\n\nprint(1)\n```"
     code = extract(reply)
     assert "def priority(v, ctx):" in code and "print(1)" not in code
+
+
+# ------------------------------------------------------------------------------ symmetry-reduced Shannon LP
+@pytest.mark.parametrize("g", [gen.cycle(7), gen.cycle(9), gen.circulant(10, (1, 3)), gen.cycle(7).complement(),
+                               gen.paley(5)], ids=lambda g: g.name)
+def test_symmetric_shannon_equals_full(g):
+    from pincer.lp import check_shannon_sym, shannon_bound_sym
+
+    full = shannon_bound(g)
+    sym = shannon_bound_sym(g)
+    assert abs(full.lp_value - sym.lp_value) < 1e-7
+    assert sym.bound == full.bound
+    assert check_shannon_sym(g, sym.gens, sym.y, sym.mu) >= sym.bound
+
+
+def test_symmetric_shannon_rejects_fake_automorphism():
+    from pincer.lp import check_shannon_sym, shannon_bound_sym
+
+    g = gen.cycle(7)
+    sym = shannon_bound_sym(g)
+    fake = [[1, 0, 2, 3, 4, 5, 6]]  # swapping 0 and 1 is not an automorphism of C7
+    with pytest.raises(ValueError):
+        check_shannon_sym(g, fake, sym.y, sym.mu)
+
+
+def test_agent_pins_beta_of_c13_via_symmetry():
+    g = gen.cycle(13)
+    r = _run(g, budget=30.0)
+    assert r.totals["beta"] == ["13/2", "13/2"]
+    assert verify_bundle(g, json.loads(json.dumps(r.bundle)))["beta"] == ["13/2", "13/2"]
+
+
+def test_exact_basis_duals_close_c14():
+    """Rounded interior-point duals miss 7 by ~1e-9 on C14; the exact basis solve hits it."""
+    from pincer.lp import shannon_bound_sym
+
+    assert shannon_bound_sym(gen.cycle(14)).bound == 7
