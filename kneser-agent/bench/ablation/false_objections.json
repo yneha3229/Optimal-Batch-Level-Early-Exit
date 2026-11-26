@@ -16,5 +16,8 @@
  "K_14_4_s0|sonnet-med": 0,
  "K_14_4_s0|opus-low": 0,
  "K_14_4_s0|opus-med": 0,
- "K_14_4_s0|opus-high": 0
+ "K_14_4_s0|opus-high": 0,
+ "K_16_4_s3|Qwen2.5-32B-cpu": 2,
+ "K_16_4-del0.01_s0|Qwen2.5-32B-cpu": 3,
+ "K_14_4_s0|Qwen2.5-32B-cpu": 2
 }

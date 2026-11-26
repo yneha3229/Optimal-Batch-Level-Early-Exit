@@ -1,10 +1,10 @@
 ## Analysis (26 Nov 2026, GPU server)
 
 Conditions: other users' jobs ran on the machine throughout. To save time, the agent runs overlapped with the
-baselines (on separate cores), so the baseline timings were not measured on an otherwise idle machine. All Qwen
+baselines (on separate cores), so the baseline timings were not measured on an otherwise idle machine. All benchmark Qwen
 numbers below are **Qwen2.5-Coder-32B-AWQ with prompts v3, before the plan-results fix d22d46c** (results of checks
-run by the Solver's own plan were not shown to the agents). The rerun on the fixed code (v4) and the Qwen3-4B
-ablation could not run: from 18:59 UTC, `cuInit` failed on every GPU of the server (error 3, also on an idle
+run by the Solver's own plan were not shown to the agents). The Qwen3-4B ablation could not run, and the Qwen 32B rerun on the fixed code ran
+on CPU only for the three reference cases (see the model ablation below): from 18:59 UTC, `cuInit` failed on every GPU of the server (error 3, also on an idle
 3080 Ti), which needs an admin reset; already-running processes of other users were not affected.
 
 - **Proven exact, 20 benchmark graphs:** standard methods 2, Kushagra's script 14, agent without LLM 14, agent +
@@ -39,10 +39,14 @@ ablation could not run: from 18:59 UTC, `cuInit` failed on every GPU of the serv
   exceptions both reach the same brackets ([84, 93], [286, 287], [495, 507]), on the 3 controls the agent's brackets
   are tighter (e.g. K(16,4)-del0.01: [455, 534] vs [0, 1818]). With prompts v1, Qwen lost to the no-LLM agent on
   K(14,4) ([286, 299] vs [286, 287]); the scheduler's safety net fixed this.
-- **Model ablation (bench/ablation/, three reference cases, one run each):** every model, Qwen 32B and five Claude
-  configurations (Haiku 5.5 medium, Sonnet 5.5 medium, Opus 5.5 low/medium/high), ends with the same certified
-  brackets ([455, 455], [455, 534], [286, 287]), so the model changes the dialogue, not the result. The Claude
-  Solvers named the right (n, k) in the first reply on 14 of 15 runs (Haiku missed the perturbed graph), Qwen on 0 of
-  3; Qwen's Critic made 5 false objections, the Claude Critics none; Qwen needed 24 LLM calls over the three graphs,
-  the Claude configurations 11-13. Caveat: the Claude rows ran on the fixed code (d22d46c), the Qwen rows before it.
-- **32B vs 4B:** not run (GPU failure above).
+- **Model ablation (bench/ablation/, three reference cases, one run each):** every model ends with the same
+  certified brackets ([455, 455], [455, 534], [286, 287]): the model changes the dialogue, not the result. The Claude
+  Solvers (Haiku 5.5 medium, Sonnet 5.5 medium, Opus 5.5 low/medium/high) named the right (n, k) in the first reply on
+  14 of 15 runs, Qwen 32B on 0 of 6; the Claude Critics made 0 false objections, Qwen's 5 (GPU, code before
+  d22d46c) and 7 (CPU, fixed code); Qwen needed 27-28 LLM calls over the three graphs, the Claude configurations
+  11-13. So the plan-results fix did not change Qwen's weak point: its Critic still objects to numbers that are right
+  (e.g. "the common-neighbour counts [70, 126, 210, 330] do not match K(16,4)"). Qwen GPU = vLLM, AWQ, 26 Nov
+  18:0x-18:4x; Qwen CPU = llama.cpp b12780, GGUF Q4_K_M, 12 cores, budget 7,200 s instead of 3,600 s (about 6.5 min
+  per reply, 52-56 min per run), run because the GPUs stopped initialising CUDA at 18:59 UTC. False objections are
+  labelled by hand (Qwen CPU rows labelled by Claude Code, same rule as the other rows).
+- **32B vs 4B:** not run (GPU failure above; a 4B model on CPU was not attempted).

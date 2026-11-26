@@ -9,7 +9,9 @@ Each run gives the pipeline's LLM role (Solver, Critic, Verifier) to one model, 
   not to search or browse, and not to write code. The prompt it gets is below.
 - The Solver and Critic see only the numeric graph summary and check results; the Verifier sees the run result
   without graph name, spec or ground truth.
-- Qwen rows come from the vLLM runs on the GPU server (`--llm local`), same prompts (v3) but the code
+- Qwen CPU rows (`Qwen2.5-32B-cpu`): Qwen 32B GGUF Q4_K_M on llama.cpp (CPU, cores 16-27), fixed code, `cpu_qwen.sh`
+  (budget 7,200 s: about 6.5 min per reply).
+- Qwen GPU rows come from the vLLM runs on the GPU server (`--llm local`), same prompts (v3) but the code
   *before* d22d46c (plan-step results were not shown to the agents): the rerun on the fixed code is blocked
   because CUDA stopped initialising on the server's GPUs at 18:59 UTC on 26 Nov. K_16_4_s3 is the reference
   run; K_14_4_s0 and K_16_4-del0.01_s0 are the benchmark runs.
