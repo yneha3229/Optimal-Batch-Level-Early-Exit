@@ -1,0 +1,27 @@
+# Model ablation: blind agents
+
+Each run gives the pipeline's LLM role (Solver, Critic, Verifier) to one model, which answers blind:
+
+- `run.sh CONFIG SPEC SEED` starts the pipeline with `--llm chat:<folder>`; every LLM request is written to
+  `chat/<CONFIG>_<graph>/req_NNN.json` and the pipeline waits for `rep_NNN.json`.
+- A fresh agent with no other context (Claude Code subagent of the given model and effort) answers the requests. It
+  may run only `next_req.py <folder>` and write reply files into that folder; it is told not to open any other file,
+  not to search or browse, and not to write code. The prompt it gets is below.
+- The Solver and Critic see only the numeric graph summary and check results; the Verifier sees the run result
+  without graph name, spec or ground truth.
+- Qwen rows come from the vLLM runs on the GPU server (`--llm local`), same code and prompts.
+- `score.py` scores the traces; `score.py --objections` prints every Critic objection for hand labelling into
+  `false_objections.json`; `plot.py` draws `model_ablation.png`.
+
+Agent prompt (folder filled in):
+
+> You are acting as the language model behind a running software pipeline. You have no other context, and you must
+> not look for any: reason independently and autonomously, only from the data in each request. The ONLY command you
+> may run is `python3 next_req.py <folder>`. The ONLY file operation you may do is writing reply files into that same
+> folder. Do not read, list, search or open any other file or directory, do not run any other command, do not use web
+> search or fetch. Do not write code to compute anything; think it through yourself. Loop: run the command; on DONE
+> stop; otherwise treat "system" as your instructions and "prompt" as the input, produce exactly the reply the system
+> text asks for (one JSON object), write it to `<folder>/rep_<id as 3 digits>.json`, repeat.
+
+Caveats: the Claude agents run inside Claude Code (not a plain API call), so their LLM seconds include agent overhead
+and are not compared with vLLM; one run per cell.

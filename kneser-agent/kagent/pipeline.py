@@ -76,7 +76,7 @@ class Run:
         self.backend = LLM.make(llm)
         import re
         self.llm_name = (re.sub(r"[^A-Za-z0-9.-]+", "_", llm.split("|")[-1].split("/")[-1]) if "|" in llm
-                         else ("Qwen2.5-Coder-32B-Instruct-AWQ" if llm == "local" else llm))
+                         else ("Qwen2.5-Coder-32B-Instruct-AWQ" if llm == "local" else llm.split(":")[0]))
         self.events = []
         self.live = live
         tw = time.perf_counter()
@@ -89,6 +89,8 @@ class Run:
         self.S = None
         self.cover = None
         self.tried = set()
+        self.history = []
+        self.code_log = []
         self.pending = {}           # future -> (kind, info)
 
     # ----- trace
@@ -163,6 +165,8 @@ class Run:
         elif kind == "code":
             self.trace("done", tool="code", p=res["p"], c=res["c"], rank=res["rank"], seconds=res["seconds"],
                        **({"rank_above": res["rank_above"]} if "rank_above" in res else {}))
+            self.code_log.append({"p": res["p"], "c": res["c"], "length": res["rank"],
+                                  **({"length_above": res["rank_above"]} if "rank_above" in res else {})})
             if res["rank"] is not None:
                 self.offer_upper(res["rank"], {"kind": "linear_code", "p": res["p"], "c": res["c"],
                                                "meets_lower": res["meets_lower"]})
@@ -196,6 +200,7 @@ class Run:
             except (KeyError, TypeError, ValueError) as e:
                 results.append({"tool": ch.get("tool") if isinstance(ch, dict) else None, "result": f"bad args: {e}"})
         self.trace("checks", results=results)
+        self.history += results                 # every check result, whoever asked for it, is shown to the agents
         return results
 
     def _one_check(self, ch, summary, results):
@@ -235,6 +240,7 @@ class Run:
         elif tool == "family_rule" and self.allow_family:
             r = tools.family_rule(int(a["n"]), int(a["k"]))
             self.trace("rule", tool="family_rule", args=a, result=r)
+            self.history.append({"tool": "family_rule", "args": a, "result": r, "from": "plan"})
             if r:
                 self.submit_code(r["p"], r["c"], why="family rule")
         elif tool == "independent_set":
@@ -260,7 +266,7 @@ class Run:
         payload = {"summary": summary, "board": self.view()}
         plan, src = self.agents.solver(payload, default)
         rounds = 0
-        history = []                                    # every check result so far, shown to both agents
+        history = self.history                          # every check result so far (critic- or plan-requested)
         while self.backend is not None and rounds < 3:
             crit, _ = self.agents.critic({"summary": summary, "solver": plan, "board": self.view(),
                                           "check_history": history})
@@ -268,7 +274,6 @@ class Run:
             if crit["verdict"] == "accept":
                 break
             checks = self.run_checks(crit.get("requested_checks", []), summary)
-            history += checks
             if self.closed():
                 break
             plan, _ = self.agents.solver({**payload, "board": self.view(), "critic_objections": crit["objections"],
@@ -279,7 +284,7 @@ class Run:
             self.execute(plan["plan"], summary)
         if not self.closed() and self.left() > 0:                       # STALL checkpoint
             self.trace("event", name="checkpoint")
-            tried = sorted(self.tried)
+            tried = self.code_log[-40:] or sorted(self.tried)     # (p, c) and the code length each one gave
             fallback = {"plan": [{"tool": "spectral", "args": {"top": 30}, "why": "fallback"}]}
             plan2, _ = self.agents.checkpoint({"summary": summary, "board": self.view(), "tried_codes": tried,
                                                "hypothesis": plan.get("family_hypothesis"),
@@ -333,7 +338,11 @@ class Run:
         base = ROOT / "results" / "baselines.jsonl"
         bl = [json.loads(l) for l in base.read_text().splitlines()] if base.exists() else []
         bl = [r for r in bl if r.get("spec") == self.spec]
-        vtxt, _ = self.agents.verifier({"result": result, "baselines": bl[-1:] or "not run"})
+        # the Verifier LLM is blind too: no graph name, spec or ground truth (the report compares with the truth in code)
+        hide = ("graph", "spec", "truth", "name")
+        vtxt, _ = self.agents.verifier({"result": {k: v for k, v in result.items() if k not in hide},
+                                        "baselines": [{k: v for k, v in r.items() if k not in hide} for r in bl[-1:]]
+                                        or "not run"})
         extra = vtxt.get("checks_requested", [])
         if "decode_more" in extra and verdict == "proven":
             checks["decoding_more"] = verify.decode_simulation(A, uc["p"], uc["c"], self.S, trials=10, seed=7)
