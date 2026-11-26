@@ -105,6 +105,10 @@ def solve(A, fallback=None, fallback_limit=120.0):
             assert is_independent(A, S)
             out.update(upper=r, lower=len(S), certificate_fits=True)
             if len(S) >= r:
+                enc, dec = explicit_code(A, p, eps, S)
+                assert enc.shape[0] == r and simulate_code(A, p, eps, enc, dec)   # explicit code, every receiver decodes
+                out.update(code={"field": p, "transmissions": int(enc.shape[0]), "senders": [int(v) for v in S],
+                                 "encoder": enc, "decoder": dec})
                 out.update(exact=True, path="rule: one field, one rank, greedy star",
                            alpha_formula=comb(n - 1, k - 1), s=time.perf_counter() - t0)
                 return out
@@ -120,3 +124,36 @@ def solve(A, fallback=None, fallback_limit=120.0):
                    path=(out["path"] + " -> general agent").strip(" ->"))
     out["s"] = time.perf_counter() - t0
     return out
+
+
+# ------------------------------------------------------------------------------------------- explicit code
+def explicit_code(A, p, eps, S):
+    """The explicit scalar linear index code over F_p (label-free).
+
+    M = I + eps*A fits the graph, and M[S,S] = I for the independent set S, so the rows of M indexed by S are a
+    basis of its row space whenever rank_p(M) = |S|.
+      encoder: for each A in S broadcast  y_A = sum_B M[A,B] x_B          (|S| transmissions)
+      decoder: receiver v computes  z_v = sum_{A in S} M[v,A] y_A  ( = x_v + eps * sum_{B ~ v} x_B ),
+               then subtracts its side information eps * sum_{B ~ v} x_B   (for v in S, z_v = y_v)
+    Returns (encoder rows over F_p as a |S| x N array, decoder coefficient matrix N x |S|).
+    """
+    N = A.shape[0]
+    M = (np.eye(N, dtype=np.int64) + eps * A) % p
+    S = np.asarray(S)
+    enc = M[S]                       # |S| x N : transmission j is enc[j] . x
+    dec = M[:, S]                    # N x |S| : receiver v combines the transmissions with dec[v]
+    return enc, dec
+
+
+def simulate_code(A, p, eps, enc, dec, trials=3, seed=0):
+    """Every receiver decodes its own message from the broadcast and its side information, for random messages."""
+    rng = np.random.default_rng(seed)
+    N = A.shape[0]
+    for _ in range(trials):
+        x = rng.integers(0, p, N)
+        y = enc @ x % p                                   # the broadcast
+        z = dec @ y % p                                   # each receiver's combination
+        side = (eps * (A @ x)) % p                        # what each receiver can subtract (it knows x_B, B ~ v)
+        if not np.array_equal((z - side) % p, x):
+            return False
+    return True
