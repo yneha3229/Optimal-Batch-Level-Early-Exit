@@ -28,6 +28,34 @@ LIMIT = 120.0
 LARGE = [(29, 2), (31, 2), (40, 2), (16, 3), (17, 3), (18, 3), (13, 4), (14, 4), (15, 4), (13, 5), (17, 4), (15, 5)]
 
 
+def _isolated(fn, args, limit):
+    """Run fn(*args) in a forked child; a crash (e.g. out of memory) is reported instead of killing the row."""
+    import multiprocessing as mp
+
+    ctx = mp.get_context("fork")
+    a, b = ctx.Pipe(duplex=False)
+
+    def child(conn):
+        try:
+            conn.send(("ok", fn(*args)))
+        except Exception as e:  # noqa: BLE001
+            conn.send(("error", repr(e)[:200]))
+
+    p = ctx.Process(target=child, args=(b,), daemon=True)
+    p.start()
+    got = a.poll(limit + 30)
+    res = a.recv() if got else None
+    p.join(5)
+    if p.is_alive():
+        p.kill()
+        p.join()
+    if res is None:
+        return None, ("crashed (exit code %s)" % p.exitcode) if p.exitcode not in (None, 0, -9) else "timeout"
+    if res[0] == "ok":
+        return res[1], ""
+    return None, "error: " + str(res[1])
+
+
 def job(n, k, part):
     import kneser_bench as KB
     from minrank_agent import structgraph as SG
@@ -40,25 +68,23 @@ def job(n, k, part):
     r = solve(A, fallback=KB.agent, fallback_limit=LIMIT)
     rec["fast_agent"] = {kk: (v if not isinstance(v, (np.integer,)) else int(v)) for kk, v in r.items()}
     rec["fast_agent"]["s"] = time.perf_counter() - t
-    if part == 2:                                   # standard methods, same rules as kneser_bench
+    if part == 2:                                   # standard methods, same rules, each isolated
         t = time.perf_counter()
-        a, S, aopt = KB.cpsat_alpha(A, LIMIT)
-        rec["cpsat_alpha"] = {"value": a, "proven": aopt, "s": time.perf_counter() - t}
+        res, err = _isolated(KB.cpsat_alpha, (A, LIMIT), LIMIT)
+        a, S, aopt = res if res else (None, [], False)
+        rec["cpsat_alpha"] = {"value": a, "proven": aopt, "s": time.perf_counter() - t, "note": err}
         t = time.perf_counter()
-        cc, ccopt = KB.cpsat_cover(A, LIMIT)
-        rec["cpsat_cover"] = {"value": cc, "proven": ccopt, "s": time.perf_counter() - t}
+        res, err = _isolated(KB.cpsat_cover, (A, LIMIT), LIMIT)
+        cc, ccopt = res if res else (None, False)
+        rec["cpsat_cover"] = {"value": cc, "proven": ccopt, "s": time.perf_counter() - t, "note": err}
         t = time.perf_counter()
-        try:
-            fc, fcopt = KB.frac_cover(A, LIMIT)
-        except Exception:
-            fc, fcopt = None, False
-        rec["frac_cover"] = {"value": fc, "proven": fcopt, "s": time.perf_counter() - t}
+        res, err = _isolated(KB.frac_cover, (A, LIMIT), LIMIT)
+        fc, fcopt = res if res else (None, False)
+        rec["frac_cover"] = {"value": fc, "proven": fcopt, "s": time.perf_counter() - t, "note": err}
         t = time.perf_counter()
-        try:
-            r2, r2opt = KB.f2_minrank_sat(A, a or 1, S, LIMIT)
-        except Exception:
-            r2, r2opt = None, None
-        rec["f2_minrank_sat"] = {"value": r2, "lower_or_proven": r2opt, "s": time.perf_counter() - t}
+        res, err = _isolated(KB.f2_minrank_sat, (A, a or 1, S, LIMIT), LIMIT)
+        r2, r2opt = res if res else (None, None)
+        rec["f2_minrank_sat"] = {"value": r2, "lower_or_proven": r2opt, "s": time.perf_counter() - t, "note": err}
     return rec
 
 
@@ -103,10 +129,12 @@ def _baseline(r):
     """Standard-methods bracket and the time it first closes (as if all ran in parallel), or None."""
     a = r["cpsat_alpha"]
     lo = a["value"] or 0
+    if a["value"] is None:
+        lo = None
     ups = [(r[m]["value"], r[m]["s"]) for m in ("cpsat_cover", "frac_cover", "f2_minrank_sat")
            if r.get(m) and r[m]["value"] is not None]
     hi = min(v for v, _ in ups) if ups else None
-    if a["proven"] and hi is not None and hi <= lo + 1e-9:
+    if lo is not None and a["proven"] and hi is not None and hi <= lo + 1e-9:
         return lo, hi, max(a["s"], min(t for v, t in ups if v <= lo + 1e-9))
     return lo, hi, None
 
@@ -135,6 +163,10 @@ def cmd_report():
                 continue
             lo, hi, bt = _baseline(src)
             std = f"**{lo}**" if bt is not None else f"[{_fmt(lo)}, {_fmt(hi)}]"
+            notes = [m for m in ("cpsat_alpha", "cpsat_cover", "frac_cover", "f2_minrank_sat")
+                     if part == 2 and src.get(m, {}).get("note")]
+            if notes:
+                std += " (" + ", ".join(m + " " + src[m]["note"].split(":")[0] for m in notes) + ")"
             stdt = f"{bt:.2f} s" if bt is not None else "open"
             if part == 1:
                 g = src["agent"]
