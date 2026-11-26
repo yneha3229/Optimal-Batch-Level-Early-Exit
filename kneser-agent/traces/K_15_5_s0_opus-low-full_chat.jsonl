@@ -1,0 +1,22 @@
+{"t": 0.001, "ev": "input", "graph": "K_15_5_s0_opus-low-full", "receivers": 3003, "llm": "chat", "family_rule": true}
+{"t": 0.013, "ev": "start", "tool": "describe"}
+{"t": 0.013, "ev": "start", "tool": "indep"}
+{"t": 0.013, "ev": "start", "tool": "cover"}
+{"t": 0.262, "ev": "board", "side": "lower", "value": 1001, "tool": "greedy independent set", "bracket": [1001, 3003]}
+{"t": 2.122, "ev": "board", "side": "upper", "value": 1218, "tool": "clique_cover", "bracket": [1001, 1218]}
+{"t": 3.331, "ev": "done", "tool": "describe", "seconds": 3.257}
+{"t": 3.331, "ev": "summary", "summary": {"receivers": 3003, "edges": 378378, "degree_min": 252, "degree_max": 252, "regular": true, "common_neighbours_adjacent": [1], "common_neighbours_nonadjacent": [6, 21, 56, 126], "triangles_through_sampled_vertex": 126, "spectrum_integral": true, "eigenvalues": [[252, 1], [56, 90], [6, 910], [-1, 1638], [-21, 350], [-126, 14]], "distinct_eigenvalues": 6, "seconds": 3.257}}
+{"t": 3.331, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 17.042, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.6, "evidence": ["receivers 3003, regular degree 252", "spectrum integral with 6 distinct eigenvalues (252,56,6,-1,-21,-126), alternating signs as in Kneser graphs", "lower bound 1001 vs upper 1218"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N and degree as binomials"}, {"tool": "family_rule", "args": {"n": 15, "k": 5}, "why": "candidate parameters; query library rule for (p,c)"}, {"tool": "spectral", "args": {"top": 5}, "why": "generic fallback code search"}], "notes": "Kneser parameters to be confirmed by binomial_match before relying on them."}}
+{"t": 17.042, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 20.744, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 20.744, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N and degree as binomials"}, {"tool": "family_rule", "args": {"n": 15, "k": 5}, "why": "candidate parameters; query library rule for (p,c)"}, {"tool": "spectral", "args": {"top": 5}, "why": "generic fallback code search"}], "hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.6, "evidence": ["receivers 3003, regular degree 252", "spectrum integral with 6 distinct eigenvalues (252,56,6,-1,-21,-126), alternating signs as in Kneser graphs", "lower bound 1001 vs upper 1218"]}, "critic_rounds": 1}
+{"t": 20.745, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 15, "k": 5}]}]}
+{"t": 20.745, "ev": "rule", "tool": "family_rule", "args": {"n": 15, "k": 5}, "result": {"p": 5, "c": 1}}
+{"t": 20.749, "ev": "start", "tool": "code", "p": 5, "c": 1, "why": "family rule"}
+{"t": 21.406, "ev": "done", "tool": "code", "p": 5, "c": 1, "rank": 1001, "seconds": 0.66}
+{"t": 21.406, "ev": "board", "side": "upper", "value": 1001, "tool": "linear_code", "bracket": [1001, 1001]}
+{"t": 21.406, "ev": "event", "name": "bracket_closed", "bracket": [1001, 1001]}
+{"t": 22.193, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 28.397, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Proven: beta = 1001. Lower bound is an independent set of size 1001 (check passed); upper bound is a linear code M = I + A over F_5 of length 1001, with code_fits, factorization and decoding checks all true. The agent tried 1 code, compute_s 3.997, but wall_s 21.406 is dominated by LLM time (17.41 s). Baselines: CP-SAT alpha found 1001 but unproven at 123 s; CP-SAT cover timed out; fractional cover gave 3003; F2 minrank SAT only reached lower 1000. kushagra_agent also proved 1001 with field 5 in 4.38 s, so it beat this agent on wall time (4.38 vs 21.41 s) with equal accuracy. Hypothesis params were left empty though correct family was implied; nothing suspicious in the certificates."}}
+{"t": 28.398, "ev": "verdict", "verdict": "proven", "bracket": [1001, 1001], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

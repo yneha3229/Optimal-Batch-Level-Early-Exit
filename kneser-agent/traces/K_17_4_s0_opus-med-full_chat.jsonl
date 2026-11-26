@@ -1,0 +1,22 @@
+{"t": 0.001, "ev": "input", "graph": "K_17_4_s0_opus-med-full", "receivers": 2380, "llm": "chat", "family_rule": true}
+{"t": 0.013, "ev": "start", "tool": "describe"}
+{"t": 0.013, "ev": "start", "tool": "indep"}
+{"t": 0.014, "ev": "start", "tool": "cover"}
+{"t": 0.156, "ev": "board", "side": "lower", "value": 560, "tool": "greedy independent set", "bracket": [560, 2380]}
+{"t": 0.623, "ev": "board", "side": "upper", "value": 627, "tool": "clique_cover", "bracket": [560, 627]}
+{"t": 1.506, "ev": "done", "tool": "describe", "seconds": 1.445}
+{"t": 1.506, "ev": "summary", "summary": {"receivers": 2380, "edges": 850850, "degree_min": 715, "degree_max": 715, "regular": true, "common_neighbours_adjacent": [126], "common_neighbours_nonadjacent": [210, 330, 495], "triangles_through_sampled_vertex": 45045, "spectrum_integral": true, "eigenvalues": [[715, 1], [55, 119], [1, 1700], [-10, 544], [-220, 16]], "distinct_eigenvalues": 5, "seconds": 1.445}}
+{"t": 1.506, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 24.225, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["regular: degree_min = degree_max = 715", "spectrum_integral true with 5 distinct eigenvalues (715, 55, 1, -10, -220)", "receivers 2380 with lower bound 560 and upper 627 (clique_cover)"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) and degree = C(n-k,k) before relying on Kneser"}, {"tool": "family_rule", "args": {"n": 17, "k": 4}, "why": "tentative (n,k) to be replaced by binomial_match output; query structural rule for (p,c)"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback code search ranked by integer spectrum"}], "notes": "Kneser params pending binomial_match; family_rule args should follow its (n,k)."}}
+{"t": 24.225, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 28.927, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 28.927, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) and degree = C(n-k,k) before relying on Kneser"}, {"tool": "family_rule", "args": {"n": 17, "k": 4}, "why": "tentative (n,k) to be replaced by binomial_match output; query structural rule for (p,c)"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback code search ranked by integer spectrum"}], "hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["regular: degree_min = degree_max = 715", "spectrum_integral true with 5 distinct eigenvalues (715, 55, 1, -10, -220)", "receivers 2380 with lower bound 560 and upper 627 (clique_cover)"]}, "critic_rounds": 1}
+{"t": 28.928, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 17, "k": 4}]}]}
+{"t": 28.928, "ev": "rule", "tool": "family_rule", "args": {"n": 17, "k": 4}, "result": {"p": 3, "c": 2}}
+{"t": 28.934, "ev": "start", "tool": "code", "p": 3, "c": 2, "why": "family rule"}
+{"t": 29.272, "ev": "done", "tool": "code", "p": 3, "c": 2, "rank": 560, "seconds": 0.343}
+{"t": 29.272, "ev": "board", "side": "upper", "value": 560, "tool": "linear_code", "bracket": [560, 560]}
+{"t": 29.272, "ev": "event", "name": "bracket_closed", "bracket": [560, 560]}
+{"t": 29.778, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 35.481, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Proven: beta = 560 for 2380 receivers. Lower bound is an independent set of size 560 (check passed); upper bound is a linear code M = I + 2A over F_3 of length 560 (code_fits, factorization and decoding checks all passed), so the bracket [560, 560] closes. Accuracy: matches kushagra_agent (exact 560, field 3); CP-SAT alpha found 560 but unproven in 125 s, cpsat_cover and f2_minrank_sat gave no upper bound, frac_cover only 2368. Time: wall 29.27 s, of which LLM 27.42 s and compute only 1.85 s; kushagra_agent was faster at 2.32 s, a plain loss on wall time driven by LLM latency. Nothing suspicious: one code tried, hypothesis left without explicit params (n, k) though the spectrum is consistent with Kneser."}}
+{"t": 35.481, "ev": "verdict", "verdict": "proven", "bracket": [560, 560], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
