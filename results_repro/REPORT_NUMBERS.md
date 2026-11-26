@@ -1,6 +1,6 @@
 # Report numbers recomputed from the result files
 
-`analysis/check_report_numbers.py` on `docs/IE624_progress_report_v2.html`. Totals: **887 MATCH, 10 MISMATCH, 0 NO FILE** (897 numbers).
+`analysis/check_report_numbers.py` on `docs/IE624_progress_report_v2.html`. Totals: **893 MATCH, 10 MISMATCH, 0 NO FILE** (903 numbers).
 
 | item | MATCH | MISMATCH | NO FILE |
 |---|---|---|---|
@@ -9,6 +9,7 @@
 | Table 10 | 84 | 0 | 0 |
 | Table 11 | 56 | 0 | 0 |
 | Table 12 | 56 | 0 | 0 |
+| Table 12b | 7 | 0 | 0 |
 | Table 13 | 47 | 0 | 0 |
 | Table 14 | 32 | 0 | 0 |
 | Table 15 | 56 | 0 | 0 |
@@ -26,7 +27,7 @@
 | §4.4 text | 34 | 0 | 0 |
 | §4.4-4.6 text | 3 | 0 | 0 |
 | §4.5 text | 35 | 0 | 0 |
-| §4.6 text | 16 | 0 | 0 |
+| §4.6 text | 15 | 0 | 0 |
 | §4.7 bandit (single runs) | 4 | 2 | 0 |
 | §4.8 robustness | 4 | 2 | 0 |
 | §4.9 what did not work | 4 | 1 | 0 |

@@ -9,7 +9,8 @@ is labelled **GPU required, logs provided**: its result file and raw log are com
 recompute everything derived from it.
 
 Branch: `feature/early-exit-repro`, from `feature/kneser-minrank-theorem` (08b7ad4). That branch did not have some
-early-exit evidence; commit 09d7d37 adds it unchanged (see §6).
+early-exit evidence; commit 09d7d37 adds it unchanged (see §6). Merged into `main` on 26 Nov, where the report is
+regenerated with the calibration-cache fix (§6) and includes §5.8 and Table 12b.
 
 Quick start:
 
@@ -45,12 +46,12 @@ and, rounded to the printed precision, equals the reported value. "Repro" is the
 | Figure 2, Table 3, §4.3 | Per-layer cost on the GTX 1650: a floor, then linear; affine fit off by up to 41% | `experiments/local_hw.py profile --seq-len {16,32,128}` | random-weight RoBERTa-base (timing only) | `results/local_cost_cuda_T{16,32,128}.json`; `figures/report2_cost_gtx1650.png` | `logs/local_profile_cuda_T{16,32,128}.log` | GTX 1650 | Measured on local GTX 1650, raw logs: `logs/local_profile_cuda_T*.log` | est. 5 min per length | Check 22/22 MATCH |
 | Figure 3, Tables 4–6, §4.4 | Timed speedup of each method's certified policy; the rule is at most 7.5% behind the fastest, but not at equal accuracy | `scripts/run_local.sh` (`local_hw.py select` on CPU, then `local_hw.py time`) | `local_cost_cuda_T*.json`, `traces/{qqp,mnli}_val.parquet` | `results/local_select_*_cuda_T*.json` (CPU), `results/local_time_{qqp,mnli}_cuda_T{16,32,128}.csv` (GPU); `figures/report2_local_speedups.png` | `logs/local_select_*_T*.log`, `logs/local_time_*_T*.log`, `logs/local_status.log` | GTX 1650 (timing); CPU (selection) | Timing measured on local GTX 1650, raw logs: `logs/local_time_*_T*.log`; selection CPU | timing 63 min; selection ~6 min (CPU) | Check 213/213 MATCH (Tables 4–6 and the §4.4 text); repro: see §3 |
 | Figure 4, Tables 7–9, §4.5 | At matched held-out drop ≤ 1 point the rule is 2–17% ahead on QQP; on MNLI within 2% in 4 of 6 settings and 6.5–8.5% behind in 2; the loss lands on hard inputs | `scripts/run_front.sh` (`local_hw.py front`) | `local_cost_cuda_T{16,128}.json`, traces | `results/local_front_{qqp,mnli}_cuda_T{16,128}.csv`; `figures/report2_front.png` | `logs/local_front_*_T*.log` | CPU replay (GTX 1650 cost table) | No | ~5 min | Check 203/203 MATCH; repro: see §3 |
-| Table 10, §4.6 | Certified selection keeps the budget on 30 re-splits (cost rule 0–7% over budget against 13–40% for the old protocol) | `local_hw.py resplit --seq-len 16 --batch-sizes 8 64 --seeds 30` | `local_cost_cuda_T16.json`, traces | `results/local_resplit_{qqp,mnli}_cuda_T16.csv`; `figures/report2_resplit.png` | `logs/local_resplit_*_T16.log` | CPU replay | No | re-split 8 min for both tasks (CPU, 6 workers) | Check 103/103 MATCH; repro: cost-rule rows do not reproduce (cache bug, §6); all other rows MATCH (§3) |
+| Table 10, §4.6 | Certified selection keeps the budget on 30 re-splits (cost rule 0–3% over budget against 23–47% for the old protocol; before the 26 Nov cache fix: 0–7% against 13–40%) | `local_hw.py resplit --seq-len 16 --batch-sizes 8 64 --seeds 30` | `local_cost_cuda_T16.json`, traces | `results/local_resplit_{qqp,mnli}_cuda_T16.csv`; `figures/report2_resplit.png` | `logs/local_resplit_*_T16.log` | CPU replay | No | re-split 8 min for both tasks (CPU, 6 workers) | Check 103/103 MATCH; repro: cost-rule rows differed (cache bug, §6), fixed and regenerated on 26 Nov; all other rows MATCH (§3) |
 | §4.7 | Bandit, single runs: regret slope 0.49–0.65; 0.2–0.3 points; 1.26–1.77× at B = 64–128 | `bandit/run_bandit.py --task <t> --regime <r> --B 64 --T 3000` (`scripts/run_final.sh`); GPU rows from `runner/gpu_runner.py` | `results/main_<task>_selected.csv`, `runner_cost_*.json` | `results/bandit_{mnli,qqp}_{dec_eager,enc_eager_meas}_B64.csv`, `main_*_real_*_gpu*.csv` (bandit rows) | `logs/final_bandit_*.log` | CPU (regret); A6000 eager (speedups) | Regret: no. Speedups: GPU required, logs provided | ~minutes | Check 4/6 MATCH. MISMATCH: slopes. The committed files hold a later 3-seed run; a refit gives 0.56–0.63; the 6 Nov single-run fit is not in the repository. Superseded by §5.4 |
 | §4.8 | Robustness bound held in all 10,500 batches (5 tasks); 19/19 unit tests; consensus loses its speedup to one attacker | `experiments/robust_bound.py --task <t> --regime dec_eager` (`run_final.sh`); `pytest tests simulator/test_simulator.py` | traces, `attacks/deepsloth_vit.py` output (`traces/cifar100_attack.parquet`) | `results/robust_violations_*_B64.csv`, `robust_*_dec_eager_B64.csv` | `logs/final_robust_*.log`, `logs/final_dec_robust.log` | CPU | No (the DeepSloth inputs needed a GPU once; committed) | ~minutes | Check 4/6 MATCH (tests re-run: 19 passed). MISMATCH: consensus collapses at k = 1 only on CIFAR-100; on MNLI/QQP its latency goes 0.70→0.74 and 0.72→0.85 |
 | §4.9 | Program search, 300 programs; probe adds ≤ 0.026 AUROC; exits ~5 points short at 75% depth | `evolve/` (OpenEvolve, `logs/evolve_mnli.log`); `analysis/probe_correctness.py`; `decoder/layerskip_exits.py`; `decoder/train_decoder_exits.py` | traces; HF `facebook/layerskip-llama3.2-1B`, `facebook/layerskip-llama3-8B` | `results/probe_*.csv`, `layerskip_ls{1b,8b}_layer_accuracy.csv`, `train_wikitext_llama_exit_accuracy.csv` | `logs/evolve_mnli.log`, `logs/step1_probe_*.log`, `logs/step3_ls*_exits.log` | local Ollama (evolve), CPU (probe), A6000 (LayerSkip) | LayerSkip and decoder exits: GPU required, logs provided | — | Check 4/5 MATCH. MISMATCH: frozen Llama heads are 8.2 points short at 75% depth (layer 24 of 32); LayerSkip 4.9/5.2 MATCH |
 | Tables 11–12, §5.1 | A6000, RoBERTa, eager, certified: QQP T128 rule + plan fastest within budget at every B (1.95–2.46×, 8–14% ahead); MNLI over budget | `scripts/run_server_a6000.sh` (`local_hw.py profile`, `select` and `front` on CPU, `time` on GPU) | `traces/{qqp,mnli}_val.parquet` | `results/local_cost_a6000_T{128,32}.json`, `local_select_*_a6000_T*.json` (CPU), `local_time_{qqp,mnli}_a6000_T{128,32}.csv` (GPU) | `logs/server_{profile,select,front,time}_*_a6000_T*.log`, `logs/server_a6000_status.log` | A6000 eager; CPU (selection) | Timing: GPU required, logs provided | 28 min (22 Nov) | Check 112/112 MATCH; repro (selection): see §3. **Labelling:** see §6 |
-| Table 13, §5.2 | t-test within δ on re-splits (1.3/5.3/8.5%); HB never certifies; WSR only on QQP (49%); label-free costs speed; 10% data costs as much for the rule as for random search | `scripts/run_cert_check.sh`; `scripts/run_mnli_delta.sh` (δ = 5%, `experiments/delta_check.py`) | `local_cost_a6000_T128.json`, `runner_cost_cifar100.json`, traces | `results/cert_check_{qqp,mnli,cifar100,mnli_d05}[_summary].csv`, `delta_check_mnli.csv` | `logs/cert_check_*.log`, `logs/delta_check_mnli.log` | CPU replay | No | 1 h 47 min with 14 workers (22 Nov) | Check 47/47 MATCH (+ §5.2 text in Part C); repro (3 h 5 min, 6 workers): cost-rule rows do not reproduce (cache bug, §6); all other rows MATCH (§3) |
+| Table 13, §5.2 | t-test within δ on re-splits (1.5/5.2/8.5%; before the cache fix 1.3/5.3/8.5%); HB never certifies; WSR only on QQP (49%); label-free costs speed; 10% data costs the rule more than random search (−28% against −20% on QQP) | `scripts/run_cert_check.sh`; `scripts/run_mnli_delta.sh` (δ = 5%, `experiments/delta_check.py`) | `local_cost_a6000_T128.json`, `runner_cost_cifar100.json`, traces | `results/cert_check_{qqp,mnli,cifar100,mnli_d05}[_summary].csv`, `delta_check_mnli.csv` | `logs/cert_check_*.log`, `logs/delta_check_mnli.log` | CPU replay | No | 1 h 47 min with 14 workers (22 Nov) | Check 47/47 MATCH (+ §5.2 text in Part C); repro (3 h 5 min, 6 workers): cost-rule rows do not reproduce (cache bug, §6); all other rows MATCH (§3) |
 | Table 14, §5.3 | Fluctuating load: passes on QQP (2.32× vs 2.11×), CIFAR-100 only with the plan, fails on MNLI (budget) | `scripts/run_load_trace.sh`, `run_mnli_delta.sh` | as Table 13 | `results/load_trace_{qqp,mnli,mnli_d05,cifar100}{,_levels,_selected,_batches}.csv` | `logs/load_trace_*.log` | CPU replay | No | 7 min per task | Check 32/32 MATCH; repro: see §3 |
 | §5.4 | Bandit, 10 seeds: slopes 0.55–0.77 in 5 settings, 4 in 0.5–0.7; t^−1/3 best in 3 of 5; warm start −2 to −12% | `scripts/run_bandit_seeds.sh` | `results/main_<task>_selected.csv`, `runner_cost_*.json` | `results/bandit_slopes_*_B64_10seeds.csv` (raw 25 MB traces not committed) | `logs/bandit_10seeds_*.log` | CPU | No | 22 min (10 seeds, 6 settings) (CPU) | Part C MATCH; repro: see §3 |
 | §5.5 | Bound held in 25,200 batches; majority and consensus collapse; threshold also robust; trimming buys little | `scripts/run_robust_cert.sh` (and `run_robust_lowrho.sh`) | as §5.4 | `results/robust_*_B64_cert.csv`, `robust_violations_*_B64_cert.csv` | `logs/robust_cert_*.log` | CPU | No | 7 min (12 settings) (CPU) | Part C MATCH; repro: see §3 |
@@ -94,6 +95,10 @@ No status tag changes. One claim is added, two are narrowed by files, and one la
 | Benefit on LLMs | FAILED decoding; HOLDS classification (Llama, Qwen QQP); mixed Qwen MNLI | same | none | Tables 15–16 |
 
 ## 3. CPU reproduction (`scripts/reproduce_cpu.sh`)
+
+This run (25 Nov) compares against the files committed before the cache fix. After the fix (26 Nov) the cost-rule
+rows of Tables 10 and 13 were regenerated (`scripts/rerun_cache_fix.sh`) and are deterministic; the other 92 files
+are unchanged by the fix.
 
 Run on 25 Nov 2026 on the A6000 server, CPU only (`CUDA_VISIBLE_DEVICES=""`), 6 worker processes, while other jobs
 kept the load average at 40–70. All **72 steps** finished OK (`results_repro/timing.tsv`). The steps add up to 5 h 16 min
@@ -206,9 +211,9 @@ on the idle A6000 at PCI 01:00.0, written to `results_repro/gpu_spot/`.
   trained weights and real prompts (`LLMDevice`, bf16).
 - **Missing evidence.** `feature/kneser-minrank-theorem` lacked the 5.8 theory, the ViT timing path, the
   GraphDevice fix and the 25 Nov ViT outputs. These are on `claude/keen-dijkstra-fpe319` or were uncommitted.
-  Commit 09d7d37 brings them in unchanged. The report HTML/PDF and `analysis/make_report.py` are left at this
-  branch's version (23 Nov): the 24 Nov version on `claude/keen-dijkstra-fpe319` adds the 5.8 paragraph and
-  conditional tables 11b/12b.
+  Commit 09d7d37 brings them in unchanged. On `main` (26 Nov) the report is built with the 24 Nov
+  `analysis/make_report.py`, which adds the 5.8 paragraph and the conditional Table 12b (ViT, B = 8 only; its caption
+  and the 5.1 text now say the run stopped during B = 16 and that the CUDA-graph run was not done).
 - **Ignored summary files.** `.gitignore` excluded `results/bandit_slopes_*_10seeds.csv`, the files behind §5.4.
   Its pattern for the 25 MB raw traces matched them too. Fixed in 09d7d37.
 - **A cache bug makes the cost rule's re-split results depend on scheduling.** `experiments/local_hw.py:210`
@@ -218,24 +223,24 @@ on the idle A6000 at PCI 01:00.0, written to `results_repro/gpu_spot/`.
   calibration table fitted on another re-split. Only the families `theory` and `theory+plan` use the cache, so
   only their rows can change, and the result depends on the worker count and job order. `select`, `front`,
   `time`, `load_trace`, `delta_check` and `theory58_front` keep one `fit` object alive for the whole run, so they
-  are not affected (they reproduce exactly, §3). Effect (§3): the reproduction (6 workers) against the committed files (12–14 workers) changes 32 report cells. **No claim
-  changes status.**
-  - **Table 10 (§4.6), cost rule.** Certified share over budget: QQP B = 8 0% → 0%, B = 64 3% → 0%; MNLI B = 8
-    7% → 3%, B = 64 0% → 7%. Old protocol: QQP B = 8 13% → 20%; MNLI B = 64 37% → 40%. Certified speedup:
-    changes of ≤ 0.05× (MNLI B = 64 1.59× → 1.64×).
-  - With the fix (`results_repro/cache_fix/`, deterministic across worker counts), the certified share is QQP 0% /
-    0% and MNLI 3% / 3%, and the old protocol is QQP 33% / 23% and MNLI 40% / 47% (B = 8 / B = 64). So the §4.6 range "0–7% against
-    13–40%" becomes about "0–3% against 23–47%", and the certified speedup changes by at most 0.04×.
-  - **Table 13 (§5.2).** The t-test's mean share over budget is MNLI 5.3% → 5.7% and CIFAR-100 8.5% → 8.7% (QQP
-    1.3% both). The worst MNLI method changes from per-sample threshold (8.3%) to cost rule + plan (9.2%).
-    CIFAR-100 cost rule + plan is 11.7% → 10.8%, still slightly above δ.
-  - Among other §5.2 numbers that change: WSR 1.50× → 1.51×; 10%-data QQP 2.30× → 1.83× becomes 2.29× → 1.84×;
-    MNLI δ = 10% violation rate 7.5% → 6.7% (and with the plan 6.7% → 9.2%).
-  - The "δ = 5% costs about 3% speed (1.51× → 1.46×)" sentence becomes "about 0% (1.48× → 1.48×)". That cost is
-    within the run-to-run noise, so this sentence should not be relied on.
-  - **To fix in the report:** apply `results_repro/cache_fix/patch.diff` and rerun `resplit` (8 min) and
-    `cert_check` (about 3 h on 6 cores). Then regenerate Tables 10 and 13. The committed code and results are left
-    unchanged, as the task requires.
+  are not affected (they reproduce exactly, §3). **Fixed on 26 Nov** (`experiments/local_hw.py` keeps a weak reference to the traces and refits when the object
+  differs; 3- and 6-worker runs now give identical files). Rerun with `scripts/rerun_cache_fix.sh` (16 workers; logs
+  `logs/cache_fix_*.log`), then the report was regenerated. Before the fix, this reproduction (6 workers) and the
+  committed files (12–14 workers) disagreed in 32 report cells, all in cost-rule rows (§3). Changes in the report,
+  committed values → fixed values. **No claim changes status.**
+  - **Table 10 (§4.6), cost rule, certified share over budget (B = 8 / 64):** QQP 0% / 3% → 0% / 0%; MNLI 7% / 0% →
+    3% / 3%. Old protocol: QQP 13% / 13% → 33% / 23%; MNLI 40% / 37% → 40% / 47%. Certified speedup: QQP 1.80× /
+    2.54× → 1.79× / 2.52×; MNLI 1.33× / 1.59× → 1.33× / 1.55×. The §4.6 text now reads "0–3% against 23–47%", mean
+    drop 0.34–0.64 points, speed cost about 6% on QQP and 9–14% on MNLI (was 2–4% and 8–12%), old protocol 33–47% of
+    MNLI re-splits (was 33–43%).
+  - **Table 13 (§5.2):** mean share over budget QQP 1.3% → 1.5%, MNLI 5.3% → 5.2%, CIFAR-100 8.5% (unchanged). Cost
+    rule + plan: QQP 2.31× (1.7%) unchanged; MNLI 1.52× (6.7%) → 1.50× (7.5%); CIFAR-100 1.26× (11.7%) → 1.27× (12.5%),
+    still slightly above δ. WSR 1.50× → 1.51×. 10% calibration data, QQP: 2.30× → 1.83× becomes 2.32× → 1.66×; the
+    report now says random search loses less (−20% against −28%) instead of "about as much"; the conclusion (the
+    data-efficiency hypothesis is not supported) is unchanged.
+  - **§5.2 MNLI δ text:** violation rate at δ = 10% 7.5% → 5.8% (with the plan 6.7% → 7.5%); lowering δ to 5% costs
+    about 2% speed (1.50× → 1.47×) instead of 3% (1.51× → 1.46×).
+  - `results_repro/cache_fix/` keeps the scratch runs that showed the effect before the fix.
 - **Ten numbers do not match their files** (`results_repro/REPORT_NUMBERS.md`). None of them is in a table, and
   none changes a claim's status:
   - Table 2: the "15–32%" simulator error (its definition is not stated) and the "1.12×" (the file now says 1.24×).

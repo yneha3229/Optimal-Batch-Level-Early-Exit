@@ -208,8 +208,13 @@ def timed_extra() -> str:
     c = load("results/local_time_cifar100_a6000*_T197.csv")
     if c is not None and len(c):
         groups = [(("CUDA graphs" if "graph" in dv else "eager"), c[c.device == dv]) for dv in sorted(c.device.unique())]
+        modes = sorted({"CUDA graphs" if "graph" in dv else "eager" for dv in c.device.unique()})
+        bs = ", ".join(str(b) for b in sorted(c.B.unique()))
+        missing = "" if "CUDA graphs" in modes else " The CUDA-graph run was not done."
         html += (timed_grid(groups) + "<p class='cap'><b>Table 12b:</b> CIFAR-100, ViT-B/16 (197 tokens), RTX A6000, "
-                 "same protocol. <code>results/local_time_cifar100_a6000[_graph]_T197.csv</code>.</p>")
+                 f"same protocol, timed only at B = {bs} ({', '.join(modes)}): the 25 Nov run on GPU 5 stopped during B = 16."
+                 f"{missing} <code>results/local_time_cifar100_a6000_T197.csv</code>, "
+                 "<code>logs/server_time_cifar100_a6000_T197.log</code>.</p>")
         have.append("CIFAR-100")
     if not have:
         return ("<p class='fb'><i class='l'>Pending:</i> the CUDA-graph and CIFAR-100 (ViT) timings. The code and scripts "
@@ -370,9 +375,12 @@ def section5() -> dict:
     rm = rob[(rob.task == "mnli") & (rob["T"] == 128)]
     rc_over = rm[(rm.family == "random_collective") & (rm.B >= 16)]
     assert (rc_over.ho_drop_pts > 1.0).all()
+    VIT51 = (("The ViT run, on 25 Nov, got through B = 8 only (Table 12b, after the tables). "
+              if (ROOT / "results/local_time_cifar100_a6000_T197.csv").exists() else "")
+             + ("" if any(ROOT.glob("results/local_time_*_a6000_graph_T*.csv")) else "The CUDA-graph run has not been done."))
     out["r51"] = f"""<p class='fb'><i class='l'>Result (16–22 Nov, eager only):</i> run for QQP and MNLI at sequence
-lengths 128 and 32 (Tables 11–12). CUDA graphs and CIFAR-100 (ViT) are reported separately after the tables: both needed a working A6000, and
-on 23–24 Nov none could start CUDA (one needed a reset, the idle ones failed to initialise). On QQP at length 128 the cost rule with the exit plan is the fastest policy within budget at every
+lengths 128 and 32 (Tables 11–12). CUDA graphs and CIFAR-100 (ViT) needed a working A6000, and
+on 23–24 Nov none could start CUDA (one needed a reset, the idle ones failed to initialise). {VIT51} On QQP at length 128 the cost rule with the exit plan is the fastest policy within budget at every
 batch size, {rng(q.ours, unit='×')} at a held-out drop of {rng(rq.ho_drop_pts)} points, {rng(q.gain, '{:.0f}')}% ahead of
 the best baseline within budget. At length 32 and B ≤ 16 the plan's policy is {rng(p32.ho_drop_pts - 1)} points over
 budget (so is the unified exit's), and the rule with all exits is the fastest policy within budget ({rng(q32.ours, unit='×')}). On MNLI
@@ -406,6 +414,14 @@ the unified exit. Section 5.2 checks whether the MNLI overshoot is a property of
                    f"{100 * t05.loc['theory+plan', 'viol']:.1f}%, random search {100 * t10.loc['random_collective', 'viol']:.1f}% → "
                    f"{100 * t05.loc['random_collective', 'viol']:.1f}%) for about {100 * (1 - t05.loc['theory', 'sp'] / t10.loc['theory', 'sp']):.0f}% "
                    f"less speed ({t10.loc['theory', 'sp']:.2f}× → {t05.loc['theory', 'sp']:.2f}×).")
+    loss_t = 1 - qx['small'] / qx['t'].loc['theory', 'sp']                 # speed lost with 10% of the calibration data
+    loss_rc = 1 - qx['small_rc'] / qx['t'].loc['random_collective', 'sp']
+    if abs(loss_t - loss_rc) <= 0.05:
+        data_txt = "random search loses about as much"
+    else:
+        data_txt = "random search loses " + ("less" if loss_rc < loss_t else "more")
+    data_txt += f" (−{100 * loss_rc:.0f}% against −{100 * loss_t:.0f}%: "
+    data_verdict = ("is not supported" if loss_t >= loss_rc - 0.05 else "is supported on QQP")
     out["r52"] = f"""<p class='fb'><i class='l'>Result (Table 13):</i> the t-test keeps the share of re-splits over budget
 at or below δ = 10% on average on all three tasks ({100 * qx['viol']:.1f}% QQP, {100 * mx['viol']:.1f}% MNLI,
 {100 * cx['viol']:.1f}% CIFAR-100, mean over five methods). On CIFAR-100 two methods are slightly above δ (per-sample
@@ -416,9 +432,9 @@ the WSR bound certifies
 one in {100 * qx['wsr_chose']:.0f}% of the QQP cases, at {qx['wsr']:.2f}× against {qx['t'].loc['theory+plan', 'sp']:.2f}×
 with the t-test, and never on MNLI or CIFAR-100. The label-free version (disagreement with the full model) had no
 violations and costs speed: {qx['lf']:.2f}× against {qx['t'].loc['theory+plan', 'sp']:.2f}× on QQP. With 10% of the
-calibration data the cost rule falls from {qx['t'].loc['theory', 'sp']:.2f}× to {qx['small']:.2f}× on QQP, and random
-search loses about as much ({qx['t'].loc['random_collective', 'sp']:.2f}× → {qx['small_rc']:.2f}×), so the data-efficiency hypothesis (one parameter needs less data than three) is not
-supported. We therefore state the certificate as asymptotic, checked on re-splits.</p>
+calibration data the cost rule falls from {qx['t'].loc['theory', 'sp']:.2f}× to {qx['small']:.2f}× on QQP, and
+{data_txt}{qx['t'].loc['random_collective', 'sp']:.2f}× → {qx['small_rc']:.2f}×), so the data-efficiency hypothesis (one parameter needs less data than three)
+{data_verdict}. We therefore state the certificate as asymptotic, checked on re-splits.</p>
 <p><b>The MNLI held-out half.</b> On the fixed split (<code>results/delta_check_mnli.csv</code>) the cost rule, the
 per-sample threshold and random search at B ≥ 16 all exceed the budget at δ = 10% (cost rule, with or without the
 plan, and threshold: {rng(over10)} points), while the unified exit and the threshold with an exit plan stay at or just

@@ -160,8 +160,11 @@ def grid_want(groups: list[pd.DataFrame], rows=FAMS) -> dict:
 
 
 # ---------------------------------------------------------------------------------------------------- part A: tables
-def tables(tabs: list[pd.DataFrame]) -> None:
-    T = {i + 1: t for i, t in enumerate(tabs)}       # report tables in order: 1..16, then timeline, claims
+def tables(tabs: list[pd.DataFrame], html: str) -> None:
+    # report tables keyed by caption ("Table 12b" -> "12b", others -> int), so optional tables do not shift the rest;
+    # the captioned tables come first in the HTML, then the timeline and the claims table
+    caps = re.findall(r"<b>Table (\d+[a-z]?):</b>", html)
+    T = {(int(c) if c.isdigit() else c): t for c, t in zip(caps, tabs)}
     # Table 1: full-model accuracy (last exit, whole validation set)
     for (task, f), rep in zip([("MNLI", "train_mnli_exit_accuracy.csv"), ("QQP", "train_qqp_exit_accuracy.csv"),
                                ("CIFAR-100", "train_cifar100_exit_accuracy.csv")], ["87.8", "91.1", "93.3"]):
@@ -252,6 +255,9 @@ def tables(tabs: list[pd.DataFrame]) -> None:
     for n, task in ((11, "qqp"), (12, "mnli")):
         cmp_grid(f"Table {n}", f"results/local_time_{task}_a6000_T{{128,32}}.csv (A6000 eager; logs/server_time_{task}_a6000_T*.log)",
                  T[n], grid_want([rob[(rob.task == task) & (rob["T"] == t)] for t in (128, 32)]))
+    if "12b" in T:                                  # ViT-B/16 on CIFAR-100 (only B = 8 was timed)
+        cmp_grid("Table 12b", "results/local_time_cifar100_a6000_T197.csv (A6000 eager; logs/server_time_cifar100_a6000_T197.log)",
+                 T["12b"], grid_want([rob[(rob.task == "cifar100") & (rob["T"] == 197)]]))
     for n, task in ((15, "qqp"), (16, "mnli")):
         cmp_grid(f"Table {n}", f"results/local_time_{task}_{{llama,qwen}}_a6000_T128.csv (A6000; logs/cls_time_{task}_*_a6000.log)",
                  T[n], grid_want([d[(d.model == mo) & (d.task == task)] for mo in ("llama", "qwen")]))
@@ -419,15 +425,15 @@ def text_checks() -> None:
                                                  nd=("naive_drop", "mean"), cd=("cert_drop", "mean"),
                                                  ns=("naive_speedup", "mean"), cs=("cert_speedup", "mean"))
     th = s.xs("theory", level="family")
-    add_range(it, "cost rule, certified, share over budget (%)", "0–7", th.cv.round(), fr)
-    add_range(it, "cost rule, old protocol, share over budget (%)", "13–40", th.nv.round(), fr)
-    add_range(it, "cost rule, certified, mean drop (pts)", "0.33–0.64", 100 * th.cd, fr)
+    add_range(it, "cost rule, certified, share over budget (%)", "0–3", th.cv.round(), fr)
+    add_range(it, "cost rule, old protocol, share over budget (%)", "23–47", th.nv.round(), fr)
+    add_range(it, "cost rule, certified, mean drop (pts)", "0.34–0.64", 100 * th.cd, fr)
     add(it, "rows at or below 10%", "11", int((s.cv <= 10 + 1e-9).sum()), fr)
     add(it, "majority MNLI B64 certified share over budget (%)", "13", s.loc[("mnli", 64, "majority")].cv, fr)
     loss = 100 * (1 - th.cs / th.ns)
-    add_range(it, "speed cost of certification, QQP (%)", "2–4", loss.loc["qqp"].round(), fr)
-    add_range(it, "speed cost of certification, MNLI (%)", "8–12", loss.loc["mnli"].round(), fr)
-    add_range(it, "old protocol MNLI share over budget, every method (%)", "33–43", s.loc["mnli"].nv.round(), fr)
+    add_range(it, "speed cost of certification, QQP (%)", "6", loss.loc["qqp"].round(), fr)
+    add_range(it, "speed cost of certification, MNLI (%)", "9–14", loss.loc["mnli"].round(), fr)
+    add_range(it, "old protocol MNLI share over budget, every method (%)", "33–47", s.loc["mnli"].nv.round(), fr)
     add_range(it, "old protocol mean drop on re-splits (pts)", "0.7–1.0", 100 * s.nd, fr)
 
     # ----- §4.2, Figure 1, Table 2: server runs of 6-12 Nov (old selection protocol)
@@ -589,7 +595,7 @@ def main() -> None:
     a = ap.parse_args()
     html = (ROOT / "docs/IE624_progress_report_v2.html").read_text()
     tabs = pd.read_html(StringIO(html))
-    tables(tabs)
+    tables(tabs, html)
     text_checks()
     if not a.no_render:
         render_check(html)
