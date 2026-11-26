@@ -1,0 +1,198 @@
+{
+ "graph": "gdb7b08",
+ "n": 210,
+ "mode": "full",
+ "L": 20,
+ "U": "20",
+ "U_float": 20.0,
+ "gap": 0.0,
+ "proven": true,
+ "upper_kind": "spectral",
+ "field": 17,
+ "upper_cert": "spec17-046",
+ "lower_cert": "indep-001",
+ "t_first_bound": 0.2933325670019258,
+ "t_proof": 22.73,
+ "t_final_change": 22.72716038300132,
+ "wall": 24.84,
+ "stopped": "L == U",
+ "t_describe": 0.5715474450043985,
+ "t_plan": null,
+ "llm": {
+  "model": "Qwen/Qwen2.5-Coder-32B-Instruct-AWQ",
+  "calls": 3,
+  "seconds": 26.57,
+  "tokens_in": 3173,
+  "tokens_out": 865,
+  "fallbacks": 0
+ },
+ "hypothesis": null,
+ "predictions": {},
+ "plan_source": null,
+ "critic_rounds": 1,
+ "unresolved_objections": [],
+ "checkpoints": 0,
+ "spectral_tried": 5,
+ "spectral_results": [
+  {
+   "p": 2,
+   "c": 1,
+   "theta": 1,
+   "rank": null,
+   "cap": 20,
+   "seconds": 0.001,
+   "rank_pred": 20,
+   "stopped": false,
+   "t": 22.58
+  },
+  {
+   "p": 17,
+   "c": 1,
+   "theta": -18,
+   "rank": null,
+   "cap": 20,
+   "seconds": 0.122,
+   "rank_pred": 190,
+   "stopped": false,
+   "t": 22.63
+  },
+  {
+   "p": 5,
+   "c": 2,
+   "theta": -18,
+   "rank": null,
+   "cap": 20,
+   "seconds": 0.117,
+   "rank_pred": 190,
+   "stopped": false,
+   "t": 22.69
+  },
+  {
+   "p": 5,
+   "c": 4,
+   "theta": 1,
+   "rank": null,
+   "cap": 20,
+   "seconds": 0.111,
+   "rank_pred": 20,
+   "stopped": false,
+   "t": 22.7
+  },
+  {
+   "p": 17,
+   "c": 16,
+   "theta": 1,
+   "rank": 20,
+   "cap": 20,
+   "seconds": 0.052,
+   "rank_pred": 20,
+   "stopped": false,
+   "t": 22.72
+  }
+ ],
+ "events": [
+  {
+   "t": 0.29,
+   "name": "NEW_LOWER",
+   "L": "20",
+   "tool": "indep_set"
+  },
+  {
+   "t": 0.35,
+   "name": "NEW_UPPER",
+   "U": "23",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.37,
+   "name": "NEW_UPPER",
+   "U": "22",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.38,
+   "name": "NEW_UPPER",
+   "U": "21",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 22.73,
+   "name": "NEW_UPPER",
+   "U": "20",
+   "tool": "spectral"
+  },
+  {
+   "t": 22.73,
+   "name": "CLOSED",
+   "L": "20",
+   "U": "20"
+  }
+ ],
+ "board": {
+  "beta": {
+   "L": 20,
+   "U": 20,
+   "L_cert": "indep-001",
+   "U_cert": "spec17-046",
+   "proven": true
+  },
+  "by_quantity": {
+   "lower:alpha": 20,
+   "lower:beta": 20,
+   "upper:beta": 20,
+   "upper:minrk_17": 20
+  },
+  "info": {
+   "alpha_hoffman_ratio_bound": 20.0,
+   "omega_hoffman_bound": 10.5,
+   "clique_cover_floor": 21,
+   "fractional_cover_floor": 20.0,
+   "alpha_upper_cpsat": 20,
+   "alpha_proven": true,
+   "value": 20
+  }
+ },
+ "verification": {
+  "verdict": "proven",
+  "checks": [
+   {
+    "check": "independent_set",
+    "ok": true,
+    "detail": "20 vertices, no edge inside (190 pairs tested)",
+    "value": 20
+   },
+   {
+    "check": "spectral_code",
+    "ok": true,
+    "p": 17,
+    "c": 16,
+    "claimed_rank": 20,
+    "fit": true,
+    "freivalds_passed": 30,
+    "freivalds_rounds": 30,
+    "freivalds_error_bound": "p^-30",
+    "exact_rank_own": 20,
+    "sub_ok": true
+   },
+   {
+    "check": "decode_simulation",
+    "ok": true,
+    "trials": 3,
+    "receivers": 210,
+    "transmissions": 20,
+    "failed_decodings": 0,
+    "sub_ok": true
+   }
+  ],
+  "extra_checks": [],
+  "checks_seconds": 0.06,
+  "analysis": "The agent proved that the broadcast rate beta(G) is exactly 20 using an independent set of size 20 and a spectral code over field 17. The agent outperformed all baselines in accuracy, providing an exact result while others did not. In terms of time, the agent was faster than indep_cpsat, standard_best, clique_cover_best, frac_cover, and pincer, but slower than minrank_agent. Suspiciously, the spectral code fit and Freivalds checks passed with high confidence, but the ground truth reveals the graph is a Kneser graph, which might warrant further investigation into the generality of the spectral method.",
+  "all_certificates_verified": true,
+  "verify_wall": 5.04
+ },
+ "truth": {
+  "name": "K(21,2)",
+  "family": "kneser",
+  "group": "main"
+ }
+}

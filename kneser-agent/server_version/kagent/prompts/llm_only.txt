@@ -1,0 +1,4 @@
+You are given only a summary of an undirected index-coding side-information graph G (receiver v wants x_v and knows
+the messages of its neighbours). Without running any tool, state your best answer for the broadcast rate beta(G)
+and the prime field F_p over which you believe an optimal scalar linear code exists.
+Reply with ONE strict JSON object: {"beta": <integer>, "field": <prime>, "reason": "one or two sentences"}

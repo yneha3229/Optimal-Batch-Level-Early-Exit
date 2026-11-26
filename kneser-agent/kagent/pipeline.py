@@ -42,8 +42,16 @@ def w_cover(path):
     return tools.clique_cover(_A(path))
 
 
-def w_code(path, p, c, S):
-    return tools.try_code(_A(path), p, c, S)
+def w_code(path, p, c, S, cap=None):
+    return tools.try_code(_A(path), p, c, S, cap=cap)
+
+
+def warmup():
+    """Compile/load the numba kernel of the rank engine once in the parent, so forked workers inherit it
+    (idea and kernel from the server version's warmup.py)."""
+    from .rank import SpectralMatrix, rank_factor
+    A = graphs.kneser(7, 2)
+    rank_factor(SpectralMatrix(A, 3, 1), cap=10)
 
 
 def binomial_match(N, d):
@@ -71,6 +79,9 @@ class Run:
                          else ("Qwen2.5-Coder-32B-Instruct-AWQ" if llm == "local" else llm))
         self.events = []
         self.live = live
+        tw = time.perf_counter()
+        warmup()                                    # one-time JIT load, before the run clock (recorded in the result)
+        self.warmup_s = round(time.perf_counter() - tw, 3)
         self.t0 = time.perf_counter()
         self.agents = Agents(self.backend, self.trace)
         self.pool = ProcessPoolExecutor(max_workers=workers)
@@ -129,7 +140,8 @@ class Run:
         if key in self.tried or key[1] == 0:
             return
         self.tried.add(key)
-        self.submit("code", w_code, self.path, key[0], key[1], self.S, p=key[0], c=key[1], why=why)
+        self.submit("code", w_code, self.path, key[0], key[1], self.S, self.board["upper"] - 1,
+                    p=key[0], c=key[1], why=why)        # cap: a rank >= the current upper bound is not needed
 
     def handle(self, f):
         kind, info = self.pending.pop(f)
@@ -147,7 +159,8 @@ class Run:
                 self.cover = res
                 self.offer_upper(len(res), {"kind": "clique_cover", "cliques": len(res)})
         elif kind == "code":
-            self.trace("done", tool="code", p=res["p"], c=res["c"], rank=res["rank"], seconds=res["seconds"])
+            self.trace("done", tool="code", p=res["p"], c=res["c"], rank=res["rank"], seconds=res["seconds"],
+                       **({"rank_above": res["rank_above"]} if "rank_above" in res else {}))
             if res["rank"] is not None:
                 self.offer_upper(res["rank"], {"kind": "linear_code", "p": res["p"], "c": res["c"],
                                                "meets_lower": res["meets_lower"]})
@@ -287,7 +300,7 @@ class Run:
         result = {"graph": self.name, "spec": self.spec, "receivers": self.N, "llm": self.llm_name,
                   "family_rule_allowed": self.allow_family, "bracket": [b["lower"], b["upper"]], "verdict": verdict,
                   "upper_certificate": uc, "checks": checks, "wall_s": round(wall, 3),
-                  "llm_s": round(self.llm_seconds(), 3), "compute_s": round(wall - self.llm_seconds(), 3),
+                  "llm_s": round(self.llm_seconds(), 3), "warmup_s": self.warmup_s, "compute_s": round(wall - self.llm_seconds(), 3),
                   "llm_calls": getattr(self.backend, "calls", 0) if self.backend else 0, "critic_rounds": rounds,
                   "hypothesis": plan.get("family_hypothesis"), "codes_tried": len(self.tried), "truth": truth}
         base = ROOT / "results" / "baselines.jsonl"

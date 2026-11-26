@@ -20,6 +20,7 @@ graph ──► Solver (LLM) ◄──► Critic (LLM)        hypothesis + plan,
 
 - `kagent/graphs.py`: Kneser graphs, edge deletion, random regular graphs, relabelling, storage.
 - `kagent/tools.py`: graph summary, greedy bounds, code construction, rule library.
+- `kagent/rank.py`: exact rank over F_p by rank factorization with early stop (ported from the server version).
 - `kagent/verify.py`: the verifier's own code (it imports nothing from `tools.py`).
 - `kagent/agents.py`: prompts, JSON schemas, validation, fallback to defaults.
 - `kagent/llm.py`: backends `chat` (a person or assistant answers files in `chat/`), `local` (vLLM / Qwen), `none`.
@@ -41,3 +42,10 @@ python bench/baselines.py run --limit 60 && python bench/run_agent.py && cd benc
 
 Traces of every run (every event, LLM message and board change, with timestamps) are in `traces/`. Proven codes
 are in `results/codes/`.
+
+Tests: `python -m pytest -q tests` (rank engine vs flint and the verifier's own elimination, evidence validation,
+the verifier imports nothing from the tools).
+
+`server_version/` is a second, larger implementation of the same pipeline written on the GPU server (rich live demo,
+frac/tabu covers, F_2 SAT, generic rules only). It is kept whole; see `MERGE_NOTES.md` for what each version has and
+what was ported into `kagent/`.

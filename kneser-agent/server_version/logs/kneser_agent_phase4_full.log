@@ -1,0 +1,3 @@
+{"id": "gdb7b08", "name": "K(21,2)", "N": 210, "L": 20, "U": "20", "proven": true, "field": 17, "t_first": 0.2933325670019258, "t_proof": 22.73, "wall": 24.84, "verdict": "proven", "llm_calls": 3, "total_s": 31.1}
+{"id": "gd73995", "name": "K(13,3)", "N": 286, "L": 66, "U": "66", "proven": true, "field": 7, "t_first": 0.2530610789981438, "t_proof": 48.2, "wall": 50.25, "verdict": "proven", "llm_calls": 5, "total_s": 56.1}
+{"id": "g6fd833", "name": "K(12,4)", "N": 495, "L": 165, "U": "165", "proven": true, "field": 2, "t_first": 0.2538795240034233, "t_proof": 76.71, "wall": 77.32, "verdict": "proven", "llm_calls": 9, "total_s": 81.7}

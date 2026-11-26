@@ -1,0 +1,183 @@
+{
+ "graph": "g6fd833",
+ "n": 495,
+ "mode": "no_llm",
+ "L": 165,
+ "U": "165",
+ "U_float": 165.0,
+ "gap": 0.0,
+ "proven": true,
+ "upper_kind": "spectral",
+ "field": 2,
+ "upper_cert": "spec2-007",
+ "lower_cert": "indep-004",
+ "t_first_bound": 0.36755879200063646,
+ "t_proof": 0.95,
+ "t_final_change": 0.939213594996545,
+ "wall": 1.15,
+ "stopped": "L == U",
+ "t_describe": 0.4659151949963416,
+ "t_plan": 0.47013466600037646,
+ "llm": null,
+ "hypothesis": {
+  "name": "none",
+  "params": {},
+  "confidence": 0.0,
+  "evidence": []
+ },
+ "predictions": {},
+ "plan_source": "default",
+ "critic_rounds": 0,
+ "unresolved_objections": [],
+ "checkpoints": 0,
+ "spectral_tried": 3,
+ "spectral_results": [
+  {
+   "p": 3,
+   "c": 2,
+   "theta": 70,
+   "rank": null,
+   "cap": 169,
+   "seconds": 0.066,
+   "rank_pred": 54,
+   "stopped": false,
+   "t": 0.89
+  },
+  {
+   "p": 7,
+   "c": 6,
+   "theta": 15,
+   "rank": null,
+   "cap": 169,
+   "seconds": 0.114,
+   "rank_pred": 166,
+   "stopped": false,
+   "t": 0.89
+  },
+  {
+   "p": 2,
+   "c": 1,
+   "theta": 15,
+   "rank": 165,
+   "cap": 169,
+   "seconds": 0.217,
+   "rank_pred": 1,
+   "stopped": false,
+   "t": 0.93
+  }
+ ],
+ "events": [
+  {
+   "t": 0.37,
+   "name": "NEW_LOWER",
+   "L": "117",
+   "tool": "indep_set"
+  },
+  {
+   "t": 0.39,
+   "name": "NEW_UPPER",
+   "U": "200",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.4,
+   "name": "NEW_UPPER",
+   "U": "193",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.4,
+   "name": "NEW_LOWER",
+   "L": "165",
+   "tool": "indep_set"
+  },
+  {
+   "t": 0.44,
+   "name": "NEW_UPPER",
+   "U": "171",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.53,
+   "name": "NEW_UPPER",
+   "U": "170",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.95,
+   "name": "NEW_UPPER",
+   "U": "165",
+   "tool": "spectral"
+  },
+  {
+   "t": 0.95,
+   "name": "CLOSED",
+   "L": "165",
+   "U": "165"
+  }
+ ],
+ "board": {
+  "beta": {
+   "L": 165,
+   "U": 165,
+   "L_cert": "indep-004",
+   "U_cert": "spec2-007",
+   "proven": true
+  },
+  "by_quantity": {
+   "lower:alpha": 165,
+   "lower:beta": 165,
+   "upper:beta": 165,
+   "upper:minrk_2": 165
+  },
+  "info": {
+   "alpha_hoffman_ratio_bound": 165.0,
+   "omega_hoffman_bound": 18.0,
+   "clique_cover_floor": 28,
+   "fractional_cover_floor": 27.5
+  }
+ },
+ "verification": {
+  "verdict": "proven",
+  "checks": [
+   {
+    "check": "independent_set",
+    "ok": true,
+    "detail": "165 vertices, no edge inside (13530 pairs tested)",
+    "value": 165
+   },
+   {
+    "check": "spectral_code",
+    "ok": true,
+    "p": 2,
+    "c": 1,
+    "claimed_rank": 165,
+    "fit": true,
+    "freivalds_passed": 30,
+    "freivalds_rounds": 30,
+    "freivalds_error_bound": "p^-30",
+    "exact_rank_own": 165,
+    "sub_ok": true
+   },
+   {
+    "check": "decode_simulation",
+    "ok": true,
+    "trials": 3,
+    "receivers": 495,
+    "transmissions": 165,
+    "failed_decodings": 0,
+    "sub_ok": true
+   }
+  ],
+  "extra_checks": [],
+  "checks_seconds": 0.45,
+  "analysis": null,
+  "all_certificates_verified": true,
+  "verify_wall": 0.45
+ },
+ "truth": {
+  "name": "K(12,4)",
+  "family": "kneser",
+  "group": "main"
+ }
+}

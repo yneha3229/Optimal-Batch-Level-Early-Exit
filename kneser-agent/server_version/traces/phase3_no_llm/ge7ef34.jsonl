@@ -1,0 +1,916 @@
+{"t": 0.018, "wall": "12:32:02.865", "kind": "run_start", "graph": "ge7ef34", "n": 1000, "mode": "no_llm", "budget": 300.0, "cores": [32, 33, 34, 35, 36, 37, 38, 39], "model": null}
+{"t": 0.018, "wall": "12:32:02.865", "kind": "task_queued", "task": "describe#1", "tool": "describe", "args": {}, "priority": 1000, "source": "scheduler"}
+{"t": 0.018, "wall": "12:32:02.865", "kind": "task_queued", "task": "indep_set#2", "tool": "indep_set", "args": {"restarts": 4, "seed": 0}, "priority": 900, "source": "scheduler"}
+{"t": 0.018, "wall": "12:32:02.865", "kind": "task_queued", "task": "clique_cover#3", "tool": "clique_cover", "args": {"tabu_iters": 20000, "seed": 0}, "priority": 800, "source": "scheduler"}
+{"t": 0.024, "wall": "12:32:02.871", "kind": "tool_start", "task": "describe#1", "tool": "describe", "args": {}, "pid": 437211, "cores": [32, 33, 34, 35], "source": "scheduler"}
+{"t": 0.032, "wall": "12:32:02.879", "kind": "tool_start", "task": "indep_set#2", "tool": "indep_set", "args": {"restarts": 4, "seed": 0}, "pid": 437212, "cores": [36], "source": "scheduler"}
+{"t": 0.039, "wall": "12:32:02.886", "kind": "tool_start", "task": "clique_cover#3", "tool": "clique_cover", "args": {"tabu_iters": 20000, "seed": 0}, "pid": 437213, "cores": [37], "source": "scheduler"}
+{"t": 0.386, "wall": "12:32:03.233", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 313, "certificate_id": "indep-001", "tool": "indep_set"}
+{"t": 0.387, "wall": "12:32:03.234", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 313, "certificate_id": "indep-001", "tool": "indep_set"}
+{"t": 0.387, "wall": "12:32:03.234", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 313, "tool": "indep_set"}}
+{"t": 0.393, "wall": "12:32:03.240", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 318, "certificate_id": "indep-002", "tool": "indep_set"}
+{"t": 0.393, "wall": "12:32:03.240", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 318, "certificate_id": "indep-002", "tool": "indep_set"}
+{"t": 0.393, "wall": "12:32:03.240", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 318, "tool": "indep_set"}}
+{"t": 0.409, "wall": "12:32:03.256", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 327, "certificate_id": "indep-003", "tool": "indep_set"}
+{"t": 0.409, "wall": "12:32:03.256", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 327, "certificate_id": "indep-003", "tool": "indep_set"}
+{"t": 0.41, "wall": "12:32:03.257", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 327, "tool": "indep_set"}}
+{"t": 0.431, "wall": "12:32:03.278", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 530, "certificate_id": "cover-004", "tool": "clique_cover"}
+{"t": 0.431, "wall": "12:32:03.278", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 530, "tool": "clique_cover"}}
+{"t": 0.455, "wall": "12:32:03.302", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 523, "certificate_id": "cover-005", "tool": "clique_cover"}
+{"t": 0.455, "wall": "12:32:03.302", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 523, "tool": "clique_cover"}}
+{"t": 0.457, "wall": "12:32:03.304", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 331, "certificate_id": "indep-006", "tool": "indep_set"}
+{"t": 0.458, "wall": "12:32:03.305", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 331, "certificate_id": "indep-006", "tool": "indep_set"}
+{"t": 0.458, "wall": "12:32:03.305", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 331, "tool": "indep_set"}}
+{"t": 0.506, "wall": "12:32:03.353", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 334, "certificate_id": "indep-007", "tool": "indep_set"}
+{"t": 0.506, "wall": "12:32:03.353", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 334, "certificate_id": "indep-007", "tool": "indep_set"}
+{"t": 0.506, "wall": "12:32:03.353", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 334, "tool": "indep_set"}}
+{"t": 0.576, "wall": "12:32:03.423", "kind": "tool_stop", "task": "describe#1", "tool": "describe", "seconds": 0.55, "how": "exited", "reason": null}
+{"t": 0.577, "wall": "12:32:03.424", "kind": "describe", "summary": "n = 1000 vertices, m = 3000 edges, density 0.006006\ndegree min 6, max 6, regular: True\ntriangles: 20 (exact)\ncommon neighbours of adjacent pairs (3000 pairs): value->count {0: 2940, 1: 60}\ncommon neighbours of non-adjacent pairs (3000 sampled pairs): {0: 2913, 1: 86, 2: 1}\ngreedy clique size 2, greedy independent set size 278\nspectrum (1000 distinct eigenvalues; exact multiplicities): 6 (x1), 4.436854 (x1), 4.400611 (x1), 4.392432 (x1), 4.358081 (x1), 4.344003 (x1), 4.337848 (x1), 4.309386 (x1), 4.294663 (x1), 4.279718 (x1), 4.270583 (x1), 4.247247 (x1)", "seconds": 0.35}
+{"t": 0.579, "wall": "12:32:03.426", "kind": "candidates", "count": 166, "top": [{"p": 5, "theta": 6, "c": 4, "rank_pred": 999}, {"p": 7, "theta": 6, "c": 1, "rank_pred": 999}, {"p": 11, "theta": 6, "c": 9, "rank_pred": 999}, {"p": 13, "theta": 6, "c": 2, "rank_pred": 999}, {"p": 17, "theta": 6, "c": 14, "rank_pred": 999}, {"p": 19, "theta": 6, "c": 3, "rank_pred": 999}, {"p": 23, "theta": 6, "c": 19, "rank_pred": 999}, {"p": 29, "theta": 6, "c": 24, "rank_pred": 999}]}
+{"t": 0.579, "wall": "12:32:03.426", "kind": "plan_accepted", "source": "default", "hypothesis": {"name": "none", "params": {}, "confidence": 0.0, "evidence": []}, "predictions": {}, "plan": [{"tool": "code_rules", "args": {"rule": "spectral"}, "why": "default: all primes <= n by rank_pred"}, {"tool": "frac_cover", "args": {}, "why": "default"}], "settings": {}, "stop_when": "L == U or budget", "unresolved_objections": []}
+{"t": 0.581, "wall": "12:32:03.428", "kind": "task_queued", "task": "frac_cover#4", "tool": "frac_cover", "args": {"init_cliques": "<523 items>"}, "priority": 60, "source": "default"}
+{"t": 0.586, "wall": "12:32:03.433", "kind": "settings_change", "what": "deferred 166 (p, theta) pairs with rank_pred >= U = 523", "why": "plan applied"}
+{"t": 0.586, "wall": "12:32:03.433", "kind": "spectral_queue", "size": 0, "head": []}
+{"t": 0.586, "wall": "12:32:03.433", "kind": "tool_done", "task": "describe#1", "tool": "describe", "summary": {"seconds": 0.35}}
+{"t": 0.596, "wall": "12:32:03.443", "kind": "tool_start", "task": "frac_cover#4", "tool": "frac_cover", "args": {"init_cliques": "<523 items>"}, "pid": 437426, "cores": [32], "source": "default"}
+{"t": 0.597, "wall": "12:32:03.444", "kind": "settings_change", "what": "spectral queue empty: running the deferred pairs", "count": 166}
+{"t": 0.598, "wall": "12:32:03.445", "kind": "task_queued", "task": "spectral#5", "tool": "spectral", "args": {"p": 5, "c": 4, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 0.606, "wall": "12:32:03.453", "kind": "tool_start", "task": "spectral#5", "tool": "spectral", "args": {"p": 5, "c": 4, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 437427, "cores": [33], "source": "plan"}
+{"t": 0.607, "wall": "12:32:03.454", "kind": "task_queued", "task": "spectral#6", "tool": "spectral", "args": {"p": 7, "c": 1, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 0.616, "wall": "12:32:03.463", "kind": "tool_start", "task": "spectral#6", "tool": "spectral", "args": {"p": 7, "c": 1, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 437461, "cores": [34], "source": "plan"}
+{"t": 0.617, "wall": "12:32:03.464", "kind": "task_queued", "task": "spectral#7", "tool": "spectral", "args": {"p": 11, "c": 9, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 0.624, "wall": "12:32:03.471", "kind": "tool_start", "task": "spectral#7", "tool": "spectral", "args": {"p": 11, "c": 9, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 437494, "cores": [35], "source": "plan"}
+{"t": 0.625, "wall": "12:32:03.472", "kind": "task_queued", "task": "spectral#8", "tool": "spectral", "args": {"p": 13, "c": 2, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 0.632, "wall": "12:32:03.479", "kind": "tool_start", "task": "spectral#8", "tool": "spectral", "args": {"p": 13, "c": 2, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 437565, "cores": [38], "source": "plan"}
+{"t": 0.632, "wall": "12:32:03.479", "kind": "task_queued", "task": "spectral#9", "tool": "spectral", "args": {"p": 17, "c": 14, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 0.639, "wall": "12:32:03.486", "kind": "tool_start", "task": "spectral#9", "tool": "spectral", "args": {"p": 17, "c": 14, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 437615, "cores": [39], "source": "plan"}
+{"t": 0.646, "wall": "12:32:03.493", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 336, "certificate_id": "indep-008", "tool": "indep_set"}
+{"t": 0.647, "wall": "12:32:03.494", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 336, "certificate_id": "indep-008", "tool": "indep_set"}
+{"t": 0.647, "wall": "12:32:03.494", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 336, "tool": "indep_set"}}
+{"t": 0.647, "wall": "12:32:03.494", "kind": "settings_change", "what": "deferred 161 (p, theta) pairs with rank_pred >= U = 523", "why": "NEW_LOWER"}
+{"t": 0.661, "wall": "12:32:03.508", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 493, "certificate_id": "cover-009", "tool": "clique_cover"}
+{"t": 0.661, "wall": "12:32:03.508", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 493, "tool": "clique_cover"}}
+{"t": 0.903, "wall": "12:32:03.750", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 492, "certificate_id": "cover-010", "tool": "clique_cover"}
+{"t": 0.903, "wall": "12:32:03.750", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 492, "tool": "clique_cover"}}
+{"t": 0.909, "wall": "12:32:03.756", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 338, "certificate_id": "indep-011", "tool": "indep_set"}
+{"t": 0.909, "wall": "12:32:03.756", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 338, "certificate_id": "indep-011", "tool": "indep_set"}
+{"t": 0.909, "wall": "12:32:03.756", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 338, "tool": "indep_set"}}
+{"t": 1.002, "wall": "12:32:03.849", "kind": "tool_report", "task": "spectral#5", "tool": "spectral", "p": 5, "c": 4, "theta": 6, "rank": null, "cap": 492, "seconds": 0.161, "rank_pred": 999, "stopped": false}
+{"t": 1.002, "wall": "12:32:03.849", "kind": "tool_done", "task": "spectral#5", "tool": "spectral", "summary": {"rank": null, "cap": 492}}
+{"t": 1.01, "wall": "12:32:03.857", "kind": "tool_stop", "task": "spectral#5", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 1.01, "wall": "12:32:03.857", "kind": "tool_stop", "task": "spectral#7", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 1.011, "wall": "12:32:03.858", "kind": "tool_report", "task": "spectral#7", "tool": "spectral", "p": 11, "c": 9, "theta": 6, "rank": null, "cap": 492, "seconds": 0.158, "rank_pred": 999, "stopped": false}
+{"t": 1.011, "wall": "12:32:03.858", "kind": "tool_done", "task": "spectral#7", "tool": "spectral", "summary": {"rank": null, "cap": 492}}
+{"t": 1.013, "wall": "12:32:03.860", "kind": "tool_stop", "task": "spectral#8", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 1.013, "wall": "12:32:03.860", "kind": "tool_report", "task": "spectral#8", "tool": "spectral", "p": 13, "c": 2, "theta": 6, "rank": null, "cap": 492, "seconds": 0.145, "rank_pred": 999, "stopped": false}
+{"t": 1.013, "wall": "12:32:03.860", "kind": "tool_done", "task": "spectral#8", "tool": "spectral", "summary": {"rank": null, "cap": 492}}
+{"t": 1.018, "wall": "12:32:03.865", "kind": "tool_stop", "task": "spectral#6", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 1.018, "wall": "12:32:03.865", "kind": "tool_report", "task": "spectral#6", "tool": "spectral", "p": 7, "c": 1, "theta": 6, "rank": null, "cap": 491, "seconds": 0.104, "rank_pred": 999, "stopped": false}
+{"t": 1.018, "wall": "12:32:03.865", "kind": "tool_done", "task": "spectral#6", "tool": "spectral", "summary": {"rank": null, "cap": 491}}
+{"t": 1.046, "wall": "12:32:03.893", "kind": "tool_stop", "task": "spectral#9", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 1.046, "wall": "12:32:03.893", "kind": "tool_report", "task": "spectral#9", "tool": "spectral", "p": 17, "c": 14, "theta": 6, "rank": null, "cap": 492, "seconds": 0.153, "rank_pred": 999, "stopped": false}
+{"t": 1.046, "wall": "12:32:03.893", "kind": "tool_done", "task": "spectral#9", "tool": "spectral", "summary": {"rank": null, "cap": 492}}
+{"t": 1.046, "wall": "12:32:03.893", "kind": "settings_change", "what": "spectral queue empty: running the deferred pairs", "count": 161}
+{"t": 1.046, "wall": "12:32:03.893", "kind": "task_queued", "task": "spectral#10", "tool": "spectral", "args": {"p": 19, "c": 3, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.049, "wall": "12:32:03.896", "kind": "tool_start", "task": "spectral#10", "tool": "spectral", "args": {"p": 19, "c": 3, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 437852, "cores": [33], "source": "plan"}
+{"t": 1.05, "wall": "12:32:03.897", "kind": "task_queued", "task": "spectral#11", "tool": "spectral", "args": {"p": 23, "c": 19, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.053, "wall": "12:32:03.900", "kind": "tool_start", "task": "spectral#11", "tool": "spectral", "args": {"p": 23, "c": 19, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 437853, "cores": [34], "source": "plan"}
+{"t": 1.054, "wall": "12:32:03.901", "kind": "task_queued", "task": "spectral#12", "tool": "spectral", "args": {"p": 29, "c": 24, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.057, "wall": "12:32:03.904", "kind": "tool_start", "task": "spectral#12", "tool": "spectral", "args": {"p": 29, "c": 24, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 437854, "cores": [35], "source": "plan"}
+{"t": 1.058, "wall": "12:32:03.905", "kind": "task_queued", "task": "spectral#13", "tool": "spectral", "args": {"p": 31, "c": 5, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.062, "wall": "12:32:03.909", "kind": "tool_start", "task": "spectral#13", "tool": "spectral", "args": {"p": 31, "c": 5, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 437855, "cores": [38], "source": "plan"}
+{"t": 1.062, "wall": "12:32:03.909", "kind": "task_queued", "task": "spectral#14", "tool": "spectral", "args": {"p": 37, "c": 6, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.069, "wall": "12:32:03.916", "kind": "tool_start", "task": "spectral#14", "tool": "spectral", "args": {"p": 37, "c": 6, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 437893, "cores": [39], "source": "plan"}
+{"t": 1.081, "wall": "12:32:03.928", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 491, "certificate_id": "cover-012", "tool": "clique_cover"}
+{"t": 1.082, "wall": "12:32:03.929", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 491, "tool": "clique_cover"}}
+{"t": 1.082, "wall": "12:32:03.929", "kind": "settings_change", "what": "deferred 156 (p, theta) pairs with rank_pred >= U = 491", "why": "NEW_UPPER"}
+{"t": 1.435, "wall": "12:32:04.282", "kind": "tool_report", "task": "spectral#12", "tool": "spectral", "p": 29, "c": 24, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 1.435, "wall": "12:32:04.282", "kind": "tool_done", "task": "spectral#12", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 1.441, "wall": "12:32:04.288", "kind": "tool_stop", "task": "spectral#12", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 1.449, "wall": "12:32:04.296", "kind": "tool_stop", "task": "spectral#13", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 1.449, "wall": "12:32:04.296", "kind": "tool_report", "task": "spectral#13", "tool": "spectral", "p": 31, "c": 5, "theta": 6, "rank": null, "cap": 490, "seconds": 0.145, "rank_pred": 999, "stopped": false}
+{"t": 1.449, "wall": "12:32:04.296", "kind": "tool_done", "task": "spectral#13", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 1.452, "wall": "12:32:04.299", "kind": "tool_stop", "task": "spectral#10", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 1.452, "wall": "12:32:04.299", "kind": "tool_stop", "task": "spectral#14", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 1.452, "wall": "12:32:04.299", "kind": "tool_report", "task": "spectral#10", "tool": "spectral", "p": 19, "c": 3, "theta": 6, "rank": null, "cap": 490, "seconds": 0.094, "rank_pred": 999, "stopped": false}
+{"t": 1.452, "wall": "12:32:04.299", "kind": "tool_done", "task": "spectral#10", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 1.452, "wall": "12:32:04.299", "kind": "tool_report", "task": "spectral#14", "tool": "spectral", "p": 37, "c": 6, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 1.452, "wall": "12:32:04.299", "kind": "tool_done", "task": "spectral#14", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 1.459, "wall": "12:32:04.306", "kind": "tool_stop", "task": "spectral#11", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 1.459, "wall": "12:32:04.306", "kind": "tool_report", "task": "spectral#11", "tool": "spectral", "p": 23, "c": 19, "theta": 6, "rank": null, "cap": 490, "seconds": 0.088, "rank_pred": 999, "stopped": false}
+{"t": 1.459, "wall": "12:32:04.306", "kind": "tool_done", "task": "spectral#11", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 1.46, "wall": "12:32:04.307", "kind": "settings_change", "what": "spectral queue empty: running the deferred pairs", "count": 156}
+{"t": 1.46, "wall": "12:32:04.307", "kind": "task_queued", "task": "spectral#15", "tool": "spectral", "args": {"p": 41, "c": 34, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.463, "wall": "12:32:04.310", "kind": "tool_start", "task": "spectral#15", "tool": "spectral", "args": {"p": 41, "c": 34, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438244, "cores": [33], "source": "plan"}
+{"t": 1.463, "wall": "12:32:04.310", "kind": "task_queued", "task": "spectral#16", "tool": "spectral", "args": {"p": 43, "c": 7, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.467, "wall": "12:32:04.314", "kind": "tool_start", "task": "spectral#16", "tool": "spectral", "args": {"p": 43, "c": 7, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438245, "cores": [34], "source": "plan"}
+{"t": 1.467, "wall": "12:32:04.314", "kind": "task_queued", "task": "spectral#17", "tool": "spectral", "args": {"p": 47, "c": 39, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.471, "wall": "12:32:04.318", "kind": "tool_start", "task": "spectral#17", "tool": "spectral", "args": {"p": 47, "c": 39, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438246, "cores": [35], "source": "plan"}
+{"t": 1.471, "wall": "12:32:04.318", "kind": "task_queued", "task": "spectral#18", "tool": "spectral", "args": {"p": 53, "c": 44, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.479, "wall": "12:32:04.326", "kind": "tool_start", "task": "spectral#18", "tool": "spectral", "args": {"p": 53, "c": 44, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438247, "cores": [38], "source": "plan"}
+{"t": 1.479, "wall": "12:32:04.326", "kind": "task_queued", "task": "spectral#19", "tool": "spectral", "args": {"p": 59, "c": 49, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.486, "wall": "12:32:04.333", "kind": "tool_start", "task": "spectral#19", "tool": "spectral", "args": {"p": 59, "c": 49, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438303, "cores": [39], "source": "plan"}
+{"t": 1.491, "wall": "12:32:04.338", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 341, "certificate_id": "indep-014", "tool": "indep_set"}
+{"t": 1.491, "wall": "12:32:04.338", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 341, "certificate_id": "indep-014", "tool": "indep_set"}
+{"t": 1.491, "wall": "12:32:04.338", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 341, "tool": "indep_set"}}
+{"t": 1.491, "wall": "12:32:04.338", "kind": "settings_change", "what": "deferred 151 (p, theta) pairs with rank_pred >= U = 491", "why": "NEW_LOWER"}
+{"t": 1.857, "wall": "12:32:04.704", "kind": "tool_report", "task": "spectral#18", "tool": "spectral", "p": 53, "c": 44, "theta": 6, "rank": null, "cap": 490, "seconds": 0.173, "rank_pred": 999, "stopped": false}
+{"t": 1.857, "wall": "12:32:04.704", "kind": "tool_report", "task": "spectral#17", "tool": "spectral", "p": 47, "c": 39, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 1.863, "wall": "12:32:04.710", "kind": "tool_stop", "task": "spectral#18", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 1.863, "wall": "12:32:04.710", "kind": "tool_done", "task": "spectral#18", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 1.864, "wall": "12:32:04.711", "kind": "tool_stop", "task": "spectral#17", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 1.866, "wall": "12:32:04.713", "kind": "tool_stop", "task": "spectral#19", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 1.866, "wall": "12:32:04.713", "kind": "tool_done", "task": "spectral#17", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 1.866, "wall": "12:32:04.713", "kind": "tool_report", "task": "spectral#19", "tool": "spectral", "p": 59, "c": 49, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 1.866, "wall": "12:32:04.713", "kind": "tool_done", "task": "spectral#19", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 1.871, "wall": "12:32:04.718", "kind": "tool_stop", "task": "spectral#15", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 1.871, "wall": "12:32:04.718", "kind": "tool_stop", "task": "spectral#16", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 1.872, "wall": "12:32:04.719", "kind": "tool_report", "task": "spectral#15", "tool": "spectral", "p": 41, "c": 34, "theta": 6, "rank": null, "cap": 490, "seconds": 0.105, "rank_pred": 999, "stopped": false}
+{"t": 1.872, "wall": "12:32:04.719", "kind": "tool_done", "task": "spectral#15", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 1.872, "wall": "12:32:04.719", "kind": "tool_report", "task": "spectral#16", "tool": "spectral", "p": 43, "c": 7, "theta": 6, "rank": null, "cap": 490, "seconds": 0.163, "rank_pred": 999, "stopped": false}
+{"t": 1.872, "wall": "12:32:04.719", "kind": "tool_done", "task": "spectral#16", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 1.872, "wall": "12:32:04.719", "kind": "settings_change", "what": "spectral queue empty: running the deferred pairs", "count": 151}
+{"t": 1.872, "wall": "12:32:04.719", "kind": "task_queued", "task": "spectral#20", "tool": "spectral", "args": {"p": 61, "c": 10, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.876, "wall": "12:32:04.723", "kind": "tool_start", "task": "spectral#20", "tool": "spectral", "args": {"p": 61, "c": 10, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438599, "cores": [33], "source": "plan"}
+{"t": 1.877, "wall": "12:32:04.724", "kind": "task_queued", "task": "spectral#21", "tool": "spectral", "args": {"p": 67, "c": 11, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.88, "wall": "12:32:04.727", "kind": "tool_start", "task": "spectral#21", "tool": "spectral", "args": {"p": 67, "c": 11, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438600, "cores": [34], "source": "plan"}
+{"t": 1.881, "wall": "12:32:04.728", "kind": "task_queued", "task": "spectral#22", "tool": "spectral", "args": {"p": 71, "c": 59, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.885, "wall": "12:32:04.732", "kind": "tool_start", "task": "spectral#22", "tool": "spectral", "args": {"p": 71, "c": 59, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438601, "cores": [35], "source": "plan"}
+{"t": 1.885, "wall": "12:32:04.732", "kind": "task_queued", "task": "spectral#23", "tool": "spectral", "args": {"p": 73, "c": 12, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.889, "wall": "12:32:04.736", "kind": "tool_start", "task": "spectral#23", "tool": "spectral", "args": {"p": 73, "c": 12, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438602, "cores": [38], "source": "plan"}
+{"t": 1.889, "wall": "12:32:04.736", "kind": "task_queued", "task": "spectral#24", "tool": "spectral", "args": {"p": 79, "c": 13, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.899, "wall": "12:32:04.746", "kind": "tool_start", "task": "spectral#24", "tool": "spectral", "args": {"p": 79, "c": 13, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438629, "cores": [39], "source": "plan"}
+{"t": 2.26, "wall": "12:32:05.107", "kind": "tool_report", "task": "spectral#22", "tool": "spectral", "p": 71, "c": 59, "theta": 6, "rank": null, "cap": 490, "seconds": 0.147, "rank_pred": 999, "stopped": false}
+{"t": 2.26, "wall": "12:32:05.107", "kind": "tool_done", "task": "spectral#22", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 2.266, "wall": "12:32:05.113", "kind": "tool_stop", "task": "spectral#22", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 2.267, "wall": "12:32:05.114", "kind": "task_queued", "task": "spectral#25", "tool": "spectral", "args": {"p": 83, "c": 69, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 2.271, "wall": "12:32:05.118", "kind": "tool_start", "task": "spectral#25", "tool": "spectral", "args": {"p": 83, "c": 69, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438973, "cores": [35], "source": "plan"}
+{"t": 2.272, "wall": "12:32:05.119", "kind": "tool_stop", "task": "spectral#23", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 2.272, "wall": "12:32:05.119", "kind": "tool_report", "task": "spectral#23", "tool": "spectral", "p": 73, "c": 12, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 2.272, "wall": "12:32:05.119", "kind": "tool_done", "task": "spectral#23", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 2.272, "wall": "12:32:05.119", "kind": "task_queued", "task": "spectral#26", "tool": "spectral", "args": {"p": 89, "c": 74, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 2.282, "wall": "12:32:05.129", "kind": "tool_start", "task": "spectral#26", "tool": "spectral", "args": {"p": 89, "c": 74, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438974, "cores": [38], "source": "plan"}
+{"t": 2.282, "wall": "12:32:05.129", "kind": "tool_stop", "task": "spectral#20", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 2.282, "wall": "12:32:05.129", "kind": "tool_stop", "task": "spectral#24", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 2.283, "wall": "12:32:05.130", "kind": "tool_report", "task": "spectral#20", "tool": "spectral", "p": 61, "c": 10, "theta": 6, "rank": null, "cap": 490, "seconds": 0.094, "rank_pred": 999, "stopped": false}
+{"t": 2.283, "wall": "12:32:05.130", "kind": "tool_done", "task": "spectral#20", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 2.283, "wall": "12:32:05.130", "kind": "tool_report", "task": "spectral#24", "tool": "spectral", "p": 79, "c": 13, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 2.283, "wall": "12:32:05.130", "kind": "tool_done", "task": "spectral#24", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 2.283, "wall": "12:32:05.130", "kind": "task_queued", "task": "spectral#27", "tool": "spectral", "args": {"p": 97, "c": 16, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 2.288, "wall": "12:32:05.135", "kind": "tool_start", "task": "spectral#27", "tool": "spectral", "args": {"p": 97, "c": 16, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 438975, "cores": [33], "source": "plan"}
+{"t": 2.288, "wall": "12:32:05.135", "kind": "task_queued", "task": "spectral#28", "tool": "spectral", "args": {"p": 101, "c": 84, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 2.305, "wall": "12:32:05.152", "kind": "tool_start", "task": "spectral#28", "tool": "spectral", "args": {"p": 101, "c": 84, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 439033, "cores": [39], "source": "plan"}
+{"t": 2.306, "wall": "12:32:05.153", "kind": "tool_stop", "task": "spectral#21", "tool": "spectral", "seconds": 0.43, "how": "exited", "reason": null}
+{"t": 2.307, "wall": "12:32:05.154", "kind": "tool_report", "task": "spectral#21", "tool": "spectral", "p": 67, "c": 11, "theta": 6, "rank": null, "cap": 490, "seconds": 0.147, "rank_pred": 999, "stopped": false}
+{"t": 2.307, "wall": "12:32:05.154", "kind": "tool_done", "task": "spectral#21", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 2.307, "wall": "12:32:05.154", "kind": "task_queued", "task": "spectral#29", "tool": "spectral", "args": {"p": 103, "c": 17, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 2.313, "wall": "12:32:05.160", "kind": "tool_start", "task": "spectral#29", "tool": "spectral", "args": {"p": 103, "c": 17, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 439072, "cores": [34], "source": "plan"}
+{"t": 2.577, "wall": "12:32:05.424", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 346, "certificate_id": "indep-015", "tool": "indep_set"}
+{"t": 2.578, "wall": "12:32:05.424", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 346, "certificate_id": "indep-015", "tool": "indep_set"}
+{"t": 2.578, "wall": "12:32:05.425", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 346, "tool": "indep_set"}}
+{"t": 2.578, "wall": "12:32:05.425", "kind": "settings_change", "what": "deferred 141 (p, theta) pairs with rank_pred >= U = 491", "why": "NEW_LOWER"}
+{"t": 2.654, "wall": "12:32:05.501", "kind": "tool_report", "task": "spectral#26", "tool": "spectral", "p": 89, "c": 74, "theta": 6, "rank": null, "cap": 490, "seconds": 0.213, "rank_pred": 999, "stopped": false}
+{"t": 2.654, "wall": "12:32:05.501", "kind": "tool_done", "task": "spectral#26", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 2.66, "wall": "12:32:05.507", "kind": "tool_stop", "task": "spectral#26", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 2.667, "wall": "12:32:05.514", "kind": "tool_stop", "task": "spectral#25", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 2.667, "wall": "12:32:05.514", "kind": "tool_report", "task": "spectral#25", "tool": "spectral", "p": 83, "c": 69, "theta": 6, "rank": null, "cap": 490, "seconds": 0.15, "rank_pred": 999, "stopped": false}
+{"t": 2.667, "wall": "12:32:05.514", "kind": "tool_done", "task": "spectral#25", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 2.689, "wall": "12:32:05.536", "kind": "tool_stop", "task": "spectral#28", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 2.689, "wall": "12:32:05.536", "kind": "tool_report", "task": "spectral#28", "tool": "spectral", "p": 101, "c": 84, "theta": 6, "rank": null, "cap": 490, "seconds": 0.155, "rank_pred": 999, "stopped": false}
+{"t": 2.689, "wall": "12:32:05.536", "kind": "tool_done", "task": "spectral#28", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 2.708, "wall": "12:32:05.555", "kind": "tool_stop", "task": "spectral#27", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 2.708, "wall": "12:32:05.555", "kind": "tool_report", "task": "spectral#27", "tool": "spectral", "p": 97, "c": 16, "theta": 6, "rank": null, "cap": 490, "seconds": 0.151, "rank_pred": 999, "stopped": false}
+{"t": 2.708, "wall": "12:32:05.555", "kind": "tool_done", "task": "spectral#27", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 2.735, "wall": "12:32:05.582", "kind": "tool_stop", "task": "spectral#29", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 2.735, "wall": "12:32:05.582", "kind": "tool_report", "task": "spectral#29", "tool": "spectral", "p": 103, "c": 17, "theta": 6, "rank": null, "cap": 490, "seconds": 0.116, "rank_pred": 999, "stopped": false}
+{"t": 2.735, "wall": "12:32:05.582", "kind": "tool_done", "task": "spectral#29", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 2.735, "wall": "12:32:05.582", "kind": "settings_change", "what": "spectral queue empty: running the deferred pairs", "count": 141}
+{"t": 2.736, "wall": "12:32:05.583", "kind": "task_queued", "task": "spectral#30", "tool": "spectral", "args": {"p": 107, "c": 89, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 2.743, "wall": "12:32:05.590", "kind": "tool_start", "task": "spectral#30", "tool": "spectral", "args": {"p": 107, "c": 89, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 439331, "cores": [33], "source": "plan"}
+{"t": 2.744, "wall": "12:32:05.591", "kind": "task_queued", "task": "spectral#31", "tool": "spectral", "args": {"p": 109, "c": 18, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 2.752, "wall": "12:32:05.600", "kind": "tool_start", "task": "spectral#31", "tool": "spectral", "args": {"p": 109, "c": 18, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 439332, "cores": [34], "source": "plan"}
+{"t": 2.753, "wall": "12:32:05.600", "kind": "task_queued", "task": "spectral#32", "tool": "spectral", "args": {"p": 113, "c": 94, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 2.762, "wall": "12:32:05.609", "kind": "tool_start", "task": "spectral#32", "tool": "spectral", "args": {"p": 113, "c": 94, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 439339, "cores": [35], "source": "plan"}
+{"t": 2.763, "wall": "12:32:05.610", "kind": "task_queued", "task": "spectral#33", "tool": "spectral", "args": {"p": 127, "c": 21, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 2.772, "wall": "12:32:05.619", "kind": "tool_start", "task": "spectral#33", "tool": "spectral", "args": {"p": 127, "c": 21, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 439382, "cores": [38], "source": "plan"}
+{"t": 2.773, "wall": "12:32:05.620", "kind": "task_queued", "task": "spectral#34", "tool": "spectral", "args": {"p": 131, "c": 109, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 2.784, "wall": "12:32:05.631", "kind": "tool_start", "task": "spectral#34", "tool": "spectral", "args": {"p": 131, "c": 109, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 439483, "cores": [39], "source": "plan"}
+{"t": 3.165, "wall": "12:32:06.012", "kind": "tool_stop", "task": "spectral#30", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 3.166, "wall": "12:32:06.013", "kind": "tool_stop", "task": "spectral#31", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 3.166, "wall": "12:32:06.013", "kind": "tool_stop", "task": "spectral#32", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 3.166, "wall": "12:32:06.013", "kind": "tool_stop", "task": "spectral#34", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 3.184, "wall": "12:32:06.031", "kind": "tool_report", "task": "spectral#30", "tool": "spectral", "p": 107, "c": 89, "theta": 6, "rank": null, "cap": 490, "seconds": 0.159, "rank_pred": 999, "stopped": false}
+{"t": 3.184, "wall": "12:32:06.031", "kind": "tool_done", "task": "spectral#30", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 3.184, "wall": "12:32:06.031", "kind": "tool_report", "task": "spectral#31", "tool": "spectral", "p": 109, "c": 18, "theta": 6, "rank": null, "cap": 490, "seconds": 0.099, "rank_pred": 999, "stopped": false}
+{"t": 3.184, "wall": "12:32:06.031", "kind": "tool_done", "task": "spectral#31", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 3.184, "wall": "12:32:06.031", "kind": "tool_report", "task": "spectral#32", "tool": "spectral", "p": 113, "c": 94, "theta": 6, "rank": null, "cap": 490, "seconds": 0.177, "rank_pred": 999, "stopped": false}
+{"t": 3.184, "wall": "12:32:06.031", "kind": "tool_done", "task": "spectral#32", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 3.184, "wall": "12:32:06.031", "kind": "tool_report", "task": "spectral#34", "tool": "spectral", "p": 131, "c": 109, "theta": 6, "rank": null, "cap": 490, "seconds": 0.201, "rank_pred": 999, "stopped": false}
+{"t": 3.184, "wall": "12:32:06.031", "kind": "tool_done", "task": "spectral#34", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 3.184, "wall": "12:32:06.031", "kind": "task_queued", "task": "spectral#35", "tool": "spectral", "args": {"p": 137, "c": 114, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 3.194, "wall": "12:32:06.041", "kind": "tool_start", "task": "spectral#35", "tool": "spectral", "args": {"p": 137, "c": 114, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 439686, "cores": [33], "source": "plan"}
+{"t": 3.194, "wall": "12:32:06.041", "kind": "task_queued", "task": "spectral#36", "tool": "spectral", "args": {"p": 139, "c": 23, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 3.2, "wall": "12:32:06.047", "kind": "tool_start", "task": "spectral#36", "tool": "spectral", "args": {"p": 139, "c": 23, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 439687, "cores": [34], "source": "plan"}
+{"t": 3.201, "wall": "12:32:06.048", "kind": "task_queued", "task": "spectral#37", "tool": "spectral", "args": {"p": 149, "c": 124, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 3.205, "wall": "12:32:06.052", "kind": "tool_start", "task": "spectral#37", "tool": "spectral", "args": {"p": 149, "c": 124, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 439688, "cores": [35], "source": "plan"}
+{"t": 3.205, "wall": "12:32:06.052", "kind": "task_queued", "task": "spectral#38", "tool": "spectral", "args": {"p": 151, "c": 25, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 3.209, "wall": "12:32:06.056", "kind": "tool_start", "task": "spectral#38", "tool": "spectral", "args": {"p": 151, "c": 25, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 439689, "cores": [39], "source": "plan"}
+{"t": 3.21, "wall": "12:32:06.057", "kind": "tool_stop", "task": "spectral#33", "tool": "spectral", "seconds": 0.44, "how": "exited", "reason": null}
+{"t": 3.21, "wall": "12:32:06.057", "kind": "tool_report", "task": "spectral#33", "tool": "spectral", "p": 127, "c": 21, "theta": 6, "rank": null, "cap": 490, "seconds": 0.172, "rank_pred": 999, "stopped": false}
+{"t": 3.21, "wall": "12:32:06.057", "kind": "tool_done", "task": "spectral#33", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 3.211, "wall": "12:32:06.058", "kind": "task_queued", "task": "spectral#39", "tool": "spectral", "args": {"p": 157, "c": 26, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 3.215, "wall": "12:32:06.062", "kind": "tool_start", "task": "spectral#39", "tool": "spectral", "args": {"p": 157, "c": 26, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 439705, "cores": [38], "source": "plan"}
+{"t": 3.591, "wall": "12:32:06.438", "kind": "tool_stop", "task": "spectral#38", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 3.592, "wall": "12:32:06.439", "kind": "tool_report", "task": "spectral#37", "tool": "spectral", "p": 149, "c": 124, "theta": 6, "rank": null, "cap": 490, "seconds": 0.196, "rank_pred": 999, "stopped": false}
+{"t": 3.592, "wall": "12:32:06.439", "kind": "tool_report", "task": "spectral#38", "tool": "spectral", "p": 151, "c": 25, "theta": 6, "rank": null, "cap": 490, "seconds": 0.147, "rank_pred": 999, "stopped": false}
+{"t": 3.592, "wall": "12:32:06.439", "kind": "tool_done", "task": "spectral#38", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 3.592, "wall": "12:32:06.439", "kind": "task_queued", "task": "spectral#40", "tool": "spectral", "args": {"p": 163, "c": 27, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 3.595, "wall": "12:32:06.442", "kind": "tool_start", "task": "spectral#40", "tool": "spectral", "args": {"p": 163, "c": 27, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440044, "cores": [39], "source": "plan"}
+{"t": 3.599, "wall": "12:32:06.446", "kind": "tool_stop", "task": "spectral#35", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 3.599, "wall": "12:32:06.446", "kind": "tool_stop", "task": "spectral#37", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 3.599, "wall": "12:32:06.446", "kind": "tool_stop", "task": "spectral#39", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 3.599, "wall": "12:32:06.446", "kind": "tool_report", "task": "spectral#35", "tool": "spectral", "p": 137, "c": 114, "theta": 6, "rank": null, "cap": 490, "seconds": 0.166, "rank_pred": 999, "stopped": false}
+{"t": 3.599, "wall": "12:32:06.446", "kind": "tool_done", "task": "spectral#35", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 3.599, "wall": "12:32:06.446", "kind": "tool_done", "task": "spectral#37", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 3.599, "wall": "12:32:06.446", "kind": "tool_report", "task": "spectral#39", "tool": "spectral", "p": 157, "c": 26, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 3.6, "wall": "12:32:06.446", "kind": "tool_done", "task": "spectral#39", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 3.6, "wall": "12:32:06.447", "kind": "task_queued", "task": "spectral#41", "tool": "spectral", "args": {"p": 167, "c": 139, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 3.604, "wall": "12:32:06.451", "kind": "tool_start", "task": "spectral#41", "tool": "spectral", "args": {"p": 167, "c": 139, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440045, "cores": [33], "source": "plan"}
+{"t": 3.605, "wall": "12:32:06.452", "kind": "task_queued", "task": "spectral#42", "tool": "spectral", "args": {"p": 173, "c": 144, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 3.608, "wall": "12:32:06.455", "kind": "tool_start", "task": "spectral#42", "tool": "spectral", "args": {"p": 173, "c": 144, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440054, "cores": [35], "source": "plan"}
+{"t": 3.609, "wall": "12:32:06.456", "kind": "task_queued", "task": "spectral#43", "tool": "spectral", "args": {"p": 179, "c": 149, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 3.615, "wall": "12:32:06.462", "kind": "tool_start", "task": "spectral#43", "tool": "spectral", "args": {"p": 179, "c": 149, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440097, "cores": [38], "source": "plan"}
+{"t": 3.616, "wall": "12:32:06.463", "kind": "tool_stop", "task": "spectral#36", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 3.619, "wall": "12:32:06.466", "kind": "tool_report", "task": "spectral#36", "tool": "spectral", "p": 139, "c": 23, "theta": 6, "rank": null, "cap": 490, "seconds": 0.167, "rank_pred": 999, "stopped": false}
+{"t": 3.62, "wall": "12:32:06.466", "kind": "tool_done", "task": "spectral#36", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 3.62, "wall": "12:32:06.467", "kind": "task_queued", "task": "spectral#44", "tool": "spectral", "args": {"p": 181, "c": 30, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 3.627, "wall": "12:32:06.474", "kind": "tool_start", "task": "spectral#44", "tool": "spectral", "args": {"p": 181, "c": 30, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440168, "cores": [34], "source": "plan"}
+{"t": 3.968, "wall": "12:32:06.815", "kind": "tool_report", "task": "spectral#40", "tool": "spectral", "p": 163, "c": 27, "theta": 6, "rank": null, "cap": 490, "seconds": 0.206, "rank_pred": 999, "stopped": false}
+{"t": 3.968, "wall": "12:32:06.815", "kind": "tool_done", "task": "spectral#40", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 3.974, "wall": "12:32:06.821", "kind": "tool_stop", "task": "spectral#40", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 3.974, "wall": "12:32:06.821", "kind": "task_queued", "task": "spectral#45", "tool": "spectral", "args": {"p": 191, "c": 159, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 3.978, "wall": "12:32:06.825", "kind": "tool_start", "task": "spectral#45", "tool": "spectral", "args": {"p": 191, "c": 159, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440399, "cores": [39], "source": "plan"}
+{"t": 4.014, "wall": "12:32:06.861", "kind": "tool_stop", "task": "spectral#41", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 4.014, "wall": "12:32:06.861", "kind": "tool_stop", "task": "spectral#42", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 4.014, "wall": "12:32:06.861", "kind": "tool_stop", "task": "spectral#43", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 4.014, "wall": "12:32:06.861", "kind": "tool_report", "task": "spectral#41", "tool": "spectral", "p": 167, "c": 139, "theta": 6, "rank": null, "cap": 490, "seconds": 0.166, "rank_pred": 999, "stopped": false}
+{"t": 4.014, "wall": "12:32:06.861", "kind": "tool_done", "task": "spectral#41", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.014, "wall": "12:32:06.861", "kind": "tool_report", "task": "spectral#42", "tool": "spectral", "p": 173, "c": 144, "theta": 6, "rank": null, "cap": 490, "seconds": 0.147, "rank_pred": 999, "stopped": false}
+{"t": 4.014, "wall": "12:32:06.861", "kind": "tool_done", "task": "spectral#42", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.014, "wall": "12:32:06.861", "kind": "tool_report", "task": "spectral#43", "tool": "spectral", "p": 179, "c": 149, "theta": 6, "rank": null, "cap": 490, "seconds": 0.145, "rank_pred": 999, "stopped": false}
+{"t": 4.014, "wall": "12:32:06.861", "kind": "tool_done", "task": "spectral#43", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.015, "wall": "12:32:06.861", "kind": "task_queued", "task": "spectral#46", "tool": "spectral", "args": {"p": 193, "c": 32, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.026, "wall": "12:32:06.873", "kind": "tool_start", "task": "spectral#46", "tool": "spectral", "args": {"p": 193, "c": 32, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440455, "cores": [33], "source": "plan"}
+{"t": 4.026, "wall": "12:32:06.873", "kind": "task_queued", "task": "spectral#47", "tool": "spectral", "args": {"p": 197, "c": 164, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.032, "wall": "12:32:06.882", "kind": "tool_start", "task": "spectral#47", "tool": "spectral", "args": {"p": 197, "c": 164, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440456, "cores": [35], "source": "plan"}
+{"t": 4.035, "wall": "12:32:06.882", "kind": "task_queued", "task": "spectral#48", "tool": "spectral", "args": {"p": 199, "c": 33, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.042, "wall": "12:32:06.889", "kind": "tool_start", "task": "spectral#48", "tool": "spectral", "args": {"p": 199, "c": 33, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440457, "cores": [38], "source": "plan"}
+{"t": 4.043, "wall": "12:32:06.890", "kind": "tool_stop", "task": "spectral#44", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 4.043, "wall": "12:32:06.890", "kind": "tool_report", "task": "spectral#44", "tool": "spectral", "p": 181, "c": 30, "theta": 6, "rank": null, "cap": 490, "seconds": 0.163, "rank_pred": 999, "stopped": false}
+{"t": 4.043, "wall": "12:32:06.890", "kind": "tool_done", "task": "spectral#44", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.044, "wall": "12:32:06.891", "kind": "task_queued", "task": "spectral#49", "tool": "spectral", "args": {"p": 211, "c": 35, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.053, "wall": "12:32:06.900", "kind": "tool_start", "task": "spectral#49", "tool": "spectral", "args": {"p": 211, "c": 35, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440570, "cores": [34], "source": "plan"}
+{"t": 4.358, "wall": "12:32:07.205", "kind": "tool_report", "task": "spectral#45", "tool": "spectral", "p": 191, "c": 159, "theta": 6, "rank": null, "cap": 490, "seconds": 0.197, "rank_pred": 999, "stopped": false}
+{"t": 4.359, "wall": "12:32:07.206", "kind": "tool_done", "task": "spectral#45", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.365, "wall": "12:32:07.212", "kind": "tool_stop", "task": "spectral#45", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 4.365, "wall": "12:32:07.212", "kind": "task_queued", "task": "spectral#50", "tool": "spectral", "args": {"p": 223, "c": 37, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.369, "wall": "12:32:07.216", "kind": "tool_start", "task": "spectral#50", "tool": "spectral", "args": {"p": 223, "c": 37, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440760, "cores": [39], "source": "plan"}
+{"t": 4.417, "wall": "12:32:07.264", "kind": "tool_stop", "task": "spectral#47", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 4.418, "wall": "12:32:07.264", "kind": "tool_report", "task": "spectral#47", "tool": "spectral", "p": 197, "c": 164, "theta": 6, "rank": null, "cap": 490, "seconds": 0.153, "rank_pred": 999, "stopped": false}
+{"t": 4.418, "wall": "12:32:07.265", "kind": "tool_done", "task": "spectral#47", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.418, "wall": "12:32:07.265", "kind": "task_queued", "task": "spectral#51", "tool": "spectral", "args": {"p": 227, "c": 189, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.422, "wall": "12:32:07.269", "kind": "tool_start", "task": "spectral#51", "tool": "spectral", "args": {"p": 227, "c": 189, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440821, "cores": [35], "source": "plan"}
+{"t": 4.423, "wall": "12:32:07.270", "kind": "tool_stop", "task": "spectral#48", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 4.423, "wall": "12:32:07.270", "kind": "tool_report", "task": "spectral#48", "tool": "spectral", "p": 199, "c": 33, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 4.423, "wall": "12:32:07.270", "kind": "tool_done", "task": "spectral#48", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.427, "wall": "12:32:07.274", "kind": "task_queued", "task": "spectral#52", "tool": "spectral", "args": {"p": 229, "c": 38, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.437, "wall": "12:32:07.284", "kind": "tool_start", "task": "spectral#52", "tool": "spectral", "args": {"p": 229, "c": 38, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440822, "cores": [38], "source": "plan"}
+{"t": 4.441, "wall": "12:32:07.288", "kind": "tool_stop", "task": "spectral#46", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 4.456, "wall": "12:32:07.303", "kind": "tool_report", "task": "spectral#46", "tool": "spectral", "p": 193, "c": 32, "theta": 6, "rank": null, "cap": 490, "seconds": 0.133, "rank_pred": 999, "stopped": false}
+{"t": 4.456, "wall": "12:32:07.303", "kind": "tool_done", "task": "spectral#46", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.456, "wall": "12:32:07.303", "kind": "task_queued", "task": "spectral#53", "tool": "spectral", "args": {"p": 233, "c": 194, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.462, "wall": "12:32:07.309", "kind": "tool_start", "task": "spectral#53", "tool": "spectral", "args": {"p": 233, "c": 194, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440918, "cores": [33], "source": "plan"}
+{"t": 4.475, "wall": "12:32:07.322", "kind": "tool_stop", "task": "spectral#49", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 4.476, "wall": "12:32:07.323", "kind": "tool_report", "task": "spectral#49", "tool": "spectral", "p": 211, "c": 35, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 4.476, "wall": "12:32:07.323", "kind": "tool_done", "task": "spectral#49", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.476, "wall": "12:32:07.323", "kind": "task_queued", "task": "spectral#54", "tool": "spectral", "args": {"p": 239, "c": 199, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.483, "wall": "12:32:07.330", "kind": "tool_start", "task": "spectral#54", "tool": "spectral", "args": {"p": 239, "c": 199, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 440950, "cores": [34], "source": "plan"}
+{"t": 4.749, "wall": "12:32:07.596", "kind": "tool_stop", "task": "spectral#50", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 4.749, "wall": "12:32:07.596", "kind": "tool_report", "task": "spectral#50", "tool": "spectral", "p": 223, "c": 37, "theta": 6, "rank": null, "cap": 490, "seconds": 0.176, "rank_pred": 999, "stopped": false}
+{"t": 4.749, "wall": "12:32:07.596", "kind": "tool_done", "task": "spectral#50", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.75, "wall": "12:32:07.596", "kind": "task_queued", "task": "spectral#55", "tool": "spectral", "args": {"p": 241, "c": 40, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.754, "wall": "12:32:07.601", "kind": "tool_start", "task": "spectral#55", "tool": "spectral", "args": {"p": 241, "c": 40, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441115, "cores": [39], "source": "plan"}
+{"t": 4.842, "wall": "12:32:07.689", "kind": "tool_stop", "task": "spectral#51", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 4.842, "wall": "12:32:07.689", "kind": "tool_stop", "task": "spectral#52", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 4.842, "wall": "12:32:07.689", "kind": "tool_report", "task": "spectral#51", "tool": "spectral", "p": 227, "c": 189, "theta": 6, "rank": null, "cap": 490, "seconds": 0.223, "rank_pred": 999, "stopped": false}
+{"t": 4.842, "wall": "12:32:07.689", "kind": "tool_done", "task": "spectral#51", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.842, "wall": "12:32:07.689", "kind": "tool_report", "task": "spectral#52", "tool": "spectral", "p": 229, "c": 38, "theta": 6, "rank": null, "cap": 490, "seconds": 0.21, "rank_pred": 999, "stopped": false}
+{"t": 4.842, "wall": "12:32:07.689", "kind": "tool_done", "task": "spectral#52", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.842, "wall": "12:32:07.689", "kind": "task_queued", "task": "spectral#56", "tool": "spectral", "args": {"p": 251, "c": 209, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.846, "wall": "12:32:07.693", "kind": "tool_start", "task": "spectral#56", "tool": "spectral", "args": {"p": 251, "c": 209, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441186, "cores": [35], "source": "plan"}
+{"t": 4.847, "wall": "12:32:07.694", "kind": "task_queued", "task": "spectral#57", "tool": "spectral", "args": {"p": 257, "c": 214, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.851, "wall": "12:32:07.698", "kind": "tool_start", "task": "spectral#57", "tool": "spectral", "args": {"p": 257, "c": 214, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441187, "cores": [38], "source": "plan"}
+{"t": 4.871, "wall": "12:32:07.718", "kind": "tool_stop", "task": "spectral#53", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 4.872, "wall": "12:32:07.719", "kind": "tool_report", "task": "spectral#53", "tool": "spectral", "p": 233, "c": 194, "theta": 6, "rank": null, "cap": 490, "seconds": 0.089, "rank_pred": 999, "stopped": false}
+{"t": 4.872, "wall": "12:32:07.719", "kind": "tool_done", "task": "spectral#53", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.872, "wall": "12:32:07.719", "kind": "task_queued", "task": "spectral#58", "tool": "spectral", "args": {"p": 263, "c": 219, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.877, "wall": "12:32:07.724", "kind": "tool_start", "task": "spectral#58", "tool": "spectral", "args": {"p": 263, "c": 219, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441315, "cores": [33], "source": "plan"}
+{"t": 4.884, "wall": "12:32:07.731", "kind": "tool_report", "task": "spectral#54", "tool": "spectral", "p": 239, "c": 199, "theta": 6, "rank": null, "cap": 490, "seconds": 0.165, "rank_pred": 999, "stopped": false}
+{"t": 4.885, "wall": "12:32:07.732", "kind": "tool_done", "task": "spectral#54", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 4.893, "wall": "12:32:07.740", "kind": "tool_stop", "task": "spectral#54", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 4.894, "wall": "12:32:07.741", "kind": "task_queued", "task": "spectral#59", "tool": "spectral", "args": {"p": 269, "c": 224, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 4.899, "wall": "12:32:07.746", "kind": "tool_start", "task": "spectral#59", "tool": "spectral", "args": {"p": 269, "c": 224, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441316, "cores": [34], "source": "plan"}
+{"t": 5.219, "wall": "12:32:08.066", "kind": "tool_stop", "task": "spectral#55", "tool": "spectral", "seconds": 0.47, "how": "exited", "reason": null}
+{"t": 5.244, "wall": "12:32:08.091", "kind": "tool_report", "task": "spectral#55", "tool": "spectral", "p": 241, "c": 40, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 5.244, "wall": "12:32:08.091", "kind": "tool_done", "task": "spectral#55", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 5.245, "wall": "12:32:08.092", "kind": "task_queued", "task": "spectral#60", "tool": "spectral", "args": {"p": 271, "c": 45, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 5.248, "wall": "12:32:08.095", "kind": "tool_start", "task": "spectral#60", "tool": "spectral", "args": {"p": 271, "c": 45, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441470, "cores": [39], "source": "plan"}
+{"t": 5.25, "wall": "12:32:08.097", "kind": "tool_stop", "task": "spectral#56", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 5.25, "wall": "12:32:08.097", "kind": "tool_stop", "task": "spectral#57", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 5.268, "wall": "12:32:08.115", "kind": "tool_report", "task": "spectral#56", "tool": "spectral", "p": 251, "c": 209, "theta": 6, "rank": null, "cap": 490, "seconds": 0.174, "rank_pred": 999, "stopped": false}
+{"t": 5.268, "wall": "12:32:08.115", "kind": "tool_done", "task": "spectral#56", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 5.268, "wall": "12:32:08.115", "kind": "tool_report", "task": "spectral#57", "tool": "spectral", "p": 257, "c": 214, "theta": 6, "rank": null, "cap": 490, "seconds": 0.161, "rank_pred": 999, "stopped": false}
+{"t": 5.268, "wall": "12:32:08.115", "kind": "tool_done", "task": "spectral#57", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 5.268, "wall": "12:32:08.115", "kind": "task_queued", "task": "spectral#61", "tool": "spectral", "args": {"p": 277, "c": 46, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 5.285, "wall": "12:32:08.133", "kind": "tool_start", "task": "spectral#61", "tool": "spectral", "args": {"p": 277, "c": 46, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441496, "cores": [35], "source": "plan"}
+{"t": 5.286, "wall": "12:32:08.133", "kind": "task_queued", "task": "spectral#62", "tool": "spectral", "args": {"p": 281, "c": 234, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 5.292, "wall": "12:32:08.139", "kind": "tool_start", "task": "spectral#62", "tool": "spectral", "args": {"p": 281, "c": 234, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441541, "cores": [38], "source": "plan"}
+{"t": 5.293, "wall": "12:32:08.140", "kind": "tool_stop", "task": "spectral#58", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 5.293, "wall": "12:32:08.140", "kind": "tool_report", "task": "spectral#58", "tool": "spectral", "p": 263, "c": 219, "theta": 6, "rank": null, "cap": 490, "seconds": 0.163, "rank_pred": 999, "stopped": false}
+{"t": 5.293, "wall": "12:32:08.140", "kind": "tool_done", "task": "spectral#58", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 5.294, "wall": "12:32:08.141", "kind": "task_queued", "task": "spectral#63", "tool": "spectral", "args": {"p": 283, "c": 47, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 5.299, "wall": "12:32:08.146", "kind": "tool_start", "task": "spectral#63", "tool": "spectral", "args": {"p": 283, "c": 47, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441555, "cores": [33], "source": "plan"}
+{"t": 5.313, "wall": "12:32:08.160", "kind": "tool_stop", "task": "spectral#59", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 5.314, "wall": "12:32:08.161", "kind": "tool_report", "task": "spectral#59", "tool": "spectral", "p": 269, "c": 224, "theta": 6, "rank": null, "cap": 490, "seconds": 0.177, "rank_pred": 999, "stopped": false}
+{"t": 5.314, "wall": "12:32:08.161", "kind": "tool_done", "task": "spectral#59", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 5.314, "wall": "12:32:08.161", "kind": "task_queued", "task": "spectral#64", "tool": "spectral", "args": {"p": 293, "c": 244, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 5.32, "wall": "12:32:08.167", "kind": "tool_start", "task": "spectral#64", "tool": "spectral", "args": {"p": 293, "c": 244, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441656, "cores": [34], "source": "plan"}
+{"t": 5.643, "wall": "12:32:08.490", "kind": "tool_stop", "task": "spectral#60", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 5.643, "wall": "12:32:08.490", "kind": "tool_report", "task": "spectral#60", "tool": "spectral", "p": 271, "c": 45, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 5.643, "wall": "12:32:08.490", "kind": "tool_done", "task": "spectral#60", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 5.644, "wall": "12:32:08.491", "kind": "task_queued", "task": "spectral#65", "tool": "spectral", "args": {"p": 307, "c": 51, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 5.653, "wall": "12:32:08.500", "kind": "tool_start", "task": "spectral#65", "tool": "spectral", "args": {"p": 307, "c": 51, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441836, "cores": [39], "source": "plan"}
+{"t": 5.657, "wall": "12:32:08.504", "kind": "tool_stop", "task": "spectral#61", "tool": "spectral", "seconds": 0.37, "how": "exited", "reason": null}
+{"t": 5.657, "wall": "12:32:08.504", "kind": "tool_report", "task": "spectral#61", "tool": "spectral", "p": 277, "c": 46, "theta": 6, "rank": null, "cap": 490, "seconds": 0.186, "rank_pred": 999, "stopped": false}
+{"t": 5.658, "wall": "12:32:08.505", "kind": "tool_done", "task": "spectral#61", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 5.658, "wall": "12:32:08.505", "kind": "task_queued", "task": "spectral#66", "tool": "spectral", "args": {"p": 311, "c": 259, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 5.661, "wall": "12:32:08.508", "kind": "tool_start", "task": "spectral#66", "tool": "spectral", "args": {"p": 311, "c": 259, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441837, "cores": [35], "source": "plan"}
+{"t": 5.672, "wall": "12:32:08.519", "kind": "tool_stop", "task": "spectral#62", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 5.673, "wall": "12:32:08.520", "kind": "tool_report", "task": "spectral#62", "tool": "spectral", "p": 281, "c": 234, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 5.673, "wall": "12:32:08.520", "kind": "tool_done", "task": "spectral#62", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 5.673, "wall": "12:32:08.520", "kind": "task_queued", "task": "spectral#67", "tool": "spectral", "args": {"p": 313, "c": 52, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 5.678, "wall": "12:32:08.525", "kind": "tool_start", "task": "spectral#67", "tool": "spectral", "args": {"p": 313, "c": 52, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 441930, "cores": [38], "source": "plan"}
+{"t": 5.711, "wall": "12:32:08.558", "kind": "tool_stop", "task": "spectral#63", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 5.713, "wall": "12:32:08.560", "kind": "tool_report", "task": "spectral#63", "tool": "spectral", "p": 283, "c": 47, "theta": 6, "rank": null, "cap": 490, "seconds": 0.095, "rank_pred": 999, "stopped": false}
+{"t": 5.713, "wall": "12:32:08.560", "kind": "tool_done", "task": "spectral#63", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 5.713, "wall": "12:32:08.560", "kind": "task_queued", "task": "spectral#68", "tool": "spectral", "args": {"p": 317, "c": 264, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 5.719, "wall": "12:32:08.566", "kind": "tool_start", "task": "spectral#68", "tool": "spectral", "args": {"p": 317, "c": 264, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442001, "cores": [33], "source": "plan"}
+{"t": 5.741, "wall": "12:32:08.588", "kind": "tool_report", "task": "spectral#64", "tool": "spectral", "p": 293, "c": 244, "theta": 6, "rank": null, "cap": 490, "seconds": 0.111, "rank_pred": 999, "stopped": false}
+{"t": 5.741, "wall": "12:32:08.588", "kind": "tool_done", "task": "spectral#64", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 5.75, "wall": "12:32:08.597", "kind": "tool_stop", "task": "spectral#64", "tool": "spectral", "seconds": 0.43, "how": "exited", "reason": null}
+{"t": 5.75, "wall": "12:32:08.597", "kind": "task_queued", "task": "spectral#69", "tool": "spectral", "args": {"p": 331, "c": 55, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 5.758, "wall": "12:32:08.605", "kind": "tool_start", "task": "spectral#69", "tool": "spectral", "args": {"p": 331, "c": 55, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442039, "cores": [34], "source": "plan"}
+{"t": 6.024, "wall": "12:32:08.871", "kind": "tool_report", "task": "spectral#65", "tool": "spectral", "p": 307, "c": 51, "theta": 6, "rank": null, "cap": 490, "seconds": 0.218, "rank_pred": 999, "stopped": false}
+{"t": 6.025, "wall": "12:32:08.872", "kind": "tool_done", "task": "spectral#65", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.031, "wall": "12:32:08.878", "kind": "tool_stop", "task": "spectral#65", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 6.031, "wall": "12:32:08.878", "kind": "task_queued", "task": "spectral#70", "tool": "spectral", "args": {"p": 337, "c": 56, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.035, "wall": "12:32:08.882", "kind": "tool_start", "task": "spectral#70", "tool": "spectral", "args": {"p": 337, "c": 56, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442195, "cores": [39], "source": "plan"}
+{"t": 6.05, "wall": "12:32:08.897", "kind": "tool_stop", "task": "spectral#66", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 6.051, "wall": "12:32:08.898", "kind": "tool_report", "task": "spectral#66", "tool": "spectral", "p": 311, "c": 259, "theta": 6, "rank": null, "cap": 490, "seconds": 0.226, "rank_pred": 999, "stopped": false}
+{"t": 6.051, "wall": "12:32:08.898", "kind": "tool_done", "task": "spectral#66", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.051, "wall": "12:32:08.898", "kind": "task_queued", "task": "spectral#71", "tool": "spectral", "args": {"p": 347, "c": 289, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.055, "wall": "12:32:08.902", "kind": "tool_start", "task": "spectral#71", "tool": "spectral", "args": {"p": 347, "c": 289, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442243, "cores": [35], "source": "plan"}
+{"t": 6.061, "wall": "12:32:08.908", "kind": "tool_stop", "task": "spectral#67", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 6.062, "wall": "12:32:08.909", "kind": "tool_report", "task": "spectral#67", "tool": "spectral", "p": 313, "c": 52, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 6.062, "wall": "12:32:08.909", "kind": "tool_done", "task": "spectral#67", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.062, "wall": "12:32:08.909", "kind": "task_queued", "task": "spectral#72", "tool": "spectral", "args": {"p": 349, "c": 58, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.066, "wall": "12:32:08.913", "kind": "tool_start", "task": "spectral#72", "tool": "spectral", "args": {"p": 349, "c": 58, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442244, "cores": [38], "source": "plan"}
+{"t": 6.17, "wall": "12:32:09.017", "kind": "tool_stop", "task": "spectral#68", "tool": "spectral", "seconds": 0.45, "how": "exited", "reason": null}
+{"t": 6.17, "wall": "12:32:09.017", "kind": "tool_stop", "task": "spectral#69", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 6.185, "wall": "12:32:09.032", "kind": "tool_report", "task": "spectral#68", "tool": "spectral", "p": 317, "c": 264, "theta": 6, "rank": null, "cap": 490, "seconds": 0.154, "rank_pred": 999, "stopped": false}
+{"t": 6.185, "wall": "12:32:09.032", "kind": "tool_done", "task": "spectral#68", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.185, "wall": "12:32:09.032", "kind": "tool_report", "task": "spectral#69", "tool": "spectral", "p": 331, "c": 55, "theta": 6, "rank": null, "cap": 490, "seconds": 0.166, "rank_pred": 999, "stopped": false}
+{"t": 6.185, "wall": "12:32:09.032", "kind": "tool_done", "task": "spectral#69", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.185, "wall": "12:32:09.032", "kind": "task_queued", "task": "spectral#73", "tool": "spectral", "args": {"p": 353, "c": 294, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.19, "wall": "12:32:09.037", "kind": "tool_start", "task": "spectral#73", "tool": "spectral", "args": {"p": 353, "c": 294, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442354, "cores": [33], "source": "plan"}
+{"t": 6.191, "wall": "12:32:09.038", "kind": "task_queued", "task": "spectral#74", "tool": "spectral", "args": {"p": 359, "c": 299, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.196, "wall": "12:32:09.043", "kind": "tool_start", "task": "spectral#74", "tool": "spectral", "args": {"p": 359, "c": 299, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442378, "cores": [34], "source": "plan"}
+{"t": 6.417, "wall": "12:32:09.264", "kind": "tool_stop", "task": "spectral#70", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 6.418, "wall": "12:32:09.265", "kind": "tool_report", "task": "spectral#70", "tool": "spectral", "p": 337, "c": 56, "theta": 6, "rank": null, "cap": 490, "seconds": 0.217, "rank_pred": 999, "stopped": false}
+{"t": 6.418, "wall": "12:32:09.265", "kind": "tool_done", "task": "spectral#70", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.418, "wall": "12:32:09.265", "kind": "task_queued", "task": "spectral#75", "tool": "spectral", "args": {"p": 367, "c": 61, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.421, "wall": "12:32:09.268", "kind": "tool_start", "task": "spectral#75", "tool": "spectral", "args": {"p": 367, "c": 61, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442550, "cores": [39], "source": "plan"}
+{"t": 6.447, "wall": "12:32:09.294", "kind": "tool_stop", "task": "spectral#71", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 6.457, "wall": "12:32:09.304", "kind": "tool_report", "task": "spectral#71", "tool": "spectral", "p": 347, "c": 289, "theta": 6, "rank": null, "cap": 490, "seconds": 0.151, "rank_pred": 999, "stopped": false}
+{"t": 6.457, "wall": "12:32:09.304", "kind": "tool_done", "task": "spectral#71", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.457, "wall": "12:32:09.304", "kind": "task_queued", "task": "spectral#76", "tool": "spectral", "args": {"p": 373, "c": 62, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.461, "wall": "12:32:09.308", "kind": "tool_start", "task": "spectral#76", "tool": "spectral", "args": {"p": 373, "c": 62, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442561, "cores": [35], "source": "plan"}
+{"t": 6.462, "wall": "12:32:09.309", "kind": "tool_stop", "task": "spectral#72", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 6.462, "wall": "12:32:09.309", "kind": "tool_report", "task": "spectral#72", "tool": "spectral", "p": 349, "c": 58, "theta": 6, "rank": null, "cap": 490, "seconds": 0.245, "rank_pred": 999, "stopped": false}
+{"t": 6.462, "wall": "12:32:09.309", "kind": "tool_done", "task": "spectral#72", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.463, "wall": "12:32:09.310", "kind": "task_queued", "task": "spectral#77", "tool": "spectral", "args": {"p": 379, "c": 63, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.473, "wall": "12:32:09.320", "kind": "tool_start", "task": "spectral#77", "tool": "spectral", "args": {"p": 379, "c": 63, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442622, "cores": [38], "source": "plan"}
+{"t": 6.596, "wall": "12:32:09.443", "kind": "tool_report", "task": "spectral#74", "tool": "spectral", "p": 359, "c": 299, "theta": 6, "rank": null, "cap": 490, "seconds": 0.164, "rank_pred": 999, "stopped": false}
+{"t": 6.596, "wall": "12:32:09.443", "kind": "tool_done", "task": "spectral#74", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.606, "wall": "12:32:09.453", "kind": "tool_stop", "task": "spectral#74", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 6.606, "wall": "12:32:09.453", "kind": "task_queued", "task": "spectral#78", "tool": "spectral", "args": {"p": 383, "c": 319, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.61, "wall": "12:32:09.457", "kind": "tool_start", "task": "spectral#78", "tool": "spectral", "args": {"p": 383, "c": 319, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442763, "cores": [34], "source": "plan"}
+{"t": 6.611, "wall": "12:32:09.458", "kind": "tool_stop", "task": "spectral#73", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 6.612, "wall": "12:32:09.459", "kind": "tool_report", "task": "spectral#73", "tool": "spectral", "p": 353, "c": 294, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 6.612, "wall": "12:32:09.459", "kind": "tool_done", "task": "spectral#73", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.612, "wall": "12:32:09.459", "kind": "task_queued", "task": "spectral#79", "tool": "spectral", "args": {"p": 389, "c": 324, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.623, "wall": "12:32:09.470", "kind": "tool_start", "task": "spectral#79", "tool": "spectral", "args": {"p": 389, "c": 324, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442764, "cores": [33], "source": "plan"}
+{"t": 6.799, "wall": "12:32:09.646", "kind": "tool_report", "task": "spectral#75", "tool": "spectral", "p": 367, "c": 61, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 6.8, "wall": "12:32:09.647", "kind": "tool_done", "task": "spectral#75", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.805, "wall": "12:32:09.652", "kind": "tool_stop", "task": "spectral#75", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 6.806, "wall": "12:32:09.653", "kind": "task_queued", "task": "spectral#80", "tool": "spectral", "args": {"p": 397, "c": 66, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.809, "wall": "12:32:09.656", "kind": "tool_start", "task": "spectral#80", "tool": "spectral", "args": {"p": 397, "c": 66, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442905, "cores": [39], "source": "plan"}
+{"t": 6.845, "wall": "12:32:09.692", "kind": "tool_stop", "task": "spectral#76", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 6.846, "wall": "12:32:09.693", "kind": "tool_report", "task": "spectral#76", "tool": "spectral", "p": 373, "c": 62, "theta": 6, "rank": null, "cap": 490, "seconds": 0.147, "rank_pred": 999, "stopped": false}
+{"t": 6.846, "wall": "12:32:09.693", "kind": "tool_done", "task": "spectral#76", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.846, "wall": "12:32:09.693", "kind": "task_queued", "task": "spectral#81", "tool": "spectral", "args": {"p": 401, "c": 334, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.85, "wall": "12:32:09.697", "kind": "tool_start", "task": "spectral#81", "tool": "spectral", "args": {"p": 401, "c": 334, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442953, "cores": [35], "source": "plan"}
+{"t": 6.857, "wall": "12:32:09.704", "kind": "tool_stop", "task": "spectral#77", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 6.857, "wall": "12:32:09.704", "kind": "tool_report", "task": "spectral#77", "tool": "spectral", "p": 379, "c": 63, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 6.857, "wall": "12:32:09.704", "kind": "tool_done", "task": "spectral#77", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 6.858, "wall": "12:32:09.705", "kind": "task_queued", "task": "spectral#82", "tool": "spectral", "args": {"p": 409, "c": 68, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 6.861, "wall": "12:32:09.708", "kind": "tool_start", "task": "spectral#82", "tool": "spectral", "args": {"p": 409, "c": 68, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 442954, "cores": [38], "source": "plan"}
+{"t": 7.019, "wall": "12:32:09.866", "kind": "tool_report", "task": "spectral#78", "tool": "spectral", "p": 383, "c": 319, "theta": 6, "rank": null, "cap": 490, "seconds": 0.167, "rank_pred": 999, "stopped": false}
+{"t": 7.019, "wall": "12:32:09.866", "kind": "tool_done", "task": "spectral#78", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 7.027, "wall": "12:32:09.874", "kind": "tool_stop", "task": "spectral#78", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 7.028, "wall": "12:32:09.875", "kind": "task_queued", "task": "spectral#83", "tool": "spectral", "args": {"p": 419, "c": 349, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 7.033, "wall": "12:32:09.881", "kind": "tool_start", "task": "spectral#83", "tool": "spectral", "args": {"p": 419, "c": 349, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443118, "cores": [34], "source": "plan"}
+{"t": 7.034, "wall": "12:32:09.881", "kind": "tool_stop", "task": "spectral#79", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 7.035, "wall": "12:32:09.882", "kind": "tool_report", "task": "spectral#79", "tool": "spectral", "p": 389, "c": 324, "theta": 6, "rank": null, "cap": 490, "seconds": 0.166, "rank_pred": 999, "stopped": false}
+{"t": 7.035, "wall": "12:32:09.882", "kind": "tool_done", "task": "spectral#79", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 7.035, "wall": "12:32:09.882", "kind": "task_queued", "task": "spectral#84", "tool": "spectral", "args": {"p": 421, "c": 70, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 7.046, "wall": "12:32:09.893", "kind": "tool_start", "task": "spectral#84", "tool": "spectral", "args": {"p": 421, "c": 70, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443119, "cores": [33], "source": "plan"}
+{"t": 7.273, "wall": "12:32:10.120", "kind": "tool_stop", "task": "spectral#80", "tool": "spectral", "seconds": 0.46, "how": "exited", "reason": null}
+{"t": 7.273, "wall": "12:32:10.120", "kind": "tool_stop", "task": "spectral#81", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 7.273, "wall": "12:32:10.120", "kind": "tool_stop", "task": "spectral#82", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 7.274, "wall": "12:32:10.121", "kind": "tool_report", "task": "spectral#80", "tool": "spectral", "p": 397, "c": 66, "theta": 6, "rank": null, "cap": 490, "seconds": 0.215, "rank_pred": 999, "stopped": false}
+{"t": 7.274, "wall": "12:32:10.121", "kind": "tool_done", "task": "spectral#80", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 7.274, "wall": "12:32:10.121", "kind": "tool_report", "task": "spectral#81", "tool": "spectral", "p": 401, "c": 334, "theta": 6, "rank": null, "cap": 490, "seconds": 0.147, "rank_pred": 999, "stopped": false}
+{"t": 7.274, "wall": "12:32:10.121", "kind": "tool_done", "task": "spectral#81", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 7.274, "wall": "12:32:10.121", "kind": "tool_report", "task": "spectral#82", "tool": "spectral", "p": 409, "c": 68, "theta": 6, "rank": null, "cap": 490, "seconds": 0.135, "rank_pred": 999, "stopped": false}
+{"t": 7.274, "wall": "12:32:10.121", "kind": "tool_done", "task": "spectral#82", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 7.274, "wall": "12:32:10.121", "kind": "task_queued", "task": "spectral#85", "tool": "spectral", "args": {"p": 431, "c": 359, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 7.301, "wall": "12:32:10.148", "kind": "tool_start", "task": "spectral#85", "tool": "spectral", "args": {"p": 431, "c": 359, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443260, "cores": [35], "source": "plan"}
+{"t": 7.302, "wall": "12:32:10.149", "kind": "task_queued", "task": "spectral#86", "tool": "spectral", "args": {"p": 433, "c": 72, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 7.306, "wall": "12:32:10.153", "kind": "tool_start", "task": "spectral#86", "tool": "spectral", "args": {"p": 433, "c": 72, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443261, "cores": [38], "source": "plan"}
+{"t": 7.306, "wall": "12:32:10.153", "kind": "task_queued", "task": "spectral#87", "tool": "spectral", "args": {"p": 439, "c": 73, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 7.315, "wall": "12:32:10.162", "kind": "tool_start", "task": "spectral#87", "tool": "spectral", "args": {"p": 439, "c": 73, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443262, "cores": [39], "source": "plan"}
+{"t": 7.465, "wall": "12:32:10.312", "kind": "tool_stop", "task": "spectral#83", "tool": "spectral", "seconds": 0.43, "how": "exited", "reason": null}
+{"t": 7.465, "wall": "12:32:10.312", "kind": "tool_stop", "task": "spectral#84", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 7.466, "wall": "12:32:10.313", "kind": "tool_report", "task": "spectral#83", "tool": "spectral", "p": 419, "c": 349, "theta": 6, "rank": null, "cap": 490, "seconds": 0.163, "rank_pred": 999, "stopped": false}
+{"t": 7.466, "wall": "12:32:10.313", "kind": "tool_done", "task": "spectral#83", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 7.466, "wall": "12:32:10.313", "kind": "tool_report", "task": "spectral#84", "tool": "spectral", "p": 421, "c": 70, "theta": 6, "rank": null, "cap": 490, "seconds": 0.166, "rank_pred": 999, "stopped": false}
+{"t": 7.466, "wall": "12:32:10.313", "kind": "tool_done", "task": "spectral#84", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 7.466, "wall": "12:32:10.313", "kind": "task_queued", "task": "spectral#88", "tool": "spectral", "args": {"p": 443, "c": 369, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 7.478, "wall": "12:32:10.325", "kind": "tool_start", "task": "spectral#88", "tool": "spectral", "args": {"p": 443, "c": 369, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443460, "cores": [33], "source": "plan"}
+{"t": 7.479, "wall": "12:32:10.326", "kind": "task_queued", "task": "spectral#89", "tool": "spectral", "args": {"p": 449, "c": 374, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 7.486, "wall": "12:32:10.333", "kind": "tool_start", "task": "spectral#89", "tool": "spectral", "args": {"p": 449, "c": 374, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443461, "cores": [34], "source": "plan"}
+{"t": 7.682, "wall": "12:32:10.529", "kind": "tool_stop", "task": "spectral#85", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 7.701, "wall": "12:32:10.548", "kind": "tool_report", "task": "spectral#85", "tool": "spectral", "p": 431, "c": 359, "theta": 6, "rank": null, "cap": 490, "seconds": 0.209, "rank_pred": 999, "stopped": false}
+{"t": 7.701, "wall": "12:32:10.548", "kind": "tool_done", "task": "spectral#85", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 7.701, "wall": "12:32:10.548", "kind": "task_queued", "task": "spectral#90", "tool": "spectral", "args": {"p": 457, "c": 76, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 7.705, "wall": "12:32:10.552", "kind": "tool_start", "task": "spectral#90", "tool": "spectral", "args": {"p": 457, "c": 76, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443617, "cores": [35], "source": "plan"}
+{"t": 7.706, "wall": "12:32:10.553", "kind": "tool_stop", "task": "spectral#86", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 7.706, "wall": "12:32:10.553", "kind": "tool_stop", "task": "spectral#87", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 7.706, "wall": "12:32:10.553", "kind": "tool_report", "task": "spectral#86", "tool": "spectral", "p": 433, "c": 72, "theta": 6, "rank": null, "cap": 490, "seconds": 0.191, "rank_pred": 999, "stopped": false}
+{"t": 7.706, "wall": "12:32:10.553", "kind": "tool_done", "task": "spectral#86", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 7.706, "wall": "12:32:10.553", "kind": "tool_report", "task": "spectral#87", "tool": "spectral", "p": 439, "c": 73, "theta": 6, "rank": null, "cap": 490, "seconds": 0.15, "rank_pred": 999, "stopped": false}
+{"t": 7.706, "wall": "12:32:10.553", "kind": "tool_done", "task": "spectral#87", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 7.706, "wall": "12:32:10.553", "kind": "task_queued", "task": "spectral#91", "tool": "spectral", "args": {"p": 461, "c": 384, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 7.713, "wall": "12:32:10.560", "kind": "tool_start", "task": "spectral#91", "tool": "spectral", "args": {"p": 461, "c": 384, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443618, "cores": [38], "source": "plan"}
+{"t": 7.716, "wall": "12:32:10.563", "kind": "task_queued", "task": "spectral#92", "tool": "spectral", "args": {"p": 463, "c": 77, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 7.723, "wall": "12:32:10.570", "kind": "tool_start", "task": "spectral#92", "tool": "spectral", "args": {"p": 463, "c": 77, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443619, "cores": [39], "source": "plan"}
+{"t": 8.013, "wall": "12:32:10.860", "kind": "tool_stop", "task": "spectral#88", "tool": "spectral", "seconds": 0.54, "how": "exited", "reason": null}
+{"t": 8.014, "wall": "12:32:10.861", "kind": "tool_stop", "task": "spectral#89", "tool": "spectral", "seconds": 0.53, "how": "exited", "reason": null}
+{"t": 8.028, "wall": "12:32:10.875", "kind": "tool_report", "task": "spectral#88", "tool": "spectral", "p": 443, "c": 369, "theta": 6, "rank": null, "cap": 490, "seconds": 0.165, "rank_pred": 999, "stopped": false}
+{"t": 8.031, "wall": "12:32:10.878", "kind": "tool_done", "task": "spectral#88", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.031, "wall": "12:32:10.878", "kind": "tool_report", "task": "spectral#89", "tool": "spectral", "p": 449, "c": 374, "theta": 6, "rank": null, "cap": 490, "seconds": 0.204, "rank_pred": 999, "stopped": false}
+{"t": 8.031, "wall": "12:32:10.878", "kind": "tool_done", "task": "spectral#89", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.031, "wall": "12:32:10.878", "kind": "task_queued", "task": "spectral#93", "tool": "spectral", "args": {"p": 467, "c": 389, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.039, "wall": "12:32:10.886", "kind": "tool_start", "task": "spectral#93", "tool": "spectral", "args": {"p": 467, "c": 389, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443833, "cores": [33], "source": "plan"}
+{"t": 8.039, "wall": "12:32:10.886", "kind": "task_queued", "task": "spectral#94", "tool": "spectral", "args": {"p": 479, "c": 399, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.05, "wall": "12:32:10.897", "kind": "tool_start", "task": "spectral#94", "tool": "spectral", "args": {"p": 479, "c": 399, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443834, "cores": [34], "source": "plan"}
+{"t": 8.093, "wall": "12:32:10.940", "kind": "tool_stop", "task": "spectral#91", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 8.093, "wall": "12:32:10.940", "kind": "tool_report", "task": "spectral#91", "tool": "spectral", "p": 461, "c": 384, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 8.093, "wall": "12:32:10.940", "kind": "tool_done", "task": "spectral#91", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.093, "wall": "12:32:10.940", "kind": "task_queued", "task": "spectral#95", "tool": "spectral", "args": {"p": 487, "c": 81, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.097, "wall": "12:32:10.944", "kind": "tool_start", "task": "spectral#95", "tool": "spectral", "args": {"p": 487, "c": 81, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443890, "cores": [38], "source": "plan"}
+{"t": 8.097, "wall": "12:32:10.944", "kind": "tool_stop", "task": "spectral#90", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 8.098, "wall": "12:32:10.945", "kind": "tool_report", "task": "spectral#90", "tool": "spectral", "p": 457, "c": 76, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 8.098, "wall": "12:32:10.945", "kind": "tool_done", "task": "spectral#90", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.098, "wall": "12:32:10.945", "kind": "task_queued", "task": "spectral#96", "tool": "spectral", "args": {"p": 491, "c": 409, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.105, "wall": "12:32:10.952", "kind": "tool_start", "task": "spectral#96", "tool": "spectral", "args": {"p": 491, "c": 409, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443893, "cores": [35], "source": "plan"}
+{"t": 8.106, "wall": "12:32:10.953", "kind": "tool_stop", "task": "spectral#92", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 8.109, "wall": "12:32:10.956", "kind": "tool_report", "task": "spectral#92", "tool": "spectral", "p": 463, "c": 77, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 8.109, "wall": "12:32:10.956", "kind": "tool_done", "task": "spectral#92", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.11, "wall": "12:32:10.957", "kind": "task_queued", "task": "spectral#97", "tool": "spectral", "args": {"p": 499, "c": 83, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.117, "wall": "12:32:10.964", "kind": "tool_start", "task": "spectral#97", "tool": "spectral", "args": {"p": 499, "c": 83, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 443894, "cores": [39], "source": "plan"}
+{"t": 8.449, "wall": "12:32:11.296", "kind": "tool_report", "task": "spectral#93", "tool": "spectral", "p": 467, "c": 389, "theta": 6, "rank": null, "cap": 490, "seconds": 0.164, "rank_pred": 999, "stopped": false}
+{"t": 8.458, "wall": "12:32:11.305", "kind": "tool_stop", "task": "spectral#94", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 8.458, "wall": "12:32:11.305", "kind": "tool_report", "task": "spectral#94", "tool": "spectral", "p": 479, "c": 399, "theta": 6, "rank": null, "cap": 490, "seconds": 0.163, "rank_pred": 999, "stopped": false}
+{"t": 8.458, "wall": "12:32:11.305", "kind": "tool_done", "task": "spectral#94", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.458, "wall": "12:32:11.305", "kind": "task_queued", "task": "spectral#98", "tool": "spectral", "args": {"p": 503, "c": 419, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.464, "wall": "12:32:11.311", "kind": "tool_start", "task": "spectral#98", "tool": "spectral", "args": {"p": 503, "c": 419, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444195, "cores": [34], "source": "plan"}
+{"t": 8.464, "wall": "12:32:11.311", "kind": "tool_stop", "task": "spectral#93", "tool": "spectral", "seconds": 0.43, "how": "exited", "reason": null}
+{"t": 8.465, "wall": "12:32:11.312", "kind": "tool_done", "task": "spectral#93", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.465, "wall": "12:32:11.312", "kind": "task_queued", "task": "spectral#99", "tool": "spectral", "args": {"p": 509, "c": 424, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.472, "wall": "12:32:11.319", "kind": "tool_start", "task": "spectral#99", "tool": "spectral", "args": {"p": 509, "c": 424, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444196, "cores": [33], "source": "plan"}
+{"t": 8.488, "wall": "12:32:11.335", "kind": "tool_stop", "task": "spectral#95", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 8.489, "wall": "12:32:11.336", "kind": "tool_stop", "task": "spectral#96", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 8.489, "wall": "12:32:11.336", "kind": "tool_report", "task": "spectral#95", "tool": "spectral", "p": 487, "c": 81, "theta": 6, "rank": null, "cap": 490, "seconds": 0.131, "rank_pred": 999, "stopped": false}
+{"t": 8.489, "wall": "12:32:11.336", "kind": "tool_done", "task": "spectral#95", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.489, "wall": "12:32:11.336", "kind": "tool_report", "task": "spectral#96", "tool": "spectral", "p": 491, "c": 409, "theta": 6, "rank": null, "cap": 490, "seconds": 0.093, "rank_pred": 999, "stopped": false}
+{"t": 8.489, "wall": "12:32:11.336", "kind": "tool_done", "task": "spectral#96", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.489, "wall": "12:32:11.336", "kind": "task_queued", "task": "spectral#100", "tool": "spectral", "args": {"p": 521, "c": 434, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.493, "wall": "12:32:11.340", "kind": "tool_start", "task": "spectral#100", "tool": "spectral", "args": {"p": 521, "c": 434, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444233, "cores": [35], "source": "plan"}
+{"t": 8.493, "wall": "12:32:11.340", "kind": "task_queued", "task": "spectral#101", "tool": "spectral", "args": {"p": 523, "c": 87, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.5, "wall": "12:32:11.347", "kind": "tool_start", "task": "spectral#101", "tool": "spectral", "args": {"p": 523, "c": 87, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444243, "cores": [38], "source": "plan"}
+{"t": 8.501, "wall": "12:32:11.348", "kind": "tool_stop", "task": "spectral#97", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 8.501, "wall": "12:32:11.348", "kind": "tool_report", "task": "spectral#97", "tool": "spectral", "p": 499, "c": 83, "theta": 6, "rank": null, "cap": 490, "seconds": 0.15, "rank_pred": 999, "stopped": false}
+{"t": 8.502, "wall": "12:32:11.349", "kind": "tool_done", "task": "spectral#97", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.502, "wall": "12:32:11.349", "kind": "task_queued", "task": "spectral#102", "tool": "spectral", "args": {"p": 541, "c": 90, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.51, "wall": "12:32:11.357", "kind": "tool_start", "task": "spectral#102", "tool": "spectral", "args": {"p": 541, "c": 90, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444244, "cores": [39], "source": "plan"}
+{"t": 8.875, "wall": "12:32:11.722", "kind": "tool_report", "task": "spectral#99", "tool": "spectral", "p": 509, "c": 424, "theta": 6, "rank": null, "cap": 490, "seconds": 0.167, "rank_pred": 999, "stopped": false}
+{"t": 8.876, "wall": "12:32:11.723", "kind": "tool_done", "task": "spectral#99", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.885, "wall": "12:32:11.732", "kind": "tool_stop", "task": "spectral#98", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 8.885, "wall": "12:32:11.732", "kind": "tool_report", "task": "spectral#98", "tool": "spectral", "p": 503, "c": 419, "theta": 6, "rank": null, "cap": 490, "seconds": 0.161, "rank_pred": 999, "stopped": false}
+{"t": 8.885, "wall": "12:32:11.732", "kind": "tool_done", "task": "spectral#98", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.885, "wall": "12:32:11.732", "kind": "task_queued", "task": "spectral#103", "tool": "spectral", "args": {"p": 547, "c": 91, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.889, "wall": "12:32:11.736", "kind": "tool_start", "task": "spectral#103", "tool": "spectral", "args": {"p": 547, "c": 91, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444561, "cores": [34], "source": "plan"}
+{"t": 8.892, "wall": "12:32:11.739", "kind": "tool_stop", "task": "spectral#99", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 8.892, "wall": "12:32:11.739", "kind": "tool_stop", "task": "spectral#100", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 8.892, "wall": "12:32:11.739", "kind": "tool_stop", "task": "spectral#101", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 8.892, "wall": "12:32:11.739", "kind": "tool_stop", "task": "spectral#102", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 8.893, "wall": "12:32:11.740", "kind": "tool_report", "task": "spectral#100", "tool": "spectral", "p": 521, "c": 434, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 8.893, "wall": "12:32:11.740", "kind": "tool_done", "task": "spectral#100", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.893, "wall": "12:32:11.740", "kind": "tool_report", "task": "spectral#101", "tool": "spectral", "p": 523, "c": 87, "theta": 6, "rank": null, "cap": 490, "seconds": 0.246, "rank_pred": 999, "stopped": false}
+{"t": 8.893, "wall": "12:32:11.740", "kind": "tool_done", "task": "spectral#101", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.893, "wall": "12:32:11.740", "kind": "tool_report", "task": "spectral#102", "tool": "spectral", "p": 541, "c": 90, "theta": 6, "rank": null, "cap": 490, "seconds": 0.171, "rank_pred": 999, "stopped": false}
+{"t": 8.893, "wall": "12:32:11.740", "kind": "tool_done", "task": "spectral#102", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 8.893, "wall": "12:32:11.740", "kind": "task_queued", "task": "spectral#104", "tool": "spectral", "args": {"p": 557, "c": 464, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.898, "wall": "12:32:11.745", "kind": "tool_start", "task": "spectral#104", "tool": "spectral", "args": {"p": 557, "c": 464, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444562, "cores": [33], "source": "plan"}
+{"t": 8.899, "wall": "12:32:11.746", "kind": "task_queued", "task": "spectral#105", "tool": "spectral", "args": {"p": 563, "c": 469, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.907, "wall": "12:32:11.754", "kind": "tool_start", "task": "spectral#105", "tool": "spectral", "args": {"p": 563, "c": 469, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444563, "cores": [35], "source": "plan"}
+{"t": 8.908, "wall": "12:32:11.755", "kind": "task_queued", "task": "spectral#106", "tool": "spectral", "args": {"p": 569, "c": 474, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.919, "wall": "12:32:11.766", "kind": "tool_start", "task": "spectral#106", "tool": "spectral", "args": {"p": 569, "c": 474, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444622, "cores": [38], "source": "plan"}
+{"t": 8.92, "wall": "12:32:11.767", "kind": "task_queued", "task": "spectral#107", "tool": "spectral", "args": {"p": 571, "c": 95, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 8.931, "wall": "12:32:11.778", "kind": "tool_start", "task": "spectral#107", "tool": "spectral", "args": {"p": 571, "c": 95, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444714, "cores": [39], "source": "plan"}
+{"t": 9.291, "wall": "12:32:12.138", "kind": "tool_stop", "task": "spectral#105", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 9.291, "wall": "12:32:12.138", "kind": "tool_report", "task": "spectral#105", "tool": "spectral", "p": 563, "c": 469, "theta": 6, "rank": null, "cap": 490, "seconds": 0.159, "rank_pred": 999, "stopped": false}
+{"t": 9.291, "wall": "12:32:12.138", "kind": "tool_done", "task": "spectral#105", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 9.291, "wall": "12:32:12.138", "kind": "task_queued", "task": "spectral#108", "tool": "spectral", "args": {"p": 577, "c": 96, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 9.295, "wall": "12:32:12.142", "kind": "tool_start", "task": "spectral#108", "tool": "spectral", "args": {"p": 577, "c": 96, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444920, "cores": [35], "source": "plan"}
+{"t": 9.298, "wall": "12:32:12.145", "kind": "tool_stop", "task": "spectral#103", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 9.301, "wall": "12:32:12.148", "kind": "tool_stop", "task": "spectral#106", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 9.301, "wall": "12:32:12.148", "kind": "tool_report", "task": "spectral#103", "tool": "spectral", "p": 547, "c": 91, "theta": 6, "rank": null, "cap": 490, "seconds": 0.089, "rank_pred": 999, "stopped": false}
+{"t": 9.301, "wall": "12:32:12.148", "kind": "tool_done", "task": "spectral#103", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 9.301, "wall": "12:32:12.148", "kind": "tool_report", "task": "spectral#106", "tool": "spectral", "p": 569, "c": 474, "theta": 6, "rank": null, "cap": 490, "seconds": 0.147, "rank_pred": 999, "stopped": false}
+{"t": 9.302, "wall": "12:32:12.149", "kind": "tool_done", "task": "spectral#106", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 9.302, "wall": "12:32:12.149", "kind": "task_queued", "task": "spectral#109", "tool": "spectral", "args": {"p": 587, "c": 489, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 9.308, "wall": "12:32:12.155", "kind": "tool_start", "task": "spectral#109", "tool": "spectral", "args": {"p": 587, "c": 489, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444921, "cores": [34], "source": "plan"}
+{"t": 9.308, "wall": "12:32:12.155", "kind": "task_queued", "task": "spectral#110", "tool": "spectral", "args": {"p": 593, "c": 494, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 9.316, "wall": "12:32:12.163", "kind": "tool_start", "task": "spectral#110", "tool": "spectral", "args": {"p": 593, "c": 494, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444932, "cores": [38], "source": "plan"}
+{"t": 9.316, "wall": "12:32:12.163", "kind": "tool_stop", "task": "spectral#104", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 9.317, "wall": "12:32:12.164", "kind": "tool_stop", "task": "spectral#107", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 9.317, "wall": "12:32:12.164", "kind": "tool_report", "task": "spectral#104", "tool": "spectral", "p": 557, "c": 464, "theta": 6, "rank": null, "cap": 490, "seconds": 0.164, "rank_pred": 999, "stopped": false}
+{"t": 9.32, "wall": "12:32:12.167", "kind": "tool_done", "task": "spectral#104", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 9.32, "wall": "12:32:12.167", "kind": "tool_report", "task": "spectral#107", "tool": "spectral", "p": 571, "c": 95, "theta": 6, "rank": null, "cap": 490, "seconds": 0.184, "rank_pred": 999, "stopped": false}
+{"t": 9.32, "wall": "12:32:12.167", "kind": "tool_done", "task": "spectral#107", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 9.32, "wall": "12:32:12.167", "kind": "task_queued", "task": "spectral#111", "tool": "spectral", "args": {"p": 599, "c": 499, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 9.329, "wall": "12:32:12.176", "kind": "tool_start", "task": "spectral#111", "tool": "spectral", "args": {"p": 599, "c": 499, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 444952, "cores": [33], "source": "plan"}
+{"t": 9.332, "wall": "12:32:12.179", "kind": "task_queued", "task": "spectral#112", "tool": "spectral", "args": {"p": 601, "c": 100, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 9.353, "wall": "12:32:12.200", "kind": "tool_start", "task": "spectral#112", "tool": "spectral", "args": {"p": 601, "c": 100, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 445001, "cores": [39], "source": "plan"}
+{"t": 9.674, "wall": "12:32:12.521", "kind": "tool_report", "task": "spectral#108", "tool": "spectral", "p": 577, "c": 96, "theta": 6, "rank": null, "cap": 490, "seconds": 0.15, "rank_pred": 999, "stopped": false}
+{"t": 9.68, "wall": "12:32:12.527", "kind": "tool_stop", "task": "spectral#108", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 9.681, "wall": "12:32:12.528", "kind": "tool_done", "task": "spectral#108", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 9.681, "wall": "12:32:12.528", "kind": "task_queued", "task": "spectral#113", "tool": "spectral", "args": {"p": 607, "c": 101, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 9.685, "wall": "12:32:12.532", "kind": "tool_start", "task": "spectral#113", "tool": "spectral", "args": {"p": 607, "c": 101, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 445275, "cores": [35], "source": "plan"}
+{"t": 9.697, "wall": "12:32:12.544", "kind": "tool_stop", "task": "spectral#110", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 9.698, "wall": "12:32:12.545", "kind": "tool_report", "task": "spectral#110", "tool": "spectral", "p": 593, "c": 494, "theta": 6, "rank": null, "cap": 490, "seconds": 0.242, "rank_pred": 999, "stopped": false}
+{"t": 9.698, "wall": "12:32:12.545", "kind": "tool_done", "task": "spectral#110", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 9.698, "wall": "12:32:12.545", "kind": "task_queued", "task": "spectral#114", "tool": "spectral", "args": {"p": 613, "c": 102, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 9.702, "wall": "12:32:12.549", "kind": "tool_start", "task": "spectral#114", "tool": "spectral", "args": {"p": 613, "c": 102, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 445293, "cores": [38], "source": "plan"}
+{"t": 9.752, "wall": "12:32:12.599", "kind": "tool_stop", "task": "spectral#109", "tool": "spectral", "seconds": 0.44, "how": "exited", "reason": null}
+{"t": 9.752, "wall": "12:32:12.599", "kind": "tool_stop", "task": "spectral#111", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 9.752, "wall": "12:32:12.599", "kind": "tool_stop", "task": "spectral#112", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 9.753, "wall": "12:32:12.600", "kind": "tool_report", "task": "spectral#109", "tool": "spectral", "p": 587, "c": 489, "theta": 6, "rank": null, "cap": 490, "seconds": 0.165, "rank_pred": 999, "stopped": false}
+{"t": 9.753, "wall": "12:32:12.600", "kind": "tool_done", "task": "spectral#109", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 9.753, "wall": "12:32:12.600", "kind": "tool_report", "task": "spectral#111", "tool": "spectral", "p": 599, "c": 499, "theta": 6, "rank": null, "cap": 490, "seconds": 0.09, "rank_pred": 999, "stopped": false}
+{"t": 9.753, "wall": "12:32:12.600", "kind": "tool_done", "task": "spectral#111", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 9.753, "wall": "12:32:12.600", "kind": "tool_report", "task": "spectral#112", "tool": "spectral", "p": 601, "c": 100, "theta": 6, "rank": null, "cap": 490, "seconds": 0.134, "rank_pred": 999, "stopped": false}
+{"t": 9.753, "wall": "12:32:12.600", "kind": "tool_done", "task": "spectral#112", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 9.753, "wall": "12:32:12.600", "kind": "task_queued", "task": "spectral#115", "tool": "spectral", "args": {"p": 617, "c": 514, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 9.765, "wall": "12:32:12.612", "kind": "tool_start", "task": "spectral#115", "tool": "spectral", "args": {"p": 617, "c": 514, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 445370, "cores": [33], "source": "plan"}
+{"t": 9.768, "wall": "12:32:12.615", "kind": "task_queued", "task": "spectral#116", "tool": "spectral", "args": {"p": 619, "c": 103, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 9.78, "wall": "12:32:12.627", "kind": "tool_start", "task": "spectral#116", "tool": "spectral", "args": {"p": 619, "c": 103, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 445371, "cores": [34], "source": "plan"}
+{"t": 9.781, "wall": "12:32:12.628", "kind": "task_queued", "task": "spectral#117", "tool": "spectral", "args": {"p": 631, "c": 105, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 9.793, "wall": "12:32:12.640", "kind": "tool_start", "task": "spectral#117", "tool": "spectral", "args": {"p": 631, "c": 105, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 445470, "cores": [39], "source": "plan"}
+{"t": 10.059, "wall": "12:32:12.906", "kind": "tool_report", "task": "spectral#113", "tool": "spectral", "p": 607, "c": 101, "theta": 6, "rank": null, "cap": 490, "seconds": 0.147, "rank_pred": 999, "stopped": false}
+{"t": 10.059, "wall": "12:32:12.906", "kind": "tool_done", "task": "spectral#113", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 10.065, "wall": "12:32:12.912", "kind": "tool_stop", "task": "spectral#113", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 10.065, "wall": "12:32:12.912", "kind": "task_queued", "task": "spectral#118", "tool": "spectral", "args": {"p": 641, "c": 534, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 10.07, "wall": "12:32:12.917", "kind": "tool_start", "task": "spectral#118", "tool": "spectral", "args": {"p": 641, "c": 534, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 445630, "cores": [35], "source": "plan"}
+{"t": 10.086, "wall": "12:32:12.933", "kind": "tool_stop", "task": "spectral#114", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 10.086, "wall": "12:32:12.933", "kind": "tool_report", "task": "spectral#114", "tool": "spectral", "p": 613, "c": 102, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 10.086, "wall": "12:32:12.933", "kind": "tool_done", "task": "spectral#114", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 10.086, "wall": "12:32:12.933", "kind": "task_queued", "task": "spectral#119", "tool": "spectral", "args": {"p": 643, "c": 107, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 10.09, "wall": "12:32:12.937", "kind": "tool_start", "task": "spectral#119", "tool": "spectral", "args": {"p": 643, "c": 107, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 445659, "cores": [38], "source": "plan"}
+{"t": 10.174, "wall": "12:32:13.021", "kind": "tool_stop", "task": "spectral#115", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 10.177, "wall": "12:32:13.024", "kind": "tool_stop", "task": "spectral#117", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 10.178, "wall": "12:32:13.025", "kind": "tool_report", "task": "spectral#115", "tool": "spectral", "p": 617, "c": 514, "theta": 6, "rank": null, "cap": 490, "seconds": 0.103, "rank_pred": 999, "stopped": false}
+{"t": 10.178, "wall": "12:32:13.025", "kind": "tool_done", "task": "spectral#115", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 10.178, "wall": "12:32:13.025", "kind": "tool_report", "task": "spectral#117", "tool": "spectral", "p": 631, "c": 105, "theta": 6, "rank": null, "cap": 490, "seconds": 0.153, "rank_pred": 999, "stopped": false}
+{"t": 10.178, "wall": "12:32:13.025", "kind": "tool_done", "task": "spectral#117", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 10.178, "wall": "12:32:13.025", "kind": "task_queued", "task": "spectral#120", "tool": "spectral", "args": {"p": 647, "c": 539, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 10.184, "wall": "12:32:13.031", "kind": "tool_start", "task": "spectral#120", "tool": "spectral", "args": {"p": 647, "c": 539, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 445731, "cores": [33], "source": "plan"}
+{"t": 10.184, "wall": "12:32:13.031", "kind": "task_queued", "task": "spectral#121", "tool": "spectral", "args": {"p": 653, "c": 544, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 10.192, "wall": "12:32:13.039", "kind": "tool_start", "task": "spectral#121", "tool": "spectral", "args": {"p": 653, "c": 544, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 445761, "cores": [39], "source": "plan"}
+{"t": 10.196, "wall": "12:32:13.043", "kind": "tool_stop", "task": "spectral#116", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 10.197, "wall": "12:32:13.044", "kind": "tool_report", "task": "spectral#116", "tool": "spectral", "p": 619, "c": 103, "theta": 6, "rank": null, "cap": 490, "seconds": 0.163, "rank_pred": 999, "stopped": false}
+{"t": 10.197, "wall": "12:32:13.044", "kind": "tool_done", "task": "spectral#116", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 10.197, "wall": "12:32:13.044", "kind": "task_queued", "task": "spectral#122", "tool": "spectral", "args": {"p": 659, "c": 549, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 10.209, "wall": "12:32:13.056", "kind": "tool_start", "task": "spectral#122", "tool": "spectral", "args": {"p": 659, "c": 549, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 445828, "cores": [34], "source": "plan"}
+{"t": 10.445, "wall": "12:32:13.292", "kind": "tool_report", "task": "spectral#118", "tool": "spectral", "p": 641, "c": 534, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 10.446, "wall": "12:32:13.293", "kind": "tool_done", "task": "spectral#118", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 10.452, "wall": "12:32:13.299", "kind": "tool_stop", "task": "spectral#118", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 10.452, "wall": "12:32:13.299", "kind": "task_queued", "task": "spectral#123", "tool": "spectral", "args": {"p": 661, "c": 110, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 10.456, "wall": "12:32:13.303", "kind": "tool_start", "task": "spectral#123", "tool": "spectral", "args": {"p": 661, "c": 110, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 445985, "cores": [35], "source": "plan"}
+{"t": 10.475, "wall": "12:32:13.322", "kind": "tool_stop", "task": "spectral#119", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 10.475, "wall": "12:32:13.322", "kind": "tool_report", "task": "spectral#119", "tool": "spectral", "p": 643, "c": 107, "theta": 6, "rank": null, "cap": 490, "seconds": 0.274, "rank_pred": 999, "stopped": false}
+{"t": 10.475, "wall": "12:32:13.322", "kind": "tool_done", "task": "spectral#119", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 10.475, "wall": "12:32:13.322", "kind": "task_queued", "task": "spectral#124", "tool": "spectral", "args": {"p": 673, "c": 112, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 10.479, "wall": "12:32:13.326", "kind": "tool_start", "task": "spectral#124", "tool": "spectral", "args": {"p": 673, "c": 112, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446035, "cores": [38], "source": "plan"}
+{"t": 10.617, "wall": "12:32:13.464", "kind": "tool_stop", "task": "spectral#120", "tool": "spectral", "seconds": 0.43, "how": "exited", "reason": null}
+{"t": 10.617, "wall": "12:32:13.464", "kind": "tool_stop", "task": "spectral#121", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 10.617, "wall": "12:32:13.464", "kind": "tool_stop", "task": "spectral#122", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 10.618, "wall": "12:32:13.465", "kind": "tool_report", "task": "spectral#120", "tool": "spectral", "p": 647, "c": 539, "theta": 6, "rank": null, "cap": 490, "seconds": 0.153, "rank_pred": 999, "stopped": false}
+{"t": 10.618, "wall": "12:32:13.465", "kind": "tool_done", "task": "spectral#120", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 10.618, "wall": "12:32:13.465", "kind": "tool_report", "task": "spectral#121", "tool": "spectral", "p": 653, "c": 544, "theta": 6, "rank": null, "cap": 490, "seconds": 0.197, "rank_pred": 999, "stopped": false}
+{"t": 10.618, "wall": "12:32:13.465", "kind": "tool_done", "task": "spectral#121", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 10.618, "wall": "12:32:13.465", "kind": "tool_report", "task": "spectral#122", "tool": "spectral", "p": 659, "c": 549, "theta": 6, "rank": null, "cap": 490, "seconds": 0.163, "rank_pred": 999, "stopped": false}
+{"t": 10.618, "wall": "12:32:13.465", "kind": "tool_done", "task": "spectral#122", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 10.618, "wall": "12:32:13.465", "kind": "task_queued", "task": "spectral#125", "tool": "spectral", "args": {"p": 677, "c": 564, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 10.624, "wall": "12:32:13.471", "kind": "tool_start", "task": "spectral#125", "tool": "spectral", "args": {"p": 677, "c": 564, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446121, "cores": [33], "source": "plan"}
+{"t": 10.624, "wall": "12:32:13.471", "kind": "task_queued", "task": "spectral#126", "tool": "spectral", "args": {"p": 683, "c": 569, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 10.631, "wall": "12:32:13.478", "kind": "tool_start", "task": "spectral#126", "tool": "spectral", "args": {"p": 683, "c": 569, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446122, "cores": [34], "source": "plan"}
+{"t": 10.632, "wall": "12:32:13.479", "kind": "task_queued", "task": "spectral#127", "tool": "spectral", "args": {"p": 691, "c": 115, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 10.645, "wall": "12:32:13.492", "kind": "tool_start", "task": "spectral#127", "tool": "spectral", "args": {"p": 691, "c": 115, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446123, "cores": [39], "source": "plan"}
+{"t": 10.871, "wall": "12:32:13.718", "kind": "tool_stop", "task": "spectral#123", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 10.871, "wall": "12:32:13.718", "kind": "tool_stop", "task": "spectral#124", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 10.871, "wall": "12:32:13.718", "kind": "tool_report", "task": "spectral#123", "tool": "spectral", "p": 661, "c": 110, "theta": 6, "rank": null, "cap": 490, "seconds": 0.21, "rank_pred": 999, "stopped": false}
+{"t": 10.871, "wall": "12:32:13.718", "kind": "tool_done", "task": "spectral#123", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 10.871, "wall": "12:32:13.718", "kind": "tool_report", "task": "spectral#124", "tool": "spectral", "p": 673, "c": 112, "theta": 6, "rank": null, "cap": 490, "seconds": 0.164, "rank_pred": 999, "stopped": false}
+{"t": 10.871, "wall": "12:32:13.718", "kind": "tool_done", "task": "spectral#124", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 10.872, "wall": "12:32:13.719", "kind": "task_queued", "task": "spectral#128", "tool": "spectral", "args": {"p": 701, "c": 584, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 10.996, "wall": "12:32:13.843", "kind": "tool_start", "task": "spectral#128", "tool": "spectral", "args": {"p": 701, "c": 584, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446340, "cores": [35], "source": "plan"}
+{"t": 10.997, "wall": "12:32:13.844", "kind": "task_queued", "task": "spectral#129", "tool": "spectral", "args": {"p": 709, "c": 118, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.009, "wall": "12:32:13.856", "kind": "tool_start", "task": "spectral#129", "tool": "spectral", "args": {"p": 709, "c": 118, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446341, "cores": [38], "source": "plan"}
+{"t": 11.029, "wall": "12:32:13.876", "kind": "tool_stop", "task": "spectral#127", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 11.029, "wall": "12:32:13.876", "kind": "tool_report", "task": "spectral#127", "tool": "spectral", "p": 691, "c": 115, "theta": 6, "rank": null, "cap": 490, "seconds": 0.19, "rank_pred": 999, "stopped": false}
+{"t": 11.029, "wall": "12:32:13.876", "kind": "tool_done", "task": "spectral#127", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.03, "wall": "12:32:13.877", "kind": "task_queued", "task": "spectral#130", "tool": "spectral", "args": {"p": 719, "c": 599, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.033, "wall": "12:32:13.880", "kind": "tool_start", "task": "spectral#130", "tool": "spectral", "args": {"p": 719, "c": 599, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446450, "cores": [39], "source": "plan"}
+{"t": 11.042, "wall": "12:32:13.889", "kind": "tool_stop", "task": "spectral#125", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 11.042, "wall": "12:32:13.889", "kind": "tool_report", "task": "spectral#125", "tool": "spectral", "p": 677, "c": 564, "theta": 6, "rank": null, "cap": 490, "seconds": 0.162, "rank_pred": 999, "stopped": false}
+{"t": 11.042, "wall": "12:32:13.889", "kind": "tool_done", "task": "spectral#125", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.042, "wall": "12:32:13.889", "kind": "task_queued", "task": "spectral#131", "tool": "spectral", "args": {"p": 727, "c": 121, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.049, "wall": "12:32:13.896", "kind": "tool_start", "task": "spectral#131", "tool": "spectral", "args": {"p": 727, "c": 121, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446491, "cores": [33], "source": "plan"}
+{"t": 11.055, "wall": "12:32:13.902", "kind": "tool_stop", "task": "spectral#126", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 11.055, "wall": "12:32:13.902", "kind": "tool_report", "task": "spectral#126", "tool": "spectral", "p": 683, "c": 569, "theta": 6, "rank": null, "cap": 490, "seconds": 0.172, "rank_pred": 999, "stopped": false}
+{"t": 11.055, "wall": "12:32:13.902", "kind": "tool_done", "task": "spectral#126", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.056, "wall": "12:32:13.903", "kind": "task_queued", "task": "spectral#132", "tool": "spectral", "args": {"p": 733, "c": 122, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.067, "wall": "12:32:13.914", "kind": "tool_start", "task": "spectral#132", "tool": "spectral", "args": {"p": 733, "c": 122, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446512, "cores": [34], "source": "plan"}
+{"t": 11.377, "wall": "12:32:14.224", "kind": "tool_report", "task": "spectral#128", "tool": "spectral", "p": 701, "c": 584, "theta": 6, "rank": null, "cap": 490, "seconds": 0.193, "rank_pred": 999, "stopped": false}
+{"t": 11.378, "wall": "12:32:14.225", "kind": "tool_done", "task": "spectral#128", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.384, "wall": "12:32:14.231", "kind": "tool_stop", "task": "spectral#128", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 11.384, "wall": "12:32:14.231", "kind": "task_queued", "task": "spectral#133", "tool": "spectral", "args": {"p": 739, "c": 123, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.389, "wall": "12:32:14.236", "kind": "tool_start", "task": "spectral#133", "tool": "spectral", "args": {"p": 739, "c": 123, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446698, "cores": [35], "source": "plan"}
+{"t": 11.391, "wall": "12:32:14.238", "kind": "tool_stop", "task": "spectral#129", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 11.391, "wall": "12:32:14.238", "kind": "tool_report", "task": "spectral#129", "tool": "spectral", "p": 709, "c": 118, "theta": 6, "rank": null, "cap": 490, "seconds": 0.201, "rank_pred": 999, "stopped": false}
+{"t": 11.391, "wall": "12:32:14.238", "kind": "tool_done", "task": "spectral#129", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.391, "wall": "12:32:14.238", "kind": "task_queued", "task": "spectral#134", "tool": "spectral", "args": {"p": 743, "c": 619, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.395, "wall": "12:32:14.242", "kind": "tool_start", "task": "spectral#134", "tool": "spectral", "args": {"p": 743, "c": 619, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446699, "cores": [38], "source": "plan"}
+{"t": 11.413, "wall": "12:32:14.260", "kind": "tool_stop", "task": "spectral#130", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 11.413, "wall": "12:32:14.260", "kind": "tool_report", "task": "spectral#130", "tool": "spectral", "p": 719, "c": 599, "theta": 6, "rank": null, "cap": 490, "seconds": 0.183, "rank_pred": 999, "stopped": false}
+{"t": 11.413, "wall": "12:32:14.260", "kind": "tool_done", "task": "spectral#130", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.413, "wall": "12:32:14.260", "kind": "task_queued", "task": "spectral#135", "tool": "spectral", "args": {"p": 751, "c": 125, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.417, "wall": "12:32:14.264", "kind": "tool_start", "task": "spectral#135", "tool": "spectral", "args": {"p": 751, "c": 125, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446729, "cores": [39], "source": "plan"}
+{"t": 11.458, "wall": "12:32:14.305", "kind": "tool_report", "task": "spectral#131", "tool": "spectral", "p": 727, "c": 121, "theta": 6, "rank": null, "cap": 490, "seconds": 0.167, "rank_pred": 999, "stopped": false}
+{"t": 11.458, "wall": "12:32:14.305", "kind": "tool_done", "task": "spectral#131", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.467, "wall": "12:32:14.314", "kind": "tool_stop", "task": "spectral#131", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 11.468, "wall": "12:32:14.315", "kind": "task_queued", "task": "spectral#136", "tool": "spectral", "args": {"p": 757, "c": 126, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.475, "wall": "12:32:14.322", "kind": "tool_start", "task": "spectral#136", "tool": "spectral", "args": {"p": 757, "c": 126, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446865, "cores": [33], "source": "plan"}
+{"t": 11.477, "wall": "12:32:14.324", "kind": "tool_stop", "task": "spectral#132", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 11.478, "wall": "12:32:14.325", "kind": "tool_report", "task": "spectral#132", "tool": "spectral", "p": 733, "c": 122, "theta": 6, "rank": null, "cap": 490, "seconds": 0.053, "rank_pred": 999, "stopped": false}
+{"t": 11.478, "wall": "12:32:14.325", "kind": "tool_done", "task": "spectral#132", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.478, "wall": "12:32:14.325", "kind": "task_queued", "task": "spectral#137", "tool": "spectral", "args": {"p": 761, "c": 634, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.487, "wall": "12:32:14.334", "kind": "tool_start", "task": "spectral#137", "tool": "spectral", "args": {"p": 761, "c": 634, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 446912, "cores": [34], "source": "plan"}
+{"t": 11.794, "wall": "12:32:14.641", "kind": "tool_stop", "task": "spectral#133", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 11.794, "wall": "12:32:14.641", "kind": "tool_stop", "task": "spectral#134", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 11.795, "wall": "12:32:14.642", "kind": "tool_report", "task": "spectral#133", "tool": "spectral", "p": 739, "c": 123, "theta": 6, "rank": null, "cap": 490, "seconds": 0.146, "rank_pred": 999, "stopped": false}
+{"t": 11.795, "wall": "12:32:14.642", "kind": "tool_done", "task": "spectral#133", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.795, "wall": "12:32:14.642", "kind": "tool_report", "task": "spectral#134", "tool": "spectral", "p": 743, "c": 619, "theta": 6, "rank": null, "cap": 490, "seconds": 0.145, "rank_pred": 999, "stopped": false}
+{"t": 11.795, "wall": "12:32:14.642", "kind": "tool_done", "task": "spectral#134", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.795, "wall": "12:32:14.642", "kind": "task_queued", "task": "spectral#138", "tool": "spectral", "args": {"p": 769, "c": 128, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.799, "wall": "12:32:14.646", "kind": "tool_start", "task": "spectral#138", "tool": "spectral", "args": {"p": 769, "c": 128, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447053, "cores": [35], "source": "plan"}
+{"t": 11.799, "wall": "12:32:14.646", "kind": "task_queued", "task": "spectral#139", "tool": "spectral", "args": {"p": 773, "c": 644, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.804, "wall": "12:32:14.651", "kind": "tool_start", "task": "spectral#139", "tool": "spectral", "args": {"p": 773, "c": 644, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447054, "cores": [38], "source": "plan"}
+{"t": 11.81, "wall": "12:32:14.657", "kind": "tool_stop", "task": "spectral#135", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 11.81, "wall": "12:32:14.657", "kind": "tool_report", "task": "spectral#135", "tool": "spectral", "p": 751, "c": 125, "theta": 6, "rank": null, "cap": 490, "seconds": 0.151, "rank_pred": 999, "stopped": false}
+{"t": 11.81, "wall": "12:32:14.657", "kind": "tool_done", "task": "spectral#135", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.81, "wall": "12:32:14.657", "kind": "task_queued", "task": "spectral#140", "tool": "spectral", "args": {"p": 787, "c": 131, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.814, "wall": "12:32:14.661", "kind": "tool_start", "task": "spectral#140", "tool": "spectral", "args": {"p": 787, "c": 131, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447056, "cores": [39], "source": "plan"}
+{"t": 11.895, "wall": "12:32:14.742", "kind": "tool_stop", "task": "spectral#136", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 11.895, "wall": "12:32:14.742", "kind": "tool_stop", "task": "spectral#137", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 11.896, "wall": "12:32:14.743", "kind": "tool_report", "task": "spectral#136", "tool": "spectral", "p": 757, "c": 126, "theta": 6, "rank": null, "cap": 490, "seconds": 0.162, "rank_pred": 999, "stopped": false}
+{"t": 11.896, "wall": "12:32:14.743", "kind": "tool_done", "task": "spectral#136", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.896, "wall": "12:32:14.743", "kind": "tool_report", "task": "spectral#137", "tool": "spectral", "p": 761, "c": 634, "theta": 6, "rank": null, "cap": 490, "seconds": 0.163, "rank_pred": 999, "stopped": false}
+{"t": 11.896, "wall": "12:32:14.743", "kind": "tool_done", "task": "spectral#137", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 11.896, "wall": "12:32:14.743", "kind": "task_queued", "task": "spectral#141", "tool": "spectral", "args": {"p": 797, "c": 664, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.902, "wall": "12:32:14.749", "kind": "tool_start", "task": "spectral#141", "tool": "spectral", "args": {"p": 797, "c": 664, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447262, "cores": [33], "source": "plan"}
+{"t": 11.903, "wall": "12:32:14.750", "kind": "task_queued", "task": "spectral#142", "tool": "spectral", "args": {"p": 809, "c": 674, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 11.911, "wall": "12:32:14.758", "kind": "tool_start", "task": "spectral#142", "tool": "spectral", "args": {"p": 809, "c": 674, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447264, "cores": [34], "source": "plan"}
+{"t": 12.179, "wall": "12:32:15.026", "kind": "tool_report", "task": "spectral#138", "tool": "spectral", "p": 769, "c": 128, "theta": 6, "rank": null, "cap": 490, "seconds": 0.192, "rank_pred": 999, "stopped": false}
+{"t": 12.18, "wall": "12:32:15.027", "kind": "tool_done", "task": "spectral#138", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 12.186, "wall": "12:32:15.033", "kind": "tool_stop", "task": "spectral#138", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 12.186, "wall": "12:32:15.033", "kind": "task_queued", "task": "spectral#143", "tool": "spectral", "args": {"p": 811, "c": 135, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 12.19, "wall": "12:32:15.037", "kind": "tool_start", "task": "spectral#143", "tool": "spectral", "args": {"p": 811, "c": 135, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447421, "cores": [35], "source": "plan"}
+{"t": 12.192, "wall": "12:32:15.039", "kind": "tool_stop", "task": "spectral#139", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 12.194, "wall": "12:32:15.041", "kind": "tool_stop", "task": "spectral#140", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 12.195, "wall": "12:32:15.042", "kind": "tool_report", "task": "spectral#139", "tool": "spectral", "p": 773, "c": 644, "theta": 6, "rank": null, "cap": 490, "seconds": 0.15, "rank_pred": 999, "stopped": false}
+{"t": 12.195, "wall": "12:32:15.042", "kind": "tool_done", "task": "spectral#139", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 12.195, "wall": "12:32:15.042", "kind": "tool_report", "task": "spectral#140", "tool": "spectral", "p": 787, "c": 131, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 12.195, "wall": "12:32:15.042", "kind": "tool_done", "task": "spectral#140", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 12.195, "wall": "12:32:15.042", "kind": "task_queued", "task": "spectral#144", "tool": "spectral", "args": {"p": 821, "c": 684, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 12.198, "wall": "12:32:15.045", "kind": "tool_start", "task": "spectral#144", "tool": "spectral", "args": {"p": 821, "c": 684, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447422, "cores": [38], "source": "plan"}
+{"t": 12.199, "wall": "12:32:15.046", "kind": "task_queued", "task": "spectral#145", "tool": "spectral", "args": {"p": 823, "c": 137, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 12.204, "wall": "12:32:15.051", "kind": "tool_start", "task": "spectral#145", "tool": "spectral", "args": {"p": 823, "c": 137, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447423, "cores": [39], "source": "plan"}
+{"t": 12.265, "wall": "12:32:15.112", "kind": "tool_stop", "task": "frac_cover#4", "tool": "frac_cover", "seconds": 11.67, "how": "exited", "reason": null}
+{"t": 12.265, "wall": "12:32:15.112", "kind": "tool_done", "task": "frac_cover#4", "tool": "frac_cover", "summary": {"best": "983/2", "lp_optimal": false}}
+{"t": 12.313, "wall": "12:32:15.160", "kind": "tool_stop", "task": "spectral#141", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 12.313, "wall": "12:32:15.160", "kind": "tool_report", "task": "spectral#141", "tool": "spectral", "p": 797, "c": 664, "theta": 6, "rank": null, "cap": 490, "seconds": 0.108, "rank_pred": 999, "stopped": false}
+{"t": 12.313, "wall": "12:32:15.160", "kind": "tool_done", "task": "spectral#141", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 12.313, "wall": "12:32:15.160", "kind": "task_queued", "task": "spectral#146", "tool": "spectral", "args": {"p": 827, "c": 689, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 12.318, "wall": "12:32:15.165", "kind": "tool_start", "task": "spectral#146", "tool": "spectral", "args": {"p": 827, "c": 689, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447590, "cores": [32], "source": "plan"}
+{"t": 12.319, "wall": "12:32:15.166", "kind": "tool_stop", "task": "spectral#142", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 12.32, "wall": "12:32:15.167", "kind": "tool_report", "task": "spectral#142", "tool": "spectral", "p": 809, "c": 674, "theta": 6, "rank": null, "cap": 490, "seconds": 0.073, "rank_pred": 999, "stopped": false}
+{"t": 12.32, "wall": "12:32:15.167", "kind": "tool_done", "task": "spectral#142", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 12.32, "wall": "12:32:15.167", "kind": "task_queued", "task": "spectral#147", "tool": "spectral", "args": {"p": 829, "c": 138, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 12.332, "wall": "12:32:15.179", "kind": "tool_start", "task": "spectral#147", "tool": "spectral", "args": {"p": 829, "c": 138, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447623, "cores": [33], "source": "plan"}
+{"t": 12.575, "wall": "12:32:15.422", "kind": "tool_stop", "task": "spectral#143", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 12.576, "wall": "12:32:15.423", "kind": "tool_report", "task": "spectral#143", "tool": "spectral", "p": 811, "c": 135, "theta": 6, "rank": null, "cap": 490, "seconds": 0.151, "rank_pred": 999, "stopped": false}
+{"t": 12.576, "wall": "12:32:15.423", "kind": "tool_done", "task": "spectral#143", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 12.576, "wall": "12:32:15.423", "kind": "task_queued", "task": "spectral#148", "tool": "spectral", "args": {"p": 839, "c": 699, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 12.581, "wall": "12:32:15.428", "kind": "tool_start", "task": "spectral#148", "tool": "spectral", "args": {"p": 839, "c": 699, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447778, "cores": [34], "source": "plan"}
+{"t": 12.587, "wall": "12:32:15.434", "kind": "tool_stop", "task": "spectral#145", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 12.588, "wall": "12:32:15.435", "kind": "tool_report", "task": "spectral#145", "tool": "spectral", "p": 823, "c": 137, "theta": 6, "rank": null, "cap": 490, "seconds": 0.073, "rank_pred": 999, "stopped": false}
+{"t": 12.588, "wall": "12:32:15.435", "kind": "tool_done", "task": "spectral#145", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 12.589, "wall": "12:32:15.436", "kind": "task_queued", "task": "spectral#149", "tool": "spectral", "args": {"p": 853, "c": 142, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 12.597, "wall": "12:32:15.444", "kind": "tool_start", "task": "spectral#149", "tool": "spectral", "args": {"p": 853, "c": 142, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447779, "cores": [35], "source": "plan"}
+{"t": 12.599, "wall": "12:32:15.446", "kind": "tool_stop", "task": "spectral#144", "tool": "spectral", "seconds": 0.4, "how": "exited", "reason": null}
+{"t": 12.602, "wall": "12:32:15.449", "kind": "tool_report", "task": "spectral#144", "tool": "spectral", "p": 821, "c": 684, "theta": 6, "rank": null, "cap": 490, "seconds": 0.13, "rank_pred": 999, "stopped": false}
+{"t": 12.602, "wall": "12:32:15.449", "kind": "tool_done", "task": "spectral#144", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 12.603, "wall": "12:32:15.450", "kind": "task_queued", "task": "spectral#150", "tool": "spectral", "args": {"p": 857, "c": 714, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 12.61, "wall": "12:32:15.457", "kind": "tool_start", "task": "spectral#150", "tool": "spectral", "args": {"p": 857, "c": 714, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447797, "cores": [38], "source": "plan"}
+{"t": 12.741, "wall": "12:32:15.588", "kind": "tool_stop", "task": "spectral#147", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 12.742, "wall": "12:32:15.589", "kind": "tool_report", "task": "spectral#147", "tool": "spectral", "p": 829, "c": 138, "theta": 6, "rank": null, "cap": 490, "seconds": 0.104, "rank_pred": 999, "stopped": false}
+{"t": 12.742, "wall": "12:32:15.589", "kind": "tool_done", "task": "spectral#147", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 12.742, "wall": "12:32:15.589", "kind": "task_queued", "task": "spectral#151", "tool": "spectral", "args": {"p": 859, "c": 143, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 12.75, "wall": "12:32:15.597", "kind": "tool_start", "task": "spectral#151", "tool": "spectral", "args": {"p": 859, "c": 143, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447991, "cores": [33], "source": "plan"}
+{"t": 12.752, "wall": "12:32:15.599", "kind": "tool_stop", "task": "spectral#146", "tool": "spectral", "seconds": 0.43, "how": "exited", "reason": null}
+{"t": 12.753, "wall": "12:32:15.600", "kind": "tool_report", "task": "spectral#146", "tool": "spectral", "p": 827, "c": 689, "theta": 6, "rank": null, "cap": 490, "seconds": 0.166, "rank_pred": 999, "stopped": false}
+{"t": 12.753, "wall": "12:32:15.600", "kind": "tool_done", "task": "spectral#146", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 12.754, "wall": "12:32:15.601", "kind": "task_queued", "task": "spectral#152", "tool": "spectral", "args": {"p": 863, "c": 719, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 12.762, "wall": "12:32:15.609", "kind": "tool_start", "task": "spectral#152", "tool": "spectral", "args": {"p": 863, "c": 719, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 447992, "cores": [32], "source": "plan"}
+{"t": 12.985, "wall": "12:32:15.832", "kind": "tool_stop", "task": "spectral#149", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 12.986, "wall": "12:32:15.833", "kind": "tool_report", "task": "spectral#149", "tool": "spectral", "p": 853, "c": 142, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 12.986, "wall": "12:32:15.833", "kind": "tool_done", "task": "spectral#149", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 12.986, "wall": "12:32:15.833", "kind": "task_queued", "task": "spectral#153", "tool": "spectral", "args": {"p": 877, "c": 146, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 12.997, "wall": "12:32:15.844", "kind": "tool_start", "task": "spectral#153", "tool": "spectral", "args": {"p": 877, "c": 146, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448133, "cores": [35], "source": "plan"}
+{"t": 12.998, "wall": "12:32:15.845", "kind": "tool_stop", "task": "spectral#148", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 12.999, "wall": "12:32:15.846", "kind": "tool_stop", "task": "spectral#150", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 13.0, "wall": "12:32:15.847", "kind": "tool_report", "task": "spectral#148", "tool": "spectral", "p": 839, "c": 699, "theta": 6, "rank": null, "cap": 490, "seconds": 0.164, "rank_pred": 999, "stopped": false}
+{"t": 13.0, "wall": "12:32:15.847", "kind": "tool_done", "task": "spectral#148", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 13.0, "wall": "12:32:15.847", "kind": "tool_report", "task": "spectral#150", "tool": "spectral", "p": 857, "c": 714, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 13.0, "wall": "12:32:15.847", "kind": "tool_done", "task": "spectral#150", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 13.001, "wall": "12:32:15.848", "kind": "task_queued", "task": "spectral#154", "tool": "spectral", "args": {"p": 881, "c": 734, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 13.009, "wall": "12:32:15.856", "kind": "tool_start", "task": "spectral#154", "tool": "spectral", "args": {"p": 881, "c": 734, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448134, "cores": [34], "source": "plan"}
+{"t": 13.01, "wall": "12:32:15.857", "kind": "task_queued", "task": "spectral#155", "tool": "spectral", "args": {"p": 883, "c": 147, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 13.019, "wall": "12:32:15.866", "kind": "tool_start", "task": "spectral#155", "tool": "spectral", "args": {"p": 883, "c": 147, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448174, "cores": [38], "source": "plan"}
+{"t": 13.17, "wall": "12:32:16.017", "kind": "tool_stop", "task": "spectral#151", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 13.171, "wall": "12:32:16.018", "kind": "tool_report", "task": "spectral#151", "tool": "spectral", "p": 859, "c": 143, "theta": 6, "rank": null, "cap": 490, "seconds": 0.166, "rank_pred": 999, "stopped": false}
+{"t": 13.171, "wall": "12:32:16.018", "kind": "tool_done", "task": "spectral#151", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 13.172, "wall": "12:32:16.019", "kind": "task_queued", "task": "spectral#156", "tool": "spectral", "args": {"p": 887, "c": 739, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 13.18, "wall": "12:32:16.027", "kind": "tool_start", "task": "spectral#156", "tool": "spectral", "args": {"p": 887, "c": 739, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448310, "cores": [33], "source": "plan"}
+{"t": 13.183, "wall": "12:32:16.030", "kind": "tool_stop", "task": "spectral#152", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 13.184, "wall": "12:32:16.031", "kind": "tool_report", "task": "spectral#152", "tool": "spectral", "p": 863, "c": 719, "theta": 6, "rank": null, "cap": 490, "seconds": 0.147, "rank_pred": 999, "stopped": false}
+{"t": 13.184, "wall": "12:32:16.031", "kind": "tool_done", "task": "spectral#152", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 13.185, "wall": "12:32:16.032", "kind": "task_queued", "task": "spectral#157", "tool": "spectral", "args": {"p": 907, "c": 151, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 13.194, "wall": "12:32:16.041", "kind": "tool_start", "task": "spectral#157", "tool": "spectral", "args": {"p": 907, "c": 151, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448347, "cores": [32], "source": "plan"}
+{"t": 13.381, "wall": "12:32:16.228", "kind": "tool_stop", "task": "spectral#153", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 13.382, "wall": "12:32:16.229", "kind": "tool_report", "task": "spectral#153", "tool": "spectral", "p": 877, "c": 146, "theta": 6, "rank": null, "cap": 490, "seconds": 0.245, "rank_pred": 999, "stopped": false}
+{"t": 13.382, "wall": "12:32:16.229", "kind": "tool_done", "task": "spectral#153", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 13.383, "wall": "12:32:16.230", "kind": "task_queued", "task": "spectral#158", "tool": "spectral", "args": {"p": 911, "c": 759, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 13.391, "wall": "12:32:16.238", "kind": "tool_start", "task": "spectral#158", "tool": "spectral", "args": {"p": 911, "c": 759, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448491, "cores": [35], "source": "plan"}
+{"t": 13.405, "wall": "12:32:16.252", "kind": "tool_stop", "task": "spectral#155", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 13.406, "wall": "12:32:16.253", "kind": "tool_report", "task": "spectral#155", "tool": "spectral", "p": 883, "c": 147, "theta": 6, "rank": null, "cap": 490, "seconds": 0.205, "rank_pred": 999, "stopped": false}
+{"t": 13.406, "wall": "12:32:16.253", "kind": "tool_done", "task": "spectral#155", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 13.406, "wall": "12:32:16.253", "kind": "task_queued", "task": "spectral#159", "tool": "spectral", "args": {"p": 919, "c": 153, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 13.417, "wall": "12:32:16.264", "kind": "tool_start", "task": "spectral#159", "tool": "spectral", "args": {"p": 919, "c": 153, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448530, "cores": [38], "source": "plan"}
+{"t": 13.419, "wall": "12:32:16.266", "kind": "tool_stop", "task": "spectral#154", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 13.42, "wall": "12:32:16.267", "kind": "tool_report", "task": "spectral#154", "tool": "spectral", "p": 881, "c": 734, "theta": 6, "rank": null, "cap": 490, "seconds": 0.102, "rank_pred": 999, "stopped": false}
+{"t": 13.42, "wall": "12:32:16.267", "kind": "tool_done", "task": "spectral#154", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 13.421, "wall": "12:32:16.268", "kind": "task_queued", "task": "spectral#160", "tool": "spectral", "args": {"p": 929, "c": 774, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 13.431, "wall": "12:32:16.278", "kind": "tool_start", "task": "spectral#160", "tool": "spectral", "args": {"p": 929, "c": 774, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448531, "cores": [34], "source": "plan"}
+{"t": 13.59, "wall": "12:32:16.437", "kind": "tool_stop", "task": "spectral#156", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 13.6, "wall": "12:32:16.447", "kind": "tool_report", "task": "spectral#156", "tool": "spectral", "p": 887, "c": 739, "theta": 6, "rank": null, "cap": 490, "seconds": 0.167, "rank_pred": 999, "stopped": false}
+{"t": 13.6, "wall": "12:32:16.447", "kind": "tool_done", "task": "spectral#156", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 13.6, "wall": "12:32:16.447", "kind": "task_queued", "task": "spectral#161", "tool": "spectral", "args": {"p": 937, "c": 156, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 13.608, "wall": "12:32:16.455", "kind": "tool_start", "task": "spectral#161", "tool": "spectral", "args": {"p": 937, "c": 156, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448704, "cores": [33], "source": "plan"}
+{"t": 13.61, "wall": "12:32:16.457", "kind": "tool_stop", "task": "spectral#157", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 13.611, "wall": "12:32:16.458", "kind": "tool_report", "task": "spectral#157", "tool": "spectral", "p": 907, "c": 151, "theta": 6, "rank": null, "cap": 490, "seconds": 0.163, "rank_pred": 999, "stopped": false}
+{"t": 13.611, "wall": "12:32:16.458", "kind": "tool_done", "task": "spectral#157", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 13.611, "wall": "12:32:16.458", "kind": "task_queued", "task": "spectral#162", "tool": "spectral", "args": {"p": 941, "c": 784, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 13.62, "wall": "12:32:16.467", "kind": "tool_start", "task": "spectral#162", "tool": "spectral", "args": {"p": 941, "c": 784, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448705, "cores": [32], "source": "plan"}
+{"t": 13.776, "wall": "12:32:16.623", "kind": "tool_stop", "task": "spectral#158", "tool": "spectral", "seconds": 0.39, "how": "exited", "reason": null}
+{"t": 13.777, "wall": "12:32:16.624", "kind": "tool_report", "task": "spectral#158", "tool": "spectral", "p": 911, "c": 759, "theta": 6, "rank": null, "cap": 490, "seconds": 0.247, "rank_pred": 999, "stopped": false}
+{"t": 13.777, "wall": "12:32:16.624", "kind": "tool_done", "task": "spectral#158", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 13.778, "wall": "12:32:16.625", "kind": "task_queued", "task": "spectral#163", "tool": "spectral", "args": {"p": 947, "c": 789, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 13.786, "wall": "12:32:16.633", "kind": "tool_start", "task": "spectral#163", "tool": "spectral", "args": {"p": 947, "c": 789, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448846, "cores": [35], "source": "plan"}
+{"t": 13.799, "wall": "12:32:16.646", "kind": "tool_stop", "task": "spectral#159", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 13.8, "wall": "12:32:16.647", "kind": "tool_report", "task": "spectral#159", "tool": "spectral", "p": 919, "c": 153, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 13.8, "wall": "12:32:16.647", "kind": "tool_done", "task": "spectral#159", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 13.801, "wall": "12:32:16.648", "kind": "task_queued", "task": "spectral#164", "tool": "spectral", "args": {"p": 953, "c": 794, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 13.811, "wall": "12:32:16.658", "kind": "tool_start", "task": "spectral#164", "tool": "spectral", "args": {"p": 953, "c": 794, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448917, "cores": [38], "source": "plan"}
+{"t": 13.841, "wall": "12:32:16.688", "kind": "tool_stop", "task": "spectral#160", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 13.842, "wall": "12:32:16.689", "kind": "tool_report", "task": "spectral#160", "tool": "spectral", "p": 929, "c": 774, "theta": 6, "rank": null, "cap": 490, "seconds": 0.166, "rank_pred": 999, "stopped": false}
+{"t": 13.842, "wall": "12:32:16.689", "kind": "tool_done", "task": "spectral#160", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 13.843, "wall": "12:32:16.690", "kind": "task_queued", "task": "spectral#165", "tool": "spectral", "args": {"p": 967, "c": 161, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 13.851, "wall": "12:32:16.698", "kind": "tool_start", "task": "spectral#165", "tool": "spectral", "args": {"p": 967, "c": 161, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 448988, "cores": [34], "source": "plan"}
+{"t": 14.025, "wall": "12:32:16.872", "kind": "tool_stop", "task": "spectral#161", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 14.026, "wall": "12:32:16.873", "kind": "tool_report", "task": "spectral#161", "tool": "spectral", "p": 937, "c": 156, "theta": 6, "rank": null, "cap": 490, "seconds": 0.151, "rank_pred": 999, "stopped": false}
+{"t": 14.027, "wall": "12:32:16.874", "kind": "tool_done", "task": "spectral#161", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 14.027, "wall": "12:32:16.874", "kind": "task_queued", "task": "spectral#166", "tool": "spectral", "args": {"p": 971, "c": 809, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 14.037, "wall": "12:32:16.884", "kind": "tool_start", "task": "spectral#166", "tool": "spectral", "args": {"p": 971, "c": 809, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 449059, "cores": [33], "source": "plan"}
+{"t": 14.042, "wall": "12:32:16.889", "kind": "tool_stop", "task": "spectral#162", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 14.042, "wall": "12:32:16.889", "kind": "tool_report", "task": "spectral#162", "tool": "spectral", "p": 941, "c": 784, "theta": 6, "rank": null, "cap": 490, "seconds": 0.147, "rank_pred": 999, "stopped": false}
+{"t": 14.043, "wall": "12:32:16.890", "kind": "tool_done", "task": "spectral#162", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 14.043, "wall": "12:32:16.890", "kind": "task_queued", "task": "spectral#167", "tool": "spectral", "args": {"p": 977, "c": 814, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 14.052, "wall": "12:32:16.899", "kind": "tool_start", "task": "spectral#167", "tool": "spectral", "args": {"p": 977, "c": 814, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 449060, "cores": [32], "source": "plan"}
+{"t": 14.168, "wall": "12:32:17.015", "kind": "tool_stop", "task": "spectral#163", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 14.169, "wall": "12:32:17.016", "kind": "tool_report", "task": "spectral#163", "tool": "spectral", "p": 947, "c": 789, "theta": 6, "rank": null, "cap": 490, "seconds": 0.148, "rank_pred": 999, "stopped": false}
+{"t": 14.169, "wall": "12:32:17.016", "kind": "tool_done", "task": "spectral#163", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 14.169, "wall": "12:32:17.016", "kind": "task_queued", "task": "spectral#168", "tool": "spectral", "args": {"p": 983, "c": 819, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 14.18, "wall": "12:32:17.027", "kind": "tool_start", "task": "spectral#168", "tool": "spectral", "args": {"p": 983, "c": 819, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 449145, "cores": [35], "source": "plan"}
+{"t": 14.196, "wall": "12:32:17.043", "kind": "tool_stop", "task": "spectral#164", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 14.197, "wall": "12:32:17.044", "kind": "tool_report", "task": "spectral#164", "tool": "spectral", "p": 953, "c": 794, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 14.197, "wall": "12:32:17.044", "kind": "tool_done", "task": "spectral#164", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 14.197, "wall": "12:32:17.044", "kind": "task_queued", "task": "spectral#169", "tool": "spectral", "args": {"p": 991, "c": 165, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 14.206, "wall": "12:32:17.053", "kind": "tool_start", "task": "spectral#169", "tool": "spectral", "args": {"p": 991, "c": 165, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 449234, "cores": [38], "source": "plan"}
+{"t": 14.259, "wall": "12:32:17.106", "kind": "tool_stop", "task": "spectral#165", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 14.259, "wall": "12:32:17.106", "kind": "tool_report", "task": "spectral#165", "tool": "spectral", "p": 967, "c": 161, "theta": 6, "rank": null, "cap": 490, "seconds": 0.164, "rank_pred": 999, "stopped": false}
+{"t": 14.26, "wall": "12:32:17.107", "kind": "tool_done", "task": "spectral#165", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 14.26, "wall": "12:32:17.107", "kind": "task_queued", "task": "spectral#170", "tool": "spectral", "args": {"p": 997, "c": 166, "theta": 6, "rank_pred": 999, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 14.269, "wall": "12:32:17.116", "kind": "tool_start", "task": "spectral#170", "tool": "spectral", "args": {"p": 997, "c": 166, "theta": 6, "rank_pred": 999, "seed": 0}, "pid": 449292, "cores": [34], "source": "plan"}
+{"t": 14.453, "wall": "12:32:17.300", "kind": "tool_stop", "task": "spectral#166", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 14.454, "wall": "12:32:17.301", "kind": "tool_report", "task": "spectral#166", "tool": "spectral", "p": 971, "c": 809, "theta": 6, "rank": null, "cap": 490, "seconds": 0.139, "rank_pred": 999, "stopped": false}
+{"t": 14.454, "wall": "12:32:17.301", "kind": "tool_done", "task": "spectral#166", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 14.472, "wall": "12:32:17.319", "kind": "tool_stop", "task": "spectral#167", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 14.472, "wall": "12:32:17.319", "kind": "tool_report", "task": "spectral#167", "tool": "spectral", "p": 977, "c": 814, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 14.473, "wall": "12:32:17.320", "kind": "tool_done", "task": "spectral#167", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 14.562, "wall": "12:32:17.409", "kind": "tool_stop", "task": "spectral#168", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 14.562, "wall": "12:32:17.409", "kind": "tool_report", "task": "spectral#168", "tool": "spectral", "p": 983, "c": 819, "theta": 6, "rank": null, "cap": 490, "seconds": 0.149, "rank_pred": 999, "stopped": false}
+{"t": 14.562, "wall": "12:32:17.409", "kind": "tool_done", "task": "spectral#168", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 14.59, "wall": "12:32:17.437", "kind": "tool_stop", "task": "spectral#169", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 14.591, "wall": "12:32:17.438", "kind": "tool_report", "task": "spectral#169", "tool": "spectral", "p": 991, "c": 165, "theta": 6, "rank": null, "cap": 490, "seconds": 0.188, "rank_pred": 999, "stopped": false}
+{"t": 14.591, "wall": "12:32:17.438", "kind": "tool_done", "task": "spectral#169", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 14.688, "wall": "12:32:17.535", "kind": "tool_stop", "task": "spectral#170", "tool": "spectral", "seconds": 0.42, "how": "exited", "reason": null}
+{"t": 14.689, "wall": "12:32:17.536", "kind": "tool_report", "task": "spectral#170", "tool": "spectral", "p": 997, "c": 166, "theta": 6, "rank": null, "cap": 490, "seconds": 0.145, "rank_pred": 999, "stopped": false}
+{"t": 14.689, "wall": "12:32:17.536", "kind": "tool_done", "task": "spectral#170", "tool": "spectral", "summary": {"rank": null, "cap": 490}}
+{"t": 14.689, "wall": "12:32:17.536", "kind": "event", "name": "NEW_PHASE", "detail": {"detail": "every queued (p, theta) pair has been tried"}}
+{"t": 14.689, "wall": "12:32:17.536", "kind": "checkpoint_default", "name": "NEW_PHASE", "action": "continue with the current queue"}
+{"t": 73.251, "wall": "12:33:16.098", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 347, "certificate_id": "indep-056", "tool": "indep_set"}
+{"t": 73.251, "wall": "12:33:16.098", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 347, "certificate_id": "indep-056", "tool": "indep_set"}
+{"t": 73.251, "wall": "12:33:16.098", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 347, "tool": "indep_set"}}
+{"t": 75.447, "wall": "12:33:18.294", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 349, "certificate_id": "indep-057", "tool": "indep_set"}
+{"t": 75.447, "wall": "12:33:18.294", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 349, "certificate_id": "indep-057", "tool": "indep_set"}
+{"t": 75.447, "wall": "12:33:18.294", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 349, "tool": "indep_set"}}
+{"t": 150.457, "wall": "12:34:33.304", "kind": "event", "name": "STALL", "detail": {"detail": "no bound change for 75 s"}}
+{"t": 150.458, "wall": "12:34:33.305", "kind": "checkpoint_default", "name": "STALL", "action": "continue with the current queue"}
+{"t": 225.467, "wall": "12:35:48.314", "kind": "event", "name": "STALL", "detail": {"detail": "no bound change for 75 s"}}
+{"t": 225.467, "wall": "12:35:48.314", "kind": "checkpoint_default", "name": "STALL", "action": "continue with the current queue"}
+{"t": 300.04, "wall": "12:37:02.887", "kind": "event", "name": "BUDGET", "detail": {"budget": 300.0}}
+{"t": 300.041, "wall": "12:37:02.887", "kind": "tool_stop_request", "task": "indep_set#2", "tool": "indep_set", "reason": "shutdown"}
+{"t": 300.041, "wall": "12:37:02.888", "kind": "tool_stop_request", "task": "clique_cover#3", "tool": "clique_cover", "reason": "shutdown"}
+{"t": 300.112, "wall": "12:37:02.959", "kind": "tool_stop", "task": "clique_cover#3", "tool": "clique_cover", "seconds": 300.07, "how": "exited", "reason": "shutdown"}
+{"t": 300.747, "wall": "12:37:03.594", "kind": "tool_stop", "task": "indep_set#2", "tool": "indep_set", "seconds": 300.72, "how": "exited", "reason": "shutdown"}
+{"t": 300.747, "wall": 300.75, "kind": "run_end", "L": 349, "U": "491", "proven": false, "stopped": "budget"}
+{"t": 300.778, "wall": "12:37:03.625", "kind": "verify_check", "check": "independent_set", "ok": true, "detail": "349 vertices, no edge inside (60726 pairs tested)", "value": 349}
+{"t": 300.778, "wall": "12:37:03.625", "kind": "verify_check", "check": "clique_cover", "ok": true, "detail": "491 cliques cover all 1000 vertices", "value": 491}
+{"t": 300.778, "wall": "12:37:03.625", "kind": "verify_check", "check": "decode_simulation_clique_code", "ok": true, "trials": 3, "transmissions": 491, "failed_decodings": 0, "sub_ok": true}
+{"t": 300.779, "wall": "12:37:03.626", "kind": "verdict", "verdict": "gap", "analysis": null, "checks_ok": true}

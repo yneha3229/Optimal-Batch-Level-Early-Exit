@@ -1,0 +1,175 @@
+{
+ "graph": "K10_3",
+ "n": 120,
+ "mode": "no_llm",
+ "L": 36,
+ "U": "36",
+ "U_float": 36.0,
+ "gap": 0.0,
+ "proven": true,
+ "upper_kind": "spectral",
+ "field": 2,
+ "upper_cert": "spec2-010",
+ "lower_cert": "indep-003",
+ "t_first_bound": 0.5548249929997837,
+ "t_proof": 2.04,
+ "t_final_change": 2.0389036880005733,
+ "wall": 4.17,
+ "stopped": "L == U",
+ "t_describe": 0.519132654000714,
+ "t_plan": 0.5200076690016431,
+ "llm": null,
+ "hypothesis": {
+  "name": "none",
+  "params": {},
+  "confidence": 0.0,
+  "evidence": []
+ },
+ "predictions": {},
+ "plan_source": "default",
+ "critic_rounds": 0,
+ "unresolved_objections": [],
+ "checkpoints": 0,
+ "spectral_tried": 4,
+ "spectral_results": [
+  {
+   "p": 7,
+   "c": 1,
+   "theta": -1,
+   "rank": null,
+   "cap": 42,
+   "seconds": 0.695,
+   "rank_pred": 36,
+   "stopped": false,
+   "t": 1.28
+  },
+  {
+   "p": 5,
+   "c": 1,
+   "theta": -1,
+   "rank": null,
+   "cap": 42,
+   "seconds": 0.689,
+   "rank_pred": 45,
+   "stopped": false,
+   "t": 1.28
+  },
+  {
+   "p": 3,
+   "c": 1,
+   "theta": 35,
+   "rank": null,
+   "cap": 42,
+   "seconds": 0.694,
+   "rank_pred": 9,
+   "stopped": false,
+   "t": 2.04
+  },
+  {
+   "p": 2,
+   "c": 1,
+   "theta": 35,
+   "rank": 36,
+   "cap": 42,
+   "seconds": 0.693,
+   "rank_pred": 0,
+   "stopped": false,
+   "t": 2.04
+  }
+ ],
+ "events": [
+  {
+   "t": 0.56,
+   "name": "NEW_UPPER",
+   "U": "44",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.56,
+   "name": "NEW_UPPER",
+   "U": "43",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.72,
+   "name": "NEW_LOWER",
+   "L": "36",
+   "tool": "indep_cpsat"
+  },
+  {
+   "t": 2.04,
+   "name": "NEW_UPPER",
+   "U": "36",
+   "tool": "spectral"
+  },
+  {
+   "t": 2.04,
+   "name": "CLOSED",
+   "L": "36",
+   "U": "36"
+  }
+ ],
+ "board": {
+  "beta": {
+   "L": 36,
+   "U": 36,
+   "L_cert": "indep-003",
+   "U_cert": "spec2-010",
+   "proven": true
+  },
+  "by_quantity": {
+   "lower:alpha": 36,
+   "lower:beta": 36,
+   "upper:beta": 36,
+   "upper:minrk_2": 36
+  },
+  "info": {
+   "alpha_hoffman_ratio_bound": 36.0,
+   "omega_hoffman_bound": 8.0,
+   "clique_cover_floor": 15,
+   "fractional_cover_floor": 15.0,
+   "alpha_upper_cpsat": 36,
+   "alpha_proven": true,
+   "value": 36
+  }
+ },
+ "verification": {
+  "verdict": "proven",
+  "checks": [
+   {
+    "check": "independent_set",
+    "ok": true,
+    "detail": "36 vertices, no edge inside (630 pairs tested)",
+    "value": 36
+   },
+   {
+    "check": "spectral_code",
+    "ok": true,
+    "p": 2,
+    "c": 1,
+    "claimed_rank": 36,
+    "fit": true,
+    "freivalds_passed": 30,
+    "freivalds_rounds": 30,
+    "freivalds_error_bound": "p^-30",
+    "exact_rank_own": 36,
+    "sub_ok": true
+   },
+   {
+    "check": "decode_simulation",
+    "ok": true,
+    "trials": 3,
+    "receivers": 120,
+    "transmissions": 36,
+    "failed_decodings": 0,
+    "sub_ok": true
+   }
+  ],
+  "extra_checks": [],
+  "checks_seconds": 0.01,
+  "analysis": null,
+  "all_certificates_verified": true,
+  "verify_wall": 0.02
+ },
+ "truth": null
+}

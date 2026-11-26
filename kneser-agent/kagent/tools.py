@@ -182,17 +182,25 @@ def family_rule(n: int, k: int):
     return None
 
 
-def try_code(A: np.ndarray, p: int, c: int, S, rank_limit: int = 4000) -> dict:
+def try_code(A: np.ndarray, p: int, c: int, S, cap: int | None = None, engine: str = "factor") -> dict:
     """Code M = I + cA over F_p. If rank = |S| (S independent) the bracket closes; checked by factor_check.
-    Otherwise the exact rank (flint) when N <= rank_limit."""
+    Otherwise the exact rank by the rank-factorization engine (kagent/rank.py, ported from the server version; any
+    N), which stops early once rank > cap: then rank = None and "rank_above" = cap (the code cannot improve the
+    upper bound). engine="flint" is the original full flint rank (N <= 4000), kept for tests and cross-checks."""
     t0 = time.perf_counter()
     N = A.shape[0]
     out = {"p": p, "c": c}
     if S is not None and factor_check(A, p, c, S):
         out.update(rank=len(S), meets_lower=True)
-    elif N <= rank_limit:
-        out.update(rank=rank_mod(fitting_matrix(A, p, c), p), meets_lower=False)
+    elif engine == "flint":
+        out.update(rank=rank_mod(fitting_matrix(A, p, c), p) if N <= 4000 else None, meets_lower=False)
     else:
-        out.update(rank=None, meets_lower=False)
+        from .rank import SpectralMatrix, rank_factor
+        if cap is not None:
+            cap = min(N, max(int(cap), len(S) if S is not None else 0))
+        r = rank_factor(SpectralMatrix(A, p, c), cap=cap)
+        out.update(rank=r.rank, meets_lower=False)
+        if r.rank is None:
+            out["rank_above"] = cap
     out["seconds"] = round(time.perf_counter() - t0, 3)
     return out

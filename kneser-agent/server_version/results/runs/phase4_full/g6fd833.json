@@ -1,0 +1,220 @@
+{
+ "graph": "g6fd833",
+ "n": 495,
+ "mode": "full",
+ "L": 165,
+ "U": "165",
+ "U_float": 165.0,
+ "gap": 0.0,
+ "proven": true,
+ "upper_kind": "spectral",
+ "field": 2,
+ "upper_cert": "spec2-007",
+ "lower_cert": "indep-003",
+ "t_first_bound": 0.2538795240034233,
+ "t_proof": 76.71,
+ "t_final_change": 76.70188864800002,
+ "wall": 77.32,
+ "stopped": "L == U",
+ "t_describe": 0.5164713720005238,
+ "t_plan": 76.21181016100309,
+ "llm": {
+  "model": "Qwen/Qwen2.5-Coder-32B-Instruct-AWQ",
+  "calls": 9,
+  "seconds": 78.38,
+  "tokens_in": 10855,
+  "tokens_out": 2587,
+  "fallbacks": 0
+ },
+ "hypothesis": {
+  "name": "none",
+  "params": {},
+  "confidence": 0.0,
+  "evidence": [
+   "The common neighbor counts for non-adjacent pairs do not match the expected values for a strongly regular graph with parameters (495, 70, 1, 15).",
+   "The triangle count of 5775 does not match the expected triangle count for a strongly regular graph with parameters v=495, k=70, lambda=1, mu=15."
+  ]
+ },
+ "predictions": {
+  "alpha": 165
+ },
+ "plan_source": "solver (3 rounds, objections unresolved)",
+ "critic_rounds": 3,
+ "unresolved_objections": [
+  "The common neighbor counts for non-adjacent pairs do not match the expected values for a strongly regular graph with parameters (495, 70, 1, 15).",
+  "The triangle count of 5775 does not match the expected triangle count for a strongly regular graph with parameters v=495, k=70, lambda=1, mu=15."
+ ],
+ "checkpoints": 0,
+ "spectral_tried": 5,
+ "spectral_results": [
+  {
+   "p": 7,
+   "c": 6,
+   "theta": 15,
+   "rank": null,
+   "cap": 169,
+   "seconds": 0.061,
+   "rank_pred": 166,
+   "stopped": false,
+   "t": 27.9
+  },
+  {
+   "p": 5,
+   "c": 4,
+   "theta": 1,
+   "rank": null,
+   "cap": 169,
+   "seconds": 0.125,
+   "rank_pred": 220,
+   "stopped": false,
+   "t": 59.62
+  },
+  {
+   "p": 23,
+   "c": 22,
+   "theta": 1,
+   "rank": null,
+   "cap": 169,
+   "seconds": 0.108,
+   "rank_pred": 219,
+   "stopped": false,
+   "t": 59.64
+  },
+  {
+   "p": 3,
+   "c": 2,
+   "theta": 70,
+   "rank": null,
+   "cap": 169,
+   "seconds": 0.126,
+   "rank_pred": 54,
+   "stopped": false,
+   "t": 76.59
+  },
+  {
+   "p": 2,
+   "c": 1,
+   "theta": 15,
+   "rank": 165,
+   "cap": 169,
+   "seconds": 0.212,
+   "rank_pred": 1,
+   "stopped": false,
+   "t": 76.69
+  }
+ ],
+ "events": [
+  {
+   "t": 0.25,
+   "name": "NEW_LOWER",
+   "L": "117",
+   "tool": "indep_set"
+  },
+  {
+   "t": 0.39,
+   "name": "NEW_UPPER",
+   "U": "200",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.39,
+   "name": "NEW_LOWER",
+   "L": "165",
+   "tool": "indep_set"
+  },
+  {
+   "t": 0.4,
+   "name": "NEW_UPPER",
+   "U": "193",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.45,
+   "name": "NEW_UPPER",
+   "U": "171",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.5,
+   "name": "NEW_UPPER",
+   "U": "170",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 76.71,
+   "name": "NEW_UPPER",
+   "U": "165",
+   "tool": "spectral"
+  },
+  {
+   "t": 76.71,
+   "name": "CLOSED",
+   "L": "165",
+   "U": "165"
+  }
+ ],
+ "board": {
+  "beta": {
+   "L": 165,
+   "U": 165,
+   "L_cert": "indep-003",
+   "U_cert": "spec2-007",
+   "proven": true
+  },
+  "by_quantity": {
+   "lower:alpha": 165,
+   "lower:beta": 165,
+   "upper:beta": 165,
+   "upper:minrk_2": 165
+  },
+  "info": {
+   "alpha_hoffman_ratio_bound": 165.0,
+   "omega_hoffman_bound": 18.0,
+   "clique_cover_floor": 28,
+   "fractional_cover_floor": 27.5
+  }
+ },
+ "verification": {
+  "verdict": "proven",
+  "checks": [
+   {
+    "check": "independent_set",
+    "ok": true,
+    "detail": "165 vertices, no edge inside (13530 pairs tested)",
+    "value": 165
+   },
+   {
+    "check": "spectral_code",
+    "ok": true,
+    "p": 2,
+    "c": 1,
+    "claimed_rank": 165,
+    "fit": true,
+    "freivalds_passed": 30,
+    "freivalds_rounds": 30,
+    "freivalds_error_bound": "p^-30",
+    "exact_rank_own": 165,
+    "sub_ok": true
+   },
+   {
+    "check": "decode_simulation",
+    "ok": true,
+    "trials": 3,
+    "receivers": 495,
+    "transmissions": 165,
+    "failed_decodings": 0,
+    "sub_ok": true
+   }
+  ],
+  "extra_checks": [],
+  "checks_seconds": 0.37,
+  "analysis": "The agent proved that the broadcast rate beta(G) is exactly 165 using an independent set of size 165 and a spectral code over field 2. The spectral code passed all checks, including Freivalds with 30 rounds and exact rank verification. Decode simulations also confirmed the correctness. No baselines were available for comparison, so no accuracy or time comparisons can be made. The solver family hypothesis did not match the ground truth, indicating the graph is actually a Kneser graph K(12,4).",
+  "all_certificates_verified": true,
+  "verify_wall": 4.35
+ },
+ "truth": {
+  "name": "K(12,4)",
+  "family": "kneser",
+  "group": "main"
+ }
+}

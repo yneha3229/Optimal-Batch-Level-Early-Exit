@@ -1,0 +1,5 @@
+{"id": "gdb7b08", "name": "K(21,2)", "N": 210, "L": 20, "U": "20", "proven": true, "field": 17, "t_first": 0.2881582789996173, "t_proof": 1.56, "wall": 3.63, "verdict": "proven", "llm_calls": null, "total_s": 5.2}
+{"id": "gd73995", "name": "K(13,3)", "N": 286, "L": 66, "U": "66", "proven": true, "field": 7, "t_first": 0.418088574995636, "t_proof": 1.0, "wall": 3.11, "verdict": "proven", "llm_calls": null, "total_s": 3.2}
+{"id": "g6fd833", "name": "K(12,4)", "N": 495, "L": 165, "U": "165", "proven": true, "field": 2, "t_first": 0.36755879200063646, "t_proof": 0.95, "wall": 1.15, "verdict": "proven", "llm_calls": null, "total_s": 1.6}
+{"id": "gbb1330", "name": "K(11,5)", "N": 462, "L": 210, "U": "231", "proven": false, "field": "any", "t_first": 0.3590767879941268, "t_proof": null, "wall": 300.58, "verdict": "gap", "llm_calls": null, "total_s": 300.6}
+{"id": "ge7ef34", "name": "RR(1000,6)", "N": 1000, "L": 349, "U": "491", "proven": false, "field": "any", "t_first": 0.3833708120000665, "t_proof": null, "wall": 300.75, "verdict": "gap", "llm_calls": null, "total_s": 300.8}

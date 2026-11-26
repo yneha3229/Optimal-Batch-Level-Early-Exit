@@ -1,3 +1,5 @@
 __pycache__/
 bench/graphs/
 chat/*.json
+server_version/bench/graphs/
+.pytest_cache/

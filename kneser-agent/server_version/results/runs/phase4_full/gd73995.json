@@ -1,0 +1,166 @@
+{
+ "graph": "gd73995",
+ "n": 286,
+ "mode": "full",
+ "L": 66,
+ "U": "66",
+ "U_float": 66.0,
+ "gap": 0.0,
+ "proven": true,
+ "upper_kind": "spectral",
+ "field": 7,
+ "upper_cert": "spec7-072",
+ "lower_cert": "indep-001",
+ "t_first_bound": 0.2530610789981438,
+ "t_proof": 48.2,
+ "t_final_change": 48.19462723299512,
+ "wall": 50.25,
+ "stopped": "L == U",
+ "t_describe": 0.834141755993187,
+ "t_plan": null,
+ "llm": {
+  "model": "Qwen/Qwen2.5-Coder-32B-Instruct-AWQ",
+  "calls": 5,
+  "seconds": 44.17,
+  "tokens_in": 5843,
+  "tokens_out": 1457,
+  "fallbacks": 0
+ },
+ "hypothesis": null,
+ "predictions": {},
+ "plan_source": null,
+ "critic_rounds": 2,
+ "unresolved_objections": [],
+ "checkpoints": 0,
+ "spectral_tried": 2,
+ "spectral_results": [
+  {
+   "p": 5,
+   "c": 1,
+   "theta": -1,
+   "rank": null,
+   "cap": 71,
+   "seconds": 0.115,
+   "rank_pred": 66,
+   "stopped": false,
+   "t": 48.16
+  },
+  {
+   "p": 7,
+   "c": 1,
+   "theta": -1,
+   "rank": 66,
+   "cap": 71,
+   "seconds": 0.136,
+   "rank_pred": 66,
+   "stopped": false,
+   "t": 48.19
+  }
+ ],
+ "events": [
+  {
+   "t": 0.25,
+   "name": "NEW_LOWER",
+   "L": "66",
+   "tool": "indep_set"
+  },
+  {
+   "t": 0.37,
+   "name": "NEW_UPPER",
+   "U": "75",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.39,
+   "name": "NEW_UPPER",
+   "U": "73",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.42,
+   "name": "NEW_UPPER",
+   "U": "72",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 48.2,
+   "name": "NEW_UPPER",
+   "U": "66",
+   "tool": "spectral"
+  },
+  {
+   "t": 48.2,
+   "name": "CLOSED",
+   "L": "66",
+   "U": "66"
+  }
+ ],
+ "board": {
+  "beta": {
+   "L": 66,
+   "U": 66,
+   "L_cert": "indep-001",
+   "U_cert": "spec7-072",
+   "proven": true
+  },
+  "by_quantity": {
+   "lower:alpha": 66,
+   "lower:beta": 66,
+   "upper:beta": 66,
+   "upper:minrk_7": 66
+  },
+  "info": {
+   "alpha_hoffman_ratio_bound": 66.0,
+   "omega_hoffman_bound": 14.7931,
+   "clique_cover_floor": 21,
+   "fractional_cover_floor": 19.3333,
+   "alpha_upper_cpsat": 66,
+   "alpha_proven": true,
+   "value": 66,
+   "lovasz_theta": 66.0000415942537
+  }
+ },
+ "verification": {
+  "verdict": "proven",
+  "checks": [
+   {
+    "check": "independent_set",
+    "ok": true,
+    "detail": "66 vertices, no edge inside (2145 pairs tested)",
+    "value": 66
+   },
+   {
+    "check": "spectral_code",
+    "ok": true,
+    "p": 7,
+    "c": 1,
+    "claimed_rank": 66,
+    "fit": true,
+    "freivalds_passed": 30,
+    "freivalds_rounds": 30,
+    "freivalds_error_bound": "p^-30",
+    "exact_rank_own": 66,
+    "sub_ok": true
+   },
+   {
+    "check": "decode_simulation",
+    "ok": true,
+    "trials": 3,
+    "receivers": 286,
+    "transmissions": 66,
+    "failed_decodings": 0,
+    "sub_ok": true
+   }
+  ],
+  "extra_checks": [],
+  "checks_seconds": 0.13,
+  "analysis": "The agent proved that the broadcast rate beta(G) is exactly 66 using a spectral code with field 7 and length 1. The agent outperformed indep_cpsat in both accuracy (proving the exact value) and time (0.253 seconds vs. 0.6 seconds). It also outperformed standard_best in accuracy (proving the exact value vs. an approximate upper bound) but took slightly more time (48.2 seconds vs. 57.56 seconds). The agent matched clique_cover_best in accuracy (both found an upper bound of 72) but was faster (48.2 seconds vs. 0.62 seconds). Frac_cover had the same accuracy as standard_best but took the same amount of time. No suspicious results were found.",
+  "all_certificates_verified": true,
+  "verify_wall": 5.86
+ },
+ "truth": {
+  "name": "K(13,3)",
+  "family": "kneser",
+  "group": "main"
+ }
+}

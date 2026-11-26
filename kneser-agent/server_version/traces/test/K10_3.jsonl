@@ -1,0 +1,80 @@
+{"t": 0.003, "wall": "09:35:27.330", "kind": "run_start", "graph": "K10_3", "n": 120, "mode": "no_llm", "budget": 60.0, "cores": [32, 33, 34, 35, 36, 37, 38, 39], "model": null}
+{"t": 0.003, "wall": "09:35:27.330", "kind": "task_queued", "task": "describe#1", "tool": "describe", "args": {}, "priority": 1000, "source": "scheduler"}
+{"t": 0.003, "wall": "09:35:27.330", "kind": "task_queued", "task": "indep_set#2", "tool": "indep_set", "args": {"restarts": 4, "seed": 0}, "priority": 900, "source": "scheduler"}
+{"t": 0.003, "wall": "09:35:27.330", "kind": "task_queued", "task": "clique_cover#3", "tool": "clique_cover", "args": {"tabu_iters": 20000, "seed": 0}, "priority": 800, "source": "scheduler"}
+{"t": 0.003, "wall": "09:35:27.330", "kind": "task_queued", "task": "indep_cpsat#4", "tool": "indep_cpsat", "args": {}, "priority": 700, "source": "scheduler"}
+{"t": 0.003, "wall": "09:35:27.330", "kind": "task_queued", "task": "clique_cover_cpsat#5", "tool": "clique_cover_cpsat", "args": {}, "priority": 600, "source": "scheduler"}
+{"t": 0.007, "wall": "09:35:27.334", "kind": "tool_start", "task": "describe#1", "tool": "describe", "args": {}, "pid": 298510, "cores": [32, 33, 34, 35], "source": "scheduler"}
+{"t": 0.011, "wall": "09:35:27.337", "kind": "tool_start", "task": "indep_set#2", "tool": "indep_set", "args": {"restarts": 4, "seed": 0}, "pid": 298511, "cores": [36], "source": "scheduler"}
+{"t": 0.017, "wall": "09:35:27.343", "kind": "tool_start", "task": "clique_cover#3", "tool": "clique_cover", "args": {"tabu_iters": 20000, "seed": 0}, "pid": 298512, "cores": [37], "source": "scheduler"}
+{"t": 0.023, "wall": "09:35:27.349", "kind": "tool_start", "task": "indep_cpsat#4", "tool": "indep_cpsat", "args": {}, "pid": 298513, "cores": [38], "source": "scheduler"}
+{"t": 0.029, "wall": "09:35:27.355", "kind": "tool_start", "task": "clique_cover_cpsat#5", "tool": "clique_cover_cpsat", "args": {}, "pid": 298521, "cores": [39], "source": "scheduler"}
+{"t": 0.519, "wall": "09:35:27.845", "kind": "tool_stop", "task": "describe#1", "tool": "describe", "seconds": 0.51, "how": "exited", "reason": null}
+{"t": 0.519, "wall": "09:35:27.846", "kind": "describe", "summary": "n = 120 vertices, m = 2100 edges, density 0.294118\ndegree min 35, max 35, regular: True\ntriangles: 2800 (exact)\ncommon neighbours of adjacent pairs (2100 pairs): value->count {4: 2100}\ncommon neighbours of non-adjacent pairs (3000 sampled pairs): {10: 2267, 20: 733}\ngreedy clique size 3, greedy independent set size 36\nspectrum (4 distinct eigenvalues; exact multiplicities): 35 (x1), 5 (x35), -1 (x75), -15 (x9)", "seconds": 0.47}
+{"t": 0.52, "wall": "09:35:27.846", "kind": "candidates", "count": 115, "top": [{"p": 7, "theta": -1, "c": 1, "rank_pred": 36}, {"p": 7, "theta": -15, "c": 1, "rank_pred": 36}, {"p": 5, "theta": -1, "c": 1, "rank_pred": 45}, {"p": 11, "theta": -1, "c": 1, "rank_pred": 45}, {"p": 13, "theta": -1, "c": 1, "rank_pred": 45}, {"p": 17, "theta": -1, "c": 1, "rank_pred": 45}, {"p": 19, "theta": -1, "c": 1, "rank_pred": 45}, {"p": 23, "theta": -1, "c": 1, "rank_pred": 45}]}
+{"t": 0.52, "wall": "09:35:27.847", "kind": "plan_accepted", "source": "default", "hypothesis": {"name": "none", "params": {}, "confidence": 0.0, "evidence": []}, "predictions": {}, "plan": [{"tool": "code_rules", "args": {"rule": "spectral"}, "why": "default: all primes <= n by rank_pred"}, {"tool": "frac_cover", "args": {}, "why": "default"}, {"tool": "sat_minrank", "args": {}, "why": "default (n <= 150)"}, {"tool": "alpha_bound", "args": {}, "why": "default (n <= 300)"}], "settings": {}, "stop_when": "L == U or budget", "unresolved_objections": []}
+{"t": 0.521, "wall": "09:35:27.847", "kind": "task_queued", "task": "frac_cover#6", "tool": "frac_cover", "args": {"init_cliques": null}, "priority": 60, "source": "default"}
+{"t": 0.521, "wall": "09:35:27.847", "kind": "task_queued", "task": "alpha_bound#7", "tool": "alpha_bound", "args": {}, "priority": 55, "source": "default"}
+{"t": 0.522, "wall": "09:35:27.848", "kind": "spectral_queue", "size": 109, "head": [{"p": 7, "theta": -1, "rank_pred": 36, "source": "plan"}, {"p": 5, "theta": -1, "rank_pred": 45, "source": "plan"}, {"p": 11, "theta": -1, "rank_pred": 45, "source": "plan"}, {"p": 13, "theta": -1, "rank_pred": 45, "source": "plan"}, {"p": 17, "theta": -1, "rank_pred": 45, "source": "plan"}, {"p": 19, "theta": -1, "rank_pred": 45, "source": "plan"}]}
+{"t": 0.522, "wall": "09:35:27.848", "kind": "tool_done", "task": "describe#1", "tool": "describe", "summary": {"seconds": 0.47}}
+{"t": 0.526, "wall": "09:35:27.853", "kind": "tool_start", "task": "frac_cover#6", "tool": "frac_cover", "args": {"init_cliques": null}, "pid": 298555, "cores": [32], "source": "default"}
+{"t": 0.531, "wall": "09:35:27.857", "kind": "tool_start", "task": "alpha_bound#7", "tool": "alpha_bound", "args": {}, "pid": 298556, "cores": [33], "source": "default"}
+{"t": 0.531, "wall": "09:35:27.858", "kind": "task_queued", "task": "spectral#8", "tool": "spectral", "args": {"p": 7, "c": 1, "theta": -1, "rank_pred": 36, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 0.535, "wall": "09:35:27.862", "kind": "tool_start", "task": "spectral#8", "tool": "spectral", "args": {"p": 7, "c": 1, "theta": -1, "rank_pred": 36, "seed": 0}, "pid": 298557, "cores": [34], "source": "plan"}
+{"t": 0.536, "wall": "09:35:27.862", "kind": "task_queued", "task": "spectral#9", "tool": "spectral", "args": {"p": 5, "c": 1, "theta": -1, "rank_pred": 45, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 0.54, "wall": "09:35:27.867", "kind": "tool_start", "task": "spectral#9", "tool": "spectral", "args": {"p": 5, "c": 1, "theta": -1, "rank_pred": 45, "seed": 0}, "pid": 298559, "cores": [35], "source": "plan"}
+{"t": 0.556, "wall": "09:35:27.882", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 44, "certificate_id": "cover-001", "tool": "clique_cover"}
+{"t": 0.556, "wall": "09:35:27.882", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 44, "tool": "clique_cover"}}
+{"t": 0.556, "wall": "09:35:27.883", "kind": "settings_change", "what": "deferred 105 (p, theta) pairs with rank_pred >= U = 44", "why": "NEW_UPPER"}
+{"t": 0.557, "wall": "09:35:27.883", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 43, "certificate_id": "cover-002", "tool": "clique_cover"}
+{"t": 0.557, "wall": "09:35:27.883", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 43, "tool": "clique_cover"}}
+{"t": 0.72, "wall": "09:35:28.046", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 36, "certificate_id": "indep-003", "tool": "indep_cpsat"}
+{"t": 0.72, "wall": "09:35:28.046", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 36, "certificate_id": "indep-003", "tool": "indep_cpsat"}
+{"t": 0.72, "wall": "09:35:28.046", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 36, "tool": "indep_cpsat"}}
+{"t": 0.72, "wall": "09:35:28.047", "kind": "task_queued", "task": "sat_minrank#10", "tool": "sat_minrank", "args": {"r": 36, "indep": "<36 items>", "limit": 60, "cnf_path": "/home/neha/ie624-main/kneser-agent/results/certs/test/K10_3/unsat_r36.cnf.gz"}, "priority": 45, "source": "event"}
+{"t": 0.75, "wall": "09:35:28.076", "kind": "tool_stop", "task": "indep_cpsat#4", "tool": "indep_cpsat", "seconds": 0.73, "how": "exited", "reason": null}
+{"t": 0.75, "wall": "09:35:28.077", "kind": "info", "tool": "indep_cpsat", "alpha_upper_cpsat": 36, "alpha_proven": true, "value": 36}
+{"t": 0.75, "wall": "09:35:28.077", "kind": "tool_done", "task": "indep_cpsat#4", "tool": "indep_cpsat", "summary": {"best": 36, "optimal": true, "alpha_upper": 36}}
+{"t": 0.755, "wall": "09:35:28.081", "kind": "tool_start", "task": "sat_minrank#10", "tool": "sat_minrank", "args": {"r": 36, "indep": "<36 items>", "limit": 60, "cnf_path": "/home/neha/ie624-main/kneser-agent/results/certs/test/K10_3/unsat_r36.cnf.gz"}, "pid": 298587, "cores": [38], "source": "event"}
+{"t": 1.283, "wall": "09:35:28.609", "kind": "tool_stop", "task": "spectral#8", "tool": "spectral", "seconds": 0.75, "how": "exited", "reason": null}
+{"t": 1.283, "wall": "09:35:28.610", "kind": "tool_stop", "task": "spectral#9", "tool": "spectral", "seconds": 0.74, "how": "exited", "reason": null}
+{"t": 1.283, "wall": "09:35:28.610", "kind": "tool_report", "task": "spectral#8", "tool": "spectral", "p": 7, "c": 1, "theta": -1, "rank": null, "cap": 42, "seconds": 0.695, "rank_pred": 36, "stopped": false}
+{"t": 1.283, "wall": "09:35:28.610", "kind": "tool_done", "task": "spectral#8", "tool": "spectral", "summary": {"rank": null, "cap": 42}}
+{"t": 1.283, "wall": "09:35:28.610", "kind": "tool_report", "task": "spectral#9", "tool": "spectral", "p": 5, "c": 1, "theta": -1, "rank": null, "cap": 42, "seconds": 0.689, "rank_pred": 45, "stopped": false}
+{"t": 1.283, "wall": "09:35:28.610", "kind": "tool_done", "task": "spectral#9", "tool": "spectral", "summary": {"rank": null, "cap": 42}}
+{"t": 1.284, "wall": "09:35:28.610", "kind": "task_queued", "task": "spectral#11", "tool": "spectral", "args": {"p": 3, "c": 1, "theta": 35, "rank_pred": 9, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.288, "wall": "09:35:28.614", "kind": "tool_start", "task": "spectral#11", "tool": "spectral", "args": {"p": 3, "c": 1, "theta": 35, "rank_pred": 9, "seed": 0}, "pid": 298641, "cores": [34], "source": "plan"}
+{"t": 1.288, "wall": "09:35:28.615", "kind": "task_queued", "task": "spectral#12", "tool": "spectral", "args": {"p": 2, "c": 1, "theta": 35, "rank_pred": 0, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 1.293, "wall": "09:35:28.619", "kind": "tool_start", "task": "spectral#12", "tool": "spectral", "args": {"p": 2, "c": 1, "theta": 35, "rank_pred": 0, "seed": 0}, "pid": 298643, "cores": [35], "source": "plan"}
+{"t": 2.035, "wall": "09:35:29.362", "kind": "tool_stop", "task": "spectral#11", "tool": "spectral", "seconds": 0.75, "how": "exited", "reason": null}
+{"t": 2.035, "wall": "09:35:29.362", "kind": "tool_report", "task": "spectral#11", "tool": "spectral", "p": 3, "c": 1, "theta": 35, "rank": null, "cap": 42, "seconds": 0.694, "rank_pred": 9, "stopped": false}
+{"t": 2.035, "wall": "09:35:29.362", "kind": "tool_done", "task": "spectral#11", "tool": "spectral", "summary": {"rank": null, "cap": 42}}
+{"t": 2.039, "wall": "09:35:29.365", "kind": "tool_stop", "task": "spectral#12", "tool": "spectral", "seconds": 0.75, "how": "exited", "reason": null}
+{"t": 2.039, "wall": "09:35:29.365", "kind": "tool_report", "task": "spectral#12", "tool": "spectral", "p": 2, "c": 1, "theta": 35, "rank": 36, "cap": 42, "seconds": 0.693, "rank_pred": 0, "stopped": false}
+{"t": 2.04, "wall": "09:35:29.367", "kind": "board_update", "bound": "upper", "quantity": "minrk_2", "value": 36, "certificate_id": "spec2-010", "tool": "spectral"}
+{"t": 2.04, "wall": "09:35:29.367", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 36, "certificate_id": "spec2-010", "tool": "spectral"}
+{"t": 2.04, "wall": "09:35:29.367", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 36, "tool": "spectral"}}
+{"t": 2.04, "wall": "09:35:29.367", "kind": "event", "name": "CLOSED", "detail": {"L": 36, "U": 36}}
+{"t": 2.04, "wall": "09:35:29.367", "kind": "tool_stop_request", "task": "indep_set#2", "tool": "indep_set", "reason": "L == U"}
+{"t": 2.04, "wall": "09:35:29.367", "kind": "tool_stop_request", "task": "clique_cover#3", "tool": "clique_cover", "reason": "L == U"}
+{"t": 2.04, "wall": "09:35:29.367", "kind": "tool_stop_request", "task": "clique_cover_cpsat#5", "tool": "clique_cover_cpsat", "reason": "L == U"}
+{"t": 2.04, "wall": "09:35:29.367", "kind": "tool_stop_request", "task": "frac_cover#6", "tool": "frac_cover", "reason": "L == U"}
+{"t": 2.041, "wall": "09:35:29.367", "kind": "tool_stop_request", "task": "alpha_bound#7", "tool": "alpha_bound", "reason": "L == U"}
+{"t": 2.041, "wall": "09:35:29.367", "kind": "tool_stop_request", "task": "sat_minrank#10", "tool": "sat_minrank", "reason": "L == U"}
+{"t": 2.041, "wall": "09:35:29.367", "kind": "tool_done", "task": "spectral#12", "tool": "spectral", "summary": {"rank": 36, "cap": 42}}
+{"t": 2.173, "wall": "09:35:29.500", "kind": "tool_stop", "task": "frac_cover#6", "tool": "frac_cover", "seconds": 1.65, "how": "exited", "reason": "L == U"}
+{"t": 4.104, "wall": "09:35:31.431", "kind": "tool_killed", "task": "indep_set#2", "tool": "indep_set", "pid": 298511, "after_s": 2.0}
+{"t": 4.105, "wall": "09:35:31.431", "kind": "tool_stop", "task": "indep_set#2", "tool": "indep_set", "seconds": 4.09, "how": "killed", "reason": "L == U"}
+{"t": 4.118, "wall": "09:35:31.444", "kind": "tool_killed", "task": "clique_cover#3", "tool": "clique_cover", "pid": 298512, "after_s": 2.0}
+{"t": 4.118, "wall": "09:35:31.444", "kind": "tool_stop", "task": "clique_cover#3", "tool": "clique_cover", "seconds": 4.1, "how": "killed", "reason": "L == U"}
+{"t": 4.129, "wall": "09:35:31.456", "kind": "tool_killed", "task": "clique_cover_cpsat#5", "tool": "clique_cover_cpsat", "pid": 298521, "after_s": 2.0}
+{"t": 4.129, "wall": "09:35:31.456", "kind": "tool_stop", "task": "clique_cover_cpsat#5", "tool": "clique_cover_cpsat", "seconds": 4.1, "how": "killed", "reason": "L == U"}
+{"t": 4.143, "wall": "09:35:31.469", "kind": "tool_killed", "task": "alpha_bound#7", "tool": "alpha_bound", "pid": 298556, "after_s": 2.0}
+{"t": 4.143, "wall": "09:35:31.469", "kind": "tool_stop", "task": "alpha_bound#7", "tool": "alpha_bound", "seconds": 3.61, "how": "killed", "reason": "L == U"}
+{"t": 4.171, "wall": "09:35:31.498", "kind": "tool_killed", "task": "sat_minrank#10", "tool": "sat_minrank", "pid": 298587, "after_s": 2.0}
+{"t": 4.172, "wall": "09:35:31.498", "kind": "tool_stop", "task": "sat_minrank#10", "tool": "sat_minrank", "seconds": 3.42, "how": "killed", "reason": "L == U"}
+{"t": 4.172, "wall": 4.17, "kind": "run_end", "L": 36, "U": "36", "proven": true, "stopped": "L == U"}
+{"t": 4.19, "wall": "09:35:31.517", "kind": "verify_check", "check": "independent_set", "ok": true, "detail": "36 vertices, no edge inside (630 pairs tested)", "value": 36}
+{"t": 4.19, "wall": "09:35:31.517", "kind": "verify_check", "check": "spectral_code", "ok": true, "p": 2, "c": 1, "claimed_rank": 36, "fit": true, "freivalds_passed": 30, "freivalds_rounds": 30, "freivalds_error_bound": "p^-30", "exact_rank_own": 36, "sub_ok": true}
+{"t": 4.19, "wall": "09:35:31.517", "kind": "verify_check", "check": "decode_simulation", "ok": true, "trials": 3, "receivers": 120, "transmissions": 36, "failed_decodings": 0, "sub_ok": true}
+{"t": 4.191, "wall": "09:35:31.517", "kind": "verdict", "verdict": "proven", "analysis": null, "checks_ok": true}

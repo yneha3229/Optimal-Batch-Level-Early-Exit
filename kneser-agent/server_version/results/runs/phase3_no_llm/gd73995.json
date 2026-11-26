@@ -1,0 +1,160 @@
+{
+ "graph": "gd73995",
+ "n": 286,
+ "mode": "no_llm",
+ "L": 66,
+ "U": "66",
+ "U_float": 66.0,
+ "gap": 0.0,
+ "proven": true,
+ "upper_kind": "spectral",
+ "field": 7,
+ "upper_cert": "spec7-005",
+ "lower_cert": "indep-002",
+ "t_first_bound": 0.418088574995636,
+ "t_proof": 1.0,
+ "t_final_change": 0.9936426559943357,
+ "wall": 3.11,
+ "stopped": "L == U",
+ "t_describe": 0.5699068559988518,
+ "t_plan": 0.571421067994379,
+ "llm": null,
+ "hypothesis": {
+  "name": "none",
+  "params": {},
+  "confidence": 0.0,
+  "evidence": []
+ },
+ "predictions": {},
+ "plan_source": "default",
+ "critic_rounds": 0,
+ "unresolved_objections": [],
+ "checkpoints": 0,
+ "spectral_tried": 2,
+ "spectral_results": [
+  {
+   "p": 5,
+   "c": 1,
+   "theta": -1,
+   "rank": null,
+   "cap": 71,
+   "seconds": 0.116,
+   "rank_pred": 66,
+   "stopped": false,
+   "t": 0.96
+  },
+  {
+   "p": 7,
+   "c": 1,
+   "theta": -1,
+   "rank": 66,
+   "cap": 71,
+   "seconds": 0.134,
+   "rank_pred": 66,
+   "stopped": false,
+   "t": 0.99
+  }
+ ],
+ "events": [
+  {
+   "t": 0.42,
+   "name": "NEW_UPPER",
+   "U": "75",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.43,
+   "name": "NEW_LOWER",
+   "L": "66",
+   "tool": "indep_set"
+  },
+  {
+   "t": 0.44,
+   "name": "NEW_UPPER",
+   "U": "73",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 0.48,
+   "name": "NEW_UPPER",
+   "U": "72",
+   "tool": "clique_cover"
+  },
+  {
+   "t": 1.0,
+   "name": "NEW_UPPER",
+   "U": "66",
+   "tool": "spectral"
+  },
+  {
+   "t": 1.0,
+   "name": "CLOSED",
+   "L": "66",
+   "U": "66"
+  }
+ ],
+ "board": {
+  "beta": {
+   "L": 66,
+   "U": 66,
+   "L_cert": "indep-002",
+   "U_cert": "spec7-005",
+   "proven": true
+  },
+  "by_quantity": {
+   "lower:alpha": 66,
+   "lower:beta": 66,
+   "upper:beta": 66,
+   "upper:minrk_7": 66
+  },
+  "info": {
+   "alpha_hoffman_ratio_bound": 66.0,
+   "omega_hoffman_bound": 14.7931,
+   "clique_cover_floor": 21,
+   "fractional_cover_floor": 19.3333
+  }
+ },
+ "verification": {
+  "verdict": "proven",
+  "checks": [
+   {
+    "check": "independent_set",
+    "ok": true,
+    "detail": "66 vertices, no edge inside (2145 pairs tested)",
+    "value": 66
+   },
+   {
+    "check": "spectral_code",
+    "ok": true,
+    "p": 7,
+    "c": 1,
+    "claimed_rank": 66,
+    "fit": true,
+    "freivalds_passed": 30,
+    "freivalds_rounds": 30,
+    "freivalds_error_bound": "p^-30",
+    "exact_rank_own": 66,
+    "sub_ok": true
+   },
+   {
+    "check": "decode_simulation",
+    "ok": true,
+    "trials": 3,
+    "receivers": 286,
+    "transmissions": 66,
+    "failed_decodings": 0,
+    "sub_ok": true
+   }
+  ],
+  "extra_checks": [],
+  "checks_seconds": 0.13,
+  "analysis": null,
+  "all_certificates_verified": true,
+  "verify_wall": 0.13
+ },
+ "truth": {
+  "name": "K(13,3)",
+  "family": "kneser",
+  "group": "main"
+ }
+}

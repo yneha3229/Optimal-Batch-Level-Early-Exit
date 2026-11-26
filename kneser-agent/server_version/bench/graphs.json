@@ -1,0 +1,488 @@
+[
+ {
+  "id": "g952499",
+  "file": "bench/graphs/g952499",
+  "n": 210,
+  "seed": 0
+ },
+ {
+  "id": "gdb7b08",
+  "file": "bench/graphs/gdb7b08",
+  "n": 210,
+  "seed": 0
+ },
+ {
+  "id": "gc6ec2d",
+  "file": "bench/graphs/gc6ec2d",
+  "n": 220,
+  "seed": 0
+ },
+ {
+  "id": "g987c80",
+  "file": "bench/graphs/g987c80",
+  "n": 231,
+  "seed": 0
+ },
+ {
+  "id": "gd73995",
+  "file": "bench/graphs/gd73995",
+  "n": 286,
+  "seed": 0
+ },
+ {
+  "id": "g16e09a",
+  "file": "bench/graphs/g16e09a",
+  "n": 300,
+  "seed": 0
+ },
+ {
+  "id": "g095a28",
+  "file": "bench/graphs/g095a28",
+  "n": 330,
+  "seed": 0
+ },
+ {
+  "id": "g3b3eff",
+  "file": "bench/graphs/g3b3eff",
+  "n": 364,
+  "seed": 0
+ },
+ {
+  "id": "gda1e7c",
+  "file": "bench/graphs/gda1e7c",
+  "n": 406,
+  "seed": 0
+ },
+ {
+  "id": "ga2d6f2",
+  "file": "bench/graphs/ga2d6f2",
+  "n": 455,
+  "seed": 0
+ },
+ {
+  "id": "gbb1330",
+  "file": "bench/graphs/gbb1330",
+  "n": 462,
+  "seed": 0
+ },
+ {
+  "id": "g6fd833",
+  "file": "bench/graphs/g6fd833",
+  "n": 495,
+  "seed": 0
+ },
+ {
+  "id": "g1c7ce0",
+  "file": "bench/graphs/g1c7ce0",
+  "n": 528,
+  "seed": 0
+ },
+ {
+  "id": "g8ea522",
+  "file": "bench/graphs/g8ea522",
+  "n": 560,
+  "seed": 0
+ },
+ {
+  "id": "g611ef8",
+  "file": "bench/graphs/g611ef8",
+  "n": 666,
+  "seed": 0
+ },
+ {
+  "id": "g5b8eaa",
+  "file": "bench/graphs/g5b8eaa",
+  "n": 680,
+  "seed": 0
+ },
+ {
+  "id": "g1966a2",
+  "file": "bench/graphs/g1966a2",
+  "n": 715,
+  "seed": 0
+ },
+ {
+  "id": "ged4d3c",
+  "file": "bench/graphs/ged4d3c",
+  "n": 792,
+  "seed": 0
+ },
+ {
+  "id": "ga93f82",
+  "file": "bench/graphs/ga93f82",
+  "n": 820,
+  "seed": 0
+ },
+ {
+  "id": "g057188",
+  "file": "bench/graphs/g057188",
+  "n": 969,
+  "seed": 2
+ },
+ {
+  "id": "gc017b0",
+  "file": "bench/graphs/gc017b0",
+  "n": 969,
+  "seed": 0
+ },
+ {
+  "id": "gedcc84",
+  "file": "bench/graphs/gedcc84",
+  "n": 969,
+  "seed": 1
+ },
+ {
+  "id": "g241b7b",
+  "file": "bench/graphs/g241b7b",
+  "n": 990,
+  "seed": 0
+ },
+ {
+  "id": "g3034d3",
+  "file": "bench/graphs/g3034d3",
+  "n": 990,
+  "seed": 1
+ },
+ {
+  "id": "ga99e47",
+  "file": "bench/graphs/ga99e47",
+  "n": 990,
+  "seed": 2
+ },
+ {
+  "id": "ge7ef34",
+  "file": "bench/graphs/ge7ef34",
+  "n": 1000,
+  "seed": 0
+ },
+ {
+  "id": "ge9754d",
+  "file": "bench/graphs/ge9754d",
+  "n": 1001,
+  "seed": 0
+ },
+ {
+  "id": "g8fad4d",
+  "file": "bench/graphs/g8fad4d",
+  "n": 1287,
+  "seed": 0
+ },
+ {
+  "id": "gf6a625",
+  "file": "bench/graphs/gf6a625",
+  "n": 1330,
+  "seed": 0
+ },
+ {
+  "id": "g81b04f",
+  "file": "bench/graphs/g81b04f",
+  "n": 1365,
+  "seed": 1
+ },
+ {
+  "id": "ga4ecd3",
+  "file": "bench/graphs/ga4ecd3",
+  "n": 1365,
+  "seed": 0
+ },
+ {
+  "id": "gad7398",
+  "file": "bench/graphs/gad7398",
+  "n": 1365,
+  "seed": 2
+ },
+ {
+  "id": "gfe1f36",
+  "file": "bench/graphs/gfe1f36",
+  "n": 1378,
+  "seed": 0
+ },
+ {
+  "id": "gad7555",
+  "file": "bench/graphs/gad7555",
+  "n": 1716,
+  "seed": 0
+ },
+ {
+  "id": "g326a54",
+  "file": "bench/graphs/g326a54",
+  "n": 1820,
+  "seed": 2
+ },
+ {
+  "id": "ga5f74d",
+  "file": "bench/graphs/ga5f74d",
+  "n": 1820,
+  "seed": 0
+ },
+ {
+  "id": "gb7dfce",
+  "file": "bench/graphs/gb7dfce",
+  "n": 1820,
+  "seed": 1
+ },
+ {
+  "id": "gc852d1",
+  "file": "bench/graphs/gc852d1",
+  "n": 1820,
+  "seed": 0
+ },
+ {
+  "id": "g93e433",
+  "file": "bench/graphs/g93e433",
+  "n": 1830,
+  "seed": 2
+ },
+ {
+  "id": "gf38e83",
+  "file": "bench/graphs/gf38e83",
+  "n": 1830,
+  "seed": 1
+ },
+ {
+  "id": "gffe6f7",
+  "file": "bench/graphs/gffe6f7",
+  "n": 1830,
+  "seed": 0
+ },
+ {
+  "id": "g2073a0",
+  "file": "bench/graphs/g2073a0",
+  "n": 2002,
+  "seed": 0
+ },
+ {
+  "id": "g53e14b",
+  "file": "bench/graphs/g53e14b",
+  "n": 2024,
+  "seed": 1
+ },
+ {
+  "id": "g756722",
+  "file": "bench/graphs/g756722",
+  "n": 2024,
+  "seed": 0
+ },
+ {
+  "id": "g884bcc",
+  "file": "bench/graphs/g884bcc",
+  "n": 2024,
+  "seed": 2
+ },
+ {
+  "id": "g4da7db",
+  "file": "bench/graphs/g4da7db",
+  "n": 2346,
+  "seed": 0
+ },
+ {
+  "id": "g646ba8",
+  "file": "bench/graphs/g646ba8",
+  "n": 2380,
+  "seed": 2
+ },
+ {
+  "id": "ga54719",
+  "file": "bench/graphs/ga54719",
+  "n": 2380,
+  "seed": 1
+ },
+ {
+  "id": "gd870fe",
+  "file": "bench/graphs/gd870fe",
+  "n": 2380,
+  "seed": 0
+ },
+ {
+  "id": "g65c04a",
+  "file": "bench/graphs/g65c04a",
+  "n": 2925,
+  "seed": 2
+ },
+ {
+  "id": "gc3f297",
+  "file": "bench/graphs/gc3f297",
+  "n": 2925,
+  "seed": 0
+ },
+ {
+  "id": "gf1a8b3",
+  "file": "bench/graphs/gf1a8b3",
+  "n": 2925,
+  "seed": 1
+ },
+ {
+  "id": "g654145",
+  "file": "bench/graphs/g654145",
+  "n": 3003,
+  "seed": 1
+ },
+ {
+  "id": "g7bd45b",
+  "file": "bench/graphs/g7bd45b",
+  "n": 3003,
+  "seed": 0
+ },
+ {
+  "id": "gc640c4",
+  "file": "bench/graphs/gc640c4",
+  "n": 3003,
+  "seed": 2
+ },
+ {
+  "id": "gddc7e7",
+  "file": "bench/graphs/gddc7e7",
+  "n": 3003,
+  "seed": 0
+ },
+ {
+  "id": "g8c7847",
+  "file": "bench/graphs/g8c7847",
+  "n": 3060,
+  "seed": 0
+ },
+ {
+  "id": "g1ae090",
+  "file": "bench/graphs/g1ae090",
+  "n": 3240,
+  "seed": 0
+ },
+ {
+  "id": "g57ec22",
+  "file": "bench/graphs/g57ec22",
+  "n": 3240,
+  "seed": 2
+ },
+ {
+  "id": "ge9d2e8",
+  "file": "bench/graphs/ge9d2e8",
+  "n": 3240,
+  "seed": 1
+ },
+ {
+  "id": "g9f5060",
+  "file": "bench/graphs/g9f5060",
+  "n": 3916,
+  "seed": 0
+ },
+ {
+  "id": "gb2258d",
+  "file": "bench/graphs/gb2258d",
+  "n": 4060,
+  "seed": 0
+ },
+ {
+  "id": "gdcb613",
+  "file": "bench/graphs/gdcb613",
+  "n": 4060,
+  "seed": 0
+ },
+ {
+  "id": "g1a6aae",
+  "file": "bench/graphs/g1a6aae",
+  "n": 4368,
+  "seed": 0
+ },
+ {
+  "id": "gb9323d",
+  "file": "bench/graphs/gb9323d",
+  "n": 4845,
+  "seed": 0
+ },
+ {
+  "id": "gcf1f3b",
+  "file": "bench/graphs/gcf1f3b",
+  "n": 4851,
+  "seed": 0
+ },
+ {
+  "id": "g2281f3",
+  "file": "bench/graphs/g2281f3",
+  "n": 5005,
+  "seed": 0
+ },
+ {
+  "id": "gdb2170",
+  "file": "bench/graphs/gdb2170",
+  "n": 5456,
+  "seed": 0
+ },
+ {
+  "id": "g65c28b",
+  "file": "bench/graphs/g65c28b",
+  "n": 5886,
+  "seed": 0
+ },
+ {
+  "id": "g96c051",
+  "file": "bench/graphs/g96c051",
+  "n": 6188,
+  "seed": 0
+ },
+ {
+  "id": "g0950b6",
+  "file": "bench/graphs/g0950b6",
+  "n": 6435,
+  "seed": 0
+ },
+ {
+  "id": "g09863a",
+  "file": "bench/graphs/g09863a",
+  "n": 7021,
+  "seed": 0
+ },
+ {
+  "id": "g955fe4",
+  "file": "bench/graphs/g955fe4",
+  "n": 7140,
+  "seed": 0
+ },
+ {
+  "id": "g442c68",
+  "file": "bench/graphs/g442c68",
+  "n": 7315,
+  "seed": 0
+ },
+ {
+  "id": "g43b435",
+  "file": "bench/graphs/g43b435",
+  "n": 8008,
+  "seed": 0
+ },
+ {
+  "id": "g84bfd4",
+  "file": "bench/graphs/g84bfd4",
+  "n": 8256,
+  "seed": 0
+ },
+ {
+  "id": "ga97ed7",
+  "file": "bench/graphs/ga97ed7",
+  "n": 8568,
+  "seed": 0
+ },
+ {
+  "id": "g655950",
+  "file": "bench/graphs/g655950",
+  "n": 8855,
+  "seed": 0
+ },
+ {
+  "id": "g8dc378",
+  "file": "bench/graphs/g8dc378",
+  "n": 9591,
+  "seed": 0
+ },
+ {
+  "id": "gb226a0",
+  "file": "bench/graphs/gb226a0",
+  "n": 9730,
+  "seed": 0
+ },
+ {
+  "id": "gc783a7",
+  "file": "bench/graphs/gc783a7",
+  "n": 9880,
+  "seed": 0
+ }
+]

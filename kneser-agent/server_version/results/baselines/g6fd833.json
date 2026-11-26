@@ -1,0 +1,147 @@
+{
+ "indep_cpsat": {
+  "status": "ok",
+  "lower": 165,
+  "time": 0.77,
+  "alpha_proven": true,
+  "alpha_upper": 165,
+  "history": [
+   [
+    0.77,
+    89
+   ],
+   [
+    0.77,
+    165
+   ]
+  ],
+  "wall": 0.79
+ },
+ "standard_best": {
+  "lower": "165",
+  "upper": "29729759/180180",
+  "lower_by": "indep_cpsat",
+  "upper_by": "frac_cover",
+  "exact": false,
+  "time": 15.55,
+  "lower_float": 165.0,
+  "upper_float": 165.00032745032746
+ },
+ "clique_cover_best": {
+  "status": "ok",
+  "upper": 170,
+  "time": 0.87,
+  "proven_optimal_cover": false,
+  "cpsat_used": true,
+  "history": [
+   [
+    0.69,
+    200,
+    "heuristic"
+   ],
+   [
+    0.7,
+    193,
+    "heuristic"
+   ],
+   [
+    0.79,
+    171,
+    "heuristic"
+   ],
+   [
+    0.87,
+    170,
+    "heuristic"
+   ]
+  ],
+  "wall": 119.19
+ },
+ "frac_cover": {
+  "status": "ok",
+  "upper": "29729759/180180",
+  "upper_float": 165.00032745032746,
+  "time": 15.55,
+  "lp_optimal": false,
+  "history": [
+   [
+    14.49,
+    "11922749/72072"
+   ],
+   [
+    14.6,
+    "39738617/240240"
+   ],
+   [
+    14.71,
+    "29790557/180180"
+   ],
+   [
+    14.82,
+    "52061/315"
+   ],
+   [
+    14.93,
+    "2835707/17160"
+   ],
+   [
+    15.06,
+    "119050751/720720"
+   ],
+   [
+    15.17,
+    "228857/1386"
+   ],
+   [
+    15.3,
+    "944013/5720"
+   ],
+   [
+    15.43,
+    "1887761/11440"
+   ],
+   [
+    15.55,
+    "29729759/180180"
+   ]
+  ],
+  "wall": 15.55
+ },
+ "sat_minrank_f2": {
+  "status": "n/a (size)",
+  "why": "CNF units 34711875 > 1000000 (Pincer's limit)",
+  "wall": 6.36
+ },
+ "lambda_search": {
+  "status": "n/a (size)",
+  "why": "n * t = 990 > 150 for t = 2",
+  "wall": 0.0
+ },
+ "pincer": {
+  "status": "ok",
+  "lower": "165",
+  "upper": "165",
+  "lower_float": 165.0,
+  "upper_float": 165.0,
+  "mr": [
+   165,
+   165
+  ],
+  "time": 3.24,
+  "graph_build_s": 0.67,
+  "verified": true,
+  "steps": 2,
+  "stopped": "closed",
+  "wall": 3.24
+ },
+ "minrank_agent": {
+  "status": "ok",
+  "lower": 165,
+  "upper": 165.0,
+  "field": 2,
+  "exact": true,
+  "time": 1.16,
+  "fields_tried": 1,
+  "wall": 1.53
+ }
+}

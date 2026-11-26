@@ -5,6 +5,7 @@ The agents never write numbers to the bound board. They choose and order tools, 
 from __future__ import annotations
 
 import json
+import re
 
 from . import llm as L
 
@@ -49,11 +50,31 @@ Reply with ONE JSON object: {"checks_requested": [str], "analysis": str}"""
 ALLOWED = {"spectral", "try_code", "family_rule", "independent_set", "binomial_match", "hoffman"}
 
 
-def _valid_plan(d):
+def _numbers(x) -> set[str]:
+    return set(re.findall(r"-?\d+(?:\.\d+)?", x if isinstance(x, str) else json.dumps(x)))
+
+
+def _valid_plan(d, summary=None):
+    if not isinstance(d, dict):
+        raise ValueError("reply must be a JSON object")
+    fh = d.get("family_hypothesis", {"name": "none"})
+    if not isinstance(fh, dict) or not isinstance(fh.get("name", ""), str):
+        raise ValueError('family_hypothesis must be an object with a string "name"')
+    if summary is not None and fh.get("name", "").strip().lower() not in ("", "none", "unknown"):
+        # ported from the server version's validator: every evidence item must quote a number of the summary
+        ev = fh.get("evidence") or []
+        if not isinstance(ev, list) or not ev:
+            raise ValueError("a family hypothesis needs evidence: a list of strings quoting numbers from the summary")
+        nums = _numbers(summary)
+        for e in ev:
+            if not isinstance(e, str) or not (_numbers(e) & nums):
+                raise ValueError(f"evidence item {e!r} does not quote any number from the graph summary")
     plan = d.get("plan")
     if not isinstance(plan, list):
         raise ValueError("plan must be a list")
     for step in plan:
+        if not isinstance(step, dict):
+            raise ValueError("each plan step must be an object {\"tool\": ..., \"args\": {...}, \"why\": ...}")
         if step.get("tool") not in ALLOWED:
             raise ValueError(f"unknown tool {step.get('tool')!r}; allowed: {sorted(ALLOWED)}")
         if not isinstance(step.get("args", {}), dict):
@@ -95,19 +116,19 @@ class Agents:
                 return d, "llm"
             except Exception as e:  # noqa: BLE001  (parse/schema/backend errors -> one retry, then default)
                 err = str(e)[:300]
-                self.trace("llm_invalid", agent=agent, error=err)
+                self.trace("llm_invalid", agent=agent, error=err, raw=str(getattr(self.b, "last_raw", ""))[:1500])
         self.trace("llm_fallback", agent=agent)
         return default, "fallback"
 
     def solver(self, payload, default):
-        return self._ask("solver", SOLVER_SYS, payload, _valid_plan, default)
+        return self._ask("solver", SOLVER_SYS, payload, lambda d: _valid_plan(d, payload.get("summary")), default)
 
     def critic(self, payload):
         return self._ask("critic", CRITIC_SYS, payload, _valid_critic,
                          {"verdict": "accept", "objections": [], "requested_checks": []})
 
     def checkpoint(self, payload, default):
-        return self._ask("solver", CHECKPOINT_SYS, payload, _valid_plan, default)
+        return self._ask("solver", CHECKPOINT_SYS, payload, lambda d: _valid_plan(d, payload.get("summary")), default)
 
     def verifier(self, payload):
         return self._ask("verifier", VERIFIER_SYS, payload, _valid_verifier,

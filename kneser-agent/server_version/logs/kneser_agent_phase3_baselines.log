@@ -1,0 +1,25 @@
+{"id": "gdb7b08", "name": "K(21,2)", "method": "indep_cpsat", "status": "ok", "lower": 20, "upper": null, "time": 0.6, "wall": 0.6}
+{"id": "gdb7b08", "name": "K(21,2)", "method": "clique_cover_best", "status": "ok", "lower": null, "upper": 21, "time": 0.6, "wall": 118.52}
+{"id": "gdb7b08", "name": "K(21,2)", "method": "frac_cover", "status": "ok", "lower": null, "upper": "21", "time": 10.55, "wall": 37.66}
+{"id": "gdb7b08", "name": "K(21,2)", "method": "sat_minrank_f2", "status": "timeout", "lower": null, "upper": null, "time": 120.16, "wall": 120.16}
+{"id": "gdb7b08", "name": "K(21,2)", "method": "lambda_search", "status": "n/a (size)", "lower": null, "upper": null, "time": null, "wall": 0.0}
+{"id": "gdb7b08", "name": "K(21,2)", "method": "pincer", "status": "ok", "lower": "20", "upper": "21", "time": 121.4, "wall": 121.4}
+{"id": "gdb7b08", "name": "K(21,2)", "method": "minrank_agent", "status": "ok", "lower": 20, "upper": 20.0, "time": 1.64, "wall": 2.12}
+{"id": "gdb7b08", "name": "K(21,2)", "standard_best": {"lower": "20", "upper": "21", "lower_by": "indep_cpsat", "upper_by": "clique_cover_best", "exact": false, "time": 0.6, "lower_float": 20.0, "upper_float": 21.0}}
+{"id": "gd73995", "name": "K(13,3)", "method": "indep_cpsat", "status": "ok", "lower": 66, "upper": null, "time": 0.6, "wall": 0.61}
+{"id": "gd73995", "name": "K(13,3)", "method": "clique_cover_best", "status": "ok", "lower": null, "upper": 72, "time": 0.62, "wall": 118.59}
+{"id": "gd73995", "name": "K(13,3)", "method": "frac_cover", "status": "ok", "lower": null, "upper": "17177207/240240", "time": 57.56, "wall": 57.79}
+{"id": "gd73995", "name": "K(13,3)", "method": "sat_minrank_f2", "status": "n/a (size)", "lower": null, "upper": null, "time": null, "wall": 6.37}
+{"id": "gd73995", "name": "K(13,3)", "method": "lambda_search", "status": "n/a (size)", "lower": null, "upper": null, "time": null, "wall": 0.0}
+{"id": "gd73995", "name": "K(13,3)", "method": "pincer", "status": "ok", "lower": "66", "upper": "25926217/360360", "time": 120.95, "wall": 120.95}
+{"id": "gd73995", "name": "K(13,3)", "method": "minrank_agent", "status": "ok", "lower": 66, "upper": 66.0, "time": 1.39, "wall": 1.82}
+{"id": "gd73995", "name": "K(13,3)", "standard_best": {"lower": "66", "upper": "17177207/240240", "lower_by": "indep_cpsat", "upper_by": "frac_cover", "exact": false, "time": 57.56, "lower_float": 66.0, "upper_float": 71.50019563769564}}
+{"id": "g6fd833", "name": "K(12,4)", "method": "indep_cpsat", "status": "ok", "lower": 165, "upper": null, "time": 0.77, "wall": 0.79}
+{"id": "g6fd833", "name": "K(12,4)", "method": "clique_cover_best", "status": "ok", "lower": null, "upper": 170, "time": 0.87, "wall": 119.19}
+{"id": "g6fd833", "name": "K(12,4)", "method": "frac_cover", "status": "ok", "lower": null, "upper": "29729759/180180", "time": 15.55, "wall": 15.55}
+{"id": "g6fd833", "name": "K(12,4)", "method": "sat_minrank_f2", "status": "n/a (size)", "lower": null, "upper": null, "time": null, "wall": 6.36}
+{"id": "g6fd833", "name": "K(12,4)", "method": "lambda_search", "status": "n/a (size)", "lower": null, "upper": null, "time": null, "wall": 0.0}
+{"id": "g6fd833", "name": "K(12,4)", "method": "pincer", "status": "ok", "lower": "165", "upper": "165", "time": 3.24, "wall": 3.24}
+{"id": "g6fd833", "name": "K(12,4)", "method": "minrank_agent", "status": "ok", "lower": 165, "upper": 165.0, "time": 1.16, "wall": 1.53}
+{"id": "g6fd833", "name": "K(12,4)", "standard_best": {"lower": "165", "upper": "29729759/180180", "lower_by": "indep_cpsat", "upper_by": "frac_cover", "exact": false, "time": 15.55, "lower_float": 165.0, "upper_float": 165.00032745032746}}
+{"id": "gbb1330", "name": "K(11,5)", "method": "indep_cpsat", "status": "ok", "lower": 210, "upper": null, "time": 0.58, "wall": 0.58}

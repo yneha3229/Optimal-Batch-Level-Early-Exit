@@ -1,0 +1,138 @@
+{
+ "indep_cpsat": {
+  "status": "ok",
+  "lower": 66,
+  "time": 0.6,
+  "alpha_proven": true,
+  "alpha_upper": 66,
+  "history": [
+   [
+    0.6,
+    66
+   ]
+  ],
+  "wall": 0.61
+ },
+ "standard_best": {
+  "lower": "66",
+  "upper": "17177207/240240",
+  "lower_by": "indep_cpsat",
+  "upper_by": "frac_cover",
+  "exact": false,
+  "time": 57.56,
+  "lower_float": 66.0,
+  "upper_float": 71.50019563769564
+ },
+ "clique_cover_best": {
+  "status": "ok",
+  "upper": 72,
+  "time": 0.62,
+  "proven_optimal_cover": false,
+  "cpsat_used": true,
+  "history": [
+   [
+    0.57,
+    75,
+    "heuristic"
+   ],
+   [
+    0.59,
+    73,
+    "heuristic"
+   ],
+   [
+    0.62,
+    72,
+    "heuristic"
+   ]
+  ],
+  "wall": 118.59
+ },
+ "frac_cover": {
+  "status": "ok",
+  "upper": "17177207/240240",
+  "upper_float": 71.50019563769564,
+  "time": 57.56,
+  "lp_optimal": true,
+  "history": [
+   [
+    54.61,
+    "460688/6435"
+   ],
+   [
+    54.93,
+    "51585241/720720"
+   ],
+   [
+    55.24,
+    "5157811/72072"
+   ],
+   [
+    55.55,
+    "51557183/720720"
+   ],
+   [
+    55.89,
+    "51548773/720720"
+   ],
+   [
+    56.27,
+    "25772129/360360"
+   ],
+   [
+    56.59,
+    "5726507/80080"
+   ],
+   [
+    56.92,
+    "25767661/360360"
+   ],
+   [
+    57.23,
+    "17177357/240240"
+   ],
+   [
+    57.56,
+    "17177207/240240"
+   ]
+  ],
+  "wall": 57.79
+ },
+ "sat_minrank_f2": {
+  "status": "n/a (size)",
+  "why": "CNF units 3133416 > 1000000 (Pincer's limit)",
+  "wall": 6.37
+ },
+ "lambda_search": {
+  "status": "n/a (size)",
+  "why": "n * t = 572 > 150 for t = 2",
+  "wall": 0.0
+ },
+ "pincer": {
+  "status": "ok",
+  "lower": "66",
+  "upper": "25926217/360360",
+  "lower_float": 66.0,
+  "upper_float": 71.94532412032412,
+  "mr": [
+   66,
+   72
+  ],
+  "time": 120.95,
+  "graph_build_s": 0.84,
+  "verified": true,
+  "steps": 11,
+  "stopped": "budget",
+  "wall": 120.95
+ },
+ "minrank_agent": {
+  "status": "ok",
+  "lower": 66,
+  "upper": 66.0,
+  "field": 7,
+  "exact": true,
+  "time": 1.39,
+  "fields_tried": 4,
+  "wall": 1.82
+ }
+}

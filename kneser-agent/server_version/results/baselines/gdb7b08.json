@@ -1,0 +1,104 @@
+{
+ "indep_cpsat": {
+  "status": "ok",
+  "lower": 20,
+  "time": 0.6,
+  "alpha_proven": true,
+  "alpha_upper": 20,
+  "history": [
+   [
+    0.6,
+    20
+   ]
+  ],
+  "wall": 0.6
+ },
+ "standard_best": {
+  "lower": "20",
+  "upper": "21",
+  "lower_by": "indep_cpsat",
+  "upper_by": "clique_cover_best",
+  "exact": false,
+  "time": 0.6,
+  "lower_float": 20.0,
+  "upper_float": 21.0
+ },
+ "clique_cover_best": {
+  "status": "ok",
+  "upper": 21,
+  "time": 0.6,
+  "proven_optimal_cover": false,
+  "cpsat_used": true,
+  "history": [
+   [
+    0.57,
+    23,
+    "heuristic"
+   ],
+   [
+    0.59,
+    22,
+    "heuristic"
+   ],
+   [
+    0.6,
+    21,
+    "heuristic"
+   ]
+  ],
+  "wall": 118.52
+ },
+ "frac_cover": {
+  "status": "ok",
+  "upper": "21",
+  "upper_float": 21.0,
+  "time": 10.55,
+  "lp_optimal": true,
+  "history": [
+   [
+    10.55,
+    "21"
+   ]
+  ],
+  "wall": 37.66
+ },
+ "sat_minrank_f2": {
+  "status": "timeout",
+  "minrk2_lower": null,
+  "asked_r": 20,
+  "time": 120.16,
+  "wall": 120.16
+ },
+ "lambda_search": {
+  "status": "n/a (size)",
+  "why": "n * t = 420 > 150 for t = 2",
+  "wall": 0.0
+ },
+ "pincer": {
+  "status": "ok",
+  "lower": "20",
+  "upper": "21",
+  "lower_float": 20.0,
+  "upper_float": 21.0,
+  "mr": [
+   20,
+   21
+  ],
+  "time": 121.4,
+  "graph_build_s": 0.92,
+  "verified": true,
+  "steps": 15,
+  "stopped": "budget",
+  "wall": 121.4
+ },
+ "minrank_agent": {
+  "status": "ok",
+  "lower": 20,
+  "upper": 20.0,
+  "field": 17,
+  "exact": true,
+  "time": 1.64,
+  "fields_tried": 7,
+  "wall": 2.12
+ }
+}

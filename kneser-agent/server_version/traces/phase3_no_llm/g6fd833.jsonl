@@ -1,0 +1,60 @@
+{"t": 0.012, "wall": "12:27:00.584", "kind": "run_start", "graph": "g6fd833", "n": 495, "mode": "no_llm", "budget": 300.0, "cores": [32, 33, 34, 35, 36, 37, 38, 39], "model": null}
+{"t": 0.012, "wall": "12:27:00.584", "kind": "task_queued", "task": "describe#1", "tool": "describe", "args": {}, "priority": 1000, "source": "scheduler"}
+{"t": 0.013, "wall": "12:27:00.584", "kind": "task_queued", "task": "indep_set#2", "tool": "indep_set", "args": {"restarts": 4, "seed": 0}, "priority": 900, "source": "scheduler"}
+{"t": 0.013, "wall": "12:27:00.584", "kind": "task_queued", "task": "clique_cover#3", "tool": "clique_cover", "args": {"tabu_iters": 20000, "seed": 0}, "priority": 800, "source": "scheduler"}
+{"t": 0.017, "wall": "12:27:00.589", "kind": "tool_start", "task": "describe#1", "tool": "describe", "args": {}, "pid": 394024, "cores": [32, 33, 34, 35], "source": "scheduler"}
+{"t": 0.021, "wall": "12:27:00.592", "kind": "tool_start", "task": "indep_set#2", "tool": "indep_set", "args": {"restarts": 4, "seed": 0}, "pid": 394025, "cores": [36], "source": "scheduler"}
+{"t": 0.024, "wall": "12:27:00.596", "kind": "tool_start", "task": "clique_cover#3", "tool": "clique_cover", "args": {"tabu_iters": 20000, "seed": 0}, "pid": 394026, "cores": [37], "source": "scheduler"}
+{"t": 0.369, "wall": "12:27:00.940", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 117, "certificate_id": "indep-001", "tool": "indep_set"}
+{"t": 0.369, "wall": "12:27:00.940", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 117, "certificate_id": "indep-001", "tool": "indep_set"}
+{"t": 0.369, "wall": "12:27:00.940", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 117, "tool": "indep_set"}}
+{"t": 0.385, "wall": "12:27:00.956", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 200, "certificate_id": "cover-002", "tool": "clique_cover"}
+{"t": 0.385, "wall": "12:27:00.956", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 200, "tool": "clique_cover"}}
+{"t": 0.395, "wall": "12:27:00.967", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 193, "certificate_id": "cover-003", "tool": "clique_cover"}
+{"t": 0.396, "wall": "12:27:00.967", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 193, "tool": "clique_cover"}}
+{"t": 0.397, "wall": "12:27:00.969", "kind": "board_update", "bound": "lower", "quantity": "beta", "value": 165, "certificate_id": "indep-004", "tool": "indep_set"}
+{"t": 0.397, "wall": "12:27:00.969", "kind": "board_update", "bound": "lower", "quantity": "alpha", "value": 165, "certificate_id": "indep-004", "tool": "indep_set"}
+{"t": 0.398, "wall": "12:27:00.969", "kind": "event", "name": "NEW_LOWER", "detail": {"L": 165, "tool": "indep_set"}}
+{"t": 0.444, "wall": "12:27:01.016", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 171, "certificate_id": "cover-005", "tool": "clique_cover"}
+{"t": 0.445, "wall": "12:27:01.016", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 171, "tool": "clique_cover"}}
+{"t": 0.465, "wall": "12:27:01.037", "kind": "tool_stop", "task": "describe#1", "tool": "describe", "seconds": 0.45, "how": "exited", "reason": null}
+{"t": 0.466, "wall": "12:27:01.037", "kind": "describe", "summary": "n = 495 vertices, m = 17325 edges, density 0.1417\ndegree min 70, max 70, regular: True\ntriangles: 5775 (exact)\ncommon neighbours of adjacent pairs (3000 pairs, sampled): value->count {1: 3000}\ncommon neighbours of non-adjacent pairs (3000 sampled pairs): {5: 1564, 15: 1191, 35: 245}\ngreedy clique size 3, greedy independent set size 165\nspectrum (5 distinct eigenvalues; exact multiplicities): 70 (x1), 15 (x54), 1 (x275), -5 (x154), -35 (x11)", "seconds": 0.31}
+{"t": 0.47, "wall": "12:27:01.041", "kind": "candidates", "count": 462, "top": [{"p": 7, "theta": 15, "c": 6, "rank_pred": 166}, {"p": 7, "theta": 1, "c": 6, "rank_pred": 166}, {"p": 23, "theta": 70, "c": 22, "rank_pred": 219}, {"p": 23, "theta": 1, "c": 22, "rank_pred": 219}, {"p": 5, "theta": 1, "c": 4, "rank_pred": 220}, {"p": 11, "theta": 1, "c": 10, "rank_pred": 220}, {"p": 13, "theta": 1, "c": 12, "rank_pred": 220}, {"p": 17, "theta": 1, "c": 16, "rank_pred": 220}]}
+{"t": 0.47, "wall": "12:27:01.042", "kind": "plan_accepted", "source": "default", "hypothesis": {"name": "none", "params": {}, "confidence": 0.0, "evidence": []}, "predictions": {}, "plan": [{"tool": "code_rules", "args": {"rule": "spectral"}, "why": "default: all primes <= n by rank_pred"}, {"tool": "frac_cover", "args": {}, "why": "default"}], "settings": {}, "stop_when": "L == U or budget", "unresolved_objections": []}
+{"t": 0.477, "wall": "12:27:01.048", "kind": "task_queued", "task": "frac_cover#4", "tool": "frac_cover", "args": {"init_cliques": "<171 items>"}, "priority": 60, "source": "default"}
+{"t": 0.494, "wall": "12:27:01.066", "kind": "settings_change", "what": "deferred 450 (p, theta) pairs with rank_pred >= U = 171", "why": "plan applied"}
+{"t": 0.495, "wall": "12:27:01.066", "kind": "spectral_queue", "size": 3, "head": [{"p": 7, "theta": 15, "rank_pred": 166, "source": "plan"}, {"p": 3, "theta": 70, "rank_pred": 54, "source": "plan"}, {"p": 2, "theta": 15, "rank_pred": 1, "source": "plan"}]}
+{"t": 0.495, "wall": "12:27:01.066", "kind": "tool_done", "task": "describe#1", "tool": "describe", "summary": {"seconds": 0.31}}
+{"t": 0.502, "wall": "12:27:01.073", "kind": "tool_start", "task": "frac_cover#4", "tool": "frac_cover", "args": {"init_cliques": "<171 items>"}, "pid": 394238, "cores": [32], "source": "default"}
+{"t": 0.503, "wall": "12:27:01.074", "kind": "task_queued", "task": "spectral#5", "tool": "spectral", "args": {"p": 7, "c": 6, "theta": 15, "rank_pred": 166, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 0.51, "wall": "12:27:01.081", "kind": "tool_start", "task": "spectral#5", "tool": "spectral", "args": {"p": 7, "c": 6, "theta": 15, "rank_pred": 166, "seed": 0}, "pid": 394239, "cores": [33], "source": "plan"}
+{"t": 0.51, "wall": "12:27:01.082", "kind": "task_queued", "task": "spectral#6", "tool": "spectral", "args": {"p": 3, "c": 2, "theta": 70, "rank_pred": 54, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 0.518, "wall": "12:27:01.090", "kind": "tool_start", "task": "spectral#6", "tool": "spectral", "args": {"p": 3, "c": 2, "theta": 70, "rank_pred": 54, "seed": 0}, "pid": 394240, "cores": [34], "source": "plan"}
+{"t": 0.519, "wall": "12:27:01.091", "kind": "task_queued", "task": "spectral#7", "tool": "spectral", "args": {"p": 2, "c": 1, "theta": 15, "rank_pred": 1, "seed": 0}, "priority": 100, "source": "plan"}
+{"t": 0.526, "wall": "12:27:01.097", "kind": "tool_start", "task": "spectral#7", "tool": "spectral", "args": {"p": 2, "c": 1, "theta": 15, "rank_pred": 1, "seed": 0}, "pid": 394292, "cores": [35], "source": "plan"}
+{"t": 0.531, "wall": "12:27:01.102", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 170, "certificate_id": "cover-006", "tool": "clique_cover"}
+{"t": 0.531, "wall": "12:27:01.102", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 170, "tool": "clique_cover"}}
+{"t": 0.886, "wall": "12:27:01.457", "kind": "tool_stop", "task": "spectral#6", "tool": "spectral", "seconds": 0.37, "how": "exited", "reason": null}
+{"t": 0.886, "wall": "12:27:01.458", "kind": "tool_report", "task": "spectral#6", "tool": "spectral", "p": 3, "c": 2, "theta": 70, "rank": null, "cap": 169, "seconds": 0.066, "rank_pred": 54, "stopped": false}
+{"t": 0.887, "wall": "12:27:01.458", "kind": "tool_done", "task": "spectral#6", "tool": "spectral", "summary": {"rank": null, "cap": 169}}
+{"t": 0.89, "wall": "12:27:01.461", "kind": "tool_stop", "task": "spectral#5", "tool": "spectral", "seconds": 0.38, "how": "exited", "reason": null}
+{"t": 0.89, "wall": "12:27:01.462", "kind": "tool_report", "task": "spectral#5", "tool": "spectral", "p": 7, "c": 6, "theta": 15, "rank": null, "cap": 169, "seconds": 0.114, "rank_pred": 166, "stopped": false}
+{"t": 0.89, "wall": "12:27:01.462", "kind": "tool_done", "task": "spectral#5", "tool": "spectral", "summary": {"rank": null, "cap": 169}}
+{"t": 0.933, "wall": "12:27:01.504", "kind": "tool_report", "task": "spectral#7", "tool": "spectral", "p": 2, "c": 1, "theta": 15, "rank": 165, "cap": 169, "seconds": 0.217, "rank_pred": 1, "stopped": false}
+{"t": 0.939, "wall": "12:27:01.510", "kind": "tool_stop", "task": "spectral#7", "tool": "spectral", "seconds": 0.41, "how": "exited", "reason": null}
+{"t": 0.948, "wall": "12:27:01.519", "kind": "board_update", "bound": "upper", "quantity": "minrk_2", "value": 165, "certificate_id": "spec2-007", "tool": "spectral"}
+{"t": 0.948, "wall": "12:27:01.519", "kind": "board_update", "bound": "upper", "quantity": "beta", "value": 165, "certificate_id": "spec2-007", "tool": "spectral"}
+{"t": 0.948, "wall": "12:27:01.520", "kind": "event", "name": "NEW_UPPER", "detail": {"U": 165, "tool": "spectral"}}
+{"t": 0.948, "wall": "12:27:01.520", "kind": "event", "name": "CLOSED", "detail": {"L": 165, "U": 165}}
+{"t": 0.949, "wall": "12:27:01.520", "kind": "tool_stop_request", "task": "indep_set#2", "tool": "indep_set", "reason": "L == U"}
+{"t": 0.949, "wall": "12:27:01.520", "kind": "tool_stop_request", "task": "clique_cover#3", "tool": "clique_cover", "reason": "L == U"}
+{"t": 0.949, "wall": "12:27:01.520", "kind": "tool_stop_request", "task": "frac_cover#4", "tool": "frac_cover", "reason": "L == U"}
+{"t": 0.949, "wall": "12:27:01.520", "kind": "tool_done", "task": "spectral#7", "tool": "spectral", "summary": {"rank": 165, "cap": 169}}
+{"t": 1.048, "wall": "12:27:01.620", "kind": "tool_stop", "task": "clique_cover#3", "tool": "clique_cover", "seconds": 1.02, "how": "exited", "reason": "L == U"}
+{"t": 1.102, "wall": "12:27:01.673", "kind": "tool_stop", "task": "frac_cover#4", "tool": "frac_cover", "seconds": 0.6, "how": "exited", "reason": "L == U"}
+{"t": 1.107, "wall": "12:27:01.678", "kind": "tool_stop", "task": "indep_set#2", "tool": "indep_set", "seconds": 1.09, "how": "exited", "reason": "L == U"}
+{"t": 1.15, "wall": 1.15, "kind": "run_end", "L": 165, "U": "165", "proven": true, "stopped": "L == U"}
+{"t": 1.641, "wall": "12:27:02.212", "kind": "verify_check", "check": "independent_set", "ok": true, "detail": "165 vertices, no edge inside (13530 pairs tested)", "value": 165}
+{"t": 1.641, "wall": "12:27:02.212", "kind": "verify_check", "check": "spectral_code", "ok": true, "p": 2, "c": 1, "claimed_rank": 165, "fit": true, "freivalds_passed": 30, "freivalds_rounds": 30, "freivalds_error_bound": "p^-30", "exact_rank_own": 165, "sub_ok": true}
+{"t": 1.641, "wall": "12:27:02.213", "kind": "verify_check", "check": "decode_simulation", "ok": true, "trials": 3, "receivers": 495, "transmissions": 165, "failed_decodings": 0, "sub_ok": true}
+{"t": 1.641, "wall": "12:27:02.213", "kind": "verdict", "verdict": "proven", "analysis": null, "checks_ok": true}
