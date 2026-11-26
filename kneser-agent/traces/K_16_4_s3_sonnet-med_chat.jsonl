@@ -1,0 +1,22 @@
+{"t": 0.009, "ev": "input", "graph": "K_16_4_s3_sonnet-med", "receivers": 1820, "llm": "chat", "family_rule": true}
+{"t": 0.058, "ev": "start", "tool": "describe"}
+{"t": 0.058, "ev": "start", "tool": "indep"}
+{"t": 0.058, "ev": "start", "tool": "cover"}
+{"t": 0.486, "ev": "board", "side": "lower", "value": 455, "tool": "greedy independent set", "bracket": [455, 1820]}
+{"t": 1.585, "ev": "board", "side": "upper", "value": 529, "tool": "clique_cover", "bracket": [455, 529]}
+{"t": 92.046, "ev": "done", "tool": "describe", "seconds": 91.863}
+{"t": 92.046, "ev": "summary", "summary": {"receivers": 1820, "edges": 450450, "degree_min": 495, "degree_max": 495, "regular": true, "common_neighbours_adjacent": [70], "common_neighbours_nonadjacent": [126, 210, 330], "triangles_through_sampled_vertex": 17325, "spectrum_integral": true, "eigenvalues": [[495, 1], [45, 104], [1, 1260], [-9, 440], [-165, 15]], "distinct_eigenvalues": 5, "seconds": 91.863}}
+{"t": 92.046, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 98.251, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {"n": 16, "k": 4}, "confidence": 0.9, "evidence": ["receivers = 1820 and C(16,4) = 1820", "regular with degree_min = degree_max = 495 and C(12,4) = 495", "spectrum_integral is true with 5 distinct eigenvalues, top eigenvalue 495 equal to the degree", "lower bound 455 equals C(15,3) = 455, the Erdos-Ko-Rado independent set size"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n, k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 16, "k": 4}, "why": "query the library rule for K(16,4) to get a (p, c) pair for a code of length near 455"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback over integer spectrum in case the rule names no field"}], "notes": "Likely exact Kneser K(16,4); lower 455 vs upper 529 leaves a gap to close with a linear code M = I + cA."}}
+{"t": 98.251, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 105.959, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 105.959, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n, k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 16, "k": 4}, "why": "query the library rule for K(16,4) to get a (p, c) pair for a code of length near 455"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback over integer spectrum in case the rule names no field"}], "hypothesis": {"name": "Kneser", "params": {"n": 16, "k": 4}, "confidence": 0.9, "evidence": ["receivers = 1820 and C(16,4) = 1820", "regular with degree_min = degree_max = 495 and C(12,4) = 495", "spectrum_integral is true with 5 distinct eigenvalues, top eigenvalue 495 equal to the degree", "lower bound 455 equals C(15,3) = 455, the Erdos-Ko-Rado independent set size"]}, "critic_rounds": 1}
+{"t": 105.959, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 16, "k": 4}]}]}
+{"t": 105.959, "ev": "rule", "tool": "family_rule", "args": {"n": 16, "k": 4}, "result": {"p": 2, "c": 1}}
+{"t": 105.959, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "family rule"}
+{"t": 106.277, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 455, "seconds": 0.317}
+{"t": 106.277, "ev": "board", "side": "upper", "value": 455, "tool": "linear_code", "bracket": [455, 455]}
+{"t": 106.277, "ev": "event", "name": "bracket_closed", "bracket": [455, 455]}
+{"t": 106.732, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 111.437, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Proven: the bracket is [455, 455] for 1820 receivers. The lower bound is an independent set of size 455, and the upper bound is a linear code over F_2 with c = 1 that meets it. All four checks passed: independent_set, code_fits, factorization and decoding. The agent tried one code, used 2 LLM calls and one critic round, and the critic accepted. Wall time was 106.277 s, of which 92.367 s was compute and 13.91 s was LLM time, so compute dominates. No baselines were run, so nothing can be said about wins or losses against them. Nothing looks suspicious: the hypothesis K(16,4) matches the numbers and the bound equals 455."}}
+{"t": 111.437, "ev": "verdict", "verdict": "proven", "bracket": [455, 455], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

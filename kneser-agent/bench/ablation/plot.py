@@ -51,7 +51,7 @@ for ax, (title, vals, top) in zip(axes, panels):
 fig.suptitle("Agent reasoning quality by model (blind runs, same prompts and graphs)", x=0.01, ha="left",
              color=TXT, fontsize=13, fontweight="bold")
 note = ("Final certified bracket identical for every model: " if same else "Brackets differ between models: ") + \
-    ", ".join(f"{g} {sorted(v)[0] if same else sorted(v)}" for g, v in brackets.items()) + ". One run per cell."
+    ", ".join(f"{g} {sorted(v)[0] if same else sorted(v)}" for g, v in brackets.items()) + ". One run per cell. Claude rows: fixed code (d22d46c); Qwen rows: GPU server, before that fix."
 fig.text(0.01, 0.005, note, color=SUB, fontsize=8)
 fig.tight_layout(rect=(0, 0.04, 1, 0.93))
 fig.savefig(HERE / "model_ablation.png", facecolor="white")

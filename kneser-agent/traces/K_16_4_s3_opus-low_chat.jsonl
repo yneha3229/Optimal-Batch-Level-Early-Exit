@@ -1,0 +1,22 @@
+{"t": 0.001, "ev": "input", "graph": "K_16_4_s3_opus-low", "receivers": 1820, "llm": "chat", "family_rule": true}
+{"t": 0.05, "ev": "start", "tool": "describe"}
+{"t": 0.05, "ev": "start", "tool": "indep"}
+{"t": 0.05, "ev": "start", "tool": "cover"}
+{"t": 0.61, "ev": "board", "side": "lower", "value": 455, "tool": "greedy independent set", "bracket": [455, 1820]}
+{"t": 1.901, "ev": "board", "side": "upper", "value": 529, "tool": "clique_cover", "bracket": [455, 529]}
+{"t": 91.322, "ev": "done", "tool": "describe", "seconds": 91.176}
+{"t": 91.322, "ev": "summary", "summary": {"receivers": 1820, "edges": 450450, "degree_min": 495, "degree_max": 495, "regular": true, "common_neighbours_adjacent": [70], "common_neighbours_nonadjacent": [126, 210, 330], "triangles_through_sampled_vertex": 17325, "spectrum_integral": true, "eigenvalues": [[495, 1], [45, 104], [1, 1260], [-9, 440], [-165, 15]], "distinct_eigenvalues": 5, "seconds": 91.176}}
+{"t": 91.322, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 97.031, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["receivers 1820, regular degree 495", "spectrum_integral true with 5 distinct eigenvalues (495, 45, 1, -9, -165)", "common_neighbours_adjacent [70]"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 16, "k": 4}, "why": "query structural rule if binomial_match confirms (16,4); may be an exception"}, {"tool": "spectral", "args": {"top": 4}, "why": "generic fallback code search"}, {"tool": "independent_set", "args": {"restarts": 50}, "why": "raise lower bound from 455 if needed"}], "notes": "Kneser params to be confirmed by binomial_match before relying on them."}}
+{"t": 97.031, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 100.239, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 100.239, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 16, "k": 4}, "why": "query structural rule if binomial_match confirms (16,4); may be an exception"}, {"tool": "spectral", "args": {"top": 4}, "why": "generic fallback code search"}, {"tool": "independent_set", "args": {"restarts": 50}, "why": "raise lower bound from 455 if needed"}], "hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["receivers 1820, regular degree 495", "spectrum_integral true with 5 distinct eigenvalues (495, 45, 1, -9, -165)", "common_neighbours_adjacent [70]"]}, "critic_rounds": 1}
+{"t": 100.239, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 16, "k": 4}]}]}
+{"t": 100.239, "ev": "rule", "tool": "family_rule", "args": {"n": 16, "k": 4}, "result": {"p": 2, "c": 1}}
+{"t": 100.239, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "family rule"}
+{"t": 100.413, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 455, "seconds": 0.17}
+{"t": 100.414, "ev": "board", "side": "upper", "value": 455, "tool": "linear_code", "bracket": [455, 455]}
+{"t": 100.414, "ev": "event", "name": "bracket_closed", "bracket": [455, 455]}
+{"t": 100.608, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 106.314, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Proven: bracket [455, 455] for 1820 receivers. Lower bound is an independent set of size 455 (check passed); upper bound is a linear code M = I + A over F_2 (p=2, c=1) whose length meets the lower bound, with code_fits, factorization and decoding checks all passing. Only 1 code was tried, after 2 LLM calls and 1 critic round. Wall time 100.414 s, of which compute 91.499 s (mostly the initial describe step), LLM 8.915 s, warmup 1.643 s. Baselines were not run, so no accuracy or time comparison is possible. Minor caveat: the Kneser hypothesis was recorded with empty params; the certificate does not depend on it."}}
+{"t": 106.314, "ev": "verdict", "verdict": "proven", "bracket": [455, 455], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

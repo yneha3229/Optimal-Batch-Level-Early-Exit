@@ -1,0 +1,25 @@
+{"t": 0.001, "ev": "input", "graph": "K_16_4-del0.01_s0_opus-low", "receivers": 1820, "llm": "chat", "family_rule": true}
+{"t": 0.079, "ev": "start", "tool": "describe"}
+{"t": 0.079, "ev": "start", "tool": "indep"}
+{"t": 0.079, "ev": "start", "tool": "cover"}
+{"t": 0.707, "ev": "board", "side": "lower", "value": 455, "tool": "greedy independent set", "bracket": [455, 1820]}
+{"t": 1.897, "ev": "board", "side": "upper", "value": 534, "tool": "clique_cover", "bracket": [455, 534]}
+{"t": 79.298, "ev": "done", "tool": "describe", "seconds": 79.039}
+{"t": 79.298, "ev": "summary", "summary": {"receivers": 1820, "edges": 445945, "degree_min": 482, "degree_max": 495, "regular": false, "common_neighbours_adjacent": [63, 64, 65, 66, 67, 68, 69, 70], "common_neighbours_nonadjacent": [65, 66, 67, 68, 69, 70, 116, 117, 118, 119, 120, 121], "triangles_through_sampled_vertex": 17142, "spectrum_integral": false, "eigenvalues": [[490.0597, 1], [45.7809, 1], [45.6586, 1], [45.5677, 1], [45.5513, 1], [45.5333, 1], [45.506, 1], [45.4775, 1], [45.4474, 1], [45.4303, 1], [45.3947, 1], [45.3922, 1], [45.3497, 1], [45.323, 1]], "distinct_eigenvalues": 1820, "seconds": 79.039}}
+{"t": 79.298, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 84.527, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "perturbed Kneser", "params": {}, "confidence": 0.6, "evidence": ["receivers 1820", "degree_min 482, degree_max 495, regular false", "spectrum_integral false", "board lower 455, upper 534"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "find (n,k) for receivers 1820 and degree up to 495"}, {"tool": "family_rule", "args": {"n": 16, "k": 4}, "why": "query rule for the candidate Kneser parameters once matched"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback since graph is not regular"}, {"tool": "independent_set", "args": {"restarts": 50}, "why": "improve lower bound 455"}], "notes": "Graph is not regular and spectrum not integral, so not an exact Kneser member; treat as perturbed."}}
+{"t": 84.527, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 88.229, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 88.229, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "find (n,k) for receivers 1820 and degree up to 495"}, {"tool": "family_rule", "args": {"n": 16, "k": 4}, "why": "query rule for the candidate Kneser parameters once matched"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback since graph is not regular"}, {"tool": "independent_set", "args": {"restarts": 50}, "why": "improve lower bound 455"}], "hypothesis": {"name": "perturbed Kneser", "params": {}, "confidence": 0.6, "evidence": ["receivers 1820", "degree_min 482, degree_max 495, regular false", "spectrum_integral false", "board lower 455, upper 534"]}, "critic_rounds": 1}
+{"t": 88.229, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 16, "k": 4}]}]}
+{"t": 88.229, "ev": "rule", "tool": "family_rule", "args": {"n": 16, "k": 4}, "result": {"p": 2, "c": 1}}
+{"t": 88.229, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "family rule"}
+{"t": 88.91, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": null, "seconds": 0.655, "rank_above": 533}
+{"t": 88.914, "ev": "start", "tool": "indep"}
+{"t": 91.839, "ev": "event", "name": "checkpoint"}
+{"t": 91.839, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 96.548, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "perturbed Kneser", "params": {"n": 16, "k": 4}, "confidence": 0.6, "evidence": ["binomial_match returned n 16, k 4", "degree_min 482, degree_max 495, regular false", "spectrum_integral false", "try_code p 2 c 1 length_above 533"]}, "plan": [], "notes": "Graph is perturbed (not regular, non-integral spectrum, 1820 distinct eigenvalues); the family code p=2,c=1 failed (length above 533) and spectral has no integer spectrum to rank. Stopping and reporting bracket [455, 534]."}}
+{"t": 96.548, "ev": "event", "name": "safety_net", "plan": [{"tool": "spectral", "args": {"top": 30}, "why": "fallback"}]}
+{"t": 96.558, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 102.262, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Nothing was certified exactly: the verdict is a gap with bracket [455, 534]. The lower bound 455 is an independent set (check passed). The upper bound 534 is a clique cover (check passed). The graph has 1820 receivers, degrees from 482 to 495 and a non-integral spectrum, so it is a perturbed Kneser K(16,4) rather than an exact member. The family code (p=2, c=1) gave a length above 533, so it did not improve the upper bound. Only 1 code was tried. Wall time was 96.5 s, of which compute was 82.9 s and LLM time 13.6 s, over 3 LLM calls. Baselines were not run, so I cannot compare accuracy or time. Nothing suspicious."}}
+{"t": 102.262, "ev": "verdict", "verdict": "gap", "bracket": [455, 534], "checks": {"independent_set": true, "clique_cover": true}}
