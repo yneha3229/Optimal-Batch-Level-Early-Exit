@@ -50,6 +50,21 @@ scheduler, a bound board that only accepts certified tool results, and an indepe
 3. vLLM JSON mode (from server `llm.py` JSONBackend): `response_format: json_object` for the `local` backend, on by
    default (`KAGENT_JSON_MODE=0` turns it off); the robust JSON parser; the raw reply is kept in `llm_invalid` events.
 
+4. A rich terminal view, `python -m kagent.view <trace> [--replay 1]` (a light port of server `demo.py` to this
+   pipeline's trace format): agent dialogue, bound board, scheduler events, verdict.
+5. The server version's rule "a wrong plan costs only time", as a safety net in the scheduler: if the LLM's plans
+   leave the bracket open after the checkpoint, the deterministic generic search still runs.
+
+After the first Qwen 32B runs (see the commit message of a46af20 and `traces/*_promptsv1_*`), more fixes in
+`kagent/` (schemas unchanged): deterministic arithmetic check of the Solver's evidence ("C(a,b) = X" claims, and
+C(n,k) = receivers for a Kneser hypothesis), tool-argument validation, bad arguments logged and skipped instead of
+crashing the run, check history shown to both agents, prompt rules (copy (n, k) from binomial_match, query the rule
+first, keep a generic step, a rule naming no field is an exception). `PROMPT_VERSION` = v3 is recorded per run.
+
+Known limit of the merged pipeline (not changed): LLM calls block the main loop, so tool results that finish during
+an LLM call enter the board only after it (the workers keep computing). The server version runs LLM calls in a
+background thread.
+
 Not ported (kept in `server_version/`): frac/tabu/CP-SAT covers, ILS independent sets, F_2 SAT, blow-up codes,
 Lanczos spectrum for large n, the CONTRADICTION/STALL events, the rich demo. They are useful but would change the
 tool vocabulary the benchmark and the reference traces use; on the Kneser benchmark the codes close the bracket.
