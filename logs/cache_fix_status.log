@@ -1,0 +1,8 @@
+2026-11-25_19:43:34 OK resplit_qqp
+2026-11-25_19:44:23 OK resplit_mnli
+2026-11-26_03:46:54 OK cert_check_qqp
+2026-11-26_03:58:08 OK cert_check_mnli
+2026-11-26_04:12:15 OK cert_check_cifar100
+2026-11-26_04:16:21 OK cert_check_mnli_d05
+2026-11-26_04:16:26 OK report_figures
+2026-11-26_04:16:36 OK make_report

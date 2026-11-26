@@ -30,6 +30,7 @@ import itertools
 import json
 import sys
 import time
+import weakref
 from multiprocessing import Pool
 from pathlib import Path
 
@@ -207,10 +208,14 @@ def make(fam: str, params: dict, cal_tr: Traces, cost: Cost):
     if fam == "random_collective":
         return plan, P.param_collective(params["tau"], params["frac_cut"], params["conf_floor"])
     if fam in ("theory", "theory+plan"):
+        # The cache is keyed on id(cal_tr), and resplit / cert_check build new traces in every job: once a job's traces
+        # are garbage-collected a later job can get the same id. Keep a weak reference and refit when the object differs,
+        # otherwise a calibration table fitted on another re-split is reused (results then depend on worker scheduling).
         key = ("cal", id(cal_tr), plan)
-        if key not in G:
-            G[key] = P.Calibration(sub_traces(cal_tr, plan))
-        return plan, theory_c(params["lam"], G[key], [LAYERS[e] for e in plan], cost)
+        ent = G.get(key)
+        if ent is None or ent[0]() is not cal_tr:
+            ent = G[key] = (weakref.ref(cal_tr), P.Calibration(sub_traces(cal_tr, plan)))
+        return plan, theory_c(params["lam"], ent[1], [LAYERS[e] for e in plan], cost)
     raise KeyError(fam)
 
 

@@ -1,0 +1,9 @@
+skip resplit_qqp
+skip resplit_mnli
+03:46:54 OK cert_check_qqp (2714 s)
+03:58:08 OK cert_check_mnli (674 s)
+04:12:15 OK cert_check_cifar100 (847 s)
+04:16:21 OK cert_check_mnli_d05 (246 s)
+04:16:26 OK report_figures (5 s)
+04:16:36 OK make_report (10 s)
+done
