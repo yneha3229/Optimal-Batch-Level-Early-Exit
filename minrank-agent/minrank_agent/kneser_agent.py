@@ -92,6 +92,7 @@ def solve(A, fallback=None, fallback_limit=120.0):
     t0 = time.perf_counter()
     out = {"recognised": None, "field": None, "upper": None, "lower": None, "exact": False, "path": ""}
     rec = recognise(A)
+    S = []
     if rec is not None:
         n, k = rec
         out["recognised"] = f"K({n},{k})"
@@ -110,9 +111,12 @@ def solve(A, fallback=None, fallback_limit=120.0):
             out["path"] = "rule did not certify"
         else:
             out["path"] = "exception instance"
+            S = greedy_independent_set(A)
+            assert is_independent(A, S)
     if fallback is not None:                       # general agent (searches fields, then the classic bounds)
         g = fallback(A, fallback_limit)
-        out.update(upper=g["upper"], lower=g["lower"], exact=g["exact"], field=g.get("field"),
+        lower = max(g["lower"] or 0, len(S))       # keep the greedy star found above
+        out.update(upper=g["upper"], lower=lower, exact=lower >= g["upper"] - 1e-9, field=g.get("field"),
                    path=(out["path"] + " -> general agent").strip(" ->"))
     out["s"] = time.perf_counter() - t0
     return out
