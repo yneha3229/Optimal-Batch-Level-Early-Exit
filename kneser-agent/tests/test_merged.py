@@ -139,3 +139,39 @@ def test_bad_agent_args_never_crash_a_run(tmp_path, monkeypatch):
     assert r["verdict"] == "proven" and r["bracket"] == [8, 8]
     evs = [e["ev"] for e in run.events]
     assert "llm_fallback" in evs and "llm_invalid" in evs
+
+
+class _Recording(_Scripted):
+    def __init__(self, replies):
+        super().__init__(replies)
+        self.prompts = []
+
+    def complete(self, agent, system, prompt):
+        self.prompts.append((agent, prompt))
+        return super().complete(agent, system, prompt)
+
+
+def test_plan_results_reach_agents_and_verifier_is_blind(tmp_path, monkeypatch):
+    """Found by blind model runs: results of checks the Solver's own plan ran never reached the check history, and
+    the Verifier's input carried the graph's name and ground truth."""
+    import kagent.pipeline as P
+    from kagent.agents import Agents
+    from kagent.pipeline import Run
+    (tmp_path / "results" / "codes").mkdir(parents=True)
+    monkeypatch.setattr(P, "ROOT", tmp_path)
+    plan = json.dumps({"family_hypothesis": {"name": "unknown", "params": {}, "confidence": 0.1, "evidence": []},
+                       "plan": [{"tool": "binomial_match", "args": {}}, {"tool": "family_rule", "args": {"n": 14, "k": 4}},
+                                {"tool": "spectral", "args": {"top": 3}}]})
+    accept = json.dumps({"verdict": "accept", "objections": [], "requested_checks": []})
+    stop = json.dumps({"family_hypothesis": {"name": "unknown", "params": {}, "confidence": 0.1, "evidence": []},
+                       "plan": []})
+    verifier = json.dumps({"checks_requested": [], "analysis": "ok"})
+    run = Run("K(14,4)", llm="none", budget=60, live=False, tag="test_history")
+    run.backend = _Recording([plan, accept, stop, verifier])
+    run.agents = Agents(run.backend, run.trace)
+    r = run.run()
+    assert r["bracket"] == [286, 287]
+    checkpoint = [p for a, p in run.backend.prompts if a == "solver"][-1]
+    assert '"binomial_match"' in checkpoint and '"family_rule"' in checkpoint and '"length"' in checkpoint
+    ver = [p for a, p in run.backend.prompts if a == "verifier"][-1]
+    assert "truth" not in ver and "K_14_4" not in ver and "K(14,4)" not in ver

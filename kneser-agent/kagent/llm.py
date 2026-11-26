@@ -98,6 +98,8 @@ class LocalBackend:
 def make(spec: str):
     if spec == "chat":
         return ChatBackend()
+    if spec.startswith("chat:"):                    # chat:<folder>, e.g. one folder per blind model run
+        return ChatBackend(spec[5:])
     if spec.startswith("local"):
         _, _, rest = spec.partition(":")
         return LocalBackend(*(rest.split("|") if rest else []))
