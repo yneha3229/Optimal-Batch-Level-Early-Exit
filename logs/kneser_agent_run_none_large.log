@@ -1,0 +1,7 @@
+K(20,4) [] [    2.41s] verdict          {"verdict": "gap", "bracket": [969, 1098], "checks": {"independent_set": true, "clique_cover": true}}
+K(20,4) ['--no-family-rule'] [    2.42s] verdict          {"verdict": "gap", "bracket": [969, 1098], "checks": {"independent_set": true, "clique_cover": true}}
+K(17,5) [] [   11.40s] verdict          {"verdict": "gap", "bracket": [1820, 2106], "checks": {"independent_set": true, "clique_cover": true}}
+K(17,5) ['--no-family-rule'] [   11.72s] verdict          {"verdict": "gap", "bracket": [1820, 2106], "checks": {"independent_set": true, "clique_cover": true}}
+K(23,4) [] [   15.77s] verdict          {"verdict": "gap", "bracket": [1540, 1789], "checks": {"independent_set": true, "clique_cover": true}}
+K(23,4) ['--no-family-rule'] [   14.89s] verdict          {"verdict": "gap", "bracket": [1540, 1789], "checks": {"independent_set": true, "clique_cover": true}}
+NONE_LARGE_DONE

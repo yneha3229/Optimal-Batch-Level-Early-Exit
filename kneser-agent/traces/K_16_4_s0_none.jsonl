@@ -3,23 +3,23 @@
 {"t": 0.01, "ev": "start", "tool": "indep"}
 {"t": 0.01, "ev": "start", "tool": "cover"}
 {"t": 0.049, "ev": "board", "side": "lower", "value": 455, "tool": "greedy independent set", "bracket": [455, 1820]}
-{"t": 0.205, "ev": "board", "side": "upper", "value": 527, "tool": "clique_cover", "bracket": [455, 527]}
-{"t": 0.496, "ev": "done", "tool": "describe", "seconds": 0.475}
-{"t": 0.496, "ev": "summary", "summary": {"receivers": 1820, "edges": 450450, "degree_min": 495, "degree_max": 495, "regular": true, "common_neighbours_adjacent": [70], "common_neighbours_nonadjacent": [126, 210, 330], "triangles_through_sampled_vertex": 17325, "spectrum_integral": true, "eigenvalues": [[495, 1], [45, 104], [1, 1260], [-9, 440], [-165, 15]], "distinct_eigenvalues": 5, "seconds": 0.475}}
-{"t": 0.496, "ev": "plan_accepted", "plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []}, "critic_rounds": 0}
-{"t": 0.497, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "spectral pred 0"}
-{"t": 0.497, "ev": "start", "tool": "code", "p": 5, "c": 4, "why": "spectral pred 120"}
-{"t": 0.497, "ev": "start", "tool": "code", "p": 11, "c": 10, "why": "spectral pred 456"}
-{"t": 0.497, "ev": "start", "tool": "code", "p": 83, "c": 82, "why": "spectral pred 545"}
-{"t": 0.498, "ev": "start", "tool": "code", "p": 13, "c": 12, "why": "spectral pred 559"}
-{"t": 0.498, "ev": "start", "tool": "code", "p": 19, "c": 18, "why": "spectral pred 559"}
-{"t": 0.498, "ev": "start", "tool": "code", "p": 3, "c": 2, "why": "spectral pred 560"}
-{"t": 0.498, "ev": "start", "tool": "code", "p": 7, "c": 6, "why": "spectral pred 560"}
-{"t": 0.808, "ev": "done", "tool": "code", "p": 11, "c": 10, "rank": null, "seconds": 0.306, "rank_above": 526}
-{"t": 0.836, "ev": "done", "tool": "code", "p": 5, "c": 4, "rank": null, "seconds": 0.337, "rank_above": 526}
-{"t": 1.112, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 455, "seconds": 0.614}
-{"t": 1.112, "ev": "board", "side": "upper", "value": 455, "tool": "linear_code", "bracket": [455, 455]}
-{"t": 1.112, "ev": "event", "name": "bracket_closed", "bracket": [455, 455]}
-{"t": 1.129, "ev": "done", "tool": "code", "p": 83, "c": 82, "rank": null, "seconds": 0.321, "rank_above": 526}
-{"t": 1.129, "ev": "event", "name": "bracket_closed", "bracket": [455, 455]}
-{"t": 1.378, "ev": "verdict", "verdict": "proven", "bracket": [455, 455], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+{"t": 0.381, "ev": "board", "side": "upper", "value": 527, "tool": "clique_cover", "bracket": [455, 527]}
+{"t": 0.547, "ev": "done", "tool": "describe", "seconds": 0.528}
+{"t": 0.547, "ev": "summary", "summary": {"receivers": 1820, "edges": 450450, "degree_min": 495, "degree_max": 495, "regular": true, "common_neighbours_adjacent": [70], "common_neighbours_nonadjacent": [126, 210, 330], "triangles_through_sampled_vertex": 17325, "spectrum_integral": true, "eigenvalues": [[495, 1], [45, 104], [1, 1260], [-9, 440], [-165, 15]], "distinct_eigenvalues": 5, "seconds": 0.528}}
+{"t": 0.547, "ev": "plan_accepted", "plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []}, "critic_rounds": 0}
+{"t": 0.548, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "spectral pred 0"}
+{"t": 0.548, "ev": "start", "tool": "code", "p": 5, "c": 4, "why": "spectral pred 120"}
+{"t": 0.548, "ev": "start", "tool": "code", "p": 11, "c": 10, "why": "spectral pred 456"}
+{"t": 0.548, "ev": "start", "tool": "code", "p": 83, "c": 82, "why": "spectral pred 545"}
+{"t": 0.548, "ev": "start", "tool": "code", "p": 13, "c": 12, "why": "spectral pred 559"}
+{"t": 0.548, "ev": "start", "tool": "code", "p": 19, "c": 18, "why": "spectral pred 559"}
+{"t": 0.548, "ev": "start", "tool": "code", "p": 3, "c": 2, "why": "spectral pred 560"}
+{"t": 0.548, "ev": "start", "tool": "code", "p": 7, "c": 6, "why": "spectral pred 560"}
+{"t": 0.902, "ev": "done", "tool": "code", "p": 11, "c": 10, "rank": null, "seconds": 0.347, "rank_above": 526}
+{"t": 0.95, "ev": "done", "tool": "code", "p": 5, "c": 4, "rank": null, "seconds": 0.395, "rank_above": 526}
+{"t": 1.04, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 455, "seconds": 0.485}
+{"t": 1.04, "ev": "board", "side": "upper", "value": 455, "tool": "linear_code", "bracket": [455, 455]}
+{"t": 1.04, "ev": "event", "name": "bracket_closed", "bracket": [455, 455]}
+{"t": 1.284, "ev": "done", "tool": "code", "p": 13, "c": 12, "rank": null, "seconds": 0.337, "rank_above": 526}
+{"t": 1.284, "ev": "event", "name": "bracket_closed", "bracket": [455, 455]}
+{"t": 1.547, "ev": "verdict", "verdict": "proven", "bracket": [455, 455], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

@@ -1,0 +1,11 @@
+{"t": 0.001, "ev": "input", "graph": "K_16_4-del0.01_s0", "receivers": 1820, "llm": "none", "family_rule": true}
+{"t": 0.011, "ev": "start", "tool": "describe"}
+{"t": 0.011, "ev": "start", "tool": "indep"}
+{"t": 0.011, "ev": "start", "tool": "cover"}
+{"t": 0.048, "ev": "board", "side": "lower", "value": 455, "tool": "greedy independent set", "bracket": [455, 1820]}
+{"t": 0.197, "ev": "board", "side": "upper", "value": 534, "tool": "clique_cover", "bracket": [455, 534]}
+{"t": 0.514, "ev": "done", "tool": "describe", "seconds": 0.493}
+{"t": 0.514, "ev": "summary", "summary": {"receivers": 1820, "edges": 445945, "degree_min": 482, "degree_max": 495, "regular": false, "common_neighbours_adjacent": [63, 64, 65, 66, 67, 68, 69, 70], "common_neighbours_nonadjacent": [65, 66, 67, 68, 69, 70, 116, 117, 118, 119, 120, 121], "triangles_through_sampled_vertex": 17142, "spectrum_integral": false, "eigenvalues": [[490.0597, 1], [45.7809, 1], [45.6586, 1], [45.5677, 1], [45.5513, 1], [45.5333, 1], [45.506, 1], [45.4775, 1], [45.4474, 1], [45.4303, 1], [45.3947, 1], [45.3922, 1], [45.3497, 1], [45.323, 1]], "distinct_eigenvalues": 1820, "seconds": 0.493}}
+{"t": 0.515, "ev": "plan_accepted", "plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []}, "critic_rounds": 0}
+{"t": 0.515, "ev": "event", "name": "checkpoint"}
+{"t": 0.525, "ev": "verdict", "verdict": "gap", "bracket": [455, 534], "checks": {"independent_set": true, "clique_cover": true}}

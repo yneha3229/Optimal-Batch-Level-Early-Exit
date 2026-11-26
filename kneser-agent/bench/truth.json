@@ -1,4 +1,11 @@
 {
+ "K_10_4_s0": {
+  "N": 210,
+  "family": "kneser",
+  "k": 4,
+  "n": 10,
+  "seed": 0
+ },
  "K_12_3_s0": {
   "N": 220,
   "family": "kneser",
@@ -17,6 +24,13 @@
   "N": 715,
   "family": "kneser",
   "k": 4,
+  "n": 13,
+  "seed": 0
+ },
+ "K_13_5_s0": {
+  "N": 1287,
+  "family": "kneser",
+  "k": 5,
   "n": 13,
   "seed": 0
  },
@@ -76,11 +90,32 @@
   "n": 17,
   "seed": 0
  },
+ "K_17_5_s0": {
+  "N": 6188,
+  "family": "kneser",
+  "k": 5,
+  "n": 17,
+  "seed": 0
+ },
+ "K_18_3-del0.01_s0": {
+  "deleted_frac": 0.01,
+  "family": "kneser with deleted edges",
+  "k": 3,
+  "n": 18,
+  "seed": 0
+ },
  "K_18_3_s0": {
   "N": 816,
   "family": "kneser",
   "k": 3,
   "n": 18,
+  "seed": 0
+ },
+ "K_20_4_s0": {
+  "N": 4845,
+  "family": "kneser",
+  "k": 4,
+  "n": 20,
   "seed": 0
  },
  "K_21_2_s0": {
@@ -95,6 +130,13 @@
   "family": "kneser",
   "k": 3,
   "n": 21,
+  "seed": 0
+ },
+ "K_23_4_s0": {
+  "N": 8855,
+  "family": "kneser",
+  "k": 4,
+  "n": 23,
   "seed": 0
  },
  "K_29_2_s0": {
@@ -130,6 +172,12 @@
   "family": "kneser",
   "k": 2,
   "n": 9,
+  "seed": 0
+ },
+ "reg_1000_6_s0": {
+  "N": 1000,
+  "d": 6,
+  "family": "random regular",
   "seed": 0
  }
 }
