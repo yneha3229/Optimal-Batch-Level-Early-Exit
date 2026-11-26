@@ -9,7 +9,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
-ORDER = [("Qwen3-4B", "Qwen3\n4B"), ("Qwen2.5-32B", "Qwen2.5\n32B"), ("haiku-med", "Haiku 5.5\nmedium"),
+ORDER = [("Qwen3-4B", "Qwen3\n4B"), ("Qwen2.5-32B", "Qwen2.5 32B\nGPU, old code"), ("Qwen2.5-32B-cpu", "Qwen2.5 32B\nCPU Q4, fixed"), ("haiku-med", "Haiku 5.5\nmedium"),
          ("sonnet-med", "Sonnet 5.5\nmedium"), ("opus-low", "Opus 5.5\nlow"), ("opus-med", "Opus 5.5\nmedium"),
          ("opus-high", "Opus 5.5\nhigh")]
 rows = [json.loads(l) for l in (HERE / "scores.jsonl").read_text().splitlines()]
