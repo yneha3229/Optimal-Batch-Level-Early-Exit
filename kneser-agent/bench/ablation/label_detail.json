@@ -134,11 +134,45 @@
    "why": "true statement or process request (checked)"
   }
  ],
+ "K_16_4_s1|Qwen2.5-32B-cpu": [
+  {
+   "objection": "The family hypothesis does not specify (n, k) parameters, and the plan relies on family_rule without querying it first.",
+   "false": false,
+   "why": "true at that point; process request"
+  },
+  {
+   "objection": "The degree of the graph is 495, but for Kneser(16,4), the degree should be C(12,3) = 220.",
+   "false": true,
+   "why": "the K(16,4) degree is C(12,4) = 495"
+  },
+  {
+   "objection": "The degree of the graph is 495, but for Kneser(16,4), the degree should be C(12,3) = 220.",
+   "false": true,
+   "why": "the K(16,4) degree is C(12,4) = 495"
+  }
+ ],
  "K_16_4_s1|haiku-med": [],
  "K_16_4_s1|sonnet-med": [],
  "K_16_4_s1|opus-low": [],
  "K_16_4_s1|opus-med": [],
  "K_16_4_s1|opus-high": [],
+ "K_16_4-del0.01_s1|Qwen2.5-32B-cpu": [
+  {
+   "objection": "The family hypothesis suggests a perturbed Kneser graph, but the spectrum is not integral and the number of distinct eigenvalues is equal to the number of receivers, which is unusual for a perturbed Kneser graph. The degree range (481 to 495) also suggests some perturbation, but the evidence is not strong enough to confirm this hypothesis without further checks.",
+   "false": true,
+   "why": "wrong inference: a perturbed Kneser graph is expected to have a non-integral spectrum with N distinct eigenvalues"
+  },
+  {
+   "objection": "The binomial_match result (n=16, k=4) does not match the number of receivers (1820) and the degree (481-495). The correct binomial match should have C(n, k) = 1820 and C(n-k, k) = 481-495, which is not the case here.",
+   "false": true,
+   "why": "binomial_match (16,4) does fit 1820 receivers"
+  },
+  {
+   "objection": "The binomial_match result (n=16, k=4) does not match the number of receivers (1820) and the degree (481-495). The correct binomial match should have N = C(n,k) = 1820 and degree = C(n-k,k) = 481-495, which is not the case for (16, 4).",
+   "false": true,
+   "why": "binomial_match (16,4) does fit 1820 receivers"
+  }
+ ],
  "K_16_4-del0.01_s1|haiku-med": [
   {
    "objection": "check_history is empty, so the (n, k) = (16, 4) hypothesis is unverified; the 1820 receivers only fit C(16,4) if binomial_match confirms it, and the 0.4 confidence is not yet supported by any check",
@@ -216,6 +250,23 @@
  "K_16_4-del0.01_s1|opus-low": [],
  "K_16_4-del0.01_s1|opus-med": [],
  "K_16_4-del0.01_s1|opus-high": [],
+ "K_14_4_s1|Qwen2.5-32B-cpu": [
+  {
+   "objection": "The plan relies on family_rule without having queried it first.",
+   "false": false,
+   "why": "true: the plan's family_rule(14,3) had not been queried"
+  },
+  {
+   "objection": "The family hypothesis does not specify the exact parameters (n, k) for the Kneser graph, but the binomial_match result confirms C(14,4) = 1001, which aligns with the number of receivers. However, the plan should include a family_rule check with the confirmed (n, k) parameters before proceeding to the spectral tool.",
+   "false": false,
+   "why": "true: params were empty; binomial_match had given (14,4)"
+  },
+  {
+   "objection": "family_rule result is null, indicating the Kneser graph rule for n=14, k=4 does not apply.",
+   "false": false,
+   "why": "true: the rule names no field for K(14,4) (an exception), which is what 'does not apply' means"
+  }
+ ],
  "K_14_4_s1|haiku-med": [
   {
    "objection": "Recomputed arithmetic: edges = 1001 * 210 / 2 = 105105, matching the summary. Eigenvalue multiplicities sum to 1 + 77 + 637 + 273 + 13 = 1001 = receivers. Trace = 210 + 28*77 + 637 - 7*273 - 84*13 = 0, as required for a loop-free graph. Triangles per vertex = 3 * (sum of mult*lambda^3 / 6) / 1001 = 1575, matching triangles_through_sampled_vertex. Adjacent common neighbours C(6,4) = 15 matches. Non-adjacent values C(7,4) = 35, C(8,4) = 70, C(9,4) = 126 match the three values listed. The spectrum is consistent with K(14,4).",
@@ -237,11 +288,45 @@
  "K_14_4_s1|opus-low": [],
  "K_14_4_s1|opus-med": [],
  "K_14_4_s1|opus-high": [],
+ "K_13_4_s0|Qwen2.5-32B-cpu": [
+  {
+   "objection": "The plan relies on family_rule without having queried it.",
+   "false": false,
+   "why": "true at that point; process request"
+  },
+  {
+   "objection": "The family_rule for (14, 5) was not queried, but the solver assumes it did not confirm. We need to confirm this before proceeding.",
+   "false": true,
+   "why": "family_rule(14,5) had been queried (null in the history); and (14,5) cannot fit 715 receivers, which the Critic missed"
+  },
+  {
+   "objection": "family_rule did not confirm (14,5) but was not queried again",
+   "false": true,
+   "why": "wrong inference 'rule null = not confirmed' (reviewer's rule); it had been queried"
+  },
+  {
+   "objection": "the plan relies on family_rule without having queried it again",
+   "false": true,
+   "why": "the plan no longer contained family_rule"
+  }
+ ],
  "K_13_4_s0|haiku-med": [],
  "K_13_4_s0|sonnet-med": [],
  "K_13_4_s0|opus-low": [],
  "K_13_4_s0|opus-med": [],
  "K_13_4_s0|opus-high": [],
+ "K_13_4_s1|Qwen2.5-32B-cpu": [
+  {
+   "objection": "The plan relies on family_rule without having queried it first.",
+   "false": false,
+   "why": "true at that point; process request"
+  },
+  {
+   "objection": "The family hypothesis does not specify the (n, k) parameters, which are confirmed to be (13, 4) by binomial_match.",
+   "false": false,
+   "why": "true"
+  }
+ ],
  "K_13_4_s1|haiku-med": [],
  "K_13_4_s1|sonnet-med": [
   {
@@ -258,11 +343,35 @@
  "K_13_4_s1|opus-low": [],
  "K_13_4_s1|opus-med": [],
  "K_13_4_s1|opus-high": [],
+ "K_15_5_s0|Qwen2.5-32B-cpu": [
+  {
+   "objection": "The plan relies on family_rule without having queried it.",
+   "false": false,
+   "why": "true at that point; process request"
+  },
+  {
+   "objection": "The family_rule for (14, 5) was not queried and returned null, which means we do not have confirmation or refutation of the Kneser graph hypothesis with these parameters.",
+   "false": true,
+   "why": "it had been queried (null in the history); (14,5) cannot fit 3003 receivers, which the Critic missed"
+  },
+  {
+   "objection": "family_rule did not confirm (14, 5) and was not queried again",
+   "false": true,
+   "why": "wrong inference 'rule null = not confirmed'; it had been queried"
+  }
+ ],
  "K_15_5_s0|haiku-med": [],
  "K_15_5_s0|sonnet-med": [],
  "K_15_5_s0|opus-low": [],
  "K_15_5_s0|opus-med": [],
  "K_15_5_s0|opus-high": [],
+ "K_15_5_s1|Qwen2.5-32B-cpu": [
+  {
+   "objection": "receivers = 3003 does not match C(14, 4) = 1001",
+   "false": false,
+   "why": "true and a real catch: the Solver had planned family_rule(14,4)"
+  }
+ ],
  "K_15_5_s1|haiku-med": [],
  "K_15_5_s1|sonnet-med": [],
  "K_15_5_s1|opus-low": [],
@@ -282,6 +391,28 @@
    "objection": "Recomputed arithmetic is correct: edges 3003 * 252 / 2 = 378378; Hoffman 3003 * 126 / 378 = 1001 = board lower; multiplicities 1638 + 350 + 14 = 2002 = 3003 - 1001; mod 5: 1 - 1 = 0, 1 - 21 = -20, 1 - 126 = -125 all 0, while 253, 57, 7 are nonzero mod 5; multiplicities 1 + 90 + 910 = 1001 remain. Summary numbers (common_neighbours_adjacent = [1], triangles_through_sampled_vertex = 126 = 252 * 1 / 2) are consistent with the hypothesis; only the parameter confirmation and rule query are missing.",
    "false": false,
    "why": "true statement or process request (checked)"
+  }
+ ],
+ "reg_1000_6_s0|Qwen2.5-32B-cpu": [
+  {
+   "objection": "The family hypothesis of a perturbed Kneser graph is not consistent with the number of distinct eigenvalues being 1000, as Kneser graphs have a much smaller number of distinct eigenvalues.",
+   "false": true,
+   "why": "wrong inference (a perturbed Kneser graph also has N distinct eigenvalues); the hypothesis was wrong for another reason (binomial_match empty)"
+  },
+  {
+   "objection": "The family hypothesis is 'none', but the plan relies on family_rule without querying it. The binomial_match result is empty, indicating no known Kneser-type graph matches the number of receivers and degree. The plan should include a family_rule check with integer arguments (n, k) before proceeding with spectral or code checks.",
+   "false": true,
+   "why": "the plan (independent_set, spectral) contained no family_rule"
+  },
+  {
+   "objection": "The family hypothesis is inconsistent with the number of receivers (1000) and the degree (6). The binomial_match result is empty, indicating there is no (n, k) pair that matches the given number of receivers and degree.",
+   "false": true,
+   "why": "the hypothesis was 'none', consistent with an empty binomial_match"
+  },
+  {
+   "objection": "The plan relies on the family_rule result without having queried it for the specific (n, k) pair that matches the graph's parameters. The family_rule result provided is for (n=16, k=4), which does not match the graph's parameters.",
+   "false": true,
+   "why": "no (n, k) matches this graph (binomial_match empty)"
   }
  ],
  "reg_1000_6_s0|haiku-med": [
@@ -305,6 +436,33 @@
  "reg_1000_6_s0|opus-low": [],
  "reg_1000_6_s0|opus-med": [],
  "reg_1000_6_s0|opus-high": [],
+ "reg_1000_6_s1|Qwen2.5-32B-cpu": [
+  {
+   "objection": "The family hypothesis of a perturbed Kneser graph is not consistent with the number of distinct eigenvalues being 1000, as Kneser graphs have a much smaller number of distinct eigenvalues.",
+   "false": true,
+   "why": "wrong inference, as in reg_1000_6_s0"
+  },
+  {
+   "objection": "The family hypothesis is inconsistent with the binomial_match result, which is empty, indicating there is no (n, k) pair that matches the number of receivers and degree.",
+   "false": true,
+   "why": "the hypothesis was 'none', consistent with an empty binomial_match"
+  },
+  {
+   "objection": "The plan does not justify the evidence as it does not consider the family_rule to find a potential (n, k) pair before proceeding with the spectral method.",
+   "false": true,
+   "why": "wrong about the tool: family_rule takes (n, k) and names (p, c); it does not find (n, k)"
+  },
+  {
+   "objection": "The family hypothesis is inconsistent with the binomial_match result, which is empty, indicating no (n, k) pair matches the given N and degree.",
+   "false": true,
+   "why": "the hypothesis was 'none', consistent with an empty binomial_match"
+  },
+  {
+   "objection": "The order of the plan is not justified by the evidence since the family_rule was queried without prior evidence suggesting a Kneser-type graph.",
+   "false": false,
+   "why": "true: family_rule(16,4) was in the plan without evidence for (16,4)"
+  }
+ ],
  "reg_1000_6_s1|haiku-med": [
   {
    "objection": "Consistency (1): summary.triangles_through_sampled_vertex = 1 means the sampled vertex v lies in one triangle v-a-b, so the edge (v,a) has at least one common neighbour (b). But summary.common_neighbours_adjacent = [0] reports no adjacent pair with a common neighbour. The solver cites both numbers as evidence without reconciling them, so the summary counts are inconsistent or sampled on different vertices. Resolve this before relying on the triangle evidence.",

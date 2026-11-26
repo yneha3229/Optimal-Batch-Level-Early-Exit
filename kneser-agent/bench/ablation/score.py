@@ -48,7 +48,11 @@ def score(g, cfg, path, labels):
         "llm_calls": sum(1 for e in ev if e["ev"] == "llm_request"),
         "invalid": sum(1 for e in ev if e["ev"] == "llm_invalid"),
         "fallback": sum(1 for e in ev if e["ev"] == "llm_fallback"),
-        "first_reply_names_nk": bool(sol) and (n, k) in named_nk(sol[0]),
+        "first_reply_names_nk": bool(sol) and (
+            # non-Kneser control: right = claims no Kneser family and plans no family_rule
+            ("kneser" not in str((sol[0].get("family_hypothesis") or {}).get("name", "")).lower()
+             and not any(s.get("tool") == "family_rule" for s in sol[0].get("plan", [])))
+            if kind == "control" else (n, k) in named_nk(sol[0])),
         "critic_rounds": len(cri), "critic_objections": sum(len(c.get("objections", [])) for c in cri),
         "false_objections": labels.get(f"{g}|{cfg}"),
         "wrong_binomials": sum(1 for a, b, x in BIN.findall(text) if int(b) <= int(a) and math.comb(int(a), int(b)) != int(x)),

@@ -3,9 +3,9 @@
 Conditions: other users' jobs ran on the machine throughout. To save time, the agent runs overlapped with the
 baselines (on separate cores), so the baseline timings were not measured on an otherwise idle machine. All benchmark Qwen
 numbers below are **Qwen2.5-Coder-32B-AWQ with prompts v3, before the plan-results fix d22d46c** (results of checks
-run by the Solver's own plan were not shown to the agents). The Qwen3-4B ablation could not run, and the Qwen 32B rerun on the fixed code ran
-on CPU only for the three reference cases (see the model ablation below): from 18:59 UTC, `cuInit` failed on every GPU of the server (error 3, also on an idle
-3080 Ti), which needs an admin reset; already-running processes of other users were not affected.
+run by the Solver's own plan were not shown to the agents). The model ablation below ran Qwen on CPU (llama.cpp) on the
+fixed code, because from 18:59 UTC `cuInit` failed on every GPU of the server (error 3): the A6000 at PCI 3D:00.0
+reports "GPU requires reset", which blocks CUDA machine-wide until an admin resets it.
 
 - **Proven exact, 20 benchmark graphs:** standard methods 2, Kushagra's script 14, agent without LLM 14, agent +
   Qwen 32B 14 (14 with generic rules only). All 14 are the regular Kneser graphs; the 3 exceptions and 3 controls
@@ -45,10 +45,12 @@ on CPU only for the three reference cases (see the model ablation below): from 1
   the model changes the dialogue and its cost, not the result. The five Claude configurations (Haiku 5.5 medium,
   Sonnet 5.5 medium, Opus 5.5 low / medium / high; 12 runs each) made **0 false Critic objections in 60 runs**,
   named the right family in the first Solver reply in 11-12 of 12 runs, and needed 3.5-4.1 LLM calls per run. Qwen
-  2.5-Coder 32B: 1.67 false objections per run in the GPU pilot (3 runs, code before d22d46c, reference traces
-  *_ref_*), 2.33 per run on CPU (fixed code; 3 runs so far, 9 more running), 0 right families in the first reply,
-  8-9 calls per run. Its Critic objects to numbers that are right (e.g. "the common-neighbour counts
-  [70, 126, 210, 330] do not match K(16,4)"). Every objection is labelled with a reason in
+  2.5-Coder 32B (CPU, fixed code, 12 runs): **25 false objections (2.08 per run)**, the right family in the first
+  reply in 0 of 12 runs (on the random control it first called the graph "perturbed Kneser"), 8.7 calls per run;
+  the 3-run GPU pilot on the old code (reference traces *_ref_*) gave 1.67 per run. Its Critic objects to numbers
+  that are right ("the common-neighbour counts [70, 126, 210, 330] do not match K(16,4)"; "family_rule (14,5) was
+  not queried" when it had been, while missing that (14,5) cannot fit 715 or 3003 receivers); it made one real
+  catch ("3003 receivers do not match C(14,4) = 1001"). Every objection is labelled with a reason in
   bench/ablation/label_detail.json (rule in labels.py; Qwen CPU and new Claude rows labelled by Claude Code).
 - **Qwen3-4B:** with the pipeline's 600-token reply limit (the same limit Qwen 32B ran under) it fails: in the first
   21 minutes 26 of 48 requests were JSON cut off at exactly 600 tokens and only 7 replies were accepted

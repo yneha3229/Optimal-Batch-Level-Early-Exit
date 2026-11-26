@@ -7,9 +7,9 @@ GPU server (64 cores; baselines pinned to cores 16-27, 3 graphs at a time; agent
 Conditions: other users' jobs ran on the machine throughout. To save time, the agent runs overlapped with the
 baselines (on separate cores), so the baseline timings were not measured on an otherwise idle machine. All benchmark Qwen
 numbers below are **Qwen2.5-Coder-32B-AWQ with prompts v3, before the plan-results fix d22d46c** (results of checks
-run by the Solver's own plan were not shown to the agents). The Qwen3-4B ablation could not run, and the Qwen 32B rerun on the fixed code ran
-on CPU only for the three reference cases (see the model ablation below): from 18:59 UTC, `cuInit` failed on every GPU of the server (error 3, also on an idle
-3080 Ti), which needs an admin reset; already-running processes of other users were not affected.
+run by the Solver's own plan were not shown to the agents). The model ablation below ran Qwen on CPU (llama.cpp) on the
+fixed code, because from 18:59 UTC `cuInit` failed on every GPU of the server (error 3): the A6000 at PCI 3D:00.0
+reports "GPU requires reset", which blocks CUDA machine-wide until an admin resets it.
 
 - **Proven exact, 20 benchmark graphs:** standard methods 2, Kushagra's script 14, agent without LLM 14, agent +
   Qwen 32B 14 (14 with generic rules only). All 14 are the regular Kneser graphs; the 3 exceptions and 3 controls
@@ -49,10 +49,12 @@ on CPU only for the three reference cases (see the model ablation below): from 1
   the model changes the dialogue and its cost, not the result. The five Claude configurations (Haiku 5.5 medium,
   Sonnet 5.5 medium, Opus 5.5 low / medium / high; 12 runs each) made **0 false Critic objections in 60 runs**,
   named the right family in the first Solver reply in 11-12 of 12 runs, and needed 3.5-4.1 LLM calls per run. Qwen
-  2.5-Coder 32B: 1.67 false objections per run in the GPU pilot (3 runs, code before d22d46c, reference traces
-  *_ref_*), 2.33 per run on CPU (fixed code; 3 runs so far, 9 more running), 0 right families in the first reply,
-  8-9 calls per run. Its Critic objects to numbers that are right (e.g. "the common-neighbour counts
-  [70, 126, 210, 330] do not match K(16,4)"). Every objection is labelled with a reason in
+  2.5-Coder 32B (CPU, fixed code, 12 runs): **25 false objections (2.08 per run)**, the right family in the first
+  reply in 0 of 12 runs (on the random control it first called the graph "perturbed Kneser"), 8.7 calls per run;
+  the 3-run GPU pilot on the old code (reference traces *_ref_*) gave 1.67 per run. Its Critic objects to numbers
+  that are right ("the common-neighbour counts [70, 126, 210, 330] do not match K(16,4)"; "family_rule (14,5) was
+  not queried" when it had been, while missing that (14,5) cannot fit 715 or 3003 receivers); it made one real
+  catch ("3003 receivers do not match C(14,4) = 1001"). Every objection is labelled with a reason in
   bench/ablation/label_detail.json (rule in labels.py; Qwen CPU and new Claude rows labelled by Claude Code).
 - **Qwen3-4B:** with the pipeline's 600-token reply limit (the same limit Qwen 32B ran under) it fails: in the first
   21 minutes 26 of 48 requests were JSON cut off at exactly 600 tokens and only 7 replies were accepted
@@ -165,46 +167,55 @@ Each run gives the Solver, Critic and Verifier roles to one model answering blin
 | K_14_4_s0 | opus-low | gap | [286, 287] | 4 | 0 | 0 | yes | 0 | 0 | yes | 31 |
 | K_14_4_s0 | opus-med | gap | [286, 287] | 4 | 0 | 0 | yes | 0 | 0 | yes | 31 |
 | K_14_4_s0 | opus-high | gap | [286, 287] | 4 | 0 | 0 | yes | 1 | 0 | yes | 31 |
+| K_16_4_s1 | Qwen2.5-32B-cpu | proven | [455, 455] | 8 | 0 | 0 | no | 3 | 2 | no | 5 |
 | K_16_4_s1 | haiku-med | proven | [455, 455] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_16_4_s1 | sonnet-med | proven | [455, 455] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_16_4_s1 | opus-low | proven | [455, 455] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_16_4_s1 | opus-med | proven | [455, 455] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_16_4_s1 | opus-high | proven | [455, 455] | 4 | 1 | 0 | yes | 0 | 0 | no | 1 |
+| K_16_4-del0.01_s1 | Qwen2.5-32B-cpu | gap | [455, 534] | 9 | 0 | 0 | no | 3 | 3 | yes | 0 |
 | K_16_4-del0.01_s1 | haiku-med | gap | [455, 534] | 8 | 0 | 0 | yes | 11 | 0 | yes | 1 |
 | K_16_4-del0.01_s1 | sonnet-med | gap | [455, 534] | 6 | 0 | 0 | yes | 3 | 0 | yes | 1 |
 | K_16_4-del0.01_s1 | opus-low | gap | [455, 534] | 4 | 0 | 0 | no | 0 | 0 | yes | 1 |
 | K_16_4-del0.01_s1 | opus-med | gap | [455, 534] | 4 | 0 | 0 | no | 0 | 0 | yes | 1 |
 | K_16_4-del0.01_s1 | opus-high | gap | [455, 534] | 4 | 0 | 0 | yes | 0 | 0 | yes | 2 |
+| K_14_4_s1 | Qwen2.5-32B-cpu | gap | [286, 287] | 9 | 0 | 0 | no | 3 | 0 | yes | 31 |
 | K_14_4_s1 | haiku-med | gap | [286, 287] | 4 | 0 | 0 | yes | 3 | 0 | yes | 35 |
 | K_14_4_s1 | sonnet-med | gap | [286, 287] | 4 | 0 | 0 | yes | 0 | 0 | yes | 31 |
 | K_14_4_s1 | opus-low | gap | [286, 287] | 4 | 0 | 0 | yes | 0 | 0 | yes | 31 |
 | K_14_4_s1 | opus-med | gap | [286, 287] | 5 | 1 | 0 | yes | 0 | 0 | yes | 31 |
 | K_14_4_s1 | opus-high | gap | [286, 287] | 4 | 0 | 0 | yes | 0 | 0 | yes | 31 |
+| K_13_4_s0 | Qwen2.5-32B-cpu | proven | [220, 220] | 8 | 0 | 0 | no | 4 | 3 | no | 5 |
 | K_13_4_s0 | haiku-med | proven | [220, 220] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_13_4_s0 | sonnet-med | proven | [220, 220] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_13_4_s0 | opus-low | proven | [220, 220] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_13_4_s0 | opus-med | proven | [220, 220] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_13_4_s0 | opus-high | proven | [220, 220] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
+| K_13_4_s1 | Qwen2.5-32B-cpu | proven | [220, 220] | 7 | 0 | 0 | no | 2 | 0 | no | 1 |
 | K_13_4_s1 | haiku-med | proven | [220, 220] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_13_4_s1 | sonnet-med | proven | [220, 220] | 3 | 0 | 0 | yes | 2 | 0 | no | 1 |
 | K_13_4_s1 | opus-low | proven | [220, 220] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_13_4_s1 | opus-med | proven | [220, 220] | 4 | 1 | 0 | yes | 0 | 0 | no | 1 |
 | K_13_4_s1 | opus-high | proven | [220, 220] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
+| K_15_5_s0 | Qwen2.5-32B-cpu | proven | [1001, 1001] | 9 | 0 | 0 | no | 3 | 2 | no | 2 |
 | K_15_5_s0 | haiku-med | proven | [1001, 1001] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_15_5_s0 | sonnet-med | proven | [1001, 1001] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_15_5_s0 | opus-low | proven | [1001, 1001] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_15_5_s0 | opus-med | proven | [1001, 1001] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_15_5_s0 | opus-high | proven | [1001, 1001] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
+| K_15_5_s1 | Qwen2.5-32B-cpu | proven | [1001, 1001] | 5 | 0 | 0 | no | 1 | 0 | no | 1 |
 | K_15_5_s1 | haiku-med | proven | [1001, 1001] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_15_5_s1 | sonnet-med | proven | [1001, 1001] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_15_5_s1 | opus-low | proven | [1001, 1001] | 3 | 0 | 0 | yes | 0 | 0 | no | 1 |
 | K_15_5_s1 | opus-med | proven | [1001, 1001] | 4 | 1 | 0 | yes | 0 | 0 | no | 1 |
 | K_15_5_s1 | opus-high | proven | [1001, 1001] | 5 | 0 | 0 | yes | 3 | 0 | no | 1 |
+| reg_1000_6_s0 | Qwen2.5-32B-cpu | gap | [332, 537] | 10 | 1 | 0 | no | 4 | 4 | yes | 0 |
 | reg_1000_6_s0 | haiku-med | gap | [336, 537] | 4 | 0 | 0 | yes | 3 | 0 | yes | 0 |
 | reg_1000_6_s0 | sonnet-med | gap | [336, 537] | 4 | 0 | 0 | yes | 0 | 0 | yes | 0 |
 | reg_1000_6_s0 | opus-low | gap | [336, 537] | 4 | 0 | 0 | yes | 0 | 0 | yes | 0 |
 | reg_1000_6_s0 | opus-med | gap | [336, 537] | 4 | 0 | 0 | yes | 0 | 0 | yes | 1 |
 | reg_1000_6_s0 | opus-high | gap | [336, 537] | 4 | 0 | 0 | yes | 0 | 0 | yes | 1 |
+| reg_1000_6_s1 | Qwen2.5-32B-cpu | gap | [333, 537] | 11 | 2 | 0 | no | 5 | 4 | yes | 0 |
 | reg_1000_6_s1 | haiku-med | gap | [336, 537] | 7 | 1 | 0 | yes | 4 | 0 | yes | 0 |
 | reg_1000_6_s1 | sonnet-med | gap | [336, 537] | 4 | 0 | 0 | yes | 0 | 0 | yes | 0 |
 | reg_1000_6_s1 | opus-low | gap | [336, 537] | 4 | 0 | 0 | yes | 0 | 0 | yes | 1 |
@@ -338,3 +349,12 @@ llm = chat: an assistant answered as the agents through the file-based chat back
 | K_15_5_s1_opus-high | chat | v4 | yes | proven | [1001, 1001] | 95.3 s | 47.9 | 47.42 s | 4 | 0 | 1 | Kneser graph K(15,5) (exact member) {'n': 15, 'k': 5} | kneser 15,5 |
 | K_14_4_s1_opus-high | chat | v4 | yes | gap | [286, 287] | 105.4 s | 72.7 | 32.67 s | 3 | 0 | 0 | Kneser graph K(n,k) (exact member, pending binomial_match) {'n': 14, 'k': 4} | kneser 14,4 |
 | K_16_4-del0.01_s1_opus-high | chat | v4 | yes | gap | [455, 534] | 142.0 s | 58.7 | 83.35 s | 3 | 0 | 0 | perturbed Kneser (edge-deleted Kneser-type graph) {'n': 16, 'k': 4, 'status': 'to be confirmed by binomial_match'} | kneser with deleted edges 16,4 |
+| K_15_5_s1 | Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu | v4 | yes | proven | [1001, 1001] | 3057.3 s | 3017.7 | 39.62 s | 4 | 0 | 1 | Kneser {} | kneser 15,5 |
+| K_13_4_s1 | Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu | v4 | yes | proven | [220, 220] | 4846.6 s | 4826.9 | 19.64 s | 6 | 0 | 2 | Kneser {'n': 13, 'k': 4} | kneser 13,4 |
+| K_16_4_s1 | Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu | v4 | yes | proven | [455, 455] | 5025.7 s | 4988.3 | 37.37 s | 7 | 0 | 3 | perturbed Kneser {} | kneser 16,4 |
+| K_13_4_s0 | Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu | v4 | yes | proven | [220, 220] | 5480.8 s | 5461.0 | 19.77 s | 7 | 0 | 3 | Kneser {} | kneser 13,4 |
+| K_15_5_s0 | Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu | v4 | yes | proven | [1001, 1001] | 6159.2 s | 6117.6 | 41.57 s | 8 | 0 | 3 | Kneser {} | kneser 15,5 |
+| reg_1000_6_s0 | Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu | v4 | yes | gap | [332, 537] | 6413.1 s | 6385.8 | 27.37 s | 9 | 1 | 3 | none {} | random regular , |
+| K_16_4-del0.01_s1 | Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu | v4 | yes | gap | [455, 534] | 6311.7 s | 6278.4 | 33.23 s | 8 | 0 | 3 | perturbed Kneser {} | kneser with deleted edges 16,4 |
+| K_14_4_s1 | Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu | v4 | yes | gap | [286, 287] | 6537.8 s | 6508.5 | 29.30 s | 8 | 0 | 3 | perturbed Kneser {'n': 14, 'k': 4} | kneser 14,4 |
+| reg_1000_6_s1 | Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu | v4 | yes | gap | [333, 537] | 6705.9 s | 6678.5 | 27.33 s | 10 | 2 | 3 | none {} | random regular , |
