@@ -1,0 +1,87 @@
+{"t": 0.001, "ev": "input", "graph": "K_14_4_s1_opus-high", "receivers": 1001, "llm": "chat", "family_rule": true}
+{"t": 0.097, "ev": "start", "tool": "describe"}
+{"t": 0.097, "ev": "start", "tool": "indep"}
+{"t": 0.097, "ev": "start", "tool": "cover"}
+{"t": 0.384, "ev": "board", "side": "lower", "value": 286, "tool": "greedy independent set", "bracket": [286, 1001]}
+{"t": 0.838, "ev": "board", "side": "upper", "value": 345, "tool": "clique_cover", "bracket": [286, 345]}
+{"t": 29.17, "ev": "done", "tool": "describe", "seconds": 28.96}
+{"t": 29.17, "ev": "summary", "summary": {"receivers": 1001, "edges": 105105, "degree_min": 210, "degree_max": 210, "regular": true, "common_neighbours_adjacent": [15], "common_neighbours_nonadjacent": [35, 70, 126], "triangles_through_sampled_vertex": 1575, "spectrum_integral": true, "eigenvalues": [[210, 1], [28, 77], [1, 637], [-7, 273], [-84, 13]], "distinct_eigenvalues": 5, "seconds": 28.96}}
+{"t": 29.17, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 67.431, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser graph K(n,k) (exact member, pending binomial_match)", "params": {"n": 14, "k": 4}, "confidence": 0.85, "evidence": ["receivers = 1001 and degree_min = degree_max = 210 (regular: true)", "spectrum_integral: true with exactly 5 distinct eigenvalues 210, 28, 1, -7, -84, alternating in sign as in a Kneser graph with k = 4", "eigenvalue multiplicities 1, 13, 77, 273, 637 (13 + 1 = 14 suggests n = 14)", "board lower = 286 (independent set), upper = 345 by clique_cover, codes_tried = 0"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "Confirm N = 1001 and degree 210 match C(n,k), C(n-k,k) for some (n,k) before relying on a Kneser hypothesis (rule 2)."}, {"tool": "family_rule", "args": {"n": 14, "k": 4}, "why": "Ask the library's structural rule for K(14,4) for a named (p, c); it may name no field (exception), in which case fall back to the generic search."}, {"tool": "spectral", "args": {"top": 6}, "why": "Generic step: rank (p, c) pairs from the integer spectrum. E.g. c = -1, p = 3 kills eigenvalues 1 and 28 (1+c*theta = 0 and -27), predicted rank 1001 - 637 - 77 = 287, within one of the lower bound 286."}, {"tool": "try_code", "args": {"p": 3, "c": -1}, "why": "Cheapest concrete candidate from the spectrum; actual rank over F_3 may fall below the diagonalizable prediction and close the bracket at 286."}, {"tool": "hoffman", "args": {}, "why": "Information only: Hoffman bound 1001*84/(210+84) = 286 would confirm the lower bound 286 is the true independence number."}], "notes": "Strong Kneser K(14,4) signature but not yet certified by binomial_match. Lower bound 286 likely equals alpha (EKR). Upper bound target is 286; the plain I + cA family cannot kill exactly the multiplicities 637+77+1 over one prime by the diagonalizable prediction, so rely on family_rule or on the actual F_p rank being lower than predicted."}}
+{"t": 67.431, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 75.141, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": [{"tool": "binomial_match", "args": {}}, {"tool": "family_rule", "args": {"n": 14, "k": 4}}]}}
+{"t": 75.141, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "Confirm N = 1001 and degree 210 match C(n,k), C(n-k,k) for some (n,k) before relying on a Kneser hypothesis (rule 2)."}, {"tool": "family_rule", "args": {"n": 14, "k": 4}, "why": "Ask the library's structural rule for K(14,4) for a named (p, c); it may name no field (exception), in which case fall back to the generic search."}, {"tool": "spectral", "args": {"top": 6}, "why": "Generic step: rank (p, c) pairs from the integer spectrum. E.g. c = -1, p = 3 kills eigenvalues 1 and 28 (1+c*theta = 0 and -27), predicted rank 1001 - 637 - 77 = 287, within one of the lower bound 286."}, {"tool": "try_code", "args": {"p": 3, "c": -1}, "why": "Cheapest concrete candidate from the spectrum; actual rank over F_3 may fall below the diagonalizable prediction and close the bracket at 286."}, {"tool": "hoffman", "args": {}, "why": "Information only: Hoffman bound 1001*84/(210+84) = 286 would confirm the lower bound 286 is the true independence number."}], "hypothesis": {"name": "Kneser graph K(n,k) (exact member, pending binomial_match)", "params": {"n": 14, "k": 4}, "confidence": 0.85, "evidence": ["receivers = 1001 and degree_min = degree_max = 210 (regular: true)", "spectrum_integral: true with exactly 5 distinct eigenvalues 210, 28, 1, -7, -84, alternating in sign as in a Kneser graph with k = 4", "eigenvalue multiplicities 1, 13, 77, 273, 637 (13 + 1 = 14 suggests n = 14)", "board lower = 286 (independent set), upper = 345 by clique_cover, codes_tried = 0"]}, "critic_rounds": 1}
+{"t": 75.142, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 14, "k": 4}]}]}
+{"t": 75.142, "ev": "rule", "tool": "family_rule", "args": {"n": 14, "k": 4}, "result": null}
+{"t": 75.143, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "spectral pred 91"}
+{"t": 75.143, "ev": "start", "tool": "code", "p": 3, "c": 2, "why": "spectral pred 287"}
+{"t": 75.143, "ev": "start", "tool": "code", "p": 5, "c": 4, "why": "spectral pred 351"}
+{"t": 75.143, "ev": "start", "tool": "code", "p": 17, "c": 16, "why": "spectral pred 351"}
+{"t": 75.143, "ev": "start", "tool": "code", "p": 11, "c": 10, "why": "spectral pred 363"}
+{"t": 75.143, "ev": "start", "tool": "code", "p": 19, "c": 18, "why": "spectral pred 363"}
+{"t": 75.498, "ev": "done", "tool": "code", "p": 5, "c": 4, "rank": null, "seconds": 0.328, "rank_above": 344}
+{"t": 75.777, "ev": "done", "tool": "code", "p": 17, "c": 16, "rank": null, "seconds": 0.287, "rank_above": 344}
+{"t": 76.056, "ev": "done", "tool": "code", "p": 11, "c": 10, "rank": null, "seconds": 0.274, "rank_above": 344}
+{"t": 76.419, "ev": "done", "tool": "code", "p": 19, "c": 18, "rank": null, "seconds": 0.35, "rank_above": 344}
+{"t": 76.474, "ev": "done", "tool": "code", "p": 3, "c": 2, "rank": 287, "seconds": 1.307}
+{"t": 76.474, "ev": "board", "side": "upper", "value": 287, "tool": "linear_code", "bracket": [286, 287]}
+{"t": 76.474, "ev": "event", "name": "near_miss", "p": 3, "rank": 287}
+{"t": 76.474, "ev": "start", "tool": "code", "p": 3, "c": 1, "why": "near miss"}
+{"t": 76.563, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 299, "seconds": 1.419}
+{"t": 76.717, "ev": "done", "tool": "code", "p": 3, "c": 1, "rank": null, "seconds": 0.233, "rank_above": 286}
+{"t": 76.717, "ev": "checks", "results": [{"tool": "hoffman", "result": 286.0}]}
+{"t": 76.717, "ev": "event", "name": "checkpoint"}
+{"t": 76.717, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 103.437, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser graph K(14,4) (exact member)", "params": {"n": 14, "k": 4}, "confidence": 0.97, "evidence": ["binomial_match returned (n, k) = (14, 4) for receivers = 1001 and degree = 210", "regular: true, spectrum_integral: true, 5 distinct eigenvalues 210, 28, 1, -7, -84 with multiplicities 1, 77, 637, 273, 13", "hoffman = 286.0 equals board lower = 286, so the independent set is maximum", "family_rule(14, 4) returned null: an exception of the rule, not a perturbation", "board upper = 287 by linear_code from try (p, c) = (3, 2), length 287"]}, "plan": [], "notes": "Stopping; report bracket [286, 287]. Lower bound cannot improve: hoffman = 286.0 = lower. For M = I + cA the integer-spectrum count is a lower bound on rank_p (rank can only exceed it, e.g. p = 2, c = 1 predicted 1001 - 637 - 273 = 91 but measured 299). Reaching 286 would require zeroing eigenvalues 1, 28, 210 (multiplicities 637 + 77 + 1 = 715) at once: c = -1 forces p | 27 and p | 209 = 11*19, impossible. Every other (p, c) has prediction >= 287 except p = 2, c = 1 (measured 299), and (3, 2) already attains 287 = its prediction. family_rule names no field for (14, 4). So the I + cA family cannot close the gap; beta is in [286, 287]."}}
+{"t": 103.437, "ev": "event", "name": "safety_net", "plan": [{"tool": "spectral", "args": {"top": 30}, "why": "fallback"}]}
+{"t": 103.439, "ev": "start", "tool": "code", "p": 7, "c": 6, "why": "spectral pred 364"}
+{"t": 103.442, "ev": "start", "tool": "code", "p": 13, "c": 12, "why": "spectral pred 364"}
+{"t": 103.442, "ev": "start", "tool": "code", "p": 23, "c": 22, "why": "spectral pred 364"}
+{"t": 103.442, "ev": "start", "tool": "code", "p": 29, "c": 28, "why": "spectral pred 364"}
+{"t": 103.442, "ev": "start", "tool": "code", "p": 31, "c": 30, "why": "spectral pred 364"}
+{"t": 103.442, "ev": "start", "tool": "code", "p": 37, "c": 36, "why": "spectral pred 364"}
+{"t": 103.442, "ev": "start", "tool": "code", "p": 41, "c": 40, "why": "spectral pred 364"}
+{"t": 103.442, "ev": "start", "tool": "code", "p": 43, "c": 42, "why": "spectral pred 364"}
+{"t": 103.442, "ev": "start", "tool": "code", "p": 47, "c": 46, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 53, "c": 52, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 59, "c": 58, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 61, "c": 60, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 67, "c": 66, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 71, "c": 70, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 73, "c": 72, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 79, "c": 78, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 83, "c": 82, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 89, "c": 88, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 97, "c": 96, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 101, "c": 100, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 103, "c": 102, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 107, "c": 106, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 109, "c": 108, "why": "spectral pred 364"}
+{"t": 103.443, "ev": "start", "tool": "code", "p": 113, "c": 112, "why": "spectral pred 364"}
+{"t": 103.678, "ev": "done", "tool": "code", "p": 13, "c": 12, "rank": null, "seconds": 0.233, "rank_above": 286}
+{"t": 103.678, "ev": "done", "tool": "code", "p": 23, "c": 22, "rank": null, "seconds": 0.218, "rank_above": 286}
+{"t": 103.681, "ev": "done", "tool": "code", "p": 7, "c": 6, "rank": null, "seconds": 0.242, "rank_above": 286}
+{"t": 103.884, "ev": "done", "tool": "code", "p": 29, "c": 28, "rank": null, "seconds": 0.213, "rank_above": 286}
+{"t": 103.903, "ev": "done", "tool": "code", "p": 37, "c": 36, "rank": null, "seconds": 0.216, "rank_above": 286}
+{"t": 103.903, "ev": "done", "tool": "code", "p": 31, "c": 30, "rank": null, "seconds": 0.222, "rank_above": 286}
+{"t": 104.129, "ev": "done", "tool": "code", "p": 47, "c": 46, "rank": null, "seconds": 0.224, "rank_above": 286}
+{"t": 104.148, "ev": "done", "tool": "code", "p": 41, "c": 40, "rank": null, "seconds": 0.263, "rank_above": 286}
+{"t": 104.157, "ev": "done", "tool": "code", "p": 43, "c": 42, "rank": null, "seconds": 0.258, "rank_above": 286}
+{"t": 104.367, "ev": "done", "tool": "code", "p": 53, "c": 52, "rank": null, "seconds": 0.23, "rank_above": 286}
+{"t": 104.398, "ev": "done", "tool": "code", "p": 59, "c": 58, "rank": null, "seconds": 0.255, "rank_above": 286}
+{"t": 104.415, "ev": "done", "tool": "code", "p": 61, "c": 60, "rank": null, "seconds": 0.254, "rank_above": 286}
+{"t": 104.587, "ev": "done", "tool": "code", "p": 67, "c": 66, "rank": null, "seconds": 0.223, "rank_above": 286}
+{"t": 104.606, "ev": "done", "tool": "code", "p": 71, "c": 70, "rank": null, "seconds": 0.196, "rank_above": 286}
+{"t": 104.61, "ev": "done", "tool": "code", "p": 73, "c": 72, "rank": null, "seconds": 0.191, "rank_above": 286}
+{"t": 104.819, "ev": "done", "tool": "code", "p": 79, "c": 78, "rank": null, "seconds": 0.232, "rank_above": 286}
+{"t": 104.837, "ev": "done", "tool": "code", "p": 83, "c": 82, "rank": null, "seconds": 0.23, "rank_above": 286}
+{"t": 104.853, "ev": "done", "tool": "code", "p": 89, "c": 88, "rank": null, "seconds": 0.236, "rank_above": 286}
+{"t": 105.049, "ev": "done", "tool": "code", "p": 97, "c": 96, "rank": null, "seconds": 0.234, "rank_above": 286}
+{"t": 105.093, "ev": "done", "tool": "code", "p": 101, "c": 100, "rank": null, "seconds": 0.259, "rank_above": 286}
+{"t": 105.13, "ev": "done", "tool": "code", "p": 103, "c": 102, "rank": null, "seconds": 0.276, "rank_above": 286}
+{"t": 105.277, "ev": "done", "tool": "code", "p": 107, "c": 106, "rank": null, "seconds": 0.224, "rank_above": 286}
+{"t": 105.342, "ev": "done", "tool": "code", "p": 109, "c": 108, "rank": null, "seconds": 0.247, "rank_above": 286}
+{"t": 105.354, "ev": "done", "tool": "code", "p": 113, "c": 112, "rank": null, "seconds": 0.224, "rank_above": 286}
+{"t": 105.356, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 112.566, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": ["own_rank"], "analysis": "Not proven: the bracket is [286, 287] (verdict gap). Lower 286 is certified by a checked independent set (independent_set: true) and matches cpsat_alpha = 286 (proven) and Hoffman 286. Upper 287 is the linear code M = I + 2A over F_3 (code_fits: true), which misses the lower bound by 1. Baselines: kushagra_agent reached the same [286, 287] with field 3 in 121.9 s; this run took 105.4 s wall, but 72.7 s of that was LLM time (compute 32.7 s), so the gain is small and comes from fewer code checks being run, not from better results. cpsat_cover and f2_minrank_sat (lower 285) found no upper bound; frac_cover gave 961. Nothing suspicious, but family_rule returned null, so K(14,4) is an exception and the gap is still open. I am requesting own_rank to confirm rank_3 = 287."}}
+{"t": 122.953, "ev": "verdict", "verdict": "gap", "bracket": [286, 287], "checks": {"independent_set": true, "code_fits": true, "own_rank_equals_upper": true}}

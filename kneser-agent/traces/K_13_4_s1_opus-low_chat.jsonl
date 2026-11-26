@@ -1,0 +1,22 @@
+{"t": 0.001, "ev": "input", "graph": "K_13_4_s1_opus-low", "receivers": 715, "llm": "chat", "family_rule": true}
+{"t": 0.18, "ev": "start", "tool": "describe"}
+{"t": 0.18, "ev": "start", "tool": "indep"}
+{"t": 0.18, "ev": "start", "tool": "cover"}
+{"t": 0.528, "ev": "board", "side": "lower", "value": 220, "tool": "greedy independent set", "bracket": [220, 715]}
+{"t": 0.955, "ev": "board", "side": "upper", "value": 254, "tool": "clique_cover", "bracket": [220, 254]}
+{"t": 34.682, "ev": "done", "tool": "describe", "seconds": 34.405}
+{"t": 34.682, "ev": "summary", "summary": {"receivers": 715, "edges": 45045, "degree_min": 126, "degree_max": 126, "regular": true, "common_neighbours_adjacent": [5], "common_neighbours_nonadjacent": [15, 35, 70], "triangles_through_sampled_vertex": 315, "spectrum_integral": true, "eigenvalues": [[126, 1], [21, 65], [1, 429], [-6, 208], [-56, 12]], "distinct_eigenvalues": 5, "seconds": 34.405}}
+{"t": 34.683, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 83.985, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.8, "evidence": ["receivers 715, regular degree 126", "spectrum_integral true with 5 distinct eigenvalues 126, 21, 1, -6, -56", "lower bound 220, upper 254 by clique_cover"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 13, "k": 4}, "why": "get the library's (p,c) for the suspected K(n,k); n,k to be confirmed by binomial_match"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback code search from the integral spectrum"}, {"tool": "independent_set", "args": {"restarts": 50}, "why": "push the lower bound if needed"}], "notes": "Regular, integral spectrum, 5 eigenvalues suggests a vertex-transitive Kneser-type graph; verify parameters before relying on them."}}
+{"t": 83.986, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 89.193, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 89.194, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 13, "k": 4}, "why": "get the library's (p,c) for the suspected K(n,k); n,k to be confirmed by binomial_match"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback code search from the integral spectrum"}, {"tool": "independent_set", "args": {"restarts": 50}, "why": "push the lower bound if needed"}], "hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.8, "evidence": ["receivers 715, regular degree 126", "spectrum_integral true with 5 distinct eigenvalues 126, 21, 1, -6, -56", "lower bound 220, upper 254 by clique_cover"]}, "critic_rounds": 1}
+{"t": 89.194, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 13, "k": 4}]}]}
+{"t": 89.194, "ev": "rule", "tool": "family_rule", "args": {"n": 13, "k": 4}, "result": {"p": 5, "c": 4}}
+{"t": 89.194, "ev": "start", "tool": "code", "p": 5, "c": 4, "why": "family rule"}
+{"t": 89.55, "ev": "done", "tool": "code", "p": 5, "c": 4, "rank": 220, "seconds": 0.338}
+{"t": 89.55, "ev": "board", "side": "upper", "value": 220, "tool": "linear_code", "bracket": [220, 220]}
+{"t": 89.55, "ev": "event", "name": "bracket_closed", "bracket": [220, 220]}
+{"t": 89.924, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 96.146, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Proven: beta = 220 for the 715-receiver graph. Lower bound is an independent set of size 220 (check passed; matches cpsat_alpha 220, proven in 12.2 s). Upper bound is a linear code M = I + 4A over F_5 of length 220; code_fits, factorization and decoding checks all passed. Time: wall 89.55 s, of which llm_s 54.5 s and compute_s 35.0 s, with 1 code tried and 1 critic round. Against baselines: the kushagra_agent reached the same exact 220 in 0.28 s, so this agent was far slower; cpsat_cover (604) and frac_cover (635) did not close in about 120 s, and f2_minrank_sat gave only a lower bound 219. Nothing suspicious, though the hypothesis listed no explicit params."}}
+{"t": 96.146, "ev": "verdict", "verdict": "proven", "bracket": [220, 220], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

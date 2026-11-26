@@ -1,0 +1,23 @@
+{"t": 0.001, "ev": "input", "graph": "reg_1000_6_s0_opus-low", "receivers": 1000, "llm": "chat", "family_rule": true}
+{"t": 0.185, "ev": "start", "tool": "describe"}
+{"t": 0.186, "ev": "start", "tool": "indep"}
+{"t": 0.186, "ev": "start", "tool": "cover"}
+{"t": 0.751, "ev": "board", "side": "lower", "value": 327, "tool": "greedy independent set", "bracket": [327, 1000]}
+{"t": 2.134, "ev": "board", "side": "upper", "value": 537, "tool": "clique_cover", "bracket": [327, 537]}
+{"t": 44.303, "ev": "done", "tool": "describe", "seconds": 44.012}
+{"t": 44.303, "ev": "summary", "summary": {"receivers": 1000, "edges": 3000, "degree_min": 6, "degree_max": 6, "regular": true, "common_neighbours_adjacent": [0, 1], "common_neighbours_nonadjacent": [0, 1, 2], "triangles_through_sampled_vertex": 1, "spectrum_integral": false, "eigenvalues": [[6.0, 1], [4.4476, 1], [4.3987, 1], [4.3693, 1], [4.362, 1], [4.3332, 1], [4.3158, 1], [4.2983, 1], [4.2917, 1], [4.2785, 1], [4.2695, 1], [4.2505, 1], [4.2332, 1], [4.2257, 1]], "distinct_eigenvalues": 1000, "seconds": 44.012}}
+{"t": 44.303, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 83.567, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "none (random-like 6-regular graph)", "params": {}, "confidence": 0.8, "evidence": ["degree_min = degree_max = 6 with 1000 receivers", "spectrum_integral is false", "distinct_eigenvalues = 1000", "triangles_through_sampled_vertex = 1"]}, "plan": [{"tool": "independent_set", "args": {"restarts": 200}, "why": "cheap: raise lower bound 327 for a sparse graph"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic code attempt; non-integral spectrum so little expected, but keeps a generic step"}, {"tool": "hoffman", "args": {}, "why": "information on how far alpha can rise"}], "notes": "Not vertex-transitive family member; no Kneser rule applies. Clique cover gives upper 537."}}
+{"t": 83.567, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 88.277, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 88.277, "ev": "plan_accepted", "plan": [{"tool": "independent_set", "args": {"restarts": 200}, "why": "cheap: raise lower bound 327 for a sparse graph"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic code attempt; non-integral spectrum so little expected, but keeps a generic step"}, {"tool": "hoffman", "args": {}, "why": "information on how far alpha can rise"}], "hypothesis": {"name": "none (random-like 6-regular graph)", "params": {}, "confidence": 0.8, "evidence": ["degree_min = degree_max = 6 with 1000 receivers", "spectrum_integral is false", "distinct_eigenvalues = 1000", "triangles_through_sampled_vertex = 1"]}, "critic_rounds": 1}
+{"t": 88.277, "ev": "start", "tool": "indep"}
+{"t": 107.509, "ev": "board", "side": "lower", "value": 336, "tool": "greedy independent set", "bracket": [336, 537]}
+{"t": 107.509, "ev": "checks", "results": [{"tool": "hoffman", "result": null}]}
+{"t": 107.509, "ev": "event", "name": "checkpoint"}
+{"t": 107.509, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 112.734, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "none (random-like 6-regular graph)", "params": {}, "confidence": 0.8, "evidence": ["spectrum_integral is false", "distinct_eigenvalues = 1000", "board lower 336, upper 537", "codes_tried = 0"]}, "plan": [], "notes": "Non-integral spectrum gives spectral no ranked (p, c) pairs and no family rule applies; stopping and reporting bracket [336, 537]."}}
+{"t": 112.75, "ev": "event", "name": "safety_net", "plan": [{"tool": "spectral", "args": {"top": 30}, "why": "fallback"}]}
+{"t": 112.776, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 118.991, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Nothing exact is proven. Verdict is a gap: beta lies in [336, 537]. The lower bound is a checked independent set of size 336; the upper bound is a checked clique cover with 537 cliques. No linear code was tried (codes_tried = 0) because the spectrum is non-integral, so the spectral family had nothing to rank. Against the baselines (120 s limit), the agent's bracket is tighter on both sides: lower 336 vs 294 (CP-SAT alpha) and 293 (minrank SAT, kushagra agent); upper 537 vs 994 (frac_cover) and 998 (kushagra agent). Wall time was 112.75 s, of which 49.195 s was LLM time, compared with roughly 120 s for most baselines. None of the bounds is optimal, and the gap of 201 remains large."}}
+{"t": 118.991, "ev": "verdict", "verdict": "gap", "bracket": [336, 537], "checks": {"independent_set": true, "clique_cover": true}}

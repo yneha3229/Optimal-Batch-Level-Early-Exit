@@ -9,10 +9,18 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 TR = HERE.parents[1] / "traces"
 TRUTH = {"K_16_4_s3": (16, 4, "rule applies"), "K_16_4-del0.01_s0": (16, 4, "perturbed"),
-         "K_14_4_s0": (14, 4, "rule exception")}
-CONFIGS = {"Qwen2.5-32B": "{g}_Qwen2.5-Coder-32B-Instruct-AWQ.jsonl", "Qwen3-4B": "{g}_Qwen3-4B-Instruct-2507.jsonl",
+         "K_14_4_s0": (14, 4, "rule exception"),
+         # second seeds and more graphs (26 Nov evening): reg = non-Kneser control, right = no K(n,k) named
+         "K_16_4_s1": (16, 4, "rule applies"), "K_16_4-del0.01_s1": (16, 4, "perturbed"),
+         "K_14_4_s1": (14, 4, "rule exception"), "K_13_4_s0": (13, 4, "rule applies"),
+         "K_13_4_s1": (13, 4, "rule applies"), "K_15_5_s0": (15, 5, "rule applies"),
+         "K_15_5_s1": (15, 5, "rule applies"), "reg_1000_6_s0": (None, None, "control"),
+         "reg_1000_6_s1": (None, None, "control")}
+PILOT = ("K_16_4_s3", "K_16_4-del0.01_s0", "K_14_4_s0")
+CONFIGS = {"Qwen2.5-32B": "{g}_ref_Qwen2.5-Coder-32B-Instruct-AWQ.jsonl", "Qwen3-4B": "{g}_Qwen3-4B-Instruct-2507.jsonl",
            # Qwen 32B on CPU (llama.cpp, GGUF Q4_K_M), fixed code (d22d46c), run while the GPUs failed cuInit
-           "Qwen2.5-32B-cpu": "{g}_Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu.jsonl"}
+           "Qwen2.5-32B-cpu": "{g}_Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu.jsonl",
+           "Qwen3-4B-cpu": "{g}_Qwen3-4B-Instruct-2507-Q4_K_M-cpu.jsonl"}
 for c in ("haiku-med", "sonnet-med", "opus-low", "opus-med", "opus-high"):
     CONFIGS[c] = "{g}_%s_chat.jsonl" % c
 BIN = re.compile(r"C\((\d+)\s*,\s*(\d+)\)\s*=\s*(\d+)")
@@ -52,6 +60,9 @@ def score(g, cfg, path, labels):
 def main():
     lab_f = HERE / "false_objections.json"
     labels = json.loads(lab_f.read_text()) if lab_f.exists() else {}
+    det_f = HERE / "label_detail.json"              # per-objection labels (labels.py) take precedence
+    if det_f.exists():
+        labels.update({k: sum(r["false"] for r in v) for k, v in json.loads(det_f.read_text()).items()})
     rows = []
     for g in TRUTH:
         for cfg, pat in CONFIGS.items():

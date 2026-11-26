@@ -1,0 +1,22 @@
+{"t": 0.051, "ev": "input", "graph": "K_16_4_s1_opus-low", "receivers": 1820, "llm": "chat", "family_rule": true}
+{"t": 0.317, "ev": "start", "tool": "describe"}
+{"t": 0.317, "ev": "start", "tool": "indep"}
+{"t": 0.317, "ev": "start", "tool": "cover"}
+{"t": 1.669, "ev": "board", "side": "lower", "value": 455, "tool": "greedy independent set", "bracket": [455, 1820]}
+{"t": 5.731, "ev": "board", "side": "upper", "value": 530, "tool": "clique_cover", "bracket": [455, 530]}
+{"t": 71.724, "ev": "done", "tool": "describe", "seconds": 71.105}
+{"t": 71.724, "ev": "summary", "summary": {"receivers": 1820, "edges": 450450, "degree_min": 495, "degree_max": 495, "regular": true, "common_neighbours_adjacent": [70], "common_neighbours_nonadjacent": [126, 210, 330], "triangles_through_sampled_vertex": 17325, "spectrum_integral": true, "eigenvalues": [[495, 1], [45, 104], [1, 1260], [-9, 440], [-165, 15]], "distinct_eigenvalues": 5, "seconds": 71.105}}
+{"t": 71.725, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 83.448, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.8, "evidence": ["receivers 1820, regular degree 495", "spectrum integral with 5 distinct eigenvalues: 495, 45, 1, -9, -165", "board lower 455, upper 530"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 16, "k": 4}, "why": "likely K(16,4) if binomial_match confirms; get rule's (p,c)"}, {"tool": "spectral", "args": {"top": 5}, "why": "generic fallback code search"}], "notes": "Regular, integral spectrum with 5 distinct eigenvalues suggests Kneser K(n,4); binomial_match first to verify (n,k)."}}
+{"t": 83.448, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 88.664, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 88.664, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "confirm (n,k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 16, "k": 4}, "why": "likely K(16,4) if binomial_match confirms; get rule's (p,c)"}, {"tool": "spectral", "args": {"top": 5}, "why": "generic fallback code search"}], "hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.8, "evidence": ["receivers 1820, regular degree 495", "spectrum integral with 5 distinct eigenvalues: 495, 45, 1, -9, -165", "board lower 455, upper 530"]}, "critic_rounds": 1}
+{"t": 88.665, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 16, "k": 4}]}]}
+{"t": 88.665, "ev": "rule", "tool": "family_rule", "args": {"n": 16, "k": 4}, "result": {"p": 2, "c": 1}}
+{"t": 88.665, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "family rule"}
+{"t": 90.22, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 455, "seconds": 1.547}
+{"t": 90.22, "ev": "board", "side": "upper", "value": 455, "tool": "linear_code", "bracket": [455, 455]}
+{"t": 90.22, "ev": "event", "name": "bracket_closed", "bracket": [455, 455]}
+{"t": 92.135, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 98.379, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Proven: beta = 455 for this 1820-receiver graph (consistent with Kneser K(16,4)). Lower bound: independent set of size 455, checked. Upper bound: linear code M = I + A over F_2 of length 455, with code_fits, factorization and decoding checks all passing. The agent closed the bracket with 1 code tried in wall 90.22 s (compute 73.284 s, LLM 16.936 s). Baselines: CP-SAT alpha found 455 but unproven at 123 s; cpsat_cover found nothing; frac_cover 1800 unproven; f2_minrank_sat gave only lower 454 in 1.2 s; kushagra_agent proved 455 exactly in 1.90 s. So the agent matches the best baseline in accuracy but is about 47x slower than kushagra_agent, mostly due to the 71 s describe step. Nothing suspicious; hypothesis params were left empty."}}
+{"t": 98.379, "ev": "verdict", "verdict": "proven", "bracket": [455, 455], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

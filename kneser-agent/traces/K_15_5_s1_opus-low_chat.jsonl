@@ -1,0 +1,22 @@
+{"t": 0.001, "ev": "input", "graph": "K_15_5_s1_opus-low", "receivers": 3003, "llm": "chat", "family_rule": true}
+{"t": 0.17, "ev": "start", "tool": "describe"}
+{"t": 0.224, "ev": "start", "tool": "indep"}
+{"t": 0.224, "ev": "start", "tool": "cover"}
+{"t": 2.573, "ev": "board", "side": "lower", "value": 1001, "tool": "greedy independent set", "bracket": [1001, 3003]}
+{"t": 37.105, "ev": "board", "side": "upper", "value": 1219, "tool": "clique_cover", "bracket": [1001, 1219]}
+{"t": 81.605, "ev": "done", "tool": "describe", "seconds": 81.103}
+{"t": 81.605, "ev": "summary", "summary": {"receivers": 3003, "edges": 378378, "degree_min": 252, "degree_max": 252, "regular": true, "common_neighbours_adjacent": [1], "common_neighbours_nonadjacent": [6, 21, 56, 126], "triangles_through_sampled_vertex": 126, "spectrum_integral": true, "eigenvalues": [[252, 1], [56, 90], [6, 910], [-1, 1638], [-21, 350], [-126, 14]], "distinct_eigenvalues": 6, "seconds": 81.103}}
+{"t": 81.605, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 89.319, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["regular with degree_min = degree_max = 252", "spectrum_integral true with 6 distinct eigenvalues", "receivers 3003", "board lower 1001, upper 1219"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "identify (n,k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 15, "k": 5}, "why": "query the Kneser rule for the matched parameters (use binomial_match's (n,k) if it differs)"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback in case the family guess or rule fails"}], "notes": "Vertex-transitive candidate; parameters to be confirmed by binomial_match before relying on them."}}
+{"t": 89.319, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 94.028, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": [{"tool": "binomial_match", "args": {}}]}}
+{"t": 94.028, "ev": "plan_accepted", "plan": [{"tool": "binomial_match", "args": {}, "why": "identify (n,k) with N = C(n,k) and degree = C(n-k,k)"}, {"tool": "family_rule", "args": {"n": 15, "k": 5}, "why": "query the Kneser rule for the matched parameters (use binomial_match's (n,k) if it differs)"}, {"tool": "spectral", "args": {"top": 3}, "why": "generic fallback in case the family guess or rule fails"}], "hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.7, "evidence": ["regular with degree_min = degree_max = 252", "spectrum_integral true with 6 distinct eigenvalues", "receivers 3003", "board lower 1001, upper 1219"]}, "critic_rounds": 1}
+{"t": 94.028, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 15, "k": 5}]}]}
+{"t": 94.029, "ev": "rule", "tool": "family_rule", "args": {"n": 15, "k": 5}, "result": {"p": 5, "c": 1}}
+{"t": 94.029, "ev": "start", "tool": "code", "p": 5, "c": 1, "why": "family rule"}
+{"t": 99.013, "ev": "done", "tool": "code", "p": 5, "c": 1, "rank": 1001, "seconds": 4.98}
+{"t": 99.013, "ev": "board", "side": "upper", "value": 1001, "tool": "linear_code", "bracket": [1001, 1001]}
+{"t": 99.013, "ev": "event", "name": "bracket_closed", "bracket": [1001, 1001]}
+{"t": 106.167, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 112.888, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "Proven: beta = 1001 for the 3003-receiver graph. Lower bound is a checked independent set of size 1001; upper bound is a linear code M = I + A over F_5 whose length meets 1001, with fit, factorization and decoding checks all passing. Versus baselines: CP-SAT alpha found 1001 but did not prove it (123 s); CP-SAT cover timed out; fractional cover gave only 3003; F2 minrank SAT reached a lower bound of 1000 only. The kushagra_agent baseline also proved 1001 via field 5 in 4.4 s, far faster than this run's 99.0 s wall (86.6 s compute, 12.4 s LLM), so this agent lost clearly on time. Nothing suspicious; the hypothesis params were left empty and only one code was tried."}}
+{"t": 112.888, "ev": "verdict", "verdict": "proven", "bracket": [1001, 1001], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

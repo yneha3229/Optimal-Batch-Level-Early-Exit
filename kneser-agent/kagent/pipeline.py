@@ -67,8 +67,10 @@ def binomial_match(N, d):
 
 # ------------------------------------------------------------------------------------- orchestrator
 class Run:
-    def __init__(self, spec, seed=0, llm="none", budget=300.0, family_rule=True, workers=3, live=True, tag=""):
+    def __init__(self, spec, seed=0, llm="none", budget=300.0, family_rule=True, workers=3, live=True, tag="",
+                 fast_path=False):
         self.spec, self.seed, self.budget, self.allow_family = spec, seed, budget, family_rule
+        self.fast_path = fast_path and family_rule
         self.path = str(graphs.make(spec, seed))
         self.name = Path(self.path).stem + (f"_{tag}" if tag else "")
         self.A = graphs.load(self.path)
@@ -264,10 +266,25 @@ class Run:
         default = {"family_hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []},
                    "plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "notes": "default plan"}
         payload = {"summary": summary, "board": self.view()}
-        plan, src = self.agents.solver(payload, default)
         rounds = 0
         history = self.history                          # every check result so far (critic- or plan-requested)
-        while self.backend is not None and rounds < 3:
+        if self.fast_path:
+            # deterministic fast path (opt-in): a regular graph whose receiver count and degree fit exactly one
+            # K(n,k) gets the family rule's code at once. Recognition is only a guess; the code is certified by
+            # the same checks as every other bound, so a wrong guess costs one rank computation.
+            hits = binomial_match(self.N, summary["degree_max"]) if summary.get("regular") else []
+            rule = tools.family_rule(hits[0]["n"], hits[0]["k"]) if len(hits) == 1 else None
+            self.trace("fast_path", matches=hits, rule=rule)
+            if rule:
+                self.submit_code(rule["p"], rule["c"], why=f"fast path K({hits[0]['n']},{hits[0]['k']})")
+                self.drain(kinds={"code"})
+        if self.closed():
+            plan = {"family_hypothesis": {"name": "Kneser (fast path)", "params": hits[0], "confidence": 1,
+                                          "evidence": ["binomial_match", "regular"]},
+                    "plan": [{"tool": "family_rule", "args": hits[0], "why": "fast path"}]}
+        else:
+            plan, src = self.agents.solver(payload, default)
+        while self.backend is not None and rounds < 3 and not self.closed():
             crit, _ = self.agents.critic({"summary": summary, "solver": plan, "board": self.view(),
                                           "check_history": history})
             rounds += 1
@@ -330,7 +347,7 @@ class Run:
             "invalid" if not all(checks.values()) else "gap")
         truth = json.loads(graphs.TRUTH.read_text()).get(Path(self.path).stem, {})
         result = {"graph": self.name, "spec": self.spec, "receivers": self.N, "llm": self.llm_name,
-                  "family_rule_allowed": self.allow_family, "prompt_version": PROMPT_VERSION if self.backend else None, "bracket": [b["lower"], b["upper"]], "verdict": verdict,
+                  "family_rule_allowed": self.allow_family, "fast_path": self.fast_path, "prompt_version": PROMPT_VERSION if self.backend else None, "bracket": [b["lower"], b["upper"]], "verdict": verdict,
                   "upper_certificate": uc, "checks": checks, "wall_s": round(wall, 3),
                   "llm_s": round(self.llm_seconds(), 3), "warmup_s": self.warmup_s, "compute_s": round(wall - self.llm_seconds(), 3),
                   "llm_calls": getattr(self.backend, "calls", 0) if self.backend else 0, "critic_rounds": rounds,
@@ -354,7 +371,13 @@ class Run:
         result.update(verdict=verdict, checks=checks, analysis=vtxt.get("analysis"))
         self.trace("verdict", verdict=verdict, bracket=result["bracket"], checks=checks)
         (ROOT / "traces").mkdir(exist_ok=True)
-        with open(ROOT / "traces" / f"{self.name}_{self.llm_name}.jsonl", "w") as fh:
+        tp = ROOT / "traces" / f"{self.name}_{self.llm_name}.jsonl"
+        i = 1
+        while tp.exists():                   # never overwrite an earlier run's trace (it may be cited elsewhere)
+            i += 1
+            tp = ROOT / "traces" / f"{self.name}_{self.llm_name}_r{i}.jsonl"
+        result["trace"] = tp.name
+        with open(tp, "w") as fh:
             for e in self.events:
                 fh.write(json.dumps(e, default=str) + "\n")
         with open(ROOT / "results" / "runs.jsonl", "a") as fh:
@@ -378,8 +401,9 @@ def main():
     ap.add_argument("--no-family-rule", action="store_true")
     ap.add_argument("--workers", type=int, default=3)
     ap.add_argument("--tag", default="")
+    ap.add_argument("--fast-path", action="store_true", help="recognise K(n,k) from N and the degree, apply the rule")
     a = ap.parse_args()
-    r = Run(a.spec, a.seed, a.llm, a.budget, not a.no_family_rule, a.workers, tag=a.tag).run()
+    r = Run(a.spec, a.seed, a.llm, a.budget, not a.no_family_rule, a.workers, tag=a.tag, fast_path=a.fast_path).run()
     print(json.dumps({k: r[k] for k in ("graph", "bracket", "verdict", "wall_s", "llm_s", "compute_s", "checks")}))
     os._exit(0)
 

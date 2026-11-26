@@ -1,0 +1,345 @@
+{
+ "K_16_4_s3|Qwen2.5-32B": [
+  {
+   "objection": "The family hypothesis does not specify (n, k) parameters, which are necessary to confirm the Kneser graph structure.",
+   "false": false,
+   "why": "true: params were empty"
+  },
+  {
+   "objection": "The degree 495 does not match the expected degree for Kneser(16,4), which should be C(12,4) = 495, but this needs to be confirmed by the family_rule.",
+   "false": true,
+   "why": "says 495 does not match, then that it should be 495"
+  },
+  {
+   "objection": "The degree_min and degree_max are both 495, but for Kneser(16,4), the degree should be C(12,3) = 220, not 495.",
+   "false": true,
+   "why": "the K(16,4) degree is C(12,4) = 495, not C(12,3)"
+  }
+ ],
+ "K_16_4_s3|Qwen2.5-32B-cpu": [
+  {
+   "objection": "The family hypothesis does not specify (n, k) parameters, which are necessary to fully validate the Kneser graph hypothesis.",
+   "false": false,
+   "why": "true: params were empty"
+  },
+  {
+   "objection": "The common-neighbour counts [70, 126, 210, 330] do not match the expected pattern for K(16, 4).",
+   "false": true,
+   "why": "70, 126, 210, 330 = C(8,4), C(9,4), C(10,4), C(11,4): they match"
+  },
+  {
+   "objection": "The common-neighbour counts [70, 126, 210, 330] do not match the expected values for K(16, 4).",
+   "false": true,
+   "why": "same: the counts match K(16,4)"
+  }
+ ],
+ "K_16_4_s3|haiku-med": [],
+ "K_16_4_s3|sonnet-med": [],
+ "K_16_4_s3|opus-low": [],
+ "K_16_4_s3|opus-med": [],
+ "K_16_4_s3|opus-high": [],
+ "K_16_4-del0.01_s0|Qwen2.5-32B": [
+  {
+   "objection": "The family hypothesis 'perturbed Kneser' does not match the distinct eigenvalues count of 1820, which should be equal to the number of receivers (1820) in a Kneser graph but the eigenvalue multiplicities suggest otherwise.",
+   "false": true,
+   "why": "a Kneser graph has few distinct eigenvalues, not N"
+  },
+  {
+   "objection": "The binomial_match result (n=16, k=4) does not match the number of receivers (1820) and edges (445945). The correct binomial match should have N = C(n, k) = 1820 and degree = C(n-k, k) = 482, which is not satisfied by n=16, k=4.",
+   "false": true,
+   "why": "C(16,4) = 1820 does match; 482 is the perturbed minimum degree"
+  },
+  {
+   "objection": "The family hypothesis is inconsistent with the number of receivers (1820) and edges (445945). The binomial_match result (n=16, k=4) does not match these numbers.",
+   "false": true,
+   "why": "binomial_match (16,4) fits 1820 receivers"
+  }
+ ],
+ "K_16_4-del0.01_s0|Qwen2.5-32B-cpu": [
+  {
+   "objection": "The graph is not regular, but the family hypothesis suggests a Kneser graph, which is regular by definition.",
+   "false": false,
+   "why": "true: Kneser graphs are regular (reviewer's correction)"
+  },
+  {
+   "objection": "The family hypothesis suggests a perturbed Kneser graph, but the binomial_match result (n=16, k=4) does not match the number of receivers (1820) and the degree range (482-495). The correct binomial match should have N = C(n,k) = 1820 and degree = C(n-k,k) within the range 482-495, which is not the case here.",
+   "false": true,
+   "why": "binomial_match (16,4) does fit 1820 receivers"
+  },
+  {
+   "objection": "The binomial_match result (n=16, k=4) does not match the number of receivers (1820) and the degree range (482-495).",
+   "false": true,
+   "why": "binomial_match (16,4) does fit 1820 receivers"
+  }
+ ],
+ "K_16_4-del0.01_s0|haiku-med": [],
+ "K_16_4-del0.01_s0|sonnet-med": [
+  {
+   "objection": "check_history is empty: the (n, k) = (16, 4) claim for 1820 receivers is unverified by binomial_match, and degree_max = 495 must be matched against its degree check",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "The Solver relies on family_rule for K(16,4) but has not queried it; with degree_min = 482 and regular = false the rule may name no field, so its output is needed before ordering the plan",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  }
+ ],
+ "K_16_4-del0.01_s0|opus-low": [],
+ "K_16_4-del0.01_s0|opus-med": [
+  {
+   "objection": "Note: spectrum_integral = false and distinct_eigenvalues = 1820, so spectral's integer-spectrum ranking may be weak; family_rule (16,4) after binomial_match is the more promising code step, which the plan already orders first.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  }
+ ],
+ "K_16_4-del0.01_s0|opus-high": [],
+ "K_14_4_s0|Qwen2.5-32B": [
+  {
+   "objection": "The family hypothesis does not specify (n, k) parameters, which are necessary for verification.",
+   "false": false,
+   "why": "true: params were empty"
+  }
+ ],
+ "K_14_4_s0|Qwen2.5-32B-cpu": [
+  {
+   "objection": "The family hypothesis does not specify (n, k) parameters, but the plan relies on family_rule without querying it first.",
+   "false": false,
+   "why": "true at that point; process request"
+  },
+  {
+   "objection": "The family hypothesis is consistent with the number of receivers (1001) and the degree (210), but the eigenvalues and multiplicities do not match the expected spectrum for Kneser(14, 4). The expected spectrum for Kneser(14, 4) should have eigenvalues 210, 28, 1, -7, and -84 with multiplicities 1, 77, 637, 273, and 13, respectively, which matches the given spectrum. However, the plan should first confirm the (p, c) pair using family_rule before proceeding with spectral.",
+   "false": true,
+   "why": "the spectrum it lists as expected is the one in the summary"
+  },
+  {
+   "objection": "The plan relies on family_rule without having queried it, even though the result is already in check_history. The plan should first confirm the (p, c) pair using family_rule.",
+   "false": true,
+   "why": "the rule had been queried; its result was in the history"
+  },
+  {
+   "objection": "family_rule did not return a (p, c) pair for Kneser(14, 4), which is necessary to confirm the hypothesis.",
+   "false": true,
+   "why": "wrong inference: a rule naming no field does not refute K(14,4) (reviewer's rule)"
+  }
+ ],
+ "K_14_4_s0|haiku-med": [],
+ "K_14_4_s0|sonnet-med": [],
+ "K_14_4_s0|opus-low": [],
+ "K_14_4_s0|opus-med": [],
+ "K_14_4_s0|opus-high": [
+  {
+   "objection": "No blocking objection. Consistency check for K(14,4): adjacent common neighbours 15 = C(6,4); nonadjacent 35, 70, 126 = C(7,4), C(8,4), C(9,4); eigenvalue multiplicities 13, 77, 273, 637 match C(14,i) - C(14,i-1); triangles 1575 = 210*15/2; Hoffman 1001*84/(210+84) = 286 equals the board lower bound 286. Plan order (binomial_match, then family_rule, then spectral) is justified; hoffman step is redundant information only and can be skipped.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  }
+ ],
+ "K_16_4_s1|haiku-med": [],
+ "K_16_4_s1|sonnet-med": [],
+ "K_16_4_s1|opus-low": [],
+ "K_16_4_s1|opus-med": [],
+ "K_16_4_s1|opus-high": [],
+ "K_16_4-del0.01_s1|haiku-med": [
+  {
+   "objection": "check_history is empty, so the (n, k) = (16, 4) hypothesis is unverified; the 1820 receivers only fit C(16,4) if binomial_match confirms it, and the 0.4 confidence is not yet supported by any check",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "Common neighbours of adjacent pairs are 63 to 70, and 70 is the exact Kneser value C(8,4) for disjoint 4-sets; the values 63 to 69 are perturbations of it, which fits a perturbed Kneser graph",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "Common neighbours of nonadjacent pairs are 66 to 70 and 116 to 122. For an exact K(16,4), intersecting pairs with overlap j=1, 2, 3 would have C(9,4)=126, C(10,4)=210, C(11,4)=330 common neighbours. The 116 to 122 values sit near 126, but the 66 to 70 values do not fit any exact overlap, so the hypothesis does not explain every number in the summary",
+   "false": false,
+   "why": "borderline: true that 66-70 fit no exact overlap (they come from deleted edges); claim is about the Solver's evidence, which indeed did not explain them"
+  },
+  {
+   "objection": "The eigenvalue list shows a cluster near 45.3 to 45.7 (14 of 1820 values shown, each with multiplicity 1). For exact K(16,4), eigenvalue C(10,2)=45 has multiplicity C(16,2)-16=104, so the cluster is consistent with the Kneser spectrum after perturbation. The solver's evidence does not mention this cluster, and the multiplicities shown cannot confirm it; the top eigenvalue 490.057 is also not a Kneser eigenvalue (exact value 495), which the solver did not address",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "The plan puts binomial_match first and family_rule second, which is the right order. The plan does not include hoffman, which costs nothing and bounds alpha from the spectrum against the lower bound 455 and upper bound 534; it is cheaper information than a spectral code check",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "The hypothesis is not consistent with every number in the summary: common_neighbours_nonadjacent contains 66 to 70, and for an exact K(16,4) intersecting pairs (overlap j = 1, 2, 3) have C(9,4) = 126, C(10,4) = 210, C(11,4) = 330 common neighbours. The solver's notes call the perturbation large but do not explain these values, so the evidence does not cover all the numbers",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "The solver's notes say the family rule may not transfer, yet the plan's first step relies on family_rule for (16, 4) and check_history does not yet contain its result; the order is justified, but the plan should not treat the rule as established before it is queried",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "The eigenvalue list has 14 values with multiplicity 1 each, while an exact K(16,4) gives eigenvalue C(10,2) = 45 multiplicity C(16,2) - 16 = 104; the summary's multiplicities cannot confirm the cluster, so 'consistent with a perturbed eigenvalue C(10,2) = 45' is weaker than the solver's evidence states",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "The plan's independent_set with 200 restarts is not justified by a number: the lower bound 455 is unchanged after the earlier 50-restart plan, and the solver gives no reason to expect a gain from 200 restarts; the greedy cost in seconds is not in the summary",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "Not every number is explained: common_neighbours_nonadjacent contains 66 to 70, which do not fit the exact K(16,4) overlap values 126, 210, 330. The solver flags this, and no available tool tests it, so it stays a caveat rather than a reason to challenge",
+   "false": false,
+   "why": "borderline, as above"
+  },
+  {
+   "objection": "The try_code evidence is loose: a code of length rank_2(M) closes the bracket only if it equals the lower bound 455 exactly; the summary does not give the code length, so the plan should state that target rather than 'reaches 455'",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  }
+ ],
+ "K_16_4-del0.01_s1|sonnet-med": [
+  {
+   "objection": "check_history is empty: the (n, k) = (16, 4) hypothesis rests on receivers = 1820 and degree_max = 495 only, and no binomial_match result confirms it.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "The plan relies on family_rule for K(16,4) but it has not been queried; its answer (a named (p, c) or an exception) decides whether the generic spectral step is even needed.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "Edges = 445943 with degree range 481 to 495 is consistent with a Kneser graph with a small fraction of edges removed, but the board gap lower = 455 versus upper = 534 cannot be narrowed until these two cheap checks are in.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  }
+ ],
+ "K_16_4-del0.01_s1|opus-low": [],
+ "K_16_4-del0.01_s1|opus-med": [],
+ "K_16_4-del0.01_s1|opus-high": [],
+ "K_14_4_s1|haiku-med": [
+  {
+   "objection": "Recomputed arithmetic: edges = 1001 * 210 / 2 = 105105, matching the summary. Eigenvalue multiplicities sum to 1 + 77 + 637 + 273 + 13 = 1001 = receivers. Trace = 210 + 28*77 + 637 - 7*273 - 84*13 = 0, as required for a loop-free graph. Triangles per vertex = 3 * (sum of mult*lambda^3 / 6) / 1001 = 1575, matching triangles_through_sampled_vertex. Adjacent common neighbours C(6,4) = 15 matches. Non-adjacent values C(7,4) = 35, C(8,4) = 70, C(9,4) = 126 match the three values listed. The spectrum is consistent with K(14,4).",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "Solver's notes call 345 the best code so far. It is not a code: upper = 345 is a clique-cover bound from the board, and codes_tried = 0. The notes should say the open gap is between the independent-set bound 286 and the clique-cover bound 345, with no code yet found. The plan does not rely on this wording, so it does not change the plan.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "Plan order is justified: binomial_match runs first as rule 2 requires, and family_rule is queried before the plan relies on it. The spectral step is a cheap generic fallback, and independent_set is cheap. No cheaper path is apparent. check_history is empty, so no planned check is a repeat.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  }
+ ],
+ "K_14_4_s1|sonnet-med": [],
+ "K_14_4_s1|opus-low": [],
+ "K_14_4_s1|opus-med": [],
+ "K_14_4_s1|opus-high": [],
+ "K_13_4_s0|haiku-med": [],
+ "K_13_4_s0|sonnet-med": [],
+ "K_13_4_s0|opus-low": [],
+ "K_13_4_s0|opus-med": [],
+ "K_13_4_s0|opus-high": [],
+ "K_13_4_s1|haiku-med": [],
+ "K_13_4_s1|sonnet-med": [
+  {
+   "objection": "Minor wording error, not affecting the plan: the Solver says eigenvalues 126, 21, 1, -6, -56 are all 1 mod 5, but -6 and -56 are 4 mod 5; only 126, 21, 1 (multiplicities 1 + 65 + 429 = 495) are 1 mod 5, so the predicted rank is 715 - 495 = 220, which still equals lower = 220 as claimed.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "Hypothesis K(13,4) is consistent with receivers = 715, degree 126 (regular), integral spectrum with 5 distinct eigenvalues and multiplicities summing to 1 + 65 + 429 + 208 + 12 = 715, and the 5 common neighbours for adjacent pairs. check_history is empty, so binomial_match first and family_rule second is justified, and try_code p=5 c=4 is the cheapest likely closer (upper 254 vs lower 220 leaves a gap of 34).",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  }
+ ],
+ "K_13_4_s1|opus-low": [],
+ "K_13_4_s1|opus-med": [],
+ "K_13_4_s1|opus-high": [],
+ "K_15_5_s0|haiku-med": [],
+ "K_15_5_s0|sonnet-med": [],
+ "K_15_5_s0|opus-low": [],
+ "K_15_5_s0|opus-med": [],
+ "K_15_5_s0|opus-high": [],
+ "K_15_5_s1|haiku-med": [],
+ "K_15_5_s1|sonnet-med": [],
+ "K_15_5_s1|opus-low": [],
+ "K_15_5_s1|opus-med": [],
+ "K_15_5_s1|opus-high": [
+  {
+   "objection": "The hypothesis leaves (n, k) unconfirmed and check_history is empty: binomial_match has not been run, yet the plan already queries family_rule with n = 15, k = 5. Run binomial_match first so the family_rule arguments are copied from a check result for receivers = 3003 and degree = 252.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "The plan's try_code (p = 5, c = 1) is the step that is expected to close the bracket [1001, 1219], but the family_rule for the matched (n, k) has not been queried; the rule may name a different (p, c) or no field (exception), which would change the order of the plan.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "Recomputed arithmetic is correct: edges 3003 * 252 / 2 = 378378; Hoffman 3003 * 126 / 378 = 1001 = board lower; multiplicities 1638 + 350 + 14 = 2002 = 3003 - 1001; mod 5: 1 - 1 = 0, 1 - 21 = -20, 1 - 126 = -125 all 0, while 253, 57, 7 are nonzero mod 5; multiplicities 1 + 90 + 910 = 1001 remain. Summary numbers (common_neighbours_adjacent = [1], triangles_through_sampled_vertex = 126 = 252 * 1 / 2) are consistent with the hypothesis; only the parameter confirmation and rule query are missing.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  }
+ ],
+ "reg_1000_6_s0|haiku-med": [
+  {
+   "objection": "(1) The hypothesis \"none\" with confidence 0.1 is consistent with every number given: receivers 1000 and edges 3000 match 1000 x 6 / 2, degree_min = degree_max = 6 matches regular true, common-neighbour counts (0 to 2) and triangles_through_sampled_vertex = 1 show no strongly regular structure, and spectrum_integral false rules out an exact Kneser-type member. The 14 eigenvalues shown are a partial list of the 1000 distinct values, which is consistent with distinct_eigenvalues = 1000; nothing here contradicts the hypothesis.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "(2) The plan order is justified: the spectral step is the generic code check kept first as the solver notes, independent_set with 200 restarts targets the open gap (lower 327, upper 537, codes_tried 0), and hoffman is information only (cheap). No family_rule or binomial_match is needed because no Kneser-type hypothesis is made.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "(3) No cheaper path is evident from the given data; check_history is empty, so no earlier result refutes or supports the plan.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  }
+ ],
+ "reg_1000_6_s0|sonnet-med": [],
+ "reg_1000_6_s0|opus-low": [],
+ "reg_1000_6_s0|opus-med": [],
+ "reg_1000_6_s0|opus-high": [],
+ "reg_1000_6_s1|haiku-med": [
+  {
+   "objection": "Consistency (1): summary.triangles_through_sampled_vertex = 1 means the sampled vertex v lies in one triangle v-a-b, so the edge (v,a) has at least one common neighbour (b). But summary.common_neighbours_adjacent = [0] reports no adjacent pair with a common neighbour. The solver cites both numbers as evidence without reconciling them, so the summary counts are inconsistent or sampled on different vertices. Resolve this before relying on the triangle evidence.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "Consistency (1): the solver's evidence line 'distinct_eigenvalues = 1000 (no repeated eigenvalues)' is consistent with N = 1000 and is fine. However, only 14 of the 1000 eigenvalues are shown and their multiplicities are all 1, so the listed values cannot confirm trace = 0 or the full multiplicity structure; the solver should not treat the spectrum as fully known.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "Plan order (2): binomial_match first is justified by rule 2 and check_history is empty. The plan is not cheaper than necessary, since the spectral code check and independent_set restarts are both fine as generic steps. Hoffman is information only and can be dropped if cost matters, but it is cheap.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "Cheaper path (3): no family_rule is needed because no Kneser-type hypothesis is made, and the solver correctly says the non-integral spectrum rules out an exact vertex-transitive family. The hypothesis confidence 0.1 is consistent with the evidence.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  }
+ ],
+ "reg_1000_6_s1|sonnet-med": [],
+ "reg_1000_6_s1|opus-low": [],
+ "reg_1000_6_s1|opus-med": [
+  {
+   "objection": "Minor: common_neighbours_adjacent [0] says adjacent pairs share no neighbour, yet triangles_through_sampled_vertex is 1; the adjacency count is likely sampled, so the graph is nearly (not exactly) triangle-free. This does not change the hypothesis: spectrum_integral false with 1000 distinct eigenvalues and degree 6 everywhere rules out any vertex-transitive family with integral spectrum, so no binomial_match or family_rule is needed.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  },
+  {
+   "objection": "Plan order is justified: independent_set is cheap and the gap 329..537 is wide; spectral (about 1000^2 * |S| / 1e11 = 0.01 s per code) keeps the required generic step; hoffman is information only.",
+   "false": false,
+   "why": "true statement or process request (checked)"
+  }
+ ],
+ "reg_1000_6_s1|opus-high": []
+}
