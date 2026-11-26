@@ -1,0 +1,38 @@
+{"t": 0.001, "ev": "input", "graph": "K_53_2_s0", "receivers": 1378, "llm": "none", "family_rule": true}
+{"t": 0.009, "ev": "start", "tool": "describe"}
+{"t": 0.009, "ev": "start", "tool": "indep"}
+{"t": 0.009, "ev": "start", "tool": "cover"}
+{"t": 0.024, "ev": "board", "side": "lower", "value": 52, "tool": "greedy independent set", "bracket": [52, 1378]}
+{"t": 0.037, "ev": "board", "side": "upper", "value": 57, "tool": "clique_cover", "bracket": [52, 57]}
+{"t": 0.227, "ev": "done", "tool": "describe", "seconds": 0.21}
+{"t": 0.227, "ev": "summary", "summary": {"receivers": 1378, "edges": 878475, "degree_min": 1275, "degree_max": 1275, "regular": true, "common_neighbours_adjacent": [1176], "common_neighbours_nonadjacent": [1225], "triangles_through_sampled_vertex": 749700, "spectrum_integral": true, "eigenvalues": [[1275, 1], [1, 1325], [-50, 52]], "distinct_eigenvalues": 3, "seconds": 0.21}}
+{"t": 0.227, "ev": "plan_accepted", "plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []}, "critic_rounds": 0}
+{"t": 0.227, "ev": "start", "tool": "code", "p": 3, "c": 2, "why": "spectral pred 1"}
+{"t": 0.228, "ev": "start", "tool": "code", "p": 17, "c": 16, "why": "spectral pred 1"}
+{"t": 0.228, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "spectral pred 52"}
+{"t": 0.228, "ev": "start", "tool": "code", "p": 7, "c": 6, "why": "spectral pred 52"}
+{"t": 0.228, "ev": "start", "tool": "code", "p": 13, "c": 12, "why": "spectral pred 52"}
+{"t": 0.228, "ev": "start", "tool": "code", "p": 5, "c": 4, "why": "spectral pred 53"}
+{"t": 0.228, "ev": "start", "tool": "code", "p": 11, "c": 10, "why": "spectral pred 53"}
+{"t": 0.228, "ev": "start", "tool": "code", "p": 19, "c": 18, "why": "spectral pred 53"}
+{"t": 0.76, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 53, "seconds": 0.521}
+{"t": 0.76, "ev": "board", "side": "upper", "value": 53, "tool": "linear_code", "bracket": [52, 53]}
+{"t": 0.76, "ev": "event", "name": "near_miss", "p": 2, "rank": 53}
+{"t": 0.764, "ev": "done", "tool": "code", "p": 17, "c": 16, "rank": 53, "seconds": 0.533}
+{"t": 0.764, "ev": "event", "name": "near_miss", "p": 17, "rank": 53}
+{"t": 0.764, "ev": "start", "tool": "code", "p": 17, "c": 1, "why": "near miss"}
+{"t": 0.764, "ev": "start", "tool": "code", "p": 17, "c": 2, "why": "near miss"}
+{"t": 0.764, "ev": "start", "tool": "code", "p": 17, "c": 3, "why": "near miss"}
+{"t": 0.764, "ev": "start", "tool": "code", "p": 17, "c": 4, "why": "near miss"}
+{"t": 0.765, "ev": "start", "tool": "code", "p": 17, "c": 5, "why": "near miss"}
+{"t": 0.765, "ev": "start", "tool": "code", "p": 17, "c": 6, "why": "near miss"}
+{"t": 0.765, "ev": "start", "tool": "code", "p": 17, "c": 7, "why": "near miss"}
+{"t": 0.792, "ev": "done", "tool": "code", "p": 3, "c": 2, "rank": 53, "seconds": 0.557}
+{"t": 0.792, "ev": "event", "name": "near_miss", "p": 3, "rank": 53}
+{"t": 0.792, "ev": "start", "tool": "code", "p": 3, "c": 1, "why": "near miss"}
+{"t": 0.973, "ev": "done", "tool": "code", "p": 7, "c": 6, "rank": 52, "seconds": 0.214}
+{"t": 0.973, "ev": "board", "side": "upper", "value": 52, "tool": "linear_code", "bracket": [52, 52]}
+{"t": 0.973, "ev": "event", "name": "bracket_closed", "bracket": [52, 52]}
+{"t": 1.271, "ev": "done", "tool": "code", "p": 13, "c": 12, "rank": 53, "seconds": 0.501}
+{"t": 1.271, "ev": "event", "name": "bracket_closed", "bracket": [52, 52]}
+{"t": 1.345, "ev": "verdict", "verdict": "proven", "bracket": [52, 52], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

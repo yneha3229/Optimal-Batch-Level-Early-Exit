@@ -1,0 +1,40 @@
+K(21,2) [] [    0.12s] verdict          {"verdict": "proven", "bracket": [20, 20], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(21,2) ['--no-family-rule'] [    0.07s] verdict          {"verdict": "proven", "bracket": [20, 20], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(29,2) [] [    0.25s] verdict          {"verdict": "proven", "bracket": [28, 28], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(29,2) ['--no-family-rule'] [    0.23s] verdict          {"verdict": "proven", "bracket": [28, 28], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(40,2) [] [    0.26s] verdict          {"verdict": "proven", "bracket": [39, 39], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(40,2) ['--no-family-rule'] [    0.30s] verdict          {"verdict": "proven", "bracket": [39, 39], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(53,2) [] [    1.34s] verdict          {"verdict": "proven", "bracket": [52, 52], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(53,2) ['--no-family-rule'] [    1.34s] verdict          {"verdict": "proven", "bracket": [52, 52], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(12,3) [] [    0.33s] verdict          {"verdict": "proven", "bracket": [55, 55], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(12,3) ['--no-family-rule'] [    0.14s] verdict          {"verdict": "proven", "bracket": [55, 55], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(13,3) [] [    0.18s] verdict          {"verdict": "proven", "bracket": [66, 66], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(13,3) ['--no-family-rule'] [    0.34s] verdict          {"verdict": "proven", "bracket": [66, 66], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(16,3) [] [    0.51s] verdict          {"verdict": "proven", "bracket": [105, 105], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(16,3) ['--no-family-rule'] [    0.46s] verdict          {"verdict": "proven", "bracket": [105, 105], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(18,3) [] [    0.28s] verdict          {"verdict": "proven", "bracket": [136, 136], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(18,3) ['--no-family-rule'] [    0.33s] verdict          {"verdict": "proven", "bracket": [136, 136], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(21,3) [] [    0.63s] verdict          {"verdict": "proven", "bracket": [190, 190], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(21,3) ['--no-family-rule'] [    0.69s] verdict          {"verdict": "proven", "bracket": [190, 190], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(13,4) [] [    0.67s] verdict          {"verdict": "proven", "bracket": [220, 220], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(13,4) ['--no-family-rule'] [    0.32s] verdict          {"verdict": "proven", "bracket": [220, 220], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(15,4) [] [    1.32s] verdict          {"verdict": "proven", "bracket": [364, 364], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(15,4) ['--no-family-rule'] [    1.21s] verdict          {"verdict": "proven", "bracket": [364, 364], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(16,4) [] [    1.55s] verdict          {"verdict": "proven", "bracket": [455, 455], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(16,4) ['--no-family-rule'] [    1.43s] verdict          {"verdict": "proven", "bracket": [455, 455], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(17,4) [] [    2.10s] verdict          {"verdict": "proven", "bracket": [560, 560], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(17,4) ['--no-family-rule'] [    2.08s] verdict          {"verdict": "proven", "bracket": [560, 560], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(15,5) [] [    4.31s] verdict          {"verdict": "proven", "bracket": [1001, 1001], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(15,5) ['--no-family-rule'] [    5.82s] verdict          {"verdict": "proven", "bracket": [1001, 1001], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}
+K(10,4) [] [    0.34s] verdict          {"verdict": "gap", "bracket": [84, 93], "checks": {"independent_set": true, "code_fits": true}}
+K(10,4) ['--no-family-rule'] [    0.35s] verdict          {"verdict": "gap", "bracket": [84, 93], "checks": {"independent_set": true, "code_fits": true}}
+K(14,4) [] [    2.09s] verdict          {"verdict": "gap", "bracket": [286, 287], "checks": {"independent_set": true, "code_fits": true}}
+K(14,4) ['--no-family-rule'] [    2.81s] verdict          {"verdict": "gap", "bracket": [286, 287], "checks": {"independent_set": true, "code_fits": true}}
+K(13,5) [] [    3.15s] verdict          {"verdict": "gap", "bracket": [495, 507], "checks": {"independent_set": true, "code_fits": true}}
+K(13,5) ['--no-family-rule'] [    3.13s] verdict          {"verdict": "gap", "bracket": [495, 507], "checks": {"independent_set": true, "code_fits": true}}
+K(16,4)-del0.01 [] [    0.53s] verdict          {"verdict": "gap", "bracket": [455, 534], "checks": {"independent_set": true, "clique_cover": true}}
+K(16,4)-del0.01 ['--no-family-rule'] [    0.51s] verdict          {"verdict": "gap", "bracket": [455, 534], "checks": {"independent_set": true, "clique_cover": true}}
+K(18,3)-del0.01 [] [    0.12s] verdict          {"verdict": "gap", "bracket": [136, 152], "checks": {"independent_set": true, "clique_cover": true}}
+K(18,3)-del0.01 ['--no-family-rule'] [    0.10s] verdict          {"verdict": "gap", "bracket": [136, 152], "checks": {"independent_set": true, "clique_cover": true}}
+reg(1000,6) [] [    0.17s] verdict          {"verdict": "gap", "bracket": [327, 537], "checks": {"independent_set": true, "clique_cover": true}}
+reg(1000,6) ['--no-family-rule'] [    0.32s] verdict          {"verdict": "gap", "bracket": [327, 537], "checks": {"independent_set": true, "clique_cover": true}}

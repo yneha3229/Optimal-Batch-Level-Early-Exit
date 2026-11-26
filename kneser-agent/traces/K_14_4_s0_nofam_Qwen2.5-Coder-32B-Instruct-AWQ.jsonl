@@ -1,0 +1,90 @@
+{"t": 0.001, "ev": "input", "graph": "K_14_4_s0_nofam", "receivers": 1001, "llm": "Qwen2.5-Coder-32B-Instruct-AWQ", "family_rule": false}
+{"t": 0.01, "ev": "start", "tool": "describe"}
+{"t": 0.011, "ev": "start", "tool": "indep"}
+{"t": 0.011, "ev": "start", "tool": "cover"}
+{"t": 0.028, "ev": "board", "side": "lower", "value": 286, "tool": "greedy independent set", "bracket": [286, 1001]}
+{"t": 0.169, "ev": "board", "side": "upper", "value": 344, "tool": "clique_cover", "bracket": [286, 344]}
+{"t": 0.283, "ev": "done", "tool": "describe", "seconds": 0.267}
+{"t": 0.283, "ev": "summary", "summary": {"receivers": 1001, "edges": 105105, "degree_min": 210, "degree_max": 210, "regular": true, "common_neighbours_adjacent": [15], "common_neighbours_nonadjacent": [35, 70, 126], "triangles_through_sampled_vertex": 1575, "spectrum_integral": true, "eigenvalues": [[210, 1], [28, 77], [1, 637], [-7, 273], [-84, 13]], "distinct_eigenvalues": 5, "seconds": 0.267}}
+{"t": 0.283, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 6.953, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.9, "evidence": ["receivers = 1001", "degree_min = 210", "degree_max = 210", "spectrum_integral = true"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "To confirm if the graph matches a Kneser graph K(n,k)"}, {"tool": "family_rule", "args": {"n": 14, "k": 3}, "why": "If binomial_match confirms K(14,3), this will give us the (p,c) pair"}, {"tool": "spectral", "args": {"top": 5}, "why": "Generic code family attempt if family_rule does not provide a solution"}], "notes": "The regularity and integral spectrum suggest a possible Kneser graph. We first confirm the parameters using binomial_match."}}
+{"t": 6.954, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 8.903, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "challenge", "objections": ["The family hypothesis does not specify (n, k) parameters, which are necessary to confirm the Kneser graph structure."], "requested_checks": [{"tool": "binomial_match", "args": {}}]}}
+{"t": 8.903, "ev": "checks", "results": [{"tool": "binomial_match", "result": [{"n": 14, "k": 4}]}]}
+{"t": 8.903, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 17.125, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {"n": 14, "k": 4}, "confidence": 0.9, "evidence": ["receivers = 1001", "degree_min = 210", "degree_max = 210", "spectrum_integral = true", "C(14,4) = 1001"]}, "plan": [{"tool": "family_rule", "args": {"n": 14, "k": 4}, "why": "If binomial_match confirms K(14,4), this will give us the (p,c) pair"}, {"tool": "spectral", "args": {"top": 5}, "why": "Generic code family attempt if family_rule does not provide a solution"}], "notes": "The regularity and integral spectrum, along with the confirmed parameters from binomial_match, strongly suggest a Kneser graph K(14,4). We now seek the (p,c) pair using family_rule."}}
+{"t": 17.125, "ev": "llm_request", "agent": "critic", "attempt": 0}
+{"t": 17.943, "ev": "llm_reply", "agent": "critic", "reply": {"verdict": "accept", "objections": [], "requested_checks": []}}
+{"t": 17.943, "ev": "plan_accepted", "plan": [{"tool": "family_rule", "args": {"n": 14, "k": 4}, "why": "If binomial_match confirms K(14,4), this will give us the (p,c) pair"}, {"tool": "spectral", "args": {"top": 5}, "why": "Generic code family attempt if family_rule does not provide a solution"}], "hypothesis": {"name": "Kneser", "params": {"n": 14, "k": 4}, "confidence": 0.9, "evidence": ["receivers = 1001", "degree_min = 210", "degree_max = 210", "spectrum_integral = true", "C(14,4) = 1001"]}, "critic_rounds": 2}
+{"t": 17.949, "ev": "start", "tool": "code", "p": 2, "c": 1, "why": "spectral pred 91"}
+{"t": 17.949, "ev": "start", "tool": "code", "p": 3, "c": 2, "why": "spectral pred 287"}
+{"t": 17.949, "ev": "start", "tool": "code", "p": 5, "c": 4, "why": "spectral pred 351"}
+{"t": 17.949, "ev": "start", "tool": "code", "p": 17, "c": 16, "why": "spectral pred 351"}
+{"t": 17.949, "ev": "start", "tool": "code", "p": 11, "c": 10, "why": "spectral pred 363"}
+{"t": 18.098, "ev": "done", "tool": "code", "p": 5, "c": 4, "rank": null, "seconds": 0.139, "rank_above": 343}
+{"t": 18.261, "ev": "done", "tool": "code", "p": 17, "c": 16, "rank": null, "seconds": 0.171, "rank_above": 343}
+{"t": 18.437, "ev": "done", "tool": "code", "p": 11, "c": 10, "rank": null, "seconds": 0.174, "rank_above": 343}
+{"t": 18.54, "ev": "done", "tool": "code", "p": 2, "c": 1, "rank": 299, "seconds": 0.587}
+{"t": 18.54, "ev": "board", "side": "upper", "value": 299, "tool": "linear_code", "bracket": [286, 299]}
+{"t": 18.558, "ev": "done", "tool": "code", "p": 3, "c": 2, "rank": 287, "seconds": 0.605}
+{"t": 18.558, "ev": "board", "side": "upper", "value": 287, "tool": "linear_code", "bracket": [286, 287]}
+{"t": 18.558, "ev": "event", "name": "near_miss", "p": 3, "rank": 287}
+{"t": 18.558, "ev": "start", "tool": "code", "p": 3, "c": 1, "why": "near miss"}
+{"t": 18.66, "ev": "done", "tool": "code", "p": 3, "c": 1, "rank": null, "seconds": 0.095, "rank_above": 286}
+{"t": 18.66, "ev": "event", "name": "checkpoint"}
+{"t": 18.66, "ev": "llm_request", "agent": "solver", "attempt": 0}
+{"t": 27.319, "ev": "llm_reply", "agent": "solver", "reply": {"family_hypothesis": {"name": "Kneser", "params": {"n": 14, "k": 4}, "confidence": 0.9, "evidence": ["receivers = 1001", "degree_min = 210", "degree_max = 210", "spectrum_integral = true", "C(14,4) = 1001"]}, "plan": [{"tool": "family_rule", "args": {"n": 14, "k": 4}, "why": "Check if there is a specific (p, c) pair for the Kneser graph K(14,4)"}, {"tool": "spectral", "args": {"top": 5}, "why": "Try the generic code family M = I + cA over F_p using the integer spectrum"}], "notes": "The Kneser hypothesis is strong due to the matching binomial coefficient and integral spectrum. We first check if there is a specific (p, c) pair for K(14,4) and then proceed with the spectral method."}}
+{"t": 27.322, "ev": "event", "name": "safety_net", "plan": [{"tool": "spectral", "args": {"top": 30}, "why": "fallback"}]}
+{"t": 27.325, "ev": "start", "tool": "code", "p": 19, "c": 18, "why": "spectral pred 363"}
+{"t": 27.325, "ev": "start", "tool": "code", "p": 7, "c": 6, "why": "spectral pred 364"}
+{"t": 27.325, "ev": "start", "tool": "code", "p": 13, "c": 12, "why": "spectral pred 364"}
+{"t": 27.325, "ev": "start", "tool": "code", "p": 23, "c": 22, "why": "spectral pred 364"}
+{"t": 27.325, "ev": "start", "tool": "code", "p": 29, "c": 28, "why": "spectral pred 364"}
+{"t": 27.325, "ev": "start", "tool": "code", "p": 31, "c": 30, "why": "spectral pred 364"}
+{"t": 27.325, "ev": "start", "tool": "code", "p": 37, "c": 36, "why": "spectral pred 364"}
+{"t": 27.326, "ev": "start", "tool": "code", "p": 41, "c": 40, "why": "spectral pred 364"}
+{"t": 27.326, "ev": "start", "tool": "code", "p": 43, "c": 42, "why": "spectral pred 364"}
+{"t": 27.326, "ev": "start", "tool": "code", "p": 47, "c": 46, "why": "spectral pred 364"}
+{"t": 27.326, "ev": "start", "tool": "code", "p": 53, "c": 52, "why": "spectral pred 364"}
+{"t": 27.326, "ev": "start", "tool": "code", "p": 59, "c": 58, "why": "spectral pred 364"}
+{"t": 27.326, "ev": "start", "tool": "code", "p": 61, "c": 60, "why": "spectral pred 364"}
+{"t": 27.326, "ev": "start", "tool": "code", "p": 67, "c": 66, "why": "spectral pred 364"}
+{"t": 27.326, "ev": "start", "tool": "code", "p": 71, "c": 70, "why": "spectral pred 364"}
+{"t": 27.326, "ev": "start", "tool": "code", "p": 73, "c": 72, "why": "spectral pred 364"}
+{"t": 27.326, "ev": "start", "tool": "code", "p": 79, "c": 78, "why": "spectral pred 364"}
+{"t": 27.327, "ev": "start", "tool": "code", "p": 83, "c": 82, "why": "spectral pred 364"}
+{"t": 27.327, "ev": "start", "tool": "code", "p": 89, "c": 88, "why": "spectral pred 364"}
+{"t": 27.327, "ev": "start", "tool": "code", "p": 97, "c": 96, "why": "spectral pred 364"}
+{"t": 27.327, "ev": "start", "tool": "code", "p": 101, "c": 100, "why": "spectral pred 364"}
+{"t": 27.327, "ev": "start", "tool": "code", "p": 103, "c": 102, "why": "spectral pred 364"}
+{"t": 27.327, "ev": "start", "tool": "code", "p": 107, "c": 106, "why": "spectral pred 364"}
+{"t": 27.327, "ev": "start", "tool": "code", "p": 109, "c": 108, "why": "spectral pred 364"}
+{"t": 27.327, "ev": "start", "tool": "code", "p": 113, "c": 112, "why": "spectral pred 364"}
+{"t": 27.452, "ev": "done", "tool": "code", "p": 7, "c": 6, "rank": null, "seconds": 0.114, "rank_above": 286}
+{"t": 27.491, "ev": "done", "tool": "code", "p": 19, "c": 18, "rank": null, "seconds": 0.162, "rank_above": 286}
+{"t": 27.495, "ev": "done", "tool": "code", "p": 13, "c": 12, "rank": null, "seconds": 0.165, "rank_above": 286}
+{"t": 27.604, "ev": "done", "tool": "code", "p": 23, "c": 22, "rank": null, "seconds": 0.158, "rank_above": 286}
+{"t": 27.646, "ev": "done", "tool": "code", "p": 29, "c": 28, "rank": null, "seconds": 0.149, "rank_above": 286}
+{"t": 27.652, "ev": "done", "tool": "code", "p": 31, "c": 30, "rank": null, "seconds": 0.154, "rank_above": 286}
+{"t": 27.775, "ev": "done", "tool": "code", "p": 37, "c": 36, "rank": null, "seconds": 0.173, "rank_above": 286}
+{"t": 27.804, "ev": "done", "tool": "code", "p": 41, "c": 40, "rank": null, "seconds": 0.162, "rank_above": 286}
+{"t": 27.817, "ev": "done", "tool": "code", "p": 43, "c": 42, "rank": null, "seconds": 0.162, "rank_above": 286}
+{"t": 27.936, "ev": "done", "tool": "code", "p": 47, "c": 46, "rank": null, "seconds": 0.159, "rank_above": 286}
+{"t": 27.964, "ev": "done", "tool": "code", "p": 53, "c": 52, "rank": null, "seconds": 0.157, "rank_above": 286}
+{"t": 27.988, "ev": "done", "tool": "code", "p": 59, "c": 58, "rank": null, "seconds": 0.169, "rank_above": 286}
+{"t": 28.112, "ev": "done", "tool": "code", "p": 61, "c": 60, "rank": null, "seconds": 0.163, "rank_above": 286}
+{"t": 28.128, "ev": "done", "tool": "code", "p": 67, "c": 66, "rank": null, "seconds": 0.168, "rank_above": 286}
+{"t": 28.149, "ev": "done", "tool": "code", "p": 71, "c": 70, "rank": null, "seconds": 0.149, "rank_above": 286}
+{"t": 28.234, "ev": "done", "tool": "code", "p": 73, "c": 72, "rank": null, "seconds": 0.131, "rank_above": 286}
+{"t": 28.291, "ev": "done", "tool": "code", "p": 83, "c": 82, "rank": null, "seconds": 0.151, "rank_above": 286}
+{"t": 28.307, "ev": "done", "tool": "code", "p": 79, "c": 78, "rank": null, "seconds": 0.173, "rank_above": 286}
+{"t": 28.404, "ev": "done", "tool": "code", "p": 89, "c": 88, "rank": null, "seconds": 0.172, "rank_above": 286}
+{"t": 28.445, "ev": "done", "tool": "code", "p": 97, "c": 96, "rank": null, "seconds": 0.147, "rank_above": 286}
+{"t": 28.481, "ev": "done", "tool": "code", "p": 101, "c": 100, "rank": null, "seconds": 0.174, "rank_above": 286}
+{"t": 28.568, "ev": "done", "tool": "code", "p": 103, "c": 102, "rank": null, "seconds": 0.161, "rank_above": 286}
+{"t": 28.596, "ev": "done", "tool": "code", "p": 107, "c": 106, "rank": null, "seconds": 0.155, "rank_above": 286}
+{"t": 28.633, "ev": "done", "tool": "code", "p": 109, "c": 108, "rank": null, "seconds": 0.151, "rank_above": 286}
+{"t": 28.683, "ev": "done", "tool": "code", "p": 113, "c": 112, "rank": null, "seconds": 0.111, "rank_above": 286}
+{"t": 28.689, "ev": "llm_request", "agent": "verifier", "attempt": 0}
+{"t": 32.42, "ev": "llm_reply", "agent": "verifier", "reply": {"checks_requested": [], "analysis": "The upper certificate is a linear code with p=3, c=2, not meeting the lower bound. The independent set and code fit checks passed. The agent found a gap between 286 and 287 receivers, taking 28.683 seconds. Baselines like CPSAT Alpha proved 286, while Kushagra Agent matched this range. The agent was faster than CPSAT Alpha but slower than Kushagra Agent. No suspicious issues noted."}}
+{"t": 32.42, "ev": "verdict", "verdict": "gap", "bracket": [286, 287], "checks": {"independent_set": true, "code_fits": true}}

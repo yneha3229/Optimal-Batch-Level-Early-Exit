@@ -1,0 +1,35 @@
+GPU 4 must be idle; current use:
+memory.used [MiB], utilization.gpu [%]
+1 MiB, 0 %
+vLLM starting (pid 60130), log: logs/kneser_agent_vllm_32b_v4.log
+vLLM exited; last log lines:
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/neha/venv-vllm/lib/python3.12/site-packages/vllm/entrypoints/launchers/api_server/entry.py", line 94, in build_async_engine_client_from_engine_args
+    async_llm = AsyncLLM.from_vllm_config(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/neha/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/async_llm.py", line 265, in from_vllm_config
+    return cls(
+           ^^^^
+  File "/home/neha/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/async_llm.py", line 194, in __init__
+    self.engine_core = EngineCoreClient.make_async_mp_client(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/neha/venv-vllm/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/neha/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 183, in make_async_mp_client
+    return AsyncMPClient(
+           ^^^^^^^^^^^^^^
+  File "/home/neha/venv-vllm/lib/python3.12/site-packages/vllm/tracing/otel.py", line 175, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/neha/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 1195, in __init__
+    super().__init__(
+  File "/home/neha/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 729, in __init__
+    with launch_core_engines(
+  File "/usr/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/home/neha/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1393, in launch_core_engines
+    wait_for_engine_startup(
+  File "/home/neha/venv-vllm/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1477, in wait_for_engine_startup
+    raise RuntimeError(
+RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}
