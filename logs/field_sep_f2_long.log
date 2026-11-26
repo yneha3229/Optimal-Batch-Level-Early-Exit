@@ -3,3 +3,7 @@
   warnings.warn('resource_tracker: There appear to be %d '
 === restart after the 25 Nov 20:16 UTC reboot, 2026-11-26T02:40:41Z
 3 specs, 0 already proven, 3 to run
+kneser_11_2: alpha=10 cover=11 minrk in [10, 11] proven=False (36010.3 s) [[10, "timeout", 36000.15]]
+kneser_13_2: alpha=12 cover=13 minrk in [12, 13] proven=False (36010.3 s) [[12, "timeout", 36000.15]]
+kneser_9_2: alpha=8 cover=9 minrk in [8, 9] proven=False (36010.3 s) [[8, "timeout", 36000.15]]
+wrote minrank/results/field_sep/families_f2_long.csv
