@@ -39,14 +39,22 @@ on CPU only for the three reference cases (see the model ablation below): from 1
   exceptions both reach the same brackets ([84, 93], [286, 287], [495, 507]), on the 3 controls the agent's brackets
   are tighter (e.g. K(16,4)-del0.01: [455, 534] vs [0, 1818]). With prompts v1, Qwen lost to the no-LLM agent on
   K(14,4) ([286, 299] vs [286, 287]); the scheduler's safety net fixed this.
-- **Model ablation (bench/ablation/, three reference cases, one run each):** every model ends with the same
-  certified brackets ([455, 455], [455, 534], [286, 287]): the model changes the dialogue, not the result. The Claude
-  Solvers (Haiku 5.5 medium, Sonnet 5.5 medium, Opus 5.5 low/medium/high) named the right (n, k) in the first reply on
-  14 of 15 runs, Qwen 32B on 0 of 6; the Claude Critics made 0 false objections, Qwen's 5 (GPU, code before
-  d22d46c) and 7 (CPU, fixed code); Qwen needed 27-28 LLM calls over the three graphs, the Claude configurations
-  11-13. So the plan-results fix did not change Qwen's weak point: its Critic still objects to numbers that are right
-  (e.g. "the common-neighbour counts [70, 126, 210, 330] do not match K(16,4)"). Qwen GPU = vLLM, AWQ, 26 Nov
-  18:0x-18:4x; Qwen CPU = llama.cpp b12780, GGUF Q4_K_M, 12 cores, budget 7,200 s instead of 3,600 s (about 6.5 min
-  per reply, 52-56 min per run), run because the GPUs stopped initialising CUDA at 18:59 UTC. False objections are
-  labelled by hand (Qwen CPU rows labelled by Claude Code, same rule as the other rows).
-- **32B vs 4B:** not run (GPU failure above; a 4B model on CPU was not attempted).
+- **Model ablation (bench/ablation/; 6 graphs x 2 relabelling seeds = 12 cells, one blind run per cell):**
+  K(16,4), K(16,4) minus 1% of edges, K(14,4) (rule exception), K(13,4), K(15,5), and a random 6-regular graph on
+  1000 vertices (non-Kneser control). Every model ends with the same certified bracket on every graph instance, so
+  the model changes the dialogue and its cost, not the result. The five Claude configurations (Haiku 5.5 medium,
+  Sonnet 5.5 medium, Opus 5.5 low / medium / high; 12 runs each) made **0 false Critic objections in 60 runs**,
+  named the right family in the first Solver reply in 11-12 of 12 runs, and needed 3.5-4.1 LLM calls per run. Qwen
+  2.5-Coder 32B: 1.67 false objections per run in the GPU pilot (3 runs, code before d22d46c, reference traces
+  *_ref_*), 2.33 per run on CPU (fixed code; 3 runs so far, 9 more running), 0 right families in the first reply,
+  8-9 calls per run. Its Critic objects to numbers that are right (e.g. "the common-neighbour counts
+  [70, 126, 210, 330] do not match K(16,4)"). Every objection is labelled with a reason in
+  bench/ablation/label_detail.json (rule in labels.py; Qwen CPU and new Claude rows labelled by Claude Code).
+- **Qwen3-4B:** with the pipeline's 600-token reply limit (the same limit Qwen 32B ran under) it fails: in the first
+  21 minutes 26 of 48 requests were JSON cut off at exactly 600 tokens and only 7 replies were accepted
+  (logs/kneser_agent_qwen4b_cap600_summary.txt). The Claude agents had no such limit, so a fair rerun with a
+  1,500-token limit runs after Qwen 32B (row "Qwen3 4B" in the chart, when present).
+- **Two issues the blind agents found:** the summary's sampled common-neighbour counts can miss a rare triangle
+  that the exact triangle count sees (reg(1000,6): adjacent pairs "share no neighbour", yet 1 triangle); and the
+  run result records the hypothesis of the accepted plan, not the checkpoint's revision. Neither touches a bound.
+- **32B vs 4B:** see Qwen3-4B above (GPU failure; both on CPU).

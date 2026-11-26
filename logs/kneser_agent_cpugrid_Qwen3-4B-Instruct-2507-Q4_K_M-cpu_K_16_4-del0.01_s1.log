@@ -1,0 +1,16 @@
+[    0.00s] input            {"graph": "K_16_4-del0.01_s1", "receivers": 1820, "llm": "Qwen3-4B-Instruct-2507-Q4_K_M-cpu", "family_rule": true}
+[    0.06s] start            {"tool": "describe"}
+[    0.06s] start            {"tool": "indep"}
+[    0.06s] start            {"tool": "cover"}
+[    0.72s] board            {"side": "lower", "value": 455, "tool": "greedy independent set", "bracket": [455, 1820]}
+[    5.85s] board            {"side": "upper", "value": 534, "tool": "clique_cover", "bracket": [455, 534]}
+[   76.63s] done             {"tool": "describe", "seconds": 76.496}
+[   76.63s] summary          {}
+[   76.63s] llm_request      {"agent": "solver", "attempt": 0}
+[  404.83s] llm_reply        solver: {"family_hypothesis": {"name": "none", "params": {}, "confidence": 0.0, "evidence": ["receivers: 1820, which is not a binomial coefficient C(n,k) for small n,k", "degree_min=481, degree_max=495, not regular, so not a vertex-transitive family", "spectrum_integral: false, eigenvalues are not integers 
+[  404.83s] llm_request      {"agent": "critic", "attempt": 0}
+[  639.88s] llm_reply        critic: {"verdict": "challenge", "objections": ["receivers: 1820 is not a binomial coefficient C(n,k) for small n,k; however, binomial_match must be run to confirm this definitively, as absence of match could refute the family hypothesis", "distinct_eigenvalues = 1820 equals the number of receivers, which i
+[  639.89s] checks           {"results": [{"tool": "binomial_match", "result": [{"n": 16, "k": 4}]}, {"tool": "family_rule", "args": {"n": 1820, "k": 1}, "result": {"p": 2, "c": 1}}]}
+[  639.89s] llm_request      {"agent": "solver", "attempt": 0}
+[ 1059.39s] llm_invalid      {"agent": "solver", "error": "Unterminated string starting at: line 41 column 7 (char 2103)", "raw": "{\n  \"family_hypothesis\": {\n    \"name\": \"none\",\n  
+[ 1059.39s] llm_request      {"agent": "solver", "attempt": 1}

@@ -1,0 +1,16 @@
+[    0.04s] input            {"graph": "reg_1000_6_s1", "receivers": 1000, "llm": "Qwen3-4B-Instruct-2507-Q4_K_M-cpu", "family_rule": true}
+[    0.19s] start            {"tool": "describe"}
+[    0.19s] start            {"tool": "indep"}
+[    0.19s] start            {"tool": "cover"}
+[    0.56s] board            {"side": "lower", "value": 329, "tool": "greedy independent set", "bracket": [329, 1000]}
+[    4.01s] board            {"side": "upper", "value": 537, "tool": "clique_cover", "bracket": [329, 537]}
+[   12.88s] done             {"tool": "describe", "seconds": 12.542}
+[   12.88s] summary          {}
+[   12.88s] llm_request      {"agent": "solver", "attempt": 0}
+[  368.15s] llm_reply        solver: {"family_hypothesis": {"name": "none", "params": {}, "confidence": 0.95, "evidence": ["receivers: 1000, degree_min: 6, degree_max: 6, regular: true, spectrum_integral: false", "distinct eigenvalues: 1000 (not integral, contradicts vertex-transitive families like Kneser)", "common neighbours adjacent
+[  368.16s] llm_request      {"agent": "critic", "attempt": 0}
+[  684.69s] llm_reply        critic: {"verdict": "challenge", "objections": ["The summary states 1000 distinct eigenvalues, but the list of eigenvalues has 13 entries (each with multiplicity 1), totaling only 13 eigenvalues, not 1000. This is a contradiction: 'distinct_eigenvalues': 1000 is inconsistent with the actual list which has o
+[  684.69s] checks           {"results": [{"tool": "binomial_match", "result": []}, {"tool": "spectral", "result": "not available"}, {"tool": "family_rule", "args": {"n": 10, "k": 6}, "resu
+[  684.69s] llm_request      {"agent": "solver", "attempt": 0}
+[ 1091.39s] llm_invalid      {"agent": "solver", "error": "Unterminated string starting at: line 44 column 12 (char 1923)", "raw": "{\n  \"family_hypothesis\": {\n    \"name\": \"none\",\n 
+[ 1091.39s] llm_request      {"agent": "solver", "attempt": 1}

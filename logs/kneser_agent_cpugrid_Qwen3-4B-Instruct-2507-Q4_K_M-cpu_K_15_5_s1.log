@@ -1,0 +1,16 @@
+[    0.00s] input            {"graph": "K_15_5_s1", "receivers": 3003, "llm": "Qwen3-4B-Instruct-2507-Q4_K_M-cpu", "family_rule": true}
+[    0.06s] start            {"tool": "describe"}
+[    0.06s] start            {"tool": "indep"}
+[    0.06s] start            {"tool": "cover"}
+[    2.78s] board            {"side": "lower", "value": 1001, "tool": "greedy independent set", "bracket": [1001, 3003]}
+[   26.86s] board            {"side": "upper", "value": 1219, "tool": "clique_cover", "bracket": [1001, 1219]}
+[  108.80s] done             {"tool": "describe", "seconds": 108.458}
+[  108.80s] summary          {}
+[  108.80s] llm_request      {"agent": "solver", "attempt": 0}
+[  506.66s] llm_invalid      {"agent": "solver", "error": "Unterminated string starting at: line 48 column 12 (char 1302)", "raw": "{\n  \"family_hypothesis\": {\n    \"name\": \"Kneser\",\
+[  506.66s] llm_request      {"agent": "solver", "attempt": 1}
+[  895.03s] llm_invalid      {"agent": "solver", "error": "Unterminated string starting at: line 20 column 14 (char 638)", "raw": "{\n  \"family_hypothesis\": {\n    \"name\": \"Kneser\",\n
+[  895.03s] llm_fallback     {"agent": "solver"}
+[  895.03s] llm_request      {"agent": "critic", "attempt": 0}
+[ 1238.46s] llm_invalid      {"agent": "critic", "error": "Unterminated string starting at: line 6 column 5 (char 702)", "raw": "{\n  \"verdict\": \"challenge\",\n  \"objections\": [\n    \
+[ 1238.46s] llm_request      {"agent": "critic", "attempt": 1}

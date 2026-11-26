@@ -1,0 +1,16 @@
+[    0.05s] input            {"graph": "K_14_4_s1", "receivers": 1001, "llm": "Qwen3-4B-Instruct-2507-Q4_K_M-cpu", "family_rule": true}
+[    0.29s] start            {"tool": "describe"}
+[    0.29s] start            {"tool": "indep"}
+[    0.29s] start            {"tool": "cover"}
+[    0.73s] board            {"side": "lower", "value": 286, "tool": "greedy independent set", "bracket": [286, 1001]}
+[    3.65s] board            {"side": "upper", "value": 345, "tool": "clique_cover", "bracket": [286, 345]}
+[   28.10s] done             {"tool": "describe", "seconds": 27.687}
+[   28.10s] summary          {}
+[   28.10s] llm_request      {"agent": "solver", "attempt": 0}
+[  500.02s] llm_invalid      {"agent": "solver", "error": "Unterminated string starting at: line 55 column 12 (char 1643)", "raw": "{\n  \"family_hypothesis\": {\n    \"name\": \"Kneser\",\
+[  500.02s] llm_request      {"agent": "solver", "attempt": 1}
+[  839.57s] llm_invalid      {"agent": "solver", "error": "hypothesis K(1001,210) has C(1001,210) = 63329855022539863081827950563704565913616393115230459155046917081985541937470466051742200
+[  839.58s] llm_fallback     {"agent": "solver"}
+[  839.58s] llm_request      {"agent": "critic", "attempt": 0}
+[ 1219.13s] llm_invalid      {"agent": "critic", "error": "Unterminated string starting at: line 10 column 5 (char 1428)", "raw": "{\n  \"verdict\": \"challenge\",\n  \"objections\": [\n   
+[ 1219.13s] llm_request      {"agent": "critic", "attempt": 1}

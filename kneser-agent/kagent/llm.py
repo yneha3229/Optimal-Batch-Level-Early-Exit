@@ -52,7 +52,7 @@ class LocalBackend:
         sys.path.insert(0, str(ROOT.parent))
         from pincer.llm import LocalBackend as LB
         self.json_mode = (os.environ.get("KAGENT_JSON_MODE", "1") != "0") if json_mode is None else json_mode
-        self.b = LB(base_url=url, model=model, temperature=0.2, max_tokens=600,
+        self.b = LB(base_url=url, model=model, temperature=0.2, max_tokens=int(os.environ.get("KAGENT_MAX_TOKENS", "600")),
                     timeout=float(os.environ.get("KAGENT_LLM_TIMEOUT", "600")))   # CPU servers need longer
         if self.json_mode:
             self.b.complete = self._complete_json
