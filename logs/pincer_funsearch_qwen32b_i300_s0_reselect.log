@@ -1,0 +1,34 @@
+{
+ "proposer": "local:Qwen/Qwen2.5-Coder-32B-Instruct-AWQ",
+ "iterations": 300,
+ "evaluated": 300,
+ "failed": 0,
+ "duplicates": 13,
+ "wall_s": 283,
+ "train_seed": 0.8744364318115059,
+ "train_best": 0.8937783556941629,
+ "train_selected": 0.892358460648939,
+ "train_split": "train",
+ "val_seed": 0.878883428128678,
+ "val_selected": 0.8872526765595028,
+ "selected_is_seed": false,
+ "val_top_by_train": [
+  0.8772,
+  0.8873,
+  0.8852,
+  0.8852,
+  0.8852,
+  0.8852,
+  0.8852,
+  0.8762
+ ],
+ "test_selected": 0.8557839289034458,
+ "test_seed": 0.8623604255344476,
+ "llm_usage": {
+  "calls": 300,
+  "seconds": 927.2986093960033,
+  "input_tokens": 153509,
+  "output_tokens": 27172,
+  "errors": 0
+ }
+}

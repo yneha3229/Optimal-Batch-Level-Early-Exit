@@ -1,0 +1,70 @@
+26 jobs -> pincer/results/bench_test2_b30_llm.jsonl
+llm        dnp_n50_p0.1_s8                    mr [37,37] beta [37.000,37.000] 20.57s
+llm        planted_n50_r8_e0.05_s8            mr [8,8] beta [7.000,7.818] 29.96s
+llm        dnp_n30_p0.3_s7                    mr [14,14] beta [13.000,14.000] 30.01s
+llm        dnp_n120_p0.1_s8                   mr [56,77] beta [56.000,77.000] 30.02s
+llm        dnp_n120_p0.1_s7                   mr [55,78] beta [55.000,78.000] 30.4s
+llm        dnp_n120_p0.3_s7                   mr [21,45] beta [21.000,45.000] 30.06s
+llm        planted_d_n50_r8_e0.05_s8          mr [8,8] beta [8.000,8.000] 4.05s
+llm        gnp_n40_p0.5_s8                    mr [8,8] beta [7.000,7.375] 9.67s
+llm        gnp_n40_p0.5_s7                    mr [9,9] beta [7.000,7.929] 30.0s
+llm        planted_n50_r8_e0.05_s7            mr [8,8] beta [7.000,8.000] 30.58s
+llm        dnp_n80_p0.3_s7                    mr [19,32] beta [19.000,32.000] 30.35s
+llm        dnp_n50_p0.3_s7                    mr [17,24] beta [16.000,23.500] 30.02s
+llm        gnp_n80_p0.5_s8                    mr [10,13] beta [9.000,13.000] 30.02s
+llm        dnp_n50_p0.6_s7                    mr [9,12] beta [9.000,11.532] 30.15s
+llm        dnp_n80_p0.3_s8                    mr [21,34] beta [21.000,34.000] 30.57s
+llm        clustered_k8_m12_pb0.0_s7          mr [44,44] beta [44.000,44.000] 28.9s
+llm        planted_d_n50_r8_e0.05_s7          mr [8,8] beta [8.000,8.000] 24.1s
+llm        dnp_n120_p0.3_s8                   mr [20,47] beta [20.000,47.000] 29.98s
+llm        clustered_k8_m12_pb0.0005_s8       mr [44,47] beta [44.000,46.000] 30.05s
+llm        dnp_n50_p0.3_s8                    mr [18,25] beta [17.000,24.333] 30.57s
+llm        dnp_n50_p0.6_s8                    mr [9,12] beta [8.000,11.470] 30.32s
+llm        dnp_n30_p0.3_s8                    mr [14,14] beta [14.000,14.000] 3.1s
+llm        gnp_n80_p0.5_s7                    mr [9,12] beta [8.000,12.000] 29.97s
+llm        clustered_k8_m12_pb0.0005_s7       mr [44,44] beta [44.000,44.000] 11.16s
+llm        dnp_n50_p0.1_s7                    mr [35,35] beta [34.000,35.000] 29.97s
+llm        clustered_k8_m12_pb0.0_s8          mr [45,45] beta [44.500,45.000] 37.71s
+26 graphs with every method; budget 30 s per graph
+
+| method | mean minrank gap | mean beta gap | minrank closed | beta closed | both closed | mean seconds used |
+|---|---|---|---|---|---|---|
+| classic | 8.46 | 8.462 | 2 | 2 | 2 | 19.0 |
+| satdescend | 8.23 | 8.231 | 2 | 2 | 2 | 19.0 |
+| roundrobin | 5.46 | 5.875 | 13 | 6 | 6 | 21.3 |
+| index | 5.35 | 5.844 | 13 | 6 | 6 | 21.3 |
+| llm | 5.77 | 6.056 | 13 | 6 | 6 | 26.2 |
+
+Per family, mean minrank gap / mean beta gap:
+
+| family | graphs | classic | satdescend | roundrobin | index | llm |
+|---|---|---|---|---|---|---|
+| clustered digraph (many SCCs) | 4 | 1.50 / 1.50 | 1.50 / 1.50 | 0.75 / 0.62 | 0.50 / 0.62 | 0.75 / 0.62 |
+| planted digraph | 2 | 5.50 / 5.50 | 5.50 / 5.50 | 0.00 / 0.00 | 0.00 / 0.00 | 0.00 / 0.00 |
+| planted undirected | 2 | 1.50 / 1.50 | 1.00 / 1.00 | 0.00 / 0.91 | 0.00 / 0.91 | 0.00 / 0.91 |
+| random digraph | 14 | 13.50 / 13.50 | 13.07 / 13.07 | 9.57 / 9.96 | 9.43 / 9.89 | 10.07 / 10.27 |
+| random undirected | 4 | 2.75 / 2.75 | 3.00 / 3.00 | 1.25 / 2.25 | 1.25 / 2.31 | 1.50 / 2.33 |
+
+Paired comparison on total gap (minrank gap + beta gap), wins / ties / losses of the row method:
+
+| | classic | satdescend | roundrobin | index | llm |
+|---|---|---|---|---|---|
+| classic | - | 2/20/4 | 1/2/23 | 0/4/22 | 2/4/20 |
+| satdescend | 4/20/2 | - | 1/2/23 | 0/3/23 | 1/5/20 |
+| roundrobin | 23/2/1 | 23/2/1 | - | 5/16/5 | 8/16/2 |
+| index | 22/4/0 | 23/3/0 | 5/16/5 | - | 12/14/0 |
+| llm | 20/4/2 | 20/5/1 | 2/16/8 | 0/14/12 | - |
+
+Time to match: seconds until the Pincer run's total gap first drops to the baseline's FINAL total gap (graphs where it does), against the seconds the baseline used:
+
+| Pincer policy | baseline | graphs matched | median Pincer s | median baseline s | median speed-up |
+|---|---|---|---|---|---|
+| index | classic | 26/26 | 1.62 | 15.5 | 11x |
+| index | satdescend | 26/26 | 1.62 | 15.6 | 11x |
+| roundrobin | classic | 25/26 | 2.41 | 15.5 | 7x |
+| roundrobin | satdescend | 25/26 | 2.48 | 15.5 | 7x |
+
+Which tools moved the bounds (sum of gap reduction over all graphs, excluding the quick pass):
+
+- index: mais_order 71.0, sat_up 64.0, mais_sa 36.0, sat_down 17.3, cover_tabu 16.0, mais_lazy 8.0, frac_cover 6.2, shannon 0.5, partial_cover 0.0
+- roundrobin: sat_up 60.2, mais_order 54.0, mais_sa 46.0, cover_tabu 24.0, mais_lazy 16.0, frac_cover 8.1, sat_down 6.4, shannon 0.5, partial_cover 0.0
