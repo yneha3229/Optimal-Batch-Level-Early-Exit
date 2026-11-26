@@ -1,0 +1,7 @@
+2026-11-22_20:47:06 OK   qqp real_qqp
+2026-11-22_20:47:16 OK   qqp dec_eager
+2026-11-22_20:48:13 OK   mnli dec_eager
+2026-11-22_20:48:26 OK   cifar100 real_cifar100
+2026-11-22_20:48:46 OK   cifar100 dec_eager
+2026-11-22_20:49:05 OK   mnli real_mnli
+2026-11-22_20:49:05 DONE

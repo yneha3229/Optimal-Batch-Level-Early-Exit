@@ -1,0 +1,3 @@
+2026-11-23_05:30:10 START exact_rerun from=minrank/results/exact.csv status=call_timeout time_per_call=3600 total=10800 out=minrank/results/exact_long.csv
+2026-11-23_07:30:19 FAIL  exact_rerun (exit 0)
+2026-11-23_07:30:19 DONE

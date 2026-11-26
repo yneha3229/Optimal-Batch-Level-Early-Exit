@@ -1,0 +1,98 @@
+Requirement already satisfied: pandas in /home/neha/venv/lib/python3.12/site-packages (3.0.6)
+Requirement already satisfied: matplotlib in /home/neha/venv/lib/python3.12/site-packages (3.11.2)
+Requirement already satisfied: openevolve in /home/neha/venv/lib/python3.12/site-packages (0.4.1)
+Collecting cvxpy
+  Downloading cvxpy-1.9.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (9.7 kB)
+Requirement already satisfied: numpy>=2.0 in /home/neha/venv/lib/python3.12/site-packages (from -r minrank/requirements.txt (line 1)) (2.5.3)
+Collecting ortools>=9.10 (from -r minrank/requirements.txt (line 2))
+  Downloading ortools-9.15.6755-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (3.3 kB)
+Collecting python-sat>=1.8.dev0 (from -r minrank/requirements.txt (line 3))
+  Downloading python_sat-1.9.dev24-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (1.8 kB)
+Requirement already satisfied: pytest>=8 in /home/neha/venv/lib/python3.12/site-packages (from -r minrank/requirements.txt (line 4)) (9.2.0)
+Requirement already satisfied: python-dateutil>=2.8.2 in /home/neha/venv/lib/python3.12/site-packages (from pandas) (2.9.0.post0)
+Requirement already satisfied: contourpy>=1.0.1 in /home/neha/venv/lib/python3.12/site-packages (from matplotlib) (1.4.0)
+Requirement already satisfied: cycler>=0.10 in /home/neha/venv/lib/python3.12/site-packages (from matplotlib) (0.12.1)
+Requirement already satisfied: fonttools>=4.28.2 in /home/neha/venv/lib/python3.12/site-packages (from matplotlib) (4.65.0)
+Requirement already satisfied: kiwisolver>=1.3.1 in /home/neha/venv/lib/python3.12/site-packages (from matplotlib) (1.5.1)
+Requirement already satisfied: packaging>=20.0 in /home/neha/venv/lib/python3.12/site-packages (from matplotlib) (26.3)
+Requirement already satisfied: pillow>=9 in /home/neha/venv/lib/python3.12/site-packages (from matplotlib) (12.3.0)
+Requirement already satisfied: pyparsing>=3 in /home/neha/venv/lib/python3.12/site-packages (from matplotlib) (3.3.3)
+Requirement already satisfied: openai>=1.0.0 in /home/neha/venv/lib/python3.12/site-packages (from openevolve) (3.46.0)
+Requirement already satisfied: pyyaml>=6.0 in /home/neha/venv/lib/python3.12/site-packages (from openevolve) (6.0.3)
+Requirement already satisfied: tqdm>=4.64.0 in /home/neha/venv/lib/python3.12/site-packages (from openevolve) (4.70.1)
+Requirement already satisfied: flask in /home/neha/venv/lib/python3.12/site-packages (from openevolve) (3.1.3)
+Requirement already satisfied: dacite>=1.9.2 in /home/neha/venv/lib/python3.12/site-packages (from openevolve) (1.9.2)
+Requirement already satisfied: cloudpickle>=2.0.0 in /home/neha/venv/lib/python3.12/site-packages (from openevolve) (3.1.2)
+Collecting osqp>=1.0.0 (from cvxpy)
+  Downloading osqp-1.1.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (2.2 kB)
+Collecting clarabel>=0.5.0 (from cvxpy)
+  Downloading clarabel-0.11.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.8 kB)
+Collecting scs>=3.2.4.post1 (from cvxpy)
+  Downloading scs-3.3.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (10 kB)
+Requirement already satisfied: scipy>=1.13.0 in /home/neha/venv/lib/python3.12/site-packages (from cvxpy) (1.18.1)
+Collecting highspy>=1.14.0 (from cvxpy)
+  Downloading highspy-1.16.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (12 kB)
+Collecting qdldl>=0.1.7.post0 (from cvxpy)
+  Downloading qdldl-0.1.9.post1-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (1.9 kB)
+Collecting sparsediffpy<0.7.0,>=0.6.0 (from cvxpy)
+  Downloading sparsediffpy-0.6.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (581 bytes)
+Requirement already satisfied: absl-py>=2.0.0 in /home/neha/venv/lib/python3.12/site-packages (from ortools>=9.10->-r minrank/requirements.txt (line 2)) (2.5.0)
+Collecting protobuf<6.34,>=6.33.1 (from ortools>=9.10->-r minrank/requirements.txt (line 2))
+  Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes)
+Requirement already satisfied: typing-extensions>=4.12 in /home/neha/venv/lib/python3.12/site-packages (from ortools>=9.10->-r minrank/requirements.txt (line 2)) (4.16.0)
+Collecting immutabledict>=3.0.0 (from ortools>=9.10->-r minrank/requirements.txt (line 2))
+  Downloading immutabledict-4.3.1-py3-none-any.whl.metadata (3.5 kB)
+Requirement already satisfied: six in /home/neha/venv/lib/python3.12/site-packages (from python-sat>=1.8.dev0->-r minrank/requirements.txt (line 3)) (1.17.0)
+Requirement already satisfied: iniconfig>=2 in /home/neha/venv/lib/python3.12/site-packages (from pytest>=8->-r minrank/requirements.txt (line 4)) (2.3.1)
+Requirement already satisfied: pluggy<2,>=1.6 in /home/neha/venv/lib/python3.12/site-packages (from pytest>=8->-r minrank/requirements.txt (line 4)) (1.7.0)
+Requirement already satisfied: pygments>=2.15 in /home/neha/venv/lib/python3.12/site-packages (from pytest>=8->-r minrank/requirements.txt (line 4)) (2.21.0)
+Requirement already satisfied: cffi in /home/neha/venv/lib/python3.12/site-packages (from clarabel>=0.5.0->cvxpy) (2.1.1)
+Requirement already satisfied: anyio<5,>=4.10.0 in /home/neha/venv/lib/python3.12/site-packages (from openai>=1.0.0->openevolve) (4.15.1)
+Requirement already satisfied: httpx2<3,>=2.12.0 in /home/neha/venv/lib/python3.12/site-packages (from openai>=1.0.0->openevolve) (2.16.0)
+Requirement already satisfied: jiter<1,>=0.16.0 in /home/neha/venv/lib/python3.12/site-packages (from openai>=1.0.0->openevolve) (0.18.0)
+Requirement already satisfied: pydantic!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.*,<3,>=1.10.13 in /home/neha/venv/lib/python3.12/site-packages (from openai>=1.0.0->openevolve) (2.13.5)
+Requirement already satisfied: sniffio in /home/neha/venv/lib/python3.12/site-packages (from openai>=1.0.0->openevolve) (1.3.1)
+Requirement already satisfied: jinja2 in /home/neha/venv/lib/python3.12/site-packages (from osqp>=1.0.0->cvxpy) (3.1.6)
+Requirement already satisfied: setuptools in /home/neha/venv/lib/python3.12/site-packages (from osqp>=1.0.0->cvxpy) (84.0.0)
+Requirement already satisfied: joblib in /home/neha/venv/lib/python3.12/site-packages (from osqp>=1.0.0->cvxpy) (1.6.0)
+Requirement already satisfied: blinker>=1.9.0 in /home/neha/venv/lib/python3.12/site-packages (from flask->openevolve) (1.9.0)
+Requirement already satisfied: click>=8.1.3 in /home/neha/venv/lib/python3.12/site-packages (from flask->openevolve) (8.5.0)
+Requirement already satisfied: itsdangerous>=2.2.0 in /home/neha/venv/lib/python3.12/site-packages (from flask->openevolve) (2.2.0)
+Requirement already satisfied: markupsafe>=2.1.1 in /home/neha/venv/lib/python3.12/site-packages (from flask->openevolve) (3.0.3)
+Requirement already satisfied: werkzeug>=3.1.0 in /home/neha/venv/lib/python3.12/site-packages (from flask->openevolve) (3.1.8)
+Requirement already satisfied: idna>=2.8 in /home/neha/venv/lib/python3.12/site-packages (from anyio<5,>=4.10.0->openai>=1.0.0->openevolve) (3.20)
+Requirement already satisfied: httpcore2==2.16.0 in /home/neha/venv/lib/python3.12/site-packages (from httpx2<3,>=2.12.0->openai>=1.0.0->openevolve) (2.16.0)
+Requirement already satisfied: truststore>=0.10 in /home/neha/venv/lib/python3.12/site-packages (from httpx2<3,>=2.12.0->openai>=1.0.0->openevolve) (0.10.5)
+Requirement already satisfied: h11>=0.16 in /home/neha/venv/lib/python3.12/site-packages (from httpcore2==2.16.0->httpx2<3,>=2.12.0->openai>=1.0.0->openevolve) (0.16.0)
+Requirement already satisfied: annotated-types>=0.6.0 in /home/neha/venv/lib/python3.12/site-packages (from pydantic!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.*,<3,>=1.10.13->openai>=1.0.0->openevolve) (0.8.0)
+Requirement already satisfied: pydantic-core==2.46.5 in /home/neha/venv/lib/python3.12/site-packages (from pydantic!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.*,<3,>=1.10.13->openai>=1.0.0->openevolve) (2.46.5)
+Requirement already satisfied: typing-inspection>=0.4.2 in /home/neha/venv/lib/python3.12/site-packages (from pydantic!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.*,<3,>=1.10.13->openai>=1.0.0->openevolve) (0.4.4)
+Requirement already satisfied: pycparser in /home/neha/venv/lib/python3.12/site-packages (from cffi->clarabel>=0.5.0->cvxpy) (3.0)
+Downloading cvxpy-1.9.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (4.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 9.0 MB/s eta 0:00:00
+Downloading ortools-9.15.6755-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (29.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 29.8/29.8 MB 8.6 MB/s eta 0:00:00
+Downloading python_sat-1.9.dev24-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (4.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.1/4.1 MB 5.9 MB/s eta 0:00:00
+Downloading clarabel-0.11.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 5.8 MB/s eta 0:00:00
+Downloading highspy-1.16.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (3.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 7.1 MB/s eta 0:00:00
+Downloading immutabledict-4.3.1-py3-none-any.whl (5.0 kB)
+Downloading osqp-1.1.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (354 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 354.1/354.1 kB 3.1 MB/s eta 0:00:00
+Downloading protobuf-6.33.6-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 323.4/323.4 kB 4.6 MB/s eta 0:00:00
+Downloading qdldl-0.1.9.post1-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (1.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 6.8 MB/s eta 0:00:00
+Downloading scs-3.3.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (43.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.3/43.3 MB 10.4 MB/s eta 0:00:00
+Downloading sparsediffpy-0.6.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (12.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.1/12.1 MB 8.4 MB/s eta 0:00:00
+Installing collected packages: sparsediffpy, python-sat, protobuf, immutabledict, highspy, scs, qdldl, osqp, clarabel, ortools, cvxpy
+  Attempting uninstall: protobuf
+    Found existing installation: protobuf 7.36.2
+    Uninstalling protobuf-7.36.2:
+      Successfully uninstalled protobuf-7.36.2
+Successfully installed clarabel-0.11.1 cvxpy-1.9.3 highspy-1.16.0 immutabledict-4.3.1 ortools-9.15.6755 osqp-1.1.3 protobuf-6.33.6 python-sat-1.9.dev24 qdldl-0.1.9.post1 scs-3.3.2 sparsediffpy-0.6.1
+DEPS_DONE

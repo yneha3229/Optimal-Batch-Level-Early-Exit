@@ -1,0 +1,1 @@
+{"exit_layers": [8, 12, 16, 20, 24, 28, 32], "decoder": false, "model": "meta-llama/Llama-3.1-8B-Instruct", "task": "mnli", "rank": 16}

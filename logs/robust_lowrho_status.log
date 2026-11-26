@@ -1,0 +1,10 @@
+2026-11-22_20:38:17 OK   qqp enc_eager_meas
+2026-11-22_20:38:31 OK   mnli enc_eager_meas
+2026-11-22_20:38:38 OK   qqp enc_graph
+2026-11-22_20:38:39 OK   qqp real_qqp
+2026-11-22_20:38:41 OK   cifar100 enc_graph
+2026-11-22_20:38:43 OK   mnli enc_graph
+2026-11-22_20:38:43 OK   mnli real_mnli
+2026-11-22_20:38:50 OK   cifar100 real_cifar100
+2026-11-22_20:38:57 OK   cifar100 enc_eager_meas
+2026-11-22_20:38:57 DONE

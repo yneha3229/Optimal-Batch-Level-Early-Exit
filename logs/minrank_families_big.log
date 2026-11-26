@@ -1,0 +1,5 @@
+3 specs, 0 already proven, 3 to run
+kneser_11_3: alpha=45 cover=55 minrk in [45, 55] proven=False (7230.6 s) [[45, "timeout", 3600.21], [54, "timeout", 3600.28]]
+kneser_13_3: alpha=66 cover=72 minrk in [66, 72] proven=False (7231.6 s) [[66, "timeout", 3600.55], [71, "timeout", 3600.66]]
+kneser_10_4: alpha=84 cover=105 minrk in [84, 105] proven=False (7351.6 s) [[84, "timeout", 3600.73], [104, "timeout", 3600.78]]
+wrote minrank/results/families_big.csv

@@ -259,8 +259,8 @@ def main() -> None:
     ap.add_argument("--task", default="wikitext", help="wikitext (Qwen2.5-1.5B) or wikitext_llama (Llama-3.1-8B)")
     ap.add_argument("--out-suffix", default="", help="appended to the output CSV name (parallel runs per batch size)")
     args = ap.parse_args()
-    sfx = "_smoke" if args.smoke else ""
     tag = args.task.replace("wikitext", "").lstrip("_")
+    sfx = "_smoke" if args.smoke and not tag else ""   # tagged tasks (train_exit_lora.py) carry the tag in every file name
     dec = EEDecoder(sfx, ckpt=f"{tag or 'qwen'}_exits")
     wpath = ROOT / (f"data/{args.task}{sfx}_windows.pt" if tag else f"data/wikitext_windows{sfx}.pt")
     W = torch.load(wpath, weights_only=False)

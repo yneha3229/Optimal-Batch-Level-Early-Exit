@@ -138,7 +138,7 @@ def main() -> None:
         groups.append({"params": lora, "lr": args.lr})
     opt = torch.optim.AdamW(groups, weight_decay=0.0)
     sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=[g["lr"] for g in groups], total_steps=args.steps,
-                                                pct_start=0.05)
+                                                pct_start=max(0.05, 2 / args.steps))
     amp = lambda: torch.autocast("cuda", dtype=torch.bfloat16, enabled=args.amp == "bf16")
 
     ds = load_dataset("Salesforce/wikitext", "wikitext-103-raw-v1")

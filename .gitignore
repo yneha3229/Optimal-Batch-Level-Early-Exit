@@ -11,3 +11,17 @@ evolve/runs/
 # unrelated coursework and third-party papers
 quiz4/
 docs/papers/
+
+# minrank: OpenEvolve run directories and raw traces (large)
+minrank/evolve/runs/
+minrank/evolve/reference.json.lock
+minrank/evolve/*.tmp*
+
+# raw per-step bandit traces (about 25 MB each); summaries are results/bandit_slopes_*.csv
+results/bandit_*_10seeds.csv
+!results/bandit_slopes_*_10seeds.csv
+/minrank/results/unsat_cnf/families/kneser_9_4_r56_indep.cnf.gz
+
+# reproduce_cpu.sh shadow tree (code copies, inputs, 25 MB bandit traces)
+results_repro/.root/
+results_repro/.gpu_root/

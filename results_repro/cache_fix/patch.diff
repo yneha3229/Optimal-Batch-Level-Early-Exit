@@ -1,0 +1,11 @@
+209a210
+>         import weakref
+211,213c212,215
+<         if key not in G:
+<             G[key] = P.Calibration(sub_traces(cal_tr, plan))
+<         return plan, theory_c(params["lam"], G[key], [LAYERS[e] for e in plan], cost)
+---
+>         ent = G.get(key)
+>         if ent is None or ent[0]() is not cal_tr:          # PATCH: id() can be reused after garbage collection
+>             ent = G[key] = (weakref.ref(cal_tr), P.Calibration(sub_traces(cal_tr, plan)))
+>         return plan, theory_c(params["lam"], ent[1], [LAYERS[e] for e in plan], cost)

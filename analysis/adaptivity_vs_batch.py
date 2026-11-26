@@ -6,13 +6,17 @@ when the whole batch stops. No timing model is involved: depth and accuracy are 
 
 Two policies, both tuned on the evolve split to a budget on the accuracy drop and reported on the held-out split:
   static     one exit for every batch (unified exit); adjacent exits are mixed at random so the budget is met exactly
+             (if no intermediate exit is within the budget, the last one is mixed with the full model)
   adaptive   stop at the first exit where the batch's mean confidence reaches tau (one threshold)
 Why it matters: with random batching the batch mean confidence has standard deviation ~ sigma / sqrt(B), so at
 large B every batch looks alike and an adaptive stop cannot tell easy batches from hard ones. The script measures
 that standard deviation and the depth the adaptive rule saves beyond the static one.
 
+--metric accuracy (default): the budget is on next-token / label accuracy. --metric fidelity: the budget is on the
+share of outputs that differ from the full model's (use larger budgets, e.g. 0.05 0.10).
+
 Usage: python3 analysis/adaptivity_vs_batch.py [--tasks mnli qqp wikitext_llama wikitext_ls8b] [--budgets 0.01 0.03]
-Output: results/adaptivity_vs_batch.csv
+Output: results/adaptivity_vs_batch.csv (results/adaptivity_vs_batch_fidelity.csv with --metric fidelity)
 """
 from __future__ import annotations
 
@@ -39,21 +43,22 @@ def batches(n: int, B: int, cap: int, seed: int) -> np.ndarray:
     return perm[: k * B].reshape(k, B)
 
 
-def adaptive(tr, idx: np.ndarray, tau: float, depth: np.ndarray) -> tuple[float, float]:
+def adaptive(tr, ok_all: np.ndarray, idx: np.ndarray, tau: float, depth: np.ndarray) -> tuple[float, float]:
     """(mean depth fraction, accuracy) of 'stop at the first exit whose batch-mean confidence >= tau'."""
     mc = tr.conf[idx].mean(1)                                   # [K, E]
     hit = mc[:, :-1] >= tau
     ex = np.where(hit.any(1), hit.argmax(1), mc.shape[1] - 1)   # [K]
-    ok = tr.correct[idx, ex[:, None]]
+    ok = ok_all[idx, ex[:, None]]
     return float(depth[ex].mean()), float(ok.mean())
 
 
-def static_frontier(tr, depth: np.ndarray, budget: float) -> tuple[float, float, float]:
-    """Shallowest random mix of two adjacent exits whose accuracy drop is <= budget. Returns (e_lo, p_lo, depth)."""
-    acc = tr.correct.mean(0)
+def static_frontier(ok_all: np.ndarray, depth: np.ndarray, budget: float) -> tuple[int, float, float]:
+    """Shallowest random mix of two adjacent exits whose accuracy drop is <= budget. Returns (e_lo, p_lo, depth).
+    The last "exit" is the full model (drop 0), so the loop always returns."""
+    acc = ok_all.mean(0)
     drop = acc[-1] - acc
     E = len(acc)
-    for e in range(E - 1):
+    for e in range(E):
         if drop[e] <= budget:
             if e == 0:
                 return 0, 1.0, float(depth[0])
@@ -61,7 +66,7 @@ def static_frontier(tr, depth: np.ndarray, budget: float) -> tuple[float, float,
             p = (budget - drop[e]) / (drop[e - 1] - drop[e]) if drop[e - 1] > drop[e] else 0.0
             p = float(np.clip(p, 0, 1))
             return e - 1, p, float(p * depth[e - 1] + (1 - p) * depth[e])
-    return E - 2, 0.0, float(depth[-1])
+    raise AssertionError("unreachable: the full model has drop 0")
 
 
 def main() -> None:
@@ -69,6 +74,8 @@ def main() -> None:
     ap.add_argument("--tasks", nargs="+", default=["mnli", "qqp", "wikitext_llama", "wikitext_ls8b"])
     ap.add_argument("--budgets", type=float, nargs="+", default=[0.01, 0.03])
     ap.add_argument("--cap", type=int, default=20000, help="max batches per split and batch size")
+    ap.add_argument("--metric", default="accuracy", choices=["accuracy", "fidelity"],
+                    help="what the budget is on: accuracy against the label, or agreement with the full model")
     args = ap.parse_args()
     rows = []
     for task in args.tasks:
@@ -80,30 +87,34 @@ def main() -> None:
         ex = __import__("json").loads(meta.read_text())["exit_layers"] if meta.exists() else EXITS.get(task)
         ev, ho = load_traces(path, "evolve", exit_layers=ex), load_traces(path, "heldout", exit_layers=ex)
         depth = np.array(ev.exit_layers) / ev.exit_layers[-1]
-        full_ev, full_ho = ev.correct[:, -1].mean(), ho.correct[:, -1].mean()
+        if args.metric == "fidelity":
+            ok_ev, ok_ho = ev.pred == ev.pred[:, [-1]], ho.pred == ho.pred[:, [-1]]
+        else:
+            ok_ev, ok_ho = ev.correct, ho.correct
+        full_ev, full_ho = ok_ev[:, -1].mean(), ok_ho[:, -1].mean()
         agree = (ho.pred[:, :-1] == ho.pred[:, [-1]]).mean(0)
-        print(f"\n{task}: full acc {full_ho:.4f}; agreement with the full model per exit {np.round(agree, 3).tolist()}")
+        print(f"\n{task}: full acc {ho.correct[:, -1].mean():.4f}; agreement with the full model per exit {np.round(agree, 3).tolist()}")
         for budget in args.budgets:
-            e_lo, p, _ = static_frontier(ev, depth, budget)
-            acc_ho = ho.correct.mean(0)
+            e_lo, p, _ = static_frontier(ok_ev, depth, budget)
+            acc_ho = ok_ho.mean(0)
             st_depth = p * depth[e_lo] + (1 - p) * depth[e_lo + 1]
             st_drop = full_ho - (p * acc_ho[e_lo] + (1 - p) * acc_ho[e_lo + 1])
             for B in BS:
                 be, bh = batches(len(ev), B, args.cap, B), batches(len(ho), B, args.cap, 100 + B)
                 best = (1.0, 1.01)
                 for tau in TAUS:
-                    dpt, acc = adaptive(ev, be, tau, depth)
+                    dpt, acc = adaptive(ev, ok_ev, be, tau, depth)
                     if full_ev - acc <= budget and dpt < best[0]:
                         best = (dpt, tau)
-                dpt, acc = adaptive(ho, bh, best[1], depth)
+                dpt, acc = adaptive(ho, ok_ho, bh, best[1], depth)
                 sd = float(ho.conf[bh].mean(1).std(0)[:-1].mean())        # spread of the batch-mean confidence
-                rows.append({"task": task, "budget_pts": 100 * budget, "B": B, "static_depth": st_depth,
+                rows.append({"task": task, "metric": args.metric, "budget_pts": 100 * budget, "B": B, "static_depth": st_depth,
                              "static_drop_pts": 100 * st_drop, "adaptive_depth": dpt,
                              "adaptive_drop_pts": 100 * (full_ho - acc), "tau": best[1],
                              "static_speedup": 1 / st_depth, "adaptive_speedup": 1 / dpt,
                              "gain_over_static_pct": 100 * (st_depth / dpt - 1), "batch_mean_conf_sd": sd})
     df = pd.DataFrame(rows)
-    df.to_csv(ROOT / "results/adaptivity_vs_batch.csv", index=False)
+    df.to_csv(ROOT / f"results/adaptivity_vs_batch{'_fidelity' if args.metric == 'fidelity' else ''}.csv", index=False)
     pd.set_option("display.width", 200)
     print(df.round(3).to_string(index=False))
 

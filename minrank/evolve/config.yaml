@@ -1,0 +1,69 @@
+# OpenEvolve config for evolving minrank heuristics (Option A).
+# The LLM server and model are overridden by scripts/minrank/06_evolve.sh (--api-base, --primary-model), so the
+# values below are defaults for a local vLLM OpenAI-compatible server on port 8000.
+# Model alternatives on one RTX A6000 (48 GB): Qwen/Qwen2.5-Coder-32B-Instruct-AWQ (default),
+# Qwen/Qwen2.5-Coder-14B-Instruct (bf16), Qwen/Qwen2.5-Coder-7B-Instruct (fastest, weaker).
+max_iterations: 300
+checkpoint_interval: 25
+checkpoint_on_improvement: true
+random_seed: 42
+log_level: INFO
+diff_based_evolution: false     # full rewrites of the EVOLVE block; small local models fail exact SEARCH/REPLACE diffs
+enforce_evolve_blocks: true     # everything outside the EVOLVE-BLOCK markers is restored from the seed
+max_code_length: 20000
+early_stopping_metric: combined_score
+
+llm:
+  api_base: http://127.0.0.1:8000/v1
+  api_key: EMPTY
+  models:
+    - name: Qwen/Qwen2.5-Coder-32B-Instruct-AWQ
+      weight: 1.0
+  temperature: 0.8
+  max_tokens: 8192
+  timeout: 300
+  retries: 2
+
+prompt:
+  num_top_programs: 2
+  num_diverse_programs: 1
+  include_artifacts: true        # per-graph status/rank/cover/lb lines from the evaluator
+  max_artifact_bytes: 4096       # 20 KB default overflowed the 32k context by iteration ~17
+  system_message: |
+    You are improving a heuristic for the MINRANK of a graph over the field F_2 (linear index coding).
+    A side-information graph on n vertices is given as bitmasks: bit j of out[i] is set iff receiver i knows
+    message j. A 0/1 matrix A FITS the graph iff A[i][i] = 1 for every i and A[i][j] = 0 whenever j is not in out[i]
+    (j != i); entries on edges are free. The goal is a fitting matrix of the lowest possible rank over F_2.
+    rank(A) <= r iff A = U V^T (mod 2) with U, V in {0,1}^{n x r}; the constraints are <u_i, v_i> = 1 and
+    <u_i, v_j> = 0 (mod 2) on every forbidden pair. These XOR constraints defeat naive local search: a plain
+    bit-flip tabu search rarely gets below a clique cover, while the true minrank can be much lower (for planted
+    graphs it is known). Score per graph = (cover_rank - rank) / cover_rank, where cover_rank is a strong clique cover;
+    0 means "as good as a clique cover", positive is better, -1 means the program crashed, timed out or returned a
+    matrix that does not fit. Fitness = mean score over training graphs (random G(n,p) and planted-rank graphs,
+    n <= 50), each run with a fixed time budget of a few seconds.
+    The program has a FIXED skeleton (clique cover start; drop a column; drive violations to 0 at that rank with
+    tabu bit flips plus alternating information-set-decoding sweeps, the diagonal is a hard pivot; repeat). You may
+    only rewrite the code between EVOLVE-BLOCK-START and EVOLVE-BLOCK-END: PARAMS, tenure(), choose_move(),
+    column_to_drop(), init_factors(). Ideas: smarter initialisation of the reduced factors (e.g. re-solving
+    columns of V with U fixed), structure-aware move selection, better column choice, restarts, using the
+    linear-algebra structure. Keep every function name, signature and return type exactly as documented.
+    Rules: imports only numpy, math, random, itertools, collections, heapq, time; no file, OS or network access;
+    no eval/exec; the code must be fast (choose_move is called many thousands of times per second).
+
+database:
+  population_size: 200
+  archive_size: 50
+  num_islands: 3
+  elite_selection_ratio: 0.1
+  exploration_ratio: 0.3
+  exploitation_ratio: 0.6
+  migration_interval: 25
+
+evaluator:
+  # Stage 1: the 4 smallest training graphs (filters crashes and regressions); stage 2: all training graphs.
+  # ~52 training graphs x 2 s / 4 workers ~ 30-40 s per candidate; the timeout leaves a wide margin.
+  timeout: 600
+  max_retries: 1
+  cascade_evaluation: true
+  cascade_thresholds: [-0.05]
+  parallel_evaluations: 2

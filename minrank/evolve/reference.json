@@ -1,0 +1,652 @@
+{
+ "gnp_n20_p0.3_s0": {
+  "cover_rank": 8,
+  "cover_time": 10.0,
+  "digest": "7780fbd40fcb1001",
+  "family": "gnp",
+  "lb": 8,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "train"
+ },
+ "gnp_n20_p0.3_s1": {
+  "cover_rank": 8,
+  "cover_time": 10.0,
+  "digest": "7e680908c7c43695",
+  "family": "gnp",
+  "lb": 7,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "train"
+ },
+ "gnp_n20_p0.3_s2": {
+  "cover_rank": 7,
+  "cover_time": 10.0,
+  "digest": "41fbd569966dcaa1",
+  "family": "gnp",
+  "lb": 7,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "train"
+ },
+ "gnp_n20_p0.3_s3": {
+  "cover_rank": 8,
+  "cover_time": 10.0,
+  "digest": "613508513cdf7159",
+  "family": "gnp",
+  "lb": 7,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "train"
+ },
+ "gnp_n20_p0.3_s4": {
+  "cover_rank": 9,
+  "cover_time": 10.0,
+  "digest": "08e3bb3dec08bc08",
+  "family": "gnp",
+  "lb": 8,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "val"
+ },
+ "gnp_n20_p0.5_s0": {
+  "cover_rank": 7,
+  "cover_time": 10.0,
+  "digest": "1dae7a0e4ca32b53",
+  "family": "gnp",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "train"
+ },
+ "gnp_n20_p0.5_s1": {
+  "cover_rank": 5,
+  "cover_time": 10.0,
+  "digest": "3b1c4072145e9f25",
+  "family": "gnp",
+  "lb": 5,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "train"
+ },
+ "gnp_n20_p0.5_s2": {
+  "cover_rank": 6,
+  "cover_time": 10.0,
+  "digest": "7e11556d1bc98c7f",
+  "family": "gnp",
+  "lb": 5,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "train"
+ },
+ "gnp_n20_p0.5_s3": {
+  "cover_rank": 6,
+  "cover_time": 10.0,
+  "digest": "98aab90dceca5cd6",
+  "family": "gnp",
+  "lb": 5,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "train"
+ },
+ "gnp_n20_p0.5_s4": {
+  "cover_rank": 6,
+  "cover_time": 10.0,
+  "digest": "1a34d5bb121383ae",
+  "family": "gnp",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "val"
+ },
+ "gnp_n20_p0.7_s0": {
+  "cover_rank": 5,
+  "cover_time": 10.0,
+  "digest": "4cb752353db28cef",
+  "family": "gnp",
+  "lb": 5,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "train"
+ },
+ "gnp_n20_p0.7_s1": {
+  "cover_rank": 4,
+  "cover_time": 10.0,
+  "digest": "4b57b16fe64a5844",
+  "family": "gnp",
+  "lb": 3,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "train"
+ },
+ "gnp_n20_p0.7_s2": {
+  "cover_rank": 4,
+  "cover_time": 10.0,
+  "digest": "1c8e7f9d20d064df",
+  "family": "gnp",
+  "lb": 3,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "train"
+ },
+ "gnp_n20_p0.7_s3": {
+  "cover_rank": 4,
+  "cover_time": 10.0,
+  "digest": "5258aab7763b4307",
+  "family": "gnp",
+  "lb": 4,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "train"
+ },
+ "gnp_n20_p0.7_s4": {
+  "cover_rank": 4,
+  "cover_time": 10.0,
+  "digest": "9c3bb5e4b030d266",
+  "family": "gnp",
+  "lb": 4,
+  "lb_time": 30.0,
+  "n": 20,
+  "split": "val"
+ },
+ "gnp_n30_p0.3_s0": {
+  "cover_rank": 11,
+  "cover_time": 10.0,
+  "digest": "61c1d591b0ba00e4",
+  "family": "gnp",
+  "lb": 10,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "gnp_n30_p0.3_s1": {
+  "cover_rank": 9,
+  "cover_time": 10.0,
+  "digest": "30499ce40f85c595",
+  "family": "gnp",
+  "lb": 9,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "gnp_n30_p0.3_s2": {
+  "cover_rank": 10,
+  "cover_time": 10.0,
+  "digest": "12714d318e1c290c",
+  "family": "gnp",
+  "lb": 9,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "gnp_n30_p0.3_s3": {
+  "cover_rank": 10,
+  "cover_time": 10.0,
+  "digest": "ca385ef6618e73da",
+  "family": "gnp",
+  "lb": 9,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "gnp_n30_p0.3_s4": {
+  "cover_rank": 11,
+  "cover_time": 10.0,
+  "digest": "6a18b52bff34ccec",
+  "family": "gnp",
+  "lb": 9,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "val"
+ },
+ "gnp_n30_p0.5_s0": {
+  "cover_rank": 8,
+  "cover_time": 10.0,
+  "digest": "18c0a16a47038c74",
+  "family": "gnp",
+  "lb": 7,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "gnp_n30_p0.5_s1": {
+  "cover_rank": 7,
+  "cover_time": 10.0,
+  "digest": "323575c409d6c1b1",
+  "family": "gnp",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "gnp_n30_p0.5_s2": {
+  "cover_rank": 7,
+  "cover_time": 10.0,
+  "digest": "a85f9eaddd9ea631",
+  "family": "gnp",
+  "lb": 7,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "gnp_n30_p0.5_s3": {
+  "cover_rank": 7,
+  "cover_time": 10.0,
+  "digest": "79087196089376ee",
+  "family": "gnp",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "gnp_n30_p0.5_s4": {
+  "cover_rank": 7,
+  "cover_time": 10.0,
+  "digest": "a27cf8342225b96b",
+  "family": "gnp",
+  "lb": 7,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "val"
+ },
+ "gnp_n30_p0.7_s0": {
+  "cover_rank": 6,
+  "cover_time": 10.0,
+  "digest": "7092f175f6bcb0bc",
+  "family": "gnp",
+  "lb": 5,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "gnp_n30_p0.7_s1": {
+  "cover_rank": 5,
+  "cover_time": 10.0,
+  "digest": "048be5e1f03332a7",
+  "family": "gnp",
+  "lb": 4,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "gnp_n30_p0.7_s2": {
+  "cover_rank": 5,
+  "cover_time": 10.0,
+  "digest": "9371ca1ef9b7007c",
+  "family": "gnp",
+  "lb": 4,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "gnp_n30_p0.7_s3": {
+  "cover_rank": 5,
+  "cover_time": 10.0,
+  "digest": "09eb62870b9697e0",
+  "family": "gnp",
+  "lb": 4,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "gnp_n30_p0.7_s4": {
+  "cover_rank": 5,
+  "cover_time": 10.0,
+  "digest": "f28c3b170f8ce158",
+  "family": "gnp",
+  "lb": 4,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "val"
+ },
+ "gnp_n50_p0.3_s0": {
+  "cover_rank": 14,
+  "cover_time": 10.0,
+  "digest": "6199d19f28cdbc00",
+  "family": "gnp",
+  "lb": 11,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "gnp_n50_p0.3_s1": {
+  "cover_rank": 14,
+  "cover_time": 10.0,
+  "digest": "f47899026a498c77",
+  "family": "gnp",
+  "lb": 12,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "gnp_n50_p0.3_s2": {
+  "cover_rank": 14,
+  "cover_time": 10.0,
+  "digest": "0348f9aee8433b2d",
+  "family": "gnp",
+  "lb": 12,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "gnp_n50_p0.3_s3": {
+  "cover_rank": 13,
+  "cover_time": 10.0,
+  "digest": "e7b82af2dec2a587",
+  "family": "gnp",
+  "lb": 10,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "gnp_n50_p0.3_s4": {
+  "cover_rank": 14,
+  "cover_time": 10.0,
+  "digest": "ef0e6844811ed597",
+  "family": "gnp",
+  "lb": 12,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "val"
+ },
+ "gnp_n50_p0.5_s0": {
+  "cover_rank": 10,
+  "cover_time": 10.0,
+  "digest": "1b4bc7949ebbb024",
+  "family": "gnp",
+  "lb": 8,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "gnp_n50_p0.5_s1": {
+  "cover_rank": 10,
+  "cover_time": 10.0,
+  "digest": "af820ead506749f7",
+  "family": "gnp",
+  "lb": 8,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "gnp_n50_p0.5_s2": {
+  "cover_rank": 10,
+  "cover_time": 10.0,
+  "digest": "3793532cb0b57060",
+  "family": "gnp",
+  "lb": 7,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "gnp_n50_p0.5_s3": {
+  "cover_rank": 10,
+  "cover_time": 10.0,
+  "digest": "0fe36f7728f8086e",
+  "family": "gnp",
+  "lb": 7,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "gnp_n50_p0.5_s4": {
+  "cover_rank": 10,
+  "cover_time": 10.0,
+  "digest": "618ce947a524b023",
+  "family": "gnp",
+  "lb": 7,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "val"
+ },
+ "gnp_n50_p0.7_s0": {
+  "cover_rank": 7,
+  "cover_time": 10.0,
+  "digest": "abb583c931541a9e",
+  "family": "gnp",
+  "lb": 5,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "gnp_n50_p0.7_s1": {
+  "cover_rank": 7,
+  "cover_time": 10.0,
+  "digest": "c8809ea915b0cdf3",
+  "family": "gnp",
+  "lb": 5,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "gnp_n50_p0.7_s2": {
+  "cover_rank": 7,
+  "cover_time": 10.0,
+  "digest": "5af2b45cbbe00b23",
+  "family": "gnp",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "gnp_n50_p0.7_s3": {
+  "cover_rank": 6,
+  "cover_time": 10.0,
+  "digest": "8090f94ed13f547d",
+  "family": "gnp",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "gnp_n50_p0.7_s4": {
+  "cover_rank": 7,
+  "cover_time": 10.0,
+  "digest": "c04b79c1302c0916",
+  "family": "gnp",
+  "lb": 5,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "val"
+ },
+ "planted_d_n30_r6_e0.0_s0": {
+  "cover_rank": 10,
+  "cover_time": 10.0,
+  "digest": "db37de69b0856b2d",
+  "family": "planted_d",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "planted_d_n30_r6_e0.0_s1": {
+  "cover_rank": 10,
+  "cover_time": 10.0,
+  "digest": "89004159c6ce85e3",
+  "family": "planted_d",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "planted_d_n30_r6_e0.0_s2": {
+  "cover_rank": 11,
+  "cover_time": 10.0,
+  "digest": "3be0e38153d68b04",
+  "family": "planted_d",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "planted_d_n30_r6_e0.0_s3": {
+  "cover_rank": 11,
+  "cover_time": 10.0,
+  "digest": "805c541083818dcb",
+  "family": "planted_d",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "planted_d_n30_r6_e0.0_s4": {
+  "cover_rank": 11,
+  "cover_time": 10.0,
+  "digest": "a2182abebda5b193",
+  "family": "planted_d",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "val"
+ },
+ "planted_d_n50_r8_e0.0_s0": {
+  "cover_rank": 15,
+  "cover_time": 10.0,
+  "digest": "916b8dbf01e7be9e",
+  "family": "planted_d",
+  "lb": 8,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "planted_d_n50_r8_e0.0_s1": {
+  "cover_rank": 14,
+  "cover_time": 10.0,
+  "digest": "1ef40ce08bb5994b",
+  "family": "planted_d",
+  "lb": 8,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "planted_d_n50_r8_e0.0_s2": {
+  "cover_rank": 15,
+  "cover_time": 10.0,
+  "digest": "e3533e4c2cabf69b",
+  "family": "planted_d",
+  "lb": 8,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "planted_d_n50_r8_e0.0_s3": {
+  "cover_rank": 15,
+  "cover_time": 10.0,
+  "digest": "343872f7abda5624",
+  "family": "planted_d",
+  "lb": 8,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "planted_d_n50_r8_e0.0_s4": {
+  "cover_rank": 16,
+  "cover_time": 10.0,
+  "digest": "82e6cec294d0579c",
+  "family": "planted_d",
+  "lb": 8,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "val"
+ },
+ "planted_n30_r6_e0.0_s0": {
+  "cover_rank": 6,
+  "cover_time": 10.0,
+  "digest": "2cbd11bf40c6acf7",
+  "family": "planted",
+  "lb": 5,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "planted_n30_r6_e0.0_s1": {
+  "cover_rank": 6,
+  "cover_time": 10.0,
+  "digest": "63787ef1ad45d603",
+  "family": "planted",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "planted_n30_r6_e0.0_s2": {
+  "cover_rank": 7,
+  "cover_time": 10.0,
+  "digest": "08b27c64187e9220",
+  "family": "planted",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "planted_n30_r6_e0.0_s3": {
+  "cover_rank": 7,
+  "cover_time": 10.0,
+  "digest": "66f906532c9e56eb",
+  "family": "planted",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "train"
+ },
+ "planted_n30_r6_e0.0_s4": {
+  "cover_rank": 6,
+  "cover_time": 10.0,
+  "digest": "310aa8e2e884bc25",
+  "family": "planted",
+  "lb": 5,
+  "lb_time": 30.0,
+  "n": 30,
+  "split": "val"
+ },
+ "planted_n50_r8_e0.0_s0": {
+  "cover_rank": 9,
+  "cover_time": 10.0,
+  "digest": "5bb3443b10f93497",
+  "family": "planted",
+  "lb": 8,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "planted_n50_r8_e0.0_s1": {
+  "cover_rank": 9,
+  "cover_time": 10.0,
+  "digest": "235f3bc35770849c",
+  "family": "planted",
+  "lb": 6,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "planted_n50_r8_e0.0_s2": {
+  "cover_rank": 9,
+  "cover_time": 10.0,
+  "digest": "3e2d76261355c3fb",
+  "family": "planted",
+  "lb": 7,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "planted_n50_r8_e0.0_s3": {
+  "cover_rank": 8,
+  "cover_time": 10.0,
+  "digest": "ed4ee98e5c11e711",
+  "family": "planted",
+  "lb": 7,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "train"
+ },
+ "planted_n50_r8_e0.0_s4": {
+  "cover_rank": 9,
+  "cover_time": 10.0,
+  "digest": "e9d15f93a934ecfd",
+  "family": "planted",
+  "lb": 7,
+  "lb_time": 30.0,
+  "n": 50,
+  "split": "val"
+ }
+}

@@ -1,0 +1,34 @@
+  B             family  ho_speedup  ho_drop_pts  hard_drop_pts
+  8             theory       1.784        0.688          2.237
+  8          theory_la       1.730        0.554          1.802
+  8         theory_seq       1.775        0.693          2.257
+  8      theory_la_seq       1.727        0.559          1.821
+  8        theory+plan       1.911        0.817          3.148
+  8     theory_la+plan       1.965        1.049          4.078
+  8    theory_seq+plan       1.911        0.812          3.128
+  8 theory_la_seq+plan       1.965        1.049          4.078
+ 16             theory       2.016        0.554          1.227
+ 16          theory_la       2.195        0.846          2.355
+ 16         theory_seq       2.184        0.777          1.742
+ 16      theory_la_seq       2.170        0.718          1.999
+ 16        theory+plan       2.077        0.628          1.405
+ 16     theory_la+plan       2.113        0.668          1.682
+ 16    theory_seq+plan       2.059        0.752          2.513
+ 16 theory_la_seq+plan       2.182        0.906          2.850
+ 64             theory       2.484        0.575          1.270
+ 64          theory_la       2.503        0.595          1.349
+ 64         theory_seq       2.431        0.511          1.151
+ 64      theory_la_seq       2.505        0.605          1.389
+ 64        theory+plan       2.415        0.774          1.567
+ 64     theory_la+plan       2.503        0.595          1.349
+ 64    theory_seq+plan       2.404        0.774          1.567
+ 64 theory_la_seq+plan       2.502        0.600          1.369
+128             theory       2.448        0.597          1.394
+128          theory_la       2.515        0.572          1.295
+128         theory_seq       2.410        0.617          1.474
+128      theory_la_seq       2.515        0.572          1.295
+128        theory+plan       2.357        0.572          1.255
+128     theory_la+plan       2.515        0.572          1.295
+128    theory_seq+plan       2.353        0.547          1.195
+128 theory_la_seq+plan       2.515        0.572          1.295
+wrote /home/neha/ie624-repro/results_repro/.root/results/theory58_front_qqp_cuda_T16.csv

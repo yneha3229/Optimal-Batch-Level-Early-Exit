@@ -1,0 +1,7 @@
+T1 collective, R fixed: 210 monotone instances, rule (3) suboptimal in 0; 190 non-monotone, suboptimal in 17 (max relative gap 2.27%)
+T2 compute-bound, one input: 301 monotone instances; all-exits lookahead suboptimal in 0; rule (2) suboptimal in 165 (mean loss 0.0476, max 0.4455 in accuracy units); rule (2) ever later than the lookahead in 0; 699 non-monotone, lookahead suboptimal in 111
+T2 loss bound (monotone, gains >= 0): 31 instances, violated in 0; loss / bound mean 0.10, max 0.80
+P3 floor, n_k = 8: simultaneous rule (2) changes the objective by -6.99 x (lam b layers_left), the sequential version by +0.001 x
+J affine, B = 3: rules (2)+(3) optimal in 122/150, mean gap 0.0037, max 0.1352; sequential (2) optimal in 122/150, mean gap 0.0036, max 0.1352
+J floor, B = 3: rules (2)+(3) optimal in 109/150, mean gap 0.0094, max 0.1938; sequential (2) optimal in 115/150, mean gap 0.0058, max 0.1088
+wrote /home/neha/ie624-repro/results_repro/.root/results/theory58_checks.json

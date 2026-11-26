@@ -1,0 +1,108 @@
+mnli: simulated 2600 candidate-settings
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:65: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  acc = df[[f"ho_acc_{s}" for s in SEEDS]].mean(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:67: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  df["ho_speedup"] = df[[f"ho_full_{s}" for s in SEEDS]].sum(1) / df[[f"ho_lat_{s}" for s in SEEDS]].sum(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:67: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  df["ho_speedup"] = df[[f"ho_full_{s}" for s in SEEDS]].sum(1) / df[[f"ho_lat_{s}" for s in SEEDS]].sum(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:65: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  acc = df[[f"ho_acc_{s}" for s in SEEDS]].mean(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:67: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  df["ho_speedup"] = df[[f"ho_full_{s}" for s in SEEDS]].sum(1) / df[[f"ho_lat_{s}" for s in SEEDS]].sum(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:67: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  df["ho_speedup"] = df[[f"ho_full_{s}" for s in SEEDS]].sum(1) / df[[f"ho_lat_{s}" for s in SEEDS]].sum(1)
+qqp: simulated 2600 candidate-settings
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:65: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  acc = df[[f"ho_acc_{s}" for s in SEEDS]].mean(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:67: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  df["ho_speedup"] = df[[f"ho_full_{s}" for s in SEEDS]].sum(1) / df[[f"ho_lat_{s}" for s in SEEDS]].sum(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:67: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  df["ho_speedup"] = df[[f"ho_full_{s}" for s in SEEDS]].sum(1) / df[[f"ho_lat_{s}" for s in SEEDS]].sum(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:65: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  acc = df[[f"ho_acc_{s}" for s in SEEDS]].mean(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:67: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  df["ho_speedup"] = df[[f"ho_full_{s}" for s in SEEDS]].sum(1) / df[[f"ho_lat_{s}" for s in SEEDS]].sum(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:67: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  df["ho_speedup"] = df[[f"ho_full_{s}" for s in SEEDS]].sum(1) / df[[f"ho_lat_{s}" for s in SEEDS]].sum(1)
+cifar100: simulated 2600 candidate-settings
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:65: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  acc = df[[f"ho_acc_{s}" for s in SEEDS]].mean(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:67: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  df["ho_speedup"] = df[[f"ho_full_{s}" for s in SEEDS]].sum(1) / df[[f"ho_lat_{s}" for s in SEEDS]].sum(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:67: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  df["ho_speedup"] = df[[f"ho_full_{s}" for s in SEEDS]].sum(1) / df[[f"ho_lat_{s}" for s in SEEDS]].sum(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:65: Pandas4Warning: Starting with pandas version 4.0 all arguments of mean will be keyword-only.
+  acc = df[[f"ho_acc_{s}" for s in SEEDS]].mean(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:67: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  df["ho_speedup"] = df[[f"ho_full_{s}" for s in SEEDS]].sum(1) / df[[f"ho_lat_{s}" for s in SEEDS]].sum(1)
+/home/neha/ie624-repro/results_repro/.root/experiments/transfer_test.py:67: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  df["ho_speedup"] = df[[f"ho_full_{s}" for s in SEEDS]].sum(1) / df[[f"ho_lat_{s}" for s in SEEDS]].sum(1)
+
+=== selection margin 1.0 pt on evolve; budget 1 pt on held-out; all tasks pooled ===
+-- mean_rel
+kind               in_domain  other_batch_size  other_mode
+family                                                    
+consensus              0.755             0.737       0.742
+majority               0.821             0.815       0.816
+random_collective      0.782             0.787       0.782
+theory                 0.834             0.838       0.832
+threshold              0.869             0.870       0.870
+unified                0.781             0.781       0.781
+-- worst_rel
+kind               in_domain  other_batch_size  other_mode
+family                                                    
+consensus              0.370             0.366       0.366
+majority               0.370             0.370       0.370
+random_collective      0.370             0.370       0.370
+theory                 0.541             0.370       0.370
+threshold              0.580             0.370       0.370
+unified                0.370             0.370       0.370
+-- violation_rate
+kind               in_domain  other_batch_size  other_mode
+family                                                    
+consensus              0.583             0.417       0.458
+majority               0.417             0.417       0.417
+random_collective      0.875             0.819       0.833
+theory                 0.708             0.722       0.719
+threshold              0.583             0.583       0.583
+unified                0.417             0.417       0.417
+
+=== selection margin 0.5 pt on evolve; budget 1 pt on held-out; all tasks pooled ===
+-- mean_rel
+kind               in_domain  other_batch_size  other_mode
+family                                                    
+consensus              0.744             0.667       0.687
+majority               0.762             0.777       0.773
+random_collective      0.888             0.893       0.890
+theory                 0.927             0.928       0.934
+threshold              0.881             0.882       0.882
+unified                0.763             0.763       0.763
+-- worst_rel
+kind               in_domain  other_batch_size  other_mode
+family                                                    
+consensus              0.463             0.385       0.385
+majority               0.505             0.411       0.411
+random_collective      0.620             0.482       0.482
+theory                 0.620             0.446       0.392
+threshold              0.640             0.640       0.640
+unified                0.392             0.408       0.392
+-- violation_rate
+kind               in_domain  other_batch_size  other_mode
+family                                                    
+consensus              0.083             0.417       0.333
+majority               0.167             0.111       0.125
+random_collective      0.250             0.278       0.271
+theory                 0.333             0.306       0.292
+threshold              0.000             0.000       0.000
+unified                0.167             0.167       0.167
+
+=== per task, transfer pairs only (margin 0.5 pt): mean / worst relative score ===
+                      mean                    min              
+task              cifar100   mnli    qqp cifar100   mnli    qqp
+family                                                         
+consensus            0.734  0.790  0.511    0.631  0.604  0.385
+majority             0.713  0.933  0.679    0.631  0.675  0.411
+random_collective    0.969  0.853  0.851    0.942  0.620  0.482
+theory               1.003  0.812  0.979    0.962  0.620  0.392
+threshold            0.969  0.943  0.734    0.944  0.783  0.640
+unified              0.691  0.964  0.634    0.631  0.845  0.392

@@ -1,0 +1,1 @@
+{"name": "cycle_5", "family": "cycle", "n": 5, "directed": false, "digest": "333fe93a5e1d62e8", "meta": {}, "edges": [[0, 1], [0, 4], [1, 2], [2, 3], [3, 4]]}

@@ -1,0 +1,12 @@
+Loading weights:   0%|          | 0/291 [00:00<?, ?it/s]Loading weights:  18%|█▊        | 52/291 [00:00<00:00, 433.61it/s]Loading weights:  33%|███▎      | 96/291 [00:00<00:00, 197.80it/s]Loading weights:  42%|████▏     | 122/291 [00:00<00:00, 176.13it/s]Loading weights:  49%|████▉     | 143/291 [00:00<00:01, 138.15it/s]Loading weights:  61%|██████    | 178/291 [00:00<00:00, 178.89it/s]Loading weights:  69%|██████▉   | 201/291 [00:01<00:00, 155.86it/s]Loading weights:  76%|███████▌  | 220/291 [00:01<00:00, 157.73it/s]Loading weights:  82%|████████▏ | 238/291 [00:01<00:00, 156.24it/s]Loading weights:  88%|████████▊ | 255/291 [00:01<00:00, 143.01it/s]Loading weights:  93%|█████████▎| 271/291 [00:01<00:00, 131.06it/s]Loading weights: 100%|██████████| 291/291 [00:01<00:00, 165.31it/s]
+Using the latest cached version of the dataset since nyu-mll/glue couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'mnli' at /home/neha/.cache/huggingface/datasets/nyu-mll___glue/mnli/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c (last modified on Wed Oct 28 10:57:28 2026).
+{'B': 1, 'full_ms': 30.807496717898175, 'heads_ms': 34.61360951769166, 'reps': 20}
+{'B': 2, 'full_ms': 52.936039748601615, 'heads_ms': 54.99948421493173, 'reps': 20}
+{'B': 4, 'full_ms': 86.52629572316073, 'heads_ms': 87.5362872320693, 'reps': 20}
+{'B': 8, 'full_ms': 162.1597660414409, 'heads_ms': 163.4973854816053, 'reps': 20}
+{'B': 16, 'full_ms': 310.0271562580019, 'heads_ms': 311.9712315092329, 'reps': 20}
+{'B': 32, 'full_ms': 616.4675555191934, 'heads_ms': 618.4695452684537, 'reps': 20}
+{'B': 64, 'full_ms': 1204.913673514966, 'heads_ms': 1206.7872740444727, 'reps': 15}
+{'B': 128, 'full_ms': 2384.007898508571, 'heads_ms': 2386.14030595636, 'reps': 7}
+{'device': 'cuda', 'seq_len': 128, 'dtype': 'bf16', 'model': 'meta-llama/Llama-3.1-8B-Instruct', 'exit_layers': [8, 12, 16, 20, 24, 28, 32], 'a': 0.4023205217237396, 'b': 0.5839671209374852, 'head': 0.3288387500409347, 'head_raw': 0.3288387500409347, 'rho8': 0.08611797379060165, 'rho64': 0.010764746723825207, 'affine_max_rel_err': 0.05077613146370483, 'gpu': 'NVIDIA RTX A6000', 'threads': 8}

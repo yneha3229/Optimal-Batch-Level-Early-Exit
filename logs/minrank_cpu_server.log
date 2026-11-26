@@ -1,0 +1,288 @@
+172 graphs
+wrote /home/neha/ie624/minrank/results/lower_bounds.csv
+172 graphs
+11180 jobs on 16 workers (0 already in baselines.csv, skipped)
+50/11180 done
+100/11180 done
+150/11180 done
+200/11180 done
+250/11180 done
+300/11180 done
+350/11180 done
+400/11180 done
+450/11180 done
+500/11180 done
+550/11180 done
+600/11180 done
+650/11180 done
+700/11180 done
+750/11180 done
+800/11180 done
+850/11180 done
+900/11180 done
+950/11180 done
+1000/11180 done
+1050/11180 done
+1100/11180 done
+1150/11180 done
+1200/11180 done
+1250/11180 done
+1300/11180 done
+1350/11180 done
+1400/11180 done
+1450/11180 done
+1500/11180 done
+1550/11180 done
+1600/11180 done
+1650/11180 done
+1700/11180 done
+1750/11180 done
+1800/11180 done
+1850/11180 done
+1900/11180 done
+1950/11180 done
+2000/11180 done
+2050/11180 done
+2100/11180 done
+2150/11180 done
+2200/11180 done
+2250/11180 done
+2300/11180 done
+2350/11180 done
+2400/11180 done
+2450/11180 done
+2500/11180 done
+2550/11180 done
+2600/11180 done
+2650/11180 done
+2700/11180 done
+2750/11180 done
+2800/11180 done
+2850/11180 done
+2900/11180 done
+2950/11180 done
+3000/11180 done
+3050/11180 done
+3100/11180 done
+3150/11180 done
+3200/11180 done
+3250/11180 done
+3300/11180 done
+3350/11180 done
+3400/11180 done
+3450/11180 done
+3500/11180 done
+3550/11180 done
+3600/11180 done
+3650/11180 done
+3700/11180 done
+3750/11180 done
+3800/11180 done
+3850/11180 done
+3900/11180 done
+3950/11180 done
+4000/11180 done
+4050/11180 done
+4100/11180 done
+4150/11180 done
+4200/11180 done
+4250/11180 done
+4300/11180 done
+4350/11180 done
+4400/11180 done
+4450/11180 done
+4500/11180 done
+4550/11180 done
+4600/11180 done
+4650/11180 done
+4700/11180 done
+4750/11180 done
+4800/11180 done
+4850/11180 done
+4900/11180 done
+4950/11180 done
+5000/11180 done
+5050/11180 done
+5100/11180 done
+5150/11180 done
+5200/11180 done
+5250/11180 done
+5300/11180 done
+5350/11180 done
+5400/11180 done
+5450/11180 done
+5500/11180 done
+5550/11180 done
+5600/11180 done
+5650/11180 done
+5700/11180 done
+5750/11180 done
+5800/11180 done
+5850/11180 done
+5900/11180 done
+5950/11180 done
+6000/11180 done
+6050/11180 done
+6100/11180 done
+6150/11180 done
+6200/11180 done
+6250/11180 done
+6300/11180 done
+6350/11180 done
+6400/11180 done
+6450/11180 done
+6500/11180 done
+6550/11180 done
+6600/11180 done
+6650/11180 done
+6700/11180 done
+6750/11180 done
+6800/11180 done
+6850/11180 done
+6900/11180 done
+6950/11180 done
+7000/11180 done
+7050/11180 done
+7100/11180 done
+7150/11180 done
+7200/11180 done
+7250/11180 done
+7300/11180 done
+7350/11180 done
+7400/11180 done
+7450/11180 done
+7500/11180 done
+7550/11180 done
+7600/11180 done
+7650/11180 done
+7700/11180 done
+7750/11180 done
+7800/11180 done
+7850/11180 done
+7900/11180 done
+7950/11180 done
+8000/11180 done
+8050/11180 done
+8100/11180 done
+8150/11180 done
+8200/11180 done
+8250/11180 done
+8300/11180 done
+8350/11180 done
+8400/11180 done
+8450/11180 done
+8500/11180 done
+8550/11180 done
+8600/11180 done
+8650/11180 done
+8700/11180 done
+8750/11180 done
+8800/11180 done
+8850/11180 done
+8900/11180 done
+8950/11180 done
+9000/11180 done
+9050/11180 done
+9100/11180 done
+9150/11180 done
+9200/11180 done
+9250/11180 done
+9300/11180 done
+9350/11180 done
+9400/11180 done
+9450/11180 done
+9500/11180 done
+9550/11180 done
+9600/11180 done
+9650/11180 done
+9700/11180 done
+9750/11180 done
+9800/11180 done
+9850/11180 done
+9900/11180 done
+9950/11180 done
+10000/11180 done
+10050/11180 done
+10100/11180 done
+10150/11180 done
+10200/11180 done
+10250/11180 done
+10300/11180 done
+10350/11180 done
+10400/11180 done
+10450/11180 done
+10500/11180 done
+10550/11180 done
+10600/11180 done
+10650/11180 done
+10700/11180 done
+10750/11180 done
+10800/11180 done
+10850/11180 done
+10900/11180 done
+10950/11180 done
+11000/11180 done
+11050/11180 done
+11100/11180 done
+11150/11180 done
+wrote /home/neha/ie624/minrank/results/baselines.csv
+53 graphs selected, 0 already proven, 53 to run
+kneser_6_2: lb=5 best=5 proven=True (lb_meets_ub, 0.01s)
+kneser_8_2: lb=7 best=7 proven=True (lb_meets_ub, 0.01s)
+cyclepow_21_2: lb=7 best=7 proven=True (lb_meets_ub, 0.03s)
+cyclepow_50_4: lb=10 best=10 proven=True (lb_meets_ub, 0.07s)
+cycle_5: lb=2 best=3 proven=True (unsat, 1.11s)
+planted_n30_r6_e0.0_s1: lb=6 best=6 proven=True (lb_meets_ub, 0.01s)
+planted_n30_r6_e0.0_s2: lb=6 best=6 proven=True (lb_meets_ub, 0.01s)
+planted_n30_r6_e0.0_s3: lb=6 best=6 proven=True (lb_meets_ub, 0.01s)
+cycle_7: lb=3 best=4 proven=True (unsat, 1.23s)
+planted_n30_r6_e0.0_s5: lb=6 best=6 proven=True (lb_meets_ub, 0.01s)
+planted_n30_r6_e0.0_s6: lb=6 best=6 proven=True (lb_meets_ub, 0.01s)
+planted_n30_r6_e0.0_s7: lb=6 best=6 proven=True (lb_meets_ub, 0.01s)
+planted_d_n30_r6_e0.0_s0: lb=6 best=6 proven=True (lb_meets_ub, 0.08s)
+planted_d_n30_r6_e0.0_s1: lb=6 best=6 proven=True (lb_meets_ub, 0.09s)
+paley_13: lb=3 best=5 proven=True (unsat, 1.41s)
+planted_d_n30_r6_e0.0_s2: lb=6 best=6 proven=True (lb_meets_ub, 0.09s)
+planted_d_n30_r6_e0.0_s3: lb=6 best=6 proven=True (lb_meets_ub, 0.1s)
+planted_d_n30_r6_e0.0_s4: lb=6 best=6 proven=True (lb_meets_ub, 0.06s)
+planted_d_n30_r6_e0.0_s5: lb=6 best=6 proven=True (lb_meets_ub, 0.05s)
+planted_d_n30_r6_e0.0_s6: lb=6 best=6 proven=True (lb_meets_ub, 0.08s)
+planted_d_n30_r6_e0.0_s7: lb=6 best=6 proven=True (lb_meets_ub, 0.07s)
+planted_n50_r8_e0.0_s0: lb=8 best=8 proven=True (lb_meets_ub, 0.02s)
+mycielski_4: lb=5 best=6 proven=True (unsat, 2.85s)
+planted_n30_r6_e0.0_s4: lb=5 best=6 proven=True (unsat, 3.43s)
+planted_n30_r6_e0.0_s0: lb=5 best=6 proven=True (unsat, 4.58s)
+paley_17: lb=3 best=6 proven=True (unsat, 557.52s)
+kneser_7_2: lb=6 best=7 proven=False (call_timeout, 600.12s)
+paley_29: lb=4 best=8 proven=False (call_timeout, 600.12s)
+paley_37: lb=4 best=10 proven=False (call_timeout, 600.14s)
+kneser_8_3: lb=21 best=28 proven=False (call_timeout, 600.21s)
+paley_53: lb=5 best=11 proven=False (call_timeout, 600.15s)
+paley_41: lb=5 best=9 proven=False (call_timeout, 600.16s)
+planted_n50_r8_e0.0_s7: lb=8 best=8 proven=True (lb_meets_ub, 0.11s)
+mycielski_5: lb=11 best=12 proven=False (call_timeout, 600.15s)
+cyclepow_31_3: lb=7 best=8 proven=False (call_timeout, 600.16s)
+mycielski_6: lb=23 best=24 proven=False (call_timeout, 600.25s)
+orth_5: lb=5 best=5 proven=True (lb_meets_ub, 0.01s)
+orth_6: lb=6 best=6 proven=True (lb_meets_ub, 0.02s)
+circ_41_1-5-8: lb=13 best=21 proven=False (call_timeout, 600.27s)
+planted_n50_r8_e0.0_s2: lb=7 best=9 proven=False (call_timeout, 600.15s)
+planted_n50_r8_e0.0_s3: lb=7 best=8 proven=False (call_timeout, 600.14s)
+planted_n50_r8_e0.0_s4: lb=7 best=8 proven=False (call_timeout, 600.18s)
+planted_n50_r8_e0.0_s5: lb=7 best=8 proven=False (call_timeout, 600.18s)
+planted_n50_r8_e0.0_s1: lb=6 best=8 proven=False (call_timeout, 891.95s)
+planted_n50_r8_e0.0_s6: lb=7 best=8 proven=False (call_timeout, 600.14s)
+planted_d_n50_r8_e0.0_s1: lb=8 best=14 proven=False (call_timeout, 600.88s)
+planted_d_n50_r8_e0.0_s7: lb=8 best=14 proven=False (call_timeout, 601.13s)
+planted_d_n50_r8_e0.0_s0: lb=8 best=14 proven=False (call_timeout, 601.31s)
+planted_d_n50_r8_e0.0_s2: lb=8 best=14 proven=False (call_timeout, 601.24s)
+planted_d_n50_r8_e0.0_s3: lb=8 best=15 proven=False (call_timeout, 601.49s)
+planted_d_n50_r8_e0.0_s4: lb=8 best=15 proven=False (call_timeout, 601.72s)
+planted_d_n50_r8_e0.0_s5: lb=8 best=15 proven=False (call_timeout, 601.72s)
+planted_d_n50_r8_e0.0_s6: lb=8 best=16 proven=False (call_timeout, 601.72s)
+wrote /home/neha/ie624/minrank/results/exact.csv
+520 candidates, 0 already in separations.csv
+wrote /home/neha/ie624/minrank/results/separations.csv; 0 separations
+note: /home/neha/ie624/minrank/results/evolved.csv not found, skipped
+wrote /home/neha/ie624/minrank/results/summary_graphs.csv (172 graphs, 48 proven optimal, 0 certificates FAILED verification)
+wrote /home/neha/ie624/minrank/results/summary_methods.csv (69 rows); figures: 3

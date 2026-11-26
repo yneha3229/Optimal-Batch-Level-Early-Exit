@@ -1,0 +1,9 @@
+cifar100_real_cifar100_B64_lowrho, attack inputs: deepsloth; victims' latency / full-model latency for k attackers
+    policy   m   lam  clean_speedup  clean_acc_drop    k0    k1    k2    k4    k8   k16   k32
+theory m=0 0.0 0.112          1.459           0.009 0.684 0.692 0.698 0.707 0.730 0.777 0.865
+theory m=4 4.0 0.089          1.452           0.009 0.689 0.701 0.713 0.730 0.756 0.799 0.880
+theory m=8 8.0 0.027          1.239           0.008 0.803 0.810 0.823 0.842 0.876 0.901 0.947
+  majority NaN 0.888          1.078           0.008 0.929 0.941 0.954 0.970 1.012 1.040 1.043
+ consensus NaN 0.220          1.063           0.009 0.925 1.043 1.043 1.043 1.043 1.043 1.043
+ threshold NaN 0.736          1.439           0.010 0.694 0.701 0.705 0.715 0.737 0.783 0.869
+pathwise bound check: [{'m': 4, 'k': 1, 'batches': 300, 'violations': 0}, {'m': 4, 'k': 2, 'batches': 300, 'violations': 0}, {'m': 4, 'k': 4, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 1, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 2, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 4, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 8, 'batches': 300, 'violations': 0}]

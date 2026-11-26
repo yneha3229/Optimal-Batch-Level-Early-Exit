@@ -1,0 +1,9 @@
+qqp_enc_eager_meas_B64_lowrho, attack inputs: hardest_2pct; victims' latency / full-model latency for k attackers
+    policy   m   lam  clean_speedup  clean_acc_drop    k0    k1    k2    k4    k8   k16   k32
+theory m=0 0.0 0.056          2.074           0.016 0.462 0.480 0.493 0.510 0.527 0.557 0.613
+theory m=4 4.0 0.044          2.132           0.015 0.462 0.467 0.476 0.496 0.545 0.577 0.627
+theory m=8 8.0 0.044          2.181           0.018 0.458 0.458 0.460 0.463 0.485 0.576 0.627
+  majority NaN 0.964          1.852           0.019 0.530 0.539 0.548 0.570 0.627 0.896 1.114
+ consensus NaN 0.559          1.119           0.003 0.754 0.885 0.995 1.039 1.104 1.114 1.114
+ threshold NaN 0.903          1.469           0.008 0.672 0.678 0.684 0.698 0.726 0.784 0.891
+pathwise bound check: [{'m': 4, 'k': 1, 'batches': 300, 'violations': 0}, {'m': 4, 'k': 2, 'batches': 300, 'violations': 0}, {'m': 4, 'k': 4, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 1, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 2, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 4, 'batches': 300, 'violations': 0}, {'m': 8, 'k': 8, 'batches': 300, 'violations': 0}]

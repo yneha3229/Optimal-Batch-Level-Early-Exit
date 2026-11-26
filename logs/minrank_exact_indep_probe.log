@@ -1,0 +1,11 @@
+9 graphs selected, 0 already proven, 9 to run
+planted_d_n50_r8_e0.0_s2: lb=8 best=8 proven=True (reached_lb, 1.92s)
+planted_d_n50_r8_e0.0_s0: lb=8 best=8 proven=True (reached_lb, 2.08s)
+planted_d_n50_r8_e0.0_s5: lb=8 best=8 proven=True (reached_lb, 2.5s)
+planted_d_n50_r8_e0.0_s6: lb=8 best=8 proven=True (reached_lb, 2.53s)
+paley_29: lb=4 best=8 proven=False (call_timeout, 600.9s)
+paley_41: lb=5 best=9 proven=False (call_timeout, 600.94s)
+paley_37: lb=4 best=10 proven=False (call_timeout, 600.97s)
+paley_53: lb=5 best=11 proven=False (call_timeout, 601.28s)
+circ_41_1-5-8: lb=13 best=21 proven=False (call_timeout, 602.14s)
+wrote minrank/results/exact_indep.csv

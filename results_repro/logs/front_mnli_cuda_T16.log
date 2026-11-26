@@ -1,0 +1,22 @@
+ B            family  ho_speedup  ho_drop_pts  hard_drop_pts
+ 8         threshold       1.071        1.223          0.570
+ 8    threshold+plan       1.482        0.877          2.852
+ 8          majority       1.306        1.203          3.178
+ 8           unified       1.487        0.877          2.771
+ 8 random_collective       1.271        0.958          1.874
+ 8            theory       1.401        1.183          3.015
+ 8       theory+plan       1.487        0.877          2.771
+16         threshold       1.324        1.225          0.572
+16    threshold+plan       1.488        0.858          2.778
+16          majority       1.411        0.919          2.451
+16           unified       1.493        0.858          2.696
+16 random_collective       1.602        1.062          1.062
+16            theory       1.607        1.266          2.533
+16       theory+plan       1.640        1.225          2.451
+64         threshold       1.702        1.213          0.573
+64    threshold+plan       1.627        0.946          0.573
+64          majority       1.484        0.905          2.948
+64           unified       1.498        0.863          2.785
+64 random_collective       1.854        1.439          2.129
+64            theory       1.750        1.254          2.539
+64       theory+plan       1.758        1.254          2.539

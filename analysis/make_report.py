@@ -139,6 +139,356 @@ def cost_rows() -> str:
     return out
 
 
+# ---- Section 5 results (A6000 runs and CPU replays, 16-23 Nov) -----------------------------------------------------
+OURS = ["theory", "theory+plan"]
+BASE = [f for f in FAMS if f not in OURS]
+MODEL = {"roberta": "RoBERTa-base", "llama": "Llama-3.1-8B", "qwen": "Qwen2.5-1.5B"}
+short = lambda f: NAME[f].replace(" (ours)", "").replace(" (150 rules)", "")
+
+
+def a6000_time() -> pd.DataFrame:
+    """Timed A6000 runs (eager, certified selection, held-out): results/local_time_<task>[_<llm>]_a6000_T<T>.csv."""
+    import re
+    out = []
+    for f in sorted(ROOT.glob("results/local_time_*_a6000_T*.csv")):
+        m = re.fullmatch(r"local_time_([a-z0-9]+?)(?:_(llama|qwen))?_a6000_T(\d+)\.csv", f.name)
+        d = pd.read_csv(f)
+        d["model"], d["T"] = m.group(2) or "roberta", int(m.group(3))
+        d["task"] = m.group(1)
+        out.append(d)
+    return pd.concat(out, ignore_index=True)
+
+
+def timed_grid(groups: list[tuple[str, pd.DataFrame]]) -> str:
+    """Speedup per family (rows) and (group, B) (columns). Bold: fastest policy within the 1-pt budget in the column;
+    * held-out drop above one point; –: no certified policy."""
+    h = "<tr><th rowspan=2>Policy</th>" + "".join(
+        f"<th colspan={g.B.nunique()}>{lab}</th>" for lab, g in groups) + "</tr>"
+    h += "<tr>" + "".join(f"<th>B={b}</th>" for _, g in groups for b in sorted(g.B.unique())) + "</tr>"
+    body = ""
+    for f in FAMS:
+        row = f"<td>{NAME[f]}</td>"
+        for _, g in groups:
+            for b in sorted(g.B.unique()):
+                c = g[(g.B == b) & g.family.isin(FAMS)]
+                ok = c[c.ho_drop_pts <= 1.0]
+                r = c[c.family == f]
+                if r.empty:
+                    row += "<td>–</td>"
+                    continue
+                r = r.iloc[0]
+                s = f"{r.real_speedup:.2f}"
+                if r.ho_drop_pts <= 1.0 and r.real_speedup >= ok.real_speedup.max() - 1e-9:
+                    s = f"<b>{s}</b>"
+                if r.ho_drop_pts > 1.0:
+                    s += "*"
+                row += f"<td>{s}</td>"
+        body += f"<tr class='{'ours' if f in OURS else ''}'>{row}</tr>"
+    return f"<table class='num'>{h}{body}</table>"
+
+
+def in_budget_best(d: pd.DataFrame) -> pd.DataFrame:
+    """Per (model, task, T, B): fastest of ours and fastest baseline within the 1-pt budget (held-out, timed)."""
+    rows = []
+    for k, g in d[d.family.isin(FAMS)].groupby(["model", "task", "T", "B"]):
+        ok = g[g.ho_drop_pts <= 1.0]
+        o, b = ok[ok.family.isin(OURS)], ok[ok.family.isin(BASE)]
+        r = dict(zip(["model", "task", "T", "B"], k))
+        r["ours"] = o.real_speedup.max() if len(o) else np.nan
+        r["ours_fam"] = o.loc[o.real_speedup.idxmax(), "family"] if len(o) else ""
+        r["base"] = b.real_speedup.max() if len(b) else np.nan
+        r["base_fam"] = b.loc[b.real_speedup.idxmax(), "family"] if len(b) else ""
+        r["theory"] = g[g.family == "theory"].real_speedup.max()
+        r["plan"] = g[g.family == "theory+plan"].real_speedup.max()
+        r["ours_drop_min"] = g[g.family.isin(OURS)].ho_drop_pts.min()
+        r["ours_drop_max"] = g[g.family.isin(OURS)].ho_drop_pts.max()
+        rows.append(r)
+    s = pd.DataFrame(rows)
+    s["gain"] = 100 * (s.ours / s.base - 1)
+    return s
+
+
+def cert_table() -> tuple[str, dict]:
+    """Item 5.2 from results/cert_check_<task>_summary.csv (30 re-splits x 4 batch sizes; cost-table speedups)."""
+    rows, x = "", {}
+    for task, lab in [("qqp", "QQP"), ("mnli", "MNLI"), ("cifar100", "CIFAR-100"), ("mnli_d05", "MNLI, δ = 5%")]:
+        p = ROOT / f"results/cert_check_{task}_summary.csv"
+        if not p.exists():
+            continue
+        d = pd.read_csv(p)
+
+        def cell(m, key="drop", fam="theory+plan", frac=1.0):
+            return d[(d.frac == frac) & (d.key == key) & (d.method == m) & (d.family == fam)]
+        t = d[(d.frac == 1.0) & (d.key == "drop") & (d.method == "t")].groupby("family").agg(
+            viol=("viol", "mean"), sp=("speedup", "mean"))
+        wsr, hb, lf, small = cell("wsr"), cell("hb"), cell("t", "disagree"), cell("t", fam="theory", frac=0.1)
+        small_rc = cell("t", fam="random_collective", frac=0.1)
+        e = x[task] = dict(viol=t.viol.mean(), viol_max=t.viol.max(), viol_max_fam=t.viol.idxmax(), t=t,
+                           wsr=wsr.speedup.mean() if len(wsr) else np.nan,
+                           wsr_chose=wsr.chose.mean() if len(wsr) else np.nan,
+                           hb_chose=hb.chose.max() if len(hb) else np.nan, lf=lf.speedup.mean(), lf_viol=lf.viol.mean(),
+                           small=small.speedup.mean(), small_viol=small.viol.mean(), small_rc=small_rc.speedup.mean())
+        wsr_s = "–" if np.isnan(e["wsr"]) else f"{e['wsr']:.2f}× ({100 * e['wsr_chose']:.0f}%)"
+        hb_s = "–" if np.isnan(e["hb_chose"]) else ("never" if e["hb_chose"] == 0 else f"{100 * e['hb_chose']:.0f}%")
+        rows += (f"<tr><td>{lab}</td><td>{100 * e['viol']:.1f}% ({100 * e['viol_max']:.1f}%, {short(e['viol_max_fam'])})</td>"
+                 f"<td>{t.loc['theory+plan', 'sp']:.2f}× ({100 * t.loc['theory+plan', 'viol']:.1f}%)</td><td>{wsr_s}</td>"
+                 f"<td>{hb_s}</td><td>{e['lf']:.2f}× ({100 * e['lf_viol']:.1f}%)</td>"
+                 f"<td>{t.loc['theory', 'sp']:.2f}× → {e['small']:.2f}× ({100 * e['small_viol']:.1f}%)</td></tr>")
+    tab = ("<table class='num'><tr><th>Task</th><th>t-test: share over budget, mean of 5 methods (worst)</th>"
+           "<th>Cost rule + plan, t-test (share over budget)</th><th>Same, WSR bound (share of cases with a certified policy)</th>"
+           "<th>Hoeffding–Bentkus</th><th>Cost rule + plan, label-free t-test (over budget)</th>"
+           "<th>Cost rule, all → 10% of calibration data (over budget)</th></tr>" + rows + "</table>")
+    return tab, x
+
+
+def load_table() -> tuple[str, dict]:
+    """Item 5.3 from results/load_trace_<task>_levels.csv: tuned-once rule vs re-tuned and tuned-once baselines."""
+    rows, x = "", {}
+    for task, lab in [("qqp", "QQP"), ("mnli", "MNLI"), ("mnli_d05", "MNLI, δ = 5%"), ("cifar100", "CIFAR-100")]:
+        p = ROOT / f"results/load_trace_{task}_levels.csv"
+        if not p.exists():
+            continue
+        d = pd.read_csv(p)
+        ok = d[d.drop_pts <= 1.0]
+        get = lambda f, tu: d[(d.family == f) & (d.tuning == tu)].iloc[0]
+        rb = ok[ok.family.isin(BASE) & (ok.tuning == "per_B")].sort_values("speedup").iloc[-1]
+        ob = ok[ok.family.isin(BASE) & ok.tuning.str.startswith("once")].sort_values("speedup").iloc[-1]
+        cells, verdict = "", []
+        for f in OURS:
+            r = get(f, "once@64")
+            within = r.drop_pts <= 1.0
+            passed = within and r.speedup >= 0.95 * rb.speedup and r.speedup > ob.speedup
+            verdict.append(passed)
+            cells += f"<td>{r.speedup:.2f}× ({r.drop_pts:.2f}{'' if within else '*'})</td>"
+            x[(task, f)] = dict(sp=r.speedup, drop=r.drop_pts, passed=passed)
+        x[task] = dict(per_b=rb, once=ob)
+        res = "pass" if any(verdict) else "fail"
+        if any(verdict) and not all(verdict):
+            res += " (plan only)" if verdict[1] else " (all exits only)"
+        rows += (f"<tr><td>{lab}</td>{cells}<td>{rb.speedup:.2f}× ({short(rb.family)}, {rb.drop_pts:.2f})</td>"
+                 f"<td>{ob.speedup:.2f}× ({short(ob.family)} {ob.tuning}, {ob.drop_pts:.2f})</td><td>{res}</td></tr>")
+    tab = ("<table class='num'><tr><th>Task</th><th>Cost rule, tuned once at B = 64 (drop)</th>"
+           "<th>Cost rule + plan, tuned once (drop)</th><th>Best baseline re-tuned per batch size, within budget</th>"
+           "<th>Best baseline tuned once, within budget</th><th>Criterion</th></tr>" + rows + "</table>")
+    return tab, x
+
+
+def bandit_summary() -> dict:
+    """Item 5.4 from results/bandit_slopes_<setting>_B64_10seeds.csv."""
+    out = {}
+    for f in sorted(ROOT.glob("results/bandit_slopes_*_B64_10seeds.csv")):
+        d = pd.read_csv(f).set_index("variant")
+        out[f.name[len("bandit_slopes_"):-len("_B64_10seeds.csv")]] = d
+    return out
+
+
+def robust_summary() -> tuple[pd.DataFrame, int, int]:
+    """Item 5.5 from results/robust_<setting>_B64_cert.csv and the pathwise-bound checks next to them."""
+    rows, viol, checks = [], 0, 0
+    for f in sorted(ROOT.glob("results/robust_*_B64_cert.csv")):
+        if f.name.startswith("robust_violations"):
+            continue
+        d = pd.read_csv(f)
+        d["setting"] = f.name[len("robust_"):-len("_B64_cert.csv")]
+        rows.append(d)
+        v = pd.read_csv(f.with_name(f.name.replace("robust_", "robust_violations_")))
+        viol, checks = viol + int(v.violations.sum()), checks + int(v.batches.sum())
+    return pd.concat(rows, ignore_index=True), viol, checks
+
+
+def rng(x, fmt="{:.2f}", unit="") -> str:
+    """'lo–hi' (or one value) of a series, formatted."""
+    lo, hi = fmt.format(min(x)), fmt.format(max(x))
+    return f"{lo}{unit}" if lo == hi else f"{lo}–{hi}{unit}"
+
+
+def section5() -> dict:
+    """HTML pieces with the results of items 5.1-5.5, the LLM classifiers and the MNLI delta check, all computed from
+    the result files named in each caption."""
+    out = {}
+    d = a6000_time()
+    s = in_budget_best(d)
+    rob = d[d.model == "roberta"]
+    out["t51"] = (timed_grid([(f"QQP, length {T}", rob[(rob.task == "qqp") & (rob["T"] == T)]) for T in (128, 32)])
+                  + "<p class='cap'><b>Table 11:</b> QQP, RTX A6000, eager PyTorch, trained RoBERTa-base checkpoint, "
+                  "real inputs: measured speedup of each method's certified policy on held-out inputs (2,048 per pass, "
+                  "5 rounds, median paired speedup). Bold: fastest policy within the one-point budget in the column. "
+                  "* held-out drop above one point. <code>results/local_time_qqp_a6000_T{128,32}.csv</code>.</p>"
+                  + timed_grid([(f"MNLI, length {T}", rob[(rob.task == "mnli") & (rob["T"] == T)]) for T in (128, 32)])
+                  + "<p class='cap'><b>Table 12:</b> MNLI, same layout. <code>results/local_time_mnli_a6000_T{128,32}.csv</code>.</p>")
+    q = s[(s.model == "roberta") & (s.task == "qqp") & (s["T"] == 128)]
+    m = s[(s.model == "roberta") & (s.task == "mnli") & (s["T"] == 128)]
+    q32 = s[(s.model == "roberta") & (s.task == "qqp") & (s["T"] == 32) & (s.B <= 16)]
+    m32 = s[(s.model == "roberta") & (s.task == "mnli") & (s["T"] == 32) & (s.B <= 16)]
+    assert (q.ours_fam == "theory+plan").all() and m.ours.isna().all() and (q32.ours_fam == "theory").all()
+    rq = rob[(rob.task == "qqp") & (rob["T"] == 128) & (rob.family == "theory+plan")]
+    p32 = rob[(rob.task == "qqp") & (rob["T"] == 32) & (rob.B <= 16) & rob.family.isin(["theory+plan", "unified"])]
+    assert (p32.ho_drop_pts > 1.0).all() and (m32.base_fam == "unified").all()
+    rm = rob[(rob.task == "mnli") & (rob["T"] == 128)]
+    rc_over = rm[(rm.family == "random_collective") & (rm.B >= 16)]
+    assert (rc_over.ho_drop_pts > 1.0).all()
+    out["r51"] = f"""<p class='fb'><i class='l'>Result (16–22 Nov, eager only):</i> run for QQP and MNLI at sequence
+lengths 128 and 32 (Tables 11–12). CUDA graphs and CIFAR-100 (ViT) are not run yet: both need changes to the timing
+device that are being made separately. On QQP at length 128 the cost rule with the exit plan is the fastest policy within budget at every
+batch size, {rng(q.ours, unit='×')} at a held-out drop of {rng(rq.ho_drop_pts)} points, {rng(q.gain, '{:.0f}')}% ahead of
+the best baseline within budget. At length 32 and B ≤ 16 the plan's policy is {rng(p32.ho_drop_pts - 1)} points over
+budget (so is the unified exit's), and the rule with all exits is the fastest policy within budget ({rng(q32.ours, unit='×')}). On MNLI
+at length 128 the cost rule is over budget at every batch size (held-out drop {rng(m.ours_drop_min.tolist() + m.ours_drop_max.tolist())}
+points), and so are the per-sample threshold and, at B ≥ 16, random search ({rng(rc_over.ho_drop_pts)} points). The
+fastest policies within budget there are the unified exit, the threshold with an exit plan and majority vote, at
+{rng(m.base, unit='×')}. At length 32 and B ≤ 16 the plan's policy is within budget but {rng(-m32.gain, '{:.0f}')}% behind
+the unified exit. Section 5.2 checks whether the MNLI overshoot is a property of this held-out half.</p>"""
+
+    tab, c = cert_table()
+    qx, mx, cx = c["qqp"], c["mnli"], c["cifar100"]
+    out["t52"] = (tab + "<p class='cap'><b>Table 13:</b> Certified selection on 30 random re-splits of the validation "
+                  "traces (20% tables and paths, 30% certification, 50% test) at B = 8, 16, 64, 128; share of the "
+                  "120 cases per method whose test drop exceeds one point, and mean speedup from the cost table (not "
+                  "timed). δ = 10% unless stated. <code>results/cert_check_{qqp,mnli,cifar100,mnli_d05}_summary.csv</code>.</p>")
+    dc = pd.read_csv(ROOT / "results/delta_check_mnli.csv")
+    dd = lambda f, de: dc[(dc.family == f) & (dc.delta == de)].set_index("B")
+    assert (dc[(dc.delta == 0.10) & (dc.family == "random_collective") & (dc.B >= 16)].ho_drop_pts > 1.0).all()
+    over10 = dc[(dc.delta == 0.10) & dc.family.isin(["threshold", "theory", "theory+plan"])].ho_drop_pts
+    under10 = dc[(dc.delta == 0.10) & dc.family.isin(["unified", "threshold+plan"])].ho_drop_pts
+    th2, th10 = dd("theory", 0.02), dd("theory", 0.10)
+    small2 = th2[th2.index <= 64]
+    loss2 = 100 * (1 - th2.ho_speedup / th10.ho_speedup)[th2.index <= 64]
+    d05 = c.get("mnli_d05")
+    t10 = mx["t"]
+    d05_txt = ""
+    if d05 is not None:
+        t05 = d05["t"]
+        d05_txt = (f" Lowering δ to 5% cuts the re-split violation rate of the cost rule from {100 * t10.loc['theory', 'viol']:.1f}% "
+                   f"to {100 * t05.loc['theory', 'viol']:.1f}% (with the plan {100 * t10.loc['theory+plan', 'viol']:.1f}% → "
+                   f"{100 * t05.loc['theory+plan', 'viol']:.1f}%, random search {100 * t10.loc['random_collective', 'viol']:.1f}% → "
+                   f"{100 * t05.loc['random_collective', 'viol']:.1f}%) for about {100 * (1 - t05.loc['theory', 'sp'] / t10.loc['theory', 'sp']):.0f}% "
+                   f"less speed ({t10.loc['theory', 'sp']:.2f}× → {t05.loc['theory', 'sp']:.2f}×).")
+    out["r52"] = f"""<p class='fb'><i class='l'>Result (Table 13):</i> the t-test keeps the share of re-splits over budget
+at or below δ = 10% on average on all three tasks ({100 * qx['viol']:.1f}% QQP, {100 * mx['viol']:.1f}% MNLI,
+{100 * cx['viol']:.1f}% CIFAR-100, mean over five methods). On CIFAR-100 two methods are slightly above δ (per-sample
+threshold {100 * cx['t'].loc['threshold', 'viol']:.1f}%, cost rule + plan {100 * cx['t'].loc['theory+plan', 'viol']:.1f}%),
+which 120 cases per method cannot separate from 10% (the 95% interval is about ±5 points). The finite-sample bounds are
+too conservative at these sample sizes: for the accuracy drop, Hoeffding–Bentkus certifies no policy on any task, and
+the WSR bound certifies
+one in {100 * qx['wsr_chose']:.0f}% of the QQP cases, at {qx['wsr']:.2f}× against {qx['t'].loc['theory+plan', 'sp']:.2f}×
+with the t-test, and never on MNLI or CIFAR-100. The label-free version (disagreement with the full model) had no
+violations and costs speed: {qx['lf']:.2f}× against {qx['t'].loc['theory+plan', 'sp']:.2f}× on QQP. With 10% of the
+calibration data the cost rule falls from {qx['t'].loc['theory', 'sp']:.2f}× to {qx['small']:.2f}× on QQP, and random
+search loses about as much ({qx['t'].loc['random_collective', 'sp']:.2f}× → {qx['small_rc']:.2f}×), so the data-efficiency hypothesis (one parameter needs less data than three) is not
+supported. We therefore state the certificate as asymptotic, checked on re-splits.</p>
+<p><b>The MNLI held-out half.</b> On the fixed split (<code>results/delta_check_mnli.csv</code>) the cost rule, the
+per-sample threshold and random search at B ≥ 16 all exceed the budget at δ = 10% (cost rule, with or without the
+plan, and threshold: {rng(over10)} points), while the unified exit and the threshold with an exit plan stay at or just
+above it ({rng(under10)} points). At
+δ = 2% the cost rule is within budget at B ≤ 64 ({rng(small2.ho_drop_pts)} points) for {rng(loss2, '{:.0f}')}% less
+speed, but not at B = 128 ({th2.loc[128, 'ho_drop_pts']:.2f}). The split is random (<code>traces/train_exit_heads.py</code>),
+and on 30 random re-splits at δ = 10% the cost rule is over budget in {100 * t10.loc['theory', 'viol']:.1f}% of cases.{d05_txt}
+We read the fixed-split overshoot as an unlucky split, not a distribution shift; these numbers are consistent with that
+reading and do not prove it.</p>"""
+
+    tab, l = load_table()
+    out["t53"] = (tab + "<p class='cap'><b>Table 14:</b> Fluctuating load: 3 arrival traces of 3,000 batches with B from 1 "
+                  "to 128, throughput speedup over all batches and accuracy drop over all served inputs (held-out, cost-table "
+                  "replay). Criterion of <code>docs/DIRECTION.md</code>: tuned once, within budget, within 5% of the best "
+                  "per-batch-size re-tuned baseline and ahead of every tuned-once baseline. * over the one-point budget. "
+                  "<code>results/load_trace_{qqp,mnli,mnli_d05,cifar100}_levels.csv</code>.</p>")
+    lq, lc, lm = l["qqp"], l["cifar100"], l[("mnli", "theory")]
+    out["r53"] = f"""<p class='fb'><i class='l'>Result (Table 14):</i> passes on QQP: the cost rule tuned once reaches
+{l[('qqp', 'theory')]['sp']:.2f}× against {lq['per_b'].speedup:.2f}× for the best baseline re-tuned per batch size
+({short(lq['per_b'].family).lower()}). CIFAR-100 passes only with the exit plan ({l[('cifar100', 'theory+plan')]['sp']:.2f}×
+against {lc['per_b'].speedup:.2f}×); with all exits the rule reaches {l[('cifar100', 'theory')]['sp']:.2f}× and is behind
+the best tuned-once baseline. MNLI fails on the budget: tuned once, the cost rule loses {lm['drop']:.2f} points (with the
+plan {l[('mnli', 'theory+plan')]['drop']:.2f}), and δ = 5% does not change the policy tuned at B = 64.</p>"""
+
+    b = bandit_summary()
+    live = {k: v for k, v in b.items() if v.loc["bandit", "regret"] > 1.0}
+    dead = [k for k in b if k not in live]
+    sched = ["bandit", "bandit_exp1/2", "bandit_const5pct"]
+    best_sched = {k: v.loc[sched, "regret"].idxmin() for k, v in b.items()}
+    n13 = sum(1 for k in live if best_sched[k] == "bandit")
+    n_band = sum(1 for x in live.values() if 0.5 <= x.loc["bandit", "slope"] <= 0.7)
+    warm = [100 * (1 - v.loc["bandit_warm", "regret"] / v.loc["bandit", "regret"]) for v in live.values()]
+    out["r54"] = f"""<p class='fb'><i class='l'>Result (ten seeds, B = 64, 3,000 batches; <code>results/bandit_slopes_*_10seeds.csv</code>):</i>
+the log–log slope of cumulative regret is {rng([x.loc['bandit', 'slope'] for x in live.values()])} in the {len(live)}
+settings where the bandit has regret to measure (95% intervals ±{rng([x.loc['bandit', 'slope_ci95'] for x in live.values()])});
+in the remaining one (<code>{', '.join(dead)}</code>) cumulative regret stays below
+{max(b[k].loc['bandit', 'regret'] for k in dead):.2f} and the slope means nothing. {n_band} of the {len(live)} slopes are
+in the 0.5–0.7 band we expected; a slope is not a proof of a rate. The <i class='v'>t</i><sup>−1/3</sup> probe schedule has
+the lowest regret of the three schedules in {n13} of these {len(live)} settings; <i class='v'>t</i><sup>−1/2</sup> is
+lower in the others. The warm start reduces regret by {rng(warm, '{:.0f}')}%.</p>"""
+
+    r, nv, nb = robust_summary()
+    text = r[r.setting.str.startswith(("qqp", "mnli"))]
+    cif = r[r.setting.str.startswith("cifar")]
+    k_major = text[text.policy == "majority"][["k16", "k32"]].max(axis=1)
+    cons8 = text[text.policy == "consensus"].k8
+    th0 = text[text.policy == "theory m=0"]
+    thr = text[text.policy == "threshold"]
+    m8, m0 = cif[cif.policy == "theory m=8"].set_index("setting"), cif[cif.policy == "theory m=0"].set_index("setting")
+    fast = m0.index[m0.clean_speedup > 1.1]
+    m8, m0 = m8.loc[fast], m0.loc[fast]
+    k32 = text.pivot_table(index="setting", columns="policy", values="k32")
+    assert (k32[["theory m=4", "theory m=8"]].min(axis=1) >= k32["theory m=0"] - 1e-9).all()
+    mnli_drop = 100 * r[r.setting.str.startswith("mnli") & r.policy.str.startswith("theory")].clean_acc_drop
+    out["r55"] = f"""<p class='fb'><i class='l'>Result (<code>experiments/robust_bound.py --tune cert</code>, 3 tasks × 4 cost
+profiles, B = 64; <code>results/robust_*_B64_cert.csv</code>):</i> the pathwise bound held in all {nb:,} checked batches
+({nv} violations). Collective rules that count votes collapse: on the text tasks majority vote reaches
+{rng(k_major)}× full-model latency at 16–32 attackers and consensus {rng(cons8)}× at 8. The cost rule degrades
+smoothly (victims' latency at 32 attackers {rng(th0.k32)}× without trimming). Two findings narrow the claim: the
+per-sample threshold is also robust ({rng(thr[~thr.setting.str.contains('dec_eager')].k32)}× at 32 attackers, outside the
+decoder-cost profile where it gives no speedup at all), and trimming buys little. At 32 attackers the trimmed rules
+are not faster than the untrimmed one on the text tasks, and on CIFAR-100 trimming eight gains costs most of the clean
+speedup ({rng(m8.clean_speedup)}× against {rng(m0.clean_speedup)}×). On MNLI the certified cost rule is again over
+budget on the held-out half ({rng(mnli_drop, '{:.1f}')} points).</p>"""
+
+    groups = lambda task: [(MODEL[mo], d[(d.model == mo) & (d.task == task)]) for mo in ("llama", "qwen")]
+    out["t57"] = (timed_grid(groups("qqp")) + "<p class='cap'><b>Table 15:</b> LLMs as batched classifiers, QQP: "
+                  "LoRA + one linear exit head per exit on the last prompt token (prefill only, prompts padded to 128 "
+                  "tokens, bf16, eager), RTX A6000, trained weights and real prompts, held-out, 2,048 inputs per pass, "
+                  "5 rounds. Layout as Table 11. <code>results/local_time_qqp_{llama,qwen}_a6000_T128.csv</code>.</p>"
+                  + timed_grid(groups("mnli")) + "<p class='cap'><b>Table 16:</b> MNLI, same layout. "
+                  "<code>results/local_time_mnli_{llama,qwen}_a6000_T128.csv</code>.</p>")
+    ll = lambda mo, t: s[(s.model == mo) & (s.task == t)]
+    lq, lm, qq, qm = ll("llama", "qqp"), ll("llama", "mnli"), ll("qwen", "qqp"), ll("qwen", "mnli")
+    for x in (lq, lm, qq):
+        assert (x.gain > 0).all()
+    qm_thr = d[(d.model == "qwen") & (d.task == "mnli") & (d.family == "threshold")]
+    ahead, behind = qm[qm.gain > 0], qm[qm.gain <= 0]
+    pct = lambda x: ", ".join(f"{g:+.0f}%".replace("-", "−") for g in x.gain)
+    rho = json.loads((ROOT / "results/local_cost_a6000_T128_llama.json").read_text())["rho8"]
+    agree = min(min(json.loads(f.read_text())["pred_agreement_per_exit"])
+                for f in ROOT.glob("results/local_check_*_a6000_T128.json"))
+    acc = lambda run: pd.read_csv(ROOT / f"results/train_wikitext_{run}_exit_accuracy.csv").query("split == 'all'")
+    fz, lo = acc("qfrozen"), acc("qlora")
+    gap = lambda a: 100 * (a[a.layer == a.layer.max()].accuracy.iloc[0] - a[a.layer == 24].accuracy.iloc[0])
+    gap_fz = 100 * (fz.original_model_accuracy.iloc[0] - fz[fz.layer == 24].accuracy.iloc[0])
+    ad = pd.read_csv(ROOT / "results/adaptivity_vs_batch.csv").query("task == 'wikitext_qlora' and budget_pts == 1.0")
+    out["r57"] = f"""<p class='fb'><i class='l'>Result, decoding (15–16 Nov):</i> steps 0–2 of the runbook ran. Training
+the exits with LoRA narrows the gap of frozen exits (Qwen2.5-1.5B, layer 24: {gap(lo):.1f} points below the fine-tuned
+model against {gap_fz:.1f} frozen), but on free-text next-token prediction a batch-level rule has almost nothing to
+adapt to: the gain of an adaptive depth over a fixed exit at a one-point budget falls from
+{ad[ad.B == ad.B.min()].gain_over_static_pct.iloc[0]:.0f}% at B = {ad.B.min()} to
+{ad[ad.B == ad.B.max()].gain_over_static_pct.iloc[0]:.1f}% at B = {ad.B.max()} (<code>results/adaptivity_vs_batch.csv</code>). Decoding stays a negative result (<code>docs/PLAN_LLM.md</code> §7).</p>
+<p class='fb'><i class='l'>Result, the LLM as a batched classifier (16–22 Nov, Tables 15–16):</i> on Llama-3.1-8B
+(compute-bound: ρ = {rho:.2f} at B = 8) the cost rule is the fastest policy within budget at every batch size on both
+tasks: QQP {rng(lq.ours, unit='×')} against {rng(lq.base, unit='×')} ({rng(lq.gain, '{:.0f}')}% ahead), MNLI
+{rng(lm.ours, unit='×')} against {rng(lm.base, unit='×')} ({rng(lm.gain, '{:.0f}')}% ahead), at held-out drops of
+{rng(lq.ours_drop_min.tolist() + lq.ours_drop_max.tolist())} and {rng(lm.ours_drop_min.tolist() + lm.ours_drop_max.tolist())}
+points. On Qwen2.5-1.5B QQP it is {rng(qq.gain, '{:.0f}')}% ahead ({rng(qq.ours, unit='×')}). Qwen2.5-1.5B MNLI is the
+exception: with all exits the rule is the slowest certified policy ({rng(qm.theory, unit='×')}); with the exit plan it
+reaches {rng(qm.plan, unit='×')} at a 0.2-point drop, ahead of the best baseline within budget at
+B = {', '.join(str(x) for x in ahead.B)} ({pct(ahead)}) and behind at B = {', '.join(str(x) for x in behind.B)}
+({pct(behind)}). The per-sample threshold is faster there ({rng(qm_thr.real_speedup, unit='×')}) but
+over budget ({rng(qm_thr.ho_drop_pts)} points). Decisions are replayed from the recorded traces on the trained weights;
+the device's predictions agree with the traces on {100 * agree:.0f}–100% of inputs at every exit
+(<code>results/local_check_*_a6000_T128.json</code>).</p>"""
+    out["claims_nearbest"] = (f"<span class='tag'>HOLDS</span> on QQP (RoBERTa, Qwen2.5-1.5B, Llama-3.1-8B) and Llama "
+                              f"MNLI, strongest on the LLM classifiers ({rng(pd.concat([lq.gain, lm.gain]), '{:.0f}')}% "
+                              f"ahead on Llama). Exceptions: RoBERTa MNLI (over budget on the fixed split) and Qwen MNLI "
+                              f"(needs the plan; {pct(qm)} at B = 8, 16, 64, 128)")
+    return out
+
+
 CSS = """
 @page { size: A4; margin: 21mm 20mm 20mm 20mm; @bottom-center { content: counter(page); font: 9pt 'C059', serif; } }
 body { font: 9.6pt/1.36 'C059', 'Century Schoolbook L', 'DejaVu Serif', serif; color: #111; text-align: justify; hyphens: auto; }
@@ -210,12 +560,13 @@ def build() -> None:
     fig = lambda name, cap: (f"<div class='fig'><img src='../figures/{name}'></div><p class='cap'>{cap}</p>"
                              if (ROOT / 'figures' / name).exists() else "")
     v = lambda x: f"<i class='v'>{x}</i>"
+    r5 = section5()
     html = f"""<!doctype html><html><head><meta charset='utf-8'><style>{CSS}</style><title>IE624 progress report</title></head><body>
 <h1>When Should a Batch Stop?</h1>
 <p class='sub'>Cost-Derived Batch-Level Early Exit, with Bounded Damage from Slowdown Inputs</p>
 <p class='sub2'>IE624 Course Project: Progress Report and Plan</p>
 <p class='auth'>Divyanshu Gupta (23B0306) &nbsp;&nbsp; Kushagra Gupta (23B3956) &nbsp;&nbsp; Neha Yadav (23B1807)</p>
-<p class='inst'>Course instructor: Prof. Manjesh K. Hanawal, IIT Bombay<br>13 November 2026</p>
+<p class='inst'>Course instructor: Prof. Manjesh K. Hanawal, IIT Bombay<br>13 November 2026; results in Section 5 updated 23 November 2026</p>
 
 <div class='abs'><b class='t'>Abstract</b>
 Early-exit networks answer easy inputs at intermediate layers, but under batched GPU inference one hard input keeps
@@ -230,8 +581,11 @@ a timing knob, decisions replayed from the trained models) the rule is at most {
 behind the fastest method, but the methods are not at equal accuracy there. Compared at a matched held-out drop of
 at most one point, using the measured cost table, the rule is {q_lo:.0f}–{q_hi:.0f}% faster than the best baseline on
 QQP; on MNLI it is within 2% of the best baseline in four of six settings and {m_lo:.1f}–{m_hi:.1f}% slower in the
-other two. The rule is not shown to be optimal. No result yet combines trained weights, matched accuracy and a
-serving GPU in one run; that run is the main planned work. A label-free bandit and a bound on the damage from
+other two. The rule is not shown to be optimal. Section 5 adds the results obtained since (23 November): timed,
+certified runs of trained checkpoints on an RTX A6000 (RoBERTa, and Llama-3.1-8B and Qwen2.5-1.5B used as batched
+classifiers), where the rule is the fastest policy within budget on QQP and on Llama MNLI and not on RoBERTa or Qwen
+MNLI; a certificate that keeps the budget on re-splits but only asymptotically; and the load, bandit and robustness
+checks. A label-free bandit and a bound on the damage from
 slowdown inputs are secondary. Section 4.1 lists the claims of our first report that we corrected.</div>
 
 <h2>1. Problem statement</h2>
@@ -424,8 +778,9 @@ certificate, which costs a CPU replay.</li>
 <li><b>Straggler rescue</b> brought no measurable gain.</li>
 </ul>
 
-<h2>5. Planned work until 26 November</h2>
-<p>Each item lists what we will do, what we expect, and the fallback.</p>
+<h2>5. Planned work until 26 November, and results so far</h2>
+<p>Each item lists what we planned, what we expected and the fallback, as written on 13 November, followed by the
+result obtained by 23 November. All numbers are on held-out data with a one-point accuracy budget.</p>
 <h3>5.1 Accuracy-matched server tables with the exit plan (16–18 Nov)</h3>
 <p>Rerun the 24 server settings (3 tasks × 4 batch sizes × eager and CUDA graphs) with the exit plan, the measured
 cost table and certified selection, on trained checkpoints, and report each as a timed accuracy–speed front like
@@ -434,6 +789,8 @@ Figure 4. This is the main evidence still missing: trained weights, matched accu
 baseline elsewhere, as in Section 4.5.<br>
 <i class='l'>Fallback:</i> if it is more than 10% behind at B ≤ 16 under CUDA graphs, report the plan as a partial fix and
 state the settings where a unified exit should be used.</p>
+{r5['r51']}
+{r5['t51']}
 <h3>5.2 Tighten the certificate (13–15 Nov)</h3>
 <p>Replace the {v('t')}-test with a finite-sample bound for bounded batch losses (Hoeffding–Bentkus), add the
 label-free version that controls disagreement with the full model, and repeat the re-split check on CIFAR-100. In
@@ -441,35 +798,41 @@ the same runs, repeat the selection with 10%, 25% and 50% of the calibration dat
 random search, to test whether a rule with one parameter needs less data than a searched rule with three.</p>
 <p class='fb'><i class='l'>Expected:</i> the same violation rates with a speed cost of a few percent.<br>
 <i class='l'>Fallback:</i> keep the {v('t')}-test and state it as an asymptotic guarantee with the measured violation rate.</p>
+{r5['r52']}
+{r5['t52']}
 <h3>5.3 Fluctuating load (19–21 Nov)</h3>
 <p>Replay an arrival trace in which the batch size moves between 1 and 128. Compare the rule, re-certified for each
 batch size from one set of calibration traces, against heuristics tuned at a single batch size and against
 heuristics re-tuned per batch size.</p>
 <p class='fb'><i class='l'>Expected:</i> within 5% of per-batch-size re-tuned heuristics and ahead of heuristics tuned once.<br>
 <i class='l'>Fallback:</i> if tuned-once heuristics are as good, drop the load claim and keep the per-setting results.</p>
+{r5['r53']}
+{r5['t53']}
 <h3>5.4 Bandit with error bars (22–23 Nov)</h3>
 <p>Ten seeds with confidence bands, a probe-rate ablation ({v('t')}<sup>−1/2</sup>, {v('t')}<sup>−1/3</sup>, constant), and a
 warm start from a small labelled set.</p>
 <p class='fb'><i class='l'>Expected:</i> slopes between 0.5 and 0.7 where the oracle stops batches.<br>
 <i class='l'>Fallback:</i> report the measured slopes without a rate claim.</p>
+{r5['r54']}
 <h3>5.5 Robustness in the compute-bound regime (22–23 Nov)</h3>
 <p>Run the attack experiments where majority vote loses its clean speedup, and test an attacker that uses
 {v('k')} &gt; {v('m')} inputs.</p>
 <p class='fb'><i class='l'>Expected:</i> the bound holds; the clean-speed cost at low ρ is quantified per task.<br>
 <i class='l'>Fallback:</i> claim only the certificate.</p>
+{r5['r55']}
 <h3>5.6 Trained checkpoints on the local GPU (when checkpoints are copied)</h3>
 <p>Repeat Section 4.4 with the trained weights and real tokenised inputs, with batches padded to their own longest
 input, so that the short-sequence settings are measured on real short inputs.</p>
 <p class='fb'><i class='l'>Expected:</i> the same ordering; timing does not depend on weight values.<br>
 <i class='l'>Fallback:</i> keep the replayed-decision results, labelled as such.</p>
-<h3>5.7 LLM decoders, second attempt (future work; scripts ready, not run)</h3>
+<h3>5.7 LLMs: decoders (second attempt) and batched classifiers</h3>
 <p>The first attempt failed for reasons we can now name: the backbone was frozen while its exits were trained (the
 same fault the encoders had before joint training), LayerSkip checkpoints are trained for drafting and not for
 returning the early answer, the test was run only at batch sizes 16 and 64, and the budget was one point of
 next-token accuracy on free text. The second attempt trains LoRA adapters and exit heads together with
 self-distillation from the final layer on Qwen2.5-1.5B, keeps a frozen baseline at the same budget, and sweeps
 batch sizes from 2 to 64. The training script and a runbook with pass and kill conditions for each step are
-written. Nothing in this track has been run, including the functional test of the training script.</p>
+written. Steps 0–2 have since been run; the result is below.</p>
 <p><b>Key–value cache.</b> A token that exits at layer {v('l')} leaves the layers above it without keys and values,
 which later tokens attend to. Our decoding loop already handles this the way CALM does [19]: the exit hidden state
 is projected into the keys and values of every skipped layer. In the first attempt this cost about 2% of a layer
@@ -485,6 +848,8 @@ greedy output as the metric.</p>
 backbone), and a speedup at small batch sizes. This is a forecast.<br>
 <i class='l'>Fallback:</i> if the exit stays more than 4 points short, the LLM track ends as a negative result with its
 cause.</p>
+{r5['r57']}
+{r5['t57']}
 <h3>5.8 Theory and write-up (24–26 Nov)</h3>
 <p>State and prove when the lookahead rule is optimal: the monotone case [11] for an affine cost with gains that
 diminish with depth. For a general non-decreasing {v('c')}({v('n')}) we aim only at the regime switch at the knee of a
@@ -499,17 +864,19 @@ floor-shaped cost, and at a bound on what rule (2) loses by overestimating its s
 <tr><td>22–23 Nov</td><td>Bandit with ten seeds; robustness at low ρ</td></tr>
 <tr><td>24–26 Nov</td><td>Theory write-up, final figures, presentation</td></tr>
 <tr><td>When a server GPU is free</td><td>LLM second attempt, first three steps of the runbook (about 4 GPU-hours, estimate). It does not take time from the server rerun</td></tr></table>
-<h3>5.10 Claims and their status</h3>
-<table><tr><th>Claim</th><th>Status</th><th>Evidence still required</th></tr>
-<tr><td>Which rule is fastest flips with batch size, execution mode and sequence length</td><td><span class='tag'>HOLDS</span> on two GPUs</td><td>Accuracy-matched server rerun (5.1)</td></tr>
-<tr><td>The per-layer cost is a floor plus a linear part, not affine</td><td><span class='tag'>HOLDS</span> on the GTX 1650</td><td>The same profile on the A6000; whether it changes realised speed, not only the fit</td></tr>
-<tr><td>At matched accuracy the rule is at least as fast as every baseline</td><td><span class='tag'>PARTLY</span> yes on QQP, no on MNLI (cost table)</td><td>Timed, trained checkpoints on the server (5.1), CIFAR-100</td></tr>
-<tr><td>Stopping a batch spreads the accuracy loss evenly</td><td><span class='tag'>FALSE</span> loss lands on hard inputs</td><td>A per-input floor on the loss; not planned before 26 Nov</td></tr>
-<tr><td>The exit plan fixes the small-batch weakness</td><td><span class='tag'>PARTLY</span> +7% and +21% at B = 8 on the cost floor (cost table); the threshold gains as much from the same search</td><td>Server run under CUDA graphs, where heads cost 19% (5.1)</td></tr>
-<tr><td>Certified selection keeps the accuracy budget</td><td>CERT_STATUS</td><td>Finite-sample bound (5.2)</td></tr>
-<tr><td>The label-free bandit learns the rule (secondary)</td><td><span class='tag'>PARTLY</span> single seeds</td><td>Ten seeds (5.4)</td></tr>
-<tr><td>Bounded damage from slowdown inputs</td><td><span class='tag'>HOLDS</span> 0 violations</td><td>Low-ρ cost, adaptive attacker (5.5)</td></tr>
-<tr><td>Benefit on LLM decoders</td><td><span class='tag'>FAILED</span> first attempt</td><td>Second attempt with jointly trained exits (5.7), not started</td></tr></table>
+<h3>5.10 Claims and their status (23 November)</h3>
+<table><tr><th>Claim</th><th>Status</th><th>Evidence, and what is still missing</th></tr>
+<tr><td>Which rule is fastest flips with batch size, execution mode and sequence length</td><td><span class='tag'>HOLDS</span> on two GPUs</td><td>Sections 4.2, 4.4, 5.1. CUDA-graph rerun on the A6000 still missing</td></tr>
+<tr><td>The per-layer cost is a floor plus a linear part, not affine</td><td><span class='tag'>HOLDS</span> on the GTX 1650; Qwen2.5-1.5B on the A6000 has a floor up to B = 4</td><td>Section 4.3; <code>results/local_cost_a6000_T128_qwen.json</code></td></tr>
+<tr><td>Re-certified per setting (a CPU replay), the rule is near the best certified method everywhere</td><td>{r5['claims_nearbest']}</td><td>Timed A6000 runs, Tables 11–12 and 15–16. CUDA graphs and CIFAR-100 on the A6000 still missing</td></tr>
+<tr><td>Stopping a batch spreads the accuracy loss evenly</td><td><span class='tag'>FALSE</span> loss lands on hard inputs</td><td>Table 9. A per-input floor on the loss is not planned before 26 Nov</td></tr>
+<tr><td>The exit plan fixes the small-batch weakness</td><td><span class='tag'>PARTLY</span> needed on Qwen MNLI and CIFAR-100 under load; at length 32 and B ≤ 16 on QQP its policy is just over budget</td><td>Tables 11, 14, 16. Under CUDA graphs, where heads cost 19%, not yet measured</td></tr>
+<tr><td>Certified selection keeps the accuracy budget</td><td><span class='tag'>WEAKENED</span> to an asymptotic certificate (t-test), within δ on average over 30 re-splits on all three tasks</td><td>Table 13: finite-sample bounds (Hoeffding–Bentkus, WSR) are too conservative at these sample sizes; the label-free version costs speed</td></tr>
+<tr><td>The MNLI held-out overshoot is an unlucky split</td><td><span class='tag'>PARTLY</span> consistent: the re-split violation rate is within δ, and δ = 2% fixes B ≤ 64 at about 10% less speed</td><td>Section 5.2; not proved, one fixed split</td></tr>
+<tr><td>Under fluctuating load, one tuning of the rule is enough</td><td><span class='tag'>HOLDS</span> on QQP; CIFAR-100 only with the plan; <span class='tag'>FAILS</span> on MNLI (budget)</td><td>Table 14 (cost-table replay, not timed)</td></tr>
+<tr><td>The label-free bandit learns the rule (secondary)</td><td><span class='tag'>HOLDS</span> ten seeds, sublinear regret</td><td>Section 5.4; slopes are not a rate proof</td></tr>
+<tr><td>Bounded damage from slowdown inputs</td><td><span class='tag'>HOLDS</span> 0 violations of the bound; majority and consensus collapse. The per-sample threshold is also robust, and trimming buys little</td><td>Section 5.5</td></tr>
+<tr><td>Benefit on LLMs</td><td><span class='tag'>FAILED</span> for decoding; <span class='tag'>HOLDS</span> for classification on Llama-3.1-8B (both tasks) and Qwen2.5-1.5B QQP, mixed on Qwen MNLI</td><td>Section 5.7, Tables 15–16</td></tr></table>
 
 <h2>6. Expected outcome</h2>
 <p>By 26 November we expect a timed, accuracy-matched comparison on two GPUs showing where the cost-derived rule

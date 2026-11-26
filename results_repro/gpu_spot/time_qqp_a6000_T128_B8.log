@@ -1,0 +1,21 @@
+B=8 round 0: full=8.64s heads_only=11.74s threshold=11.20s threshold+plan=4.99s majority=8.45s unified=5.01s random_collective=7.00s theory=7.20s theory+plan=6.02s
+B=8 round 1: full=8.75s heads_only=11.81s threshold=9.34s threshold+plan=5.16s majority=8.47s unified=5.05s random_collective=7.35s theory=6.96s theory+plan=5.91s
+B=8 round 2: full=8.78s heads_only=11.88s threshold=8.19s threshold+plan=5.04s majority=3.44s unified=1.97s random_collective=2.42s theory=2.36s theory+plan=2.12s
+B=8 round 3: full=3.71s heads_only=3.93s threshold=3.01s threshold+plan=2.30s majority=3.03s unified=1.97s random_collective=2.49s theory=2.43s theory+plan=2.29s
+B=8 round 4: full=3.70s heads_only=4.03s threshold=3.17s threshold+plan=2.10s majority=2.92s unified=2.15s random_collective=2.93s theory=2.49s theory+plan=2.16s
+ B            family  real_speedup  real_lo  real_hi  model_speedup  ho_drop_pts
+ 8              full         1.000    1.000    1.000          1.000        0.000
+ 8        heads_only         0.741    0.735    0.944          0.945        0.000
+ 8         threshold         1.072    0.771    1.233          1.540        0.614
+ 8    threshold+plan         1.732    1.615    1.762          1.977        1.049
+ 8          majority         1.225    1.022    2.549          1.353        0.782
+ 8           unified         1.735    1.718    4.464          1.977        1.049
+ 8 random_collective         1.263    1.190    3.628          1.842        0.861
+ 8            theory         1.484    1.200    3.719          2.016        0.604
+ 8       theory+plan         1.621    1.435    4.149          2.079        0.663
+
+real	4m56.812s
+user	4m15.531s
+sys	0m9.355s
+0, NVIDIA RTX A6000, 00000000:01:00.0
+71.06 72.33 57.29 59/3278 31917

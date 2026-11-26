@@ -1,0 +1,41 @@
+{'graph': 'kneser_5_2', 'n': 10, 'alpha': 4, 'alpha_proven': True, 'cover': 5, 'minrk2': 5, 'proven': True, 'log': [(4, 'unsat', 0.0), (5, 'sat', 0.0)]}
+{'graph': 'kneser_8_2', 'n': 28, 'alpha': 7, 'alpha_proven': True, 'cover': 7, 'minrk2': 7, 'proven': True, 'log': [(7, 'sat', 0.0)]}
+{'graph': 'kneser_6_2', 'n': 15, 'alpha': 5, 'alpha_proven': True, 'cover': 5, 'minrk2': 5, 'proven': True, 'log': [(5, 'sat', 0.0)]}
+{'graph': 'kneser_10_2', 'n': 45, 'alpha': 9, 'alpha_proven': True, 'cover': 9, 'minrk2': 9, 'proven': True, 'log': [(9, 'sat', 0.1)]}
+{'graph': 'kneser_7_2', 'n': 21, 'alpha': 6, 'alpha_proven': True, 'cover': 7, 'minrk2': 7, 'proven': True, 'log': [(6, 'unsat', 0.6), (7, 'sat', 0.0)]}
+{'graph': 'kneser_12_2', 'n': 66, 'alpha': 11, 'alpha_proven': True, 'cover': 11, 'minrk2': 11, 'proven': True, 'log': [(11, 'sat', 0.2)]}
+{'error': "ValueError('paley needs a prime q = 1 mod 4, got 9')"}
+{'graph': 'paley_5', 'n': 5, 'alpha': 2, 'alpha_proven': True, 'cover': 3, 'minrk2': 3, 'proven': True, 'log': [(2, 'unsat', 0.0), (3, 'sat', 0.0)]}
+{'graph': 'paley_13', 'n': 13, 'alpha': 3, 'alpha_proven': True, 'cover': 5, 'minrk2': 5, 'proven': True, 'log': [(3, 'unsat', 0.0), (4, 'unsat', 0.0), (5, 'sat', 0.0)]}
+{'error': "ValueError('paley needs a prime q = 1 mod 4, got 25')"}
+{'graph': 'paley_17', 'n': 17, 'alpha': 3, 'alpha_proven': True, 'cover': 6, 'minrk2': 6, 'proven': True, 'log': [(3, 'unsat', 0.0), (4, 'unsat', 0.0), (5, 'unsat', 0.1), (6, 'sat', 0.2)]}
+{'graph': 'kneser_7_3', 'n': 35, 'alpha': 15, 'alpha_proven': True, 'cover': 18, 'minrk2': 18, 'proven': True, 'log': [(15, 'unsat', 0.2), (16, 'unsat', 0.6), (17, 'unsat', 44.0), (18, 'sat', 1.0)]}
+{'graph': 'kneser_8_3', 'n': 56, 'alpha': 21, 'alpha_proven': True, 'cover': 28, 'minrk2': 22, 'proven': True, 'log': [(21, 'unsat', 898.2), (22, 'sat', 0.8)]}
+{'graph': 'mycielski_3', 'n': 5, 'alpha': 2, 'alpha_proven': True, 'cover': 3, 'minrk2': 3, 'proven': True, 'log': [(2, 'unsat', 0.0), (3, 'sat', 0.0)]}
+{'graph': 'mycielski_4', 'n': 11, 'alpha': 5, 'alpha_proven': True, 'cover': 6, 'minrk2': 6, 'proven': True, 'log': [(5, 'unsat', 0.0), (6, 'sat', 0.0)]}
+{'graph': 'mycielski_5', 'n': 23, 'alpha': 11, 'alpha_proven': True, 'cover': 12, 'minrk2': 12, 'proven': True, 'log': [(11, 'unsat', 0.1), (12, 'sat', 0.1)]}
+{'graph': 'mycielski_6', 'n': 47, 'alpha': 23, 'alpha_proven': True, 'cover': 24, 'minrk2': 24, 'proven': True, 'log': [(23, 'unsat', 504.2), (24, 'sat', 0.5)]}
+{'graph': 'cyclepow_9_2', 'n': 9, 'alpha': 3, 'alpha_proven': True, 'cover': 3, 'minrk2': 3, 'proven': True, 'log': [(3, 'sat', 0.0)]}
+{'graph': 'cyclepow_9_3', 'n': 9, 'alpha': 2, 'alpha_proven': True, 'cover': 3, 'minrk2': 3, 'proven': True, 'log': [(2, 'unsat', 0.0), (3, 'sat', 0.0)]}
+{'graph': 'cyclepow_11_2', 'n': 11, 'alpha': 3, 'alpha_proven': True, 'cover': 4, 'minrk2': 4, 'proven': True, 'log': [(3, 'unsat', 0.0), (4, 'sat', 0.0)]}
+{'graph': 'cyclepow_11_3', 'n': 11, 'alpha': 2, 'alpha_proven': True, 'cover': 3, 'minrk2': 3, 'proven': True, 'log': [(2, 'unsat', 0.0), (3, 'sat', 0.0)]}
+{'graph': 'cyclepow_13_2', 'n': 13, 'alpha': 4, 'alpha_proven': True, 'cover': 5, 'minrk2': 5, 'proven': True, 'log': [(4, 'unsat', 0.0), (5, 'sat', 0.0)]}
+{'graph': 'cyclepow_13_3', 'n': 13, 'alpha': 3, 'alpha_proven': True, 'cover': 4, 'minrk2': 4, 'proven': True, 'log': [(3, 'unsat', 0.0), (4, 'sat', 0.0)]}
+{'graph': 'cyclepow_15_2', 'n': 15, 'alpha': 5, 'alpha_proven': True, 'cover': 5, 'minrk2': 5, 'proven': True, 'log': [(5, 'sat', 0.0)]}
+{'graph': 'cyclepow_15_3', 'n': 15, 'alpha': 3, 'alpha_proven': True, 'cover': 4, 'minrk2': 4, 'proven': True, 'log': [(3, 'unsat', 0.0), (4, 'sat', 0.0)]}
+{'graph': 'cyclepow_17_2', 'n': 17, 'alpha': 5, 'alpha_proven': True, 'cover': 6, 'minrk2': 6, 'proven': True, 'log': [(5, 'unsat', 0.0), (6, 'sat', 0.0)]}
+{'graph': 'cyclepow_17_3', 'n': 17, 'alpha': 4, 'alpha_proven': True, 'cover': 5, 'minrk2': 5, 'proven': True, 'log': [(4, 'unsat', 0.0), (5, 'sat', 0.0)]}
+{'graph': 'cyclepow_19_2', 'n': 19, 'alpha': 6, 'alpha_proven': True, 'cover': 7, 'minrk2': 7, 'proven': True, 'log': [(6, 'unsat', 0.0), (7, 'sat', 0.0)]}
+{'graph': 'cyclepow_19_3', 'n': 19, 'alpha': 4, 'alpha_proven': True, 'cover': 5, 'minrk2': 5, 'proven': True, 'log': [(4, 'unsat', 0.0), (5, 'sat', 0.0)]}
+{'graph': 'cyclepow_21_2', 'n': 21, 'alpha': 7, 'alpha_proven': True, 'cover': 7, 'minrk2': 7, 'proven': True, 'log': [(7, 'sat', 0.0)]}
+{'graph': 'cyclepow_21_3', 'n': 21, 'alpha': 5, 'alpha_proven': True, 'cover': 6, 'minrk2': 6, 'proven': True, 'log': [(5, 'unsat', 0.0), (6, 'sat', 0.0)]}
+{'graph': 'cyclepow_23_2', 'n': 23, 'alpha': 7, 'alpha_proven': True, 'cover': 8, 'minrk2': 8, 'proven': True, 'log': [(7, 'unsat', 0.0), (8, 'sat', 0.0)]}
+{'graph': 'cyclepow_23_3', 'n': 23, 'alpha': 5, 'alpha_proven': True, 'cover': 6, 'minrk2': 6, 'proven': True, 'log': [(5, 'unsat', 0.0), (6, 'sat', 0.0)]}
+{'graph': 'cyclepow_25_2', 'n': 25, 'alpha': 8, 'alpha_proven': True, 'cover': 9, 'minrk2': 9, 'proven': True, 'log': [(8, 'unsat', 0.1), (9, 'sat', 0.1)]}
+{'graph': 'cyclepow_25_3', 'n': 25, 'alpha': 6, 'alpha_proven': True, 'cover': 7, 'minrk2': 7, 'proven': True, 'log': [(6, 'unsat', 0.0), (7, 'sat', 0.0)]}
+{'graph': 'cyclepow_27_2', 'n': 27, 'alpha': 9, 'alpha_proven': True, 'cover': 9, 'minrk2': 9, 'proven': True, 'log': [(9, 'sat', 0.1)]}
+{'graph': 'cyclepow_27_3', 'n': 27, 'alpha': 6, 'alpha_proven': True, 'cover': 7, 'minrk2': 7, 'proven': True, 'log': [(6, 'unsat', 0.0), (7, 'sat', 0.0)]}
+{'graph': 'cyclepow_29_2', 'n': 29, 'alpha': 9, 'alpha_proven': True, 'cover': 10, 'minrk2': 10, 'proven': True, 'log': [(9, 'unsat', 0.1), (10, 'sat', 0.1)]}
+{'graph': 'cyclepow_29_3', 'n': 29, 'alpha': 7, 'alpha_proven': True, 'cover': 8, 'minrk2': 8, 'proven': True, 'log': [(7, 'unsat', 0.1), (8, 'sat', 0.1)]}
+{'graph': 'cyclepow_31_2', 'n': 31, 'alpha': 10, 'alpha_proven': True, 'cover': 11, 'minrk2': 11, 'proven': True, 'log': [(10, 'unsat', 0.1), (11, 'sat', 0.1)]}
+{'graph': 'cyclepow_31_3', 'n': 31, 'alpha': 7, 'alpha_proven': True, 'cover': 8, 'minrk2': 8, 'proven': True, 'log': [(7, 'unsat', 0.1), (8, 'sat', 0.1)]}

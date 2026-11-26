@@ -1,0 +1,29 @@
+seed 0 done; probes: bandit=300, bandit_probe0.3=99, bandit_probe3=918, bandit_dual1pct=300, bandit_exp1/2=109, bandit_const5pct=160, bandit_warm=320
+seed 1 done; probes: bandit=314, bandit_probe0.3=84, bandit_probe3=958, bandit_dual1pct=314, bandit_exp1/2=100, bandit_const5pct=160, bandit_warm=334
+seed 2 done; probes: bandit=295, bandit_probe0.3=85, bandit_probe3=932, bandit_dual1pct=295, bandit_exp1/2=109, bandit_const5pct=129, bandit_warm=315
+seed 3 done; probes: bandit=360, bandit_probe0.3=94, bandit_probe3=964, bandit_dual1pct=360, bandit_exp1/2=104, bandit_const5pct=165, bandit_warm=380
+seed 4 done; probes: bandit=291, bandit_probe0.3=88, bandit_probe3=899, bandit_dual1pct=291, bandit_exp1/2=106, bandit_const5pct=146, bandit_warm=311
+seed 5 done; probes: bandit=322, bandit_probe0.3=98, bandit_probe3=944, bandit_dual1pct=322, bandit_exp1/2=110, bandit_const5pct=168, bandit_warm=342
+seed 6 done; probes: bandit=279, bandit_probe0.3=89, bandit_probe3=895, bandit_dual1pct=279, bandit_exp1/2=107, bandit_const5pct=139, bandit_warm=299
+seed 7 done; probes: bandit=311, bandit_probe0.3=92, bandit_probe3=896, bandit_dual1pct=311, bandit_exp1/2=106, bandit_const5pct=142, bandit_warm=331
+seed 8 done; probes: bandit=284, bandit_probe0.3=67, bandit_probe3=876, bandit_dual1pct=284, bandit_exp1/2=90, bandit_const5pct=118, bandit_warm=304
+seed 9 done; probes: bandit=271, bandit_probe0.3=63, bandit_probe3=907, bandit_dual1pct=271, bandit_exp1/2=76, bandit_const5pct=115, bandit_warm=291
+lambda = 0.0746245; mean over the last 500 batches (all seeds):
+  oracle_acc       acc 0.8993  rel_latency 0.450  score 0.8657  fid_score 0.9273
+  oracle_fid       acc 0.9080  rel_latency 0.567  score 0.8657  fid_score 0.9473
+  offline_theory   acc 0.8995  rel_latency 0.444  score 0.8663  fid_score 0.9281
+  bandit           acc 0.9093  rel_latency 0.680  score 0.8586  fid_score 0.9451
+  bandit_probe0.3  acc 0.9094  rel_latency 0.711  score 0.8563  fid_score 0.9429
+  bandit_probe3    acc 0.9097  rel_latency 0.718  score 0.8561  fid_score 0.9423
+  bandit_dual1pct  acc 0.9078  rel_latency 0.639  score 0.8601  fid_score 0.9434
+  bandit_exp1/2    acc 0.9093  rel_latency 0.705  score 0.8567  fid_score 0.9432
+  bandit_const5pct acc 0.9093  rel_latency 0.705  score 0.8567  fid_score 0.9432
+  bandit_warm      acc 0.9093  rel_latency 0.677  score 0.8588  fid_score 0.9453
+  ceebert          acc 0.8741  rel_latency 0.543  score 0.8336  fid_score 0.8929
+  cumulative fidelity regret after T=3000: bandit               12.7 +- 0.6   log-log slope 0.673 +- 0.032
+  cumulative fidelity regret after T=3000: bandit_probe0.3      16.2 +- 0.8   log-log slope 0.787 +- 0.065
+  cumulative fidelity regret after T=3000: bandit_probe3        23.1 +- 0.8   log-log slope 0.649 +- 0.022
+  cumulative fidelity regret after T=3000: bandit_dual1pct      16.7 +- 1.6   log-log slope 0.733 +- 0.047
+  cumulative fidelity regret after T=3000: bandit_exp1/2        14.7 +- 0.9   log-log slope 0.816 +- 0.035
+  cumulative fidelity regret after T=3000: bandit_const5pct     17.1 +- 0.9   log-log slope 0.702 +- 0.081
+  cumulative fidelity regret after T=3000: bandit_warm          11.7 +- 0.6   log-log slope 0.665 +- 0.032
