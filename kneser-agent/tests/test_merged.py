@@ -88,3 +88,54 @@ def test_parse_json_variants():
     assert parse_json('```json\n{"a": 1}\n```') == {"a": 1}
     assert parse_json('Sure. {"a": {"b": 2}} done') == {"a": {"b": 2}}
     assert parse_json('{"a": 1}') == {"a": 1}
+
+
+def test_arithmetic_check_catches_the_qwen_errors():
+    from kagent.agents import _valid_plan, check_arithmetic
+    # Qwen 32B on K(14,4) (1001 receivers) claimed K(14,7) and "C(7, 2) = 210"; on K(16,4) it first claimed K(14,5)
+    assert "3432" in check_arithmetic({"name": "Kneser", "params": {"n": 14, "k": 7}, "evidence": []}, 1001)
+    assert "21" in check_arithmetic({"name": "Kneser", "params": {}, "evidence": ["degree 210 = C(7, 2) = 210"]}, 1001)
+    assert check_arithmetic({"name": "Kneser", "params": {"n": 14, "k": 5}, "evidence": []}, 1820)
+    assert check_arithmetic({"name": "Kneser", "params": {"n": 16, "k": 4},
+                             "evidence": ["1820 = C(16,4)", "C(12, 4) = 495"]}, 1820) is None
+    assert check_arithmetic({"name": "perturbed Kneser", "params": {"n": 16, "k": 4, "deleted": 0.01},
+                             "evidence": []}, 1820) is None
+    # evidence may quote numbers from check results, not only from the summary
+    d = {"family_hypothesis": {"name": "Kneser", "params": {"n": 16, "k": 4}, "confidence": 0.9,
+                               "evidence": ["binomial_match returned n=16, k=4", "Hoffman bound 455"]},
+         "plan": [{"tool": "spectral", "args": {}}]}
+    ctx = {"check_history": [{"tool": "binomial_match", "result": [{"n": 16, "k": 4}]},
+                             {"tool": "hoffman", "result": 455.0}]}
+    assert _valid_plan(d, {"receivers": 1820}, ctx) is d
+
+
+class _Scripted:
+    """Stand-in LLM backend: replies in order (used to test that bad agent replies cannot crash a run)."""
+
+    def __init__(self, replies):
+        self.replies, self.calls, self.seconds, self.last_raw = list(replies), 0, 0.0, ""
+
+    def complete(self, agent, system, prompt):
+        self.calls += 1
+        self.last_raw = self.replies.pop(0) if self.replies else '{"verdict": "accept", "analysis": "ok"}'
+        return self.last_raw
+
+
+def test_bad_agent_args_never_crash_a_run(tmp_path, monkeypatch):
+    import kagent.pipeline as P
+    from kagent.agents import Agents
+    from kagent.pipeline import Run
+    (tmp_path / "results" / "codes").mkdir(parents=True)
+    monkeypatch.setattr(P, "ROOT", tmp_path)                  # keep the test's outputs out of results/ and traces/
+    bad_plan = json.dumps({"family_hypothesis": {"name": "none"}, "plan": [{"tool": "family_rule", "args": {}}]})
+    good = json.dumps({"family_hypothesis": {"name": "none"},
+                       "plan": [{"tool": "try_code", "args": {"p": 4, "c": 1}}]})       # 4 is not a prime
+    critic = json.dumps({"verdict": "challenge", "objections": ["x"],
+                         "requested_checks": [{"tool": "family_rule", "args": {"n": "a"}}]})
+    run = Run("K(9,2)", llm="none", budget=30, live=False, tag="test_badargs")
+    run.backend = _Scripted([bad_plan, bad_plan, critic, critic, good, good] + ['{"verdict": "accept"}'] * 3)
+    run.agents = Agents(run.backend, run.trace)
+    r = run.run()
+    assert r["verdict"] == "proven" and r["bracket"] == [8, 8]
+    evs = [e["ev"] for e in run.events]
+    assert "llm_fallback" in evs and "llm_invalid" in evs

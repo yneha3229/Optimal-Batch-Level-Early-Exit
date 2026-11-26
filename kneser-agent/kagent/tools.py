@@ -13,6 +13,10 @@ import numpy as np
 PRIMES = [p for p in range(2, 400) if all(p % d for d in range(2, int(p ** 0.5) + 1))]
 
 
+def is_prime(p: int) -> bool:
+    return p >= 2 and all(p % d for d in range(2, int(p ** 0.5) + 1))
+
+
 # ------------------------------------------------------------------------------------------- summary
 def describe(A: np.ndarray, eig_limit: int = 4000, seed: int = 0) -> dict:
     t0 = time.perf_counter()

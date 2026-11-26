@@ -1,0 +1,5 @@
+GPU 4 must be idle; current use:
+memory.used [MiB], utilization.gpu [%]
+1 MiB, 0 %
+vLLM starting (pid 29786), log: logs/kneser_agent_vllm_32b.log
+ready on http://127.0.0.1:8000/v1 serving Qwen/Qwen2.5-Coder-32B-Instruct-AWQ

@@ -1,0 +1,91 @@
+[    0.00s] input            {"graph": "K_14_4_s0", "receivers": 1001, "llm": "Qwen2.5-Coder-32B-Instruct-AWQ", "family_rule": true}
+[    0.01s] start            {"tool": "describe"}
+[    0.01s] start            {"tool": "indep"}
+[    0.01s] start            {"tool": "cover"}
+[    0.03s] board            {"side": "lower", "value": 286, "tool": "greedy independent set", "bracket": [286, 1001]}
+[    0.17s] done             {"tool": "describe", "seconds": 0.154}
+[    0.17s] summary          {}
+[    0.17s] llm_request      {"agent": "solver", "attempt": 0}
+[    7.27s] llm_reply        solver: {"family_hypothesis": {"name": "Kneser", "params": {}, "confidence": 0.9, "evidence": ["receivers = 1001", "degree_min = 210", "degree_max = 210", "spectrum_integral = true"]}, "plan": [{"tool": "binomial_match", "args": {}, "why": "To confirm if the graph matches a Kneser graph K(n,k)"}, {"tool": "
+[    7.27s] llm_request      {"agent": "critic", "attempt": 0}
+[    9.05s] llm_reply        critic: {"verdict": "challenge", "objections": ["The family hypothesis does not specify (n, k) parameters, which are necessary for verification."], "requested_checks": [{"tool": "binomial_match", "args": {}}]}
+[    9.05s] checks           {"results": [{"tool": "binomial_match", "result": [{"n": 14, "k": 4}]}]}
+[    9.05s] llm_request      {"agent": "solver", "attempt": 0}
+[   16.89s] llm_reply        solver: {"family_hypothesis": {"name": "Kneser", "params": {"n": 14, "k": 4}, "confidence": 0.9, "evidence": ["receivers = 1001", "degree_min = 210", "degree_max = 210", "spectrum_integral = true", "binomial_match result: n=14, k=4"]}, "plan": [{"tool": "family_rule", "args": {"n": 14, "k": 4}, "why": "If b
+[   16.89s] llm_request      {"agent": "critic", "attempt": 0}
+[   17.84s] llm_reply        critic: {"verdict": "accept", "objections": [], "requested_checks": []}
+[   17.84s] plan_accepted    {"plan": [{"tool": "family_rule", "args": {"n": 14, "k": 4}, "why": "If binomial_match confirms K(14,4), we can use the known (p,c) pair"}, {"tool": "spectral",
+[   17.84s] rule             {"tool": "family_rule", "args": {"n": 14, "k": 4}, "result": null}
+[   17.84s] start            {"tool": "code", "p": 2, "c": 1, "why": "spectral pred 91"}
+[   17.84s] start            {"tool": "code", "p": 3, "c": 2, "why": "spectral pred 287"}
+[   17.84s] start            {"tool": "code", "p": 5, "c": 4, "why": "spectral pred 351"}
+[   17.84s] start            {"tool": "code", "p": 17, "c": 16, "why": "spectral pred 351"}
+[   17.84s] start            {"tool": "code", "p": 11, "c": 10, "why": "spectral pred 363"}
+[   17.85s] board            {"side": "upper", "value": 344, "tool": "clique_cover", "bracket": [286, 344]}
+[   18.34s] done             {"tool": "code", "p": 3, "c": 2, "rank": 287, "seconds": 0.48}
+[   18.34s] board            {"side": "upper", "value": 287, "tool": "linear_code", "bracket": [286, 287]}
+[   18.34s] event            {"name": "near_miss", "p": 3, "rank": 287}
+[   18.34s] start            {"tool": "code", "p": 3, "c": 1, "why": "near miss"}
+[   18.43s] done             {"tool": "code", "p": 2, "c": 1, "rank": 299, "seconds": 0.58}
+[   18.62s] done             {"tool": "code", "p": 5, "c": 4, "rank": 364, "seconds": 0.765}
+[   18.68s] done             {"tool": "code", "p": 3, "c": 1, "rank": null, "seconds": 0.055, "rank_above": 286}
+[   18.88s] done             {"tool": "code", "p": 17, "c": 16, "rank": 351, "seconds": 0.549}
+[   19.09s] done             {"tool": "code", "p": 11, "c": 10, "rank": 364, "seconds": 0.654}
+[   19.09s] event            {"name": "checkpoint"}
+[   19.09s] llm_request      {"agent": "solver", "attempt": 0}
+[   27.07s] llm_reply        solver: {"family_hypothesis": {"name": "Kneser", "params": {"n": 14, "k": 4}, "confidence": 0.9, "evidence": ["receivers = 1001", "degree_min = 210", "degree_max = 210", "spectrum_integral = true", "binomial_match result: n=14, k=4"]}, "plan": [{"tool": "family_rule", "args": {"n": 14, "k": 4}, "why": "Chec
+[   27.07s] rule             {"tool": "family_rule", "args": {"n": 14, "k": 4}, "result": null}
+[   27.07s] event            {"name": "safety_net", "plan": [{"tool": "spectral", "args": {"top": 30}, "why": "fallback"}]}
+[   27.07s] start            {"tool": "code", "p": 19, "c": 18, "why": "spectral pred 363"}
+[   27.07s] start            {"tool": "code", "p": 7, "c": 6, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 13, "c": 12, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 23, "c": 22, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 29, "c": 28, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 31, "c": 30, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 37, "c": 36, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 41, "c": 40, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 43, "c": 42, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 47, "c": 46, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 53, "c": 52, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 59, "c": 58, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 61, "c": 60, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 67, "c": 66, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 71, "c": 70, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 73, "c": 72, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 79, "c": 78, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 83, "c": 82, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 89, "c": 88, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 97, "c": 96, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 101, "c": 100, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 103, "c": 102, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 107, "c": 106, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 109, "c": 108, "why": "spectral pred 364"}
+[   27.07s] start            {"tool": "code", "p": 113, "c": 112, "why": "spectral pred 364"}
+[   27.23s] done             {"tool": "code", "p": 7, "c": 6, "rank": null, "seconds": 0.145, "rank_above": 286}
+[   27.24s] done             {"tool": "code", "p": 19, "c": 18, "rank": null, "seconds": 0.165, "rank_above": 286}
+[   27.24s] done             {"tool": "code", "p": 13, "c": 12, "rank": null, "seconds": 0.165, "rank_above": 286}
+[   27.36s] done             {"tool": "code", "p": 23, "c": 22, "rank": null, "seconds": 0.138, "rank_above": 286}
+[   27.40s] done             {"tool": "code", "p": 31, "c": 30, "rank": null, "seconds": 0.155, "rank_above": 286}
+[   27.40s] done             {"tool": "code", "p": 29, "c": 28, "rank": null, "seconds": 0.163, "rank_above": 286}
+[   27.54s] done             {"tool": "code", "p": 37, "c": 36, "rank": null, "seconds": 0.176, "rank_above": 286}
+[   27.56s] done             {"tool": "code", "p": 41, "c": 40, "rank": null, "seconds": 0.161, "rank_above": 286}
+[   27.58s] done             {"tool": "code", "p": 43, "c": 42, "rank": null, "seconds": 0.176, "rank_above": 286}
+[   27.66s] done             {"tool": "code", "p": 47, "c": 46, "rank": null, "seconds": 0.123, "rank_above": 286}
+[   27.75s] done             {"tool": "code", "p": 53, "c": 52, "rank": null, "seconds": 0.179, "rank_above": 286}
+[   27.76s] done             {"tool": "code", "p": 59, "c": 58, "rank": null, "seconds": 0.182, "rank_above": 286}
+[   27.82s] done             {"tool": "code", "p": 61, "c": 60, "rank": null, "seconds": 0.151, "rank_above": 286}
+[   27.90s] done             {"tool": "code", "p": 67, "c": 66, "rank": null, "seconds": 0.161, "rank_above": 286}
+[   27.93s] done             {"tool": "code", "p": 71, "c": 70, "rank": null, "seconds": 0.157, "rank_above": 286}
+[   27.99s] done             {"tool": "code", "p": 73, "c": 72, "rank": null, "seconds": 0.167, "rank_above": 286}
+[   28.08s] done             {"tool": "code", "p": 83, "c": 82, "rank": null, "seconds": 0.15, "rank_above": 286}
+[   28.08s] done             {"tool": "code", "p": 79, "c": 78, "rank": null, "seconds": 0.169, "rank_above": 286}
+[   28.14s] done             {"tool": "code", "p": 89, "c": 88, "rank": null, "seconds": 0.158, "rank_above": 286}
+[   28.23s] done             {"tool": "code", "p": 101, "c": 100, "rank": null, "seconds": 0.15, "rank_above": 286}
+[   28.25s] done             {"tool": "code", "p": 97, "c": 96, "rank": null, "seconds": 0.164, "rank_above": 286}
+[   28.30s] done             {"tool": "code", "p": 103, "c": 102, "rank": null, "seconds": 0.162, "rank_above": 286}
+[   28.39s] done             {"tool": "code", "p": 107, "c": 106, "rank": null, "seconds": 0.158, "rank_above": 286}
+[   28.39s] done             {"tool": "code", "p": 109, "c": 108, "rank": null, "seconds": 0.147, "rank_above": 286}
+[   28.44s] done             {"tool": "code", "p": 113, "c": 112, "rank": null, "seconds": 0.143, "rank_above": 286}
+[   28.45s] llm_request      {"agent": "verifier", "attempt": 0}
+[   32.40s] llm_reply        verifier: {"checks_requested": [], "analysis": "The agent found a gap for K(14,4) with 1001 receivers using a linear code certificate over F_3 with parameters p=3, c=2, which does not meet the lower bound. The independent set and code fit checks passed. No baselines were run for comparison. The agent took 28.
+[   32.40s] verdict          {"verdict": "gap", "bracket": [286, 287], "checks": {"independent_set": true, "code_fits": true}}

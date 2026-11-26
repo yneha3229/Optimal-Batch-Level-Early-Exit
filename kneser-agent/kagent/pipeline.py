@@ -16,7 +16,7 @@ import numpy as np
 
 from . import graphs, tools, verify
 from . import llm as LLM
-from .agents import Agents
+from .agents import PROMPT_VERSION, Agents
 
 ROOT = Path(__file__).resolve().parents[1]
 _CACHE: dict = {}
@@ -136,6 +136,8 @@ class Run:
         return f
 
     def submit_code(self, p, c, why=""):
+        if not tools.is_prime(int(p)):
+            raise ValueError(f"p = {p} is not a prime")
         key = (int(p), int(c) % int(p))
         if key in self.tried or key[1] == 0:
             return
@@ -189,43 +191,57 @@ class Run:
     def run_checks(self, checks, summary):
         results = []
         for ch in checks[:4]:
-            tool, a = ch.get("tool"), ch.get("args", {}) or {}
-            if tool == "binomial_match":
-                results.append({"tool": tool, "result": binomial_match(self.N, summary["degree_max"])})
-            elif tool == "hoffman":
-                results.append({"tool": tool, "result": tools.hoffman_alpha_bound(summary)})
-            elif tool == "family_rule" and self.allow_family:
-                results.append({"tool": tool, "args": a, "result": tools.family_rule(int(a["n"]), int(a["k"]))})
-            elif tool == "try_code":
-                r = tools.try_code(self.A, int(a["p"]), int(a["c"]) % int(a["p"]), self.S)
-                self.tried.add((r["p"], r["c"]))
-                self.offer_upper(r["rank"], {"kind": "linear_code", "p": r["p"], "c": r["c"], "meets_lower": r["meets_lower"]}) if r["rank"] else None
-                results.append({"tool": tool, "args": a, "result": r})
-            else:
-                results.append({"tool": tool, "result": "not available"})
+            try:
+                self._one_check(ch, summary, results)
+            except (KeyError, TypeError, ValueError) as e:
+                results.append({"tool": ch.get("tool") if isinstance(ch, dict) else None, "result": f"bad args: {e}"})
         self.trace("checks", results=results)
         return results
+
+    def _one_check(self, ch, summary, results):
+        tool, a = ch.get("tool"), ch.get("args", {}) or {}
+        if tool == "binomial_match":
+            results.append({"tool": tool, "result": binomial_match(self.N, summary["degree_max"])})
+        elif tool == "hoffman":
+            results.append({"tool": tool, "result": tools.hoffman_alpha_bound(summary)})
+        elif tool == "family_rule" and self.allow_family:
+            results.append({"tool": tool, "args": a, "result": tools.family_rule(int(a["n"]), int(a["k"]))})
+        elif tool == "try_code":
+            if not tools.is_prime(int(a["p"])) or int(a["c"]) % int(a["p"]) == 0:
+                raise ValueError("try_code needs a prime p and c != 0 mod p")
+            r = tools.try_code(self.A, int(a["p"]), int(a["c"]) % int(a["p"]), self.S)
+            self.tried.add((r["p"], r["c"]))
+            self.offer_upper(r["rank"], {"kind": "linear_code", "p": r["p"], "c": r["c"], "meets_lower": r["meets_lower"]}) if r["rank"] else None
+            results.append({"tool": tool, "args": a, "result": r})
+        else:
+            results.append({"tool": tool, "result": "not available"})
 
     def execute(self, plan, summary):
         for step in plan:
             if self.closed() or self.left() <= 0:
                 return
-            tool, a = step.get("tool"), step.get("args", {}) or {}
-            if tool == "spectral":
-                for cand in tools.spectral_candidates(summary, top=int(a.get("top", 8))):
-                    self.submit_code(cand["p"], cand["c"], why=f"spectral pred {cand['rank_pred']}")
-            elif tool == "try_code":
-                self.submit_code(int(a["p"]), int(a["c"]), why=step.get("why", ""))
-            elif tool == "family_rule" and self.allow_family:
-                r = tools.family_rule(int(a["n"]), int(a["k"]))
-                self.trace("rule", tool="family_rule", args=a, result=r)
-                if r:
-                    self.submit_code(r["p"], r["c"], why="family rule")
-            elif tool == "independent_set":
-                self.submit("indep", w_indep, self.path, int(a.get("restarts", 4)), self.seed + 1)
-            elif tool in ("hoffman", "binomial_match"):
-                self.run_checks([step], summary)
-            self.drain(kinds={"code", "indep"})
+            try:
+                self._one_step(step, summary)
+            except (KeyError, TypeError, ValueError) as e:
+                self.trace("plan_item_ignored", step=step, reason=str(e)[:200])
+
+    def _one_step(self, step, summary):
+        tool, a = step.get("tool"), step.get("args", {}) or {}
+        if tool == "spectral":
+            for cand in tools.spectral_candidates(summary, top=int(a.get("top", 8))):
+                self.submit_code(cand["p"], cand["c"], why=f"spectral pred {cand['rank_pred']}")
+        elif tool == "try_code":
+            self.submit_code(int(a["p"]), int(a["c"]), why=step.get("why", ""))
+        elif tool == "family_rule" and self.allow_family:
+            r = tools.family_rule(int(a["n"]), int(a["k"]))
+            self.trace("rule", tool="family_rule", args=a, result=r)
+            if r:
+                self.submit_code(r["p"], r["c"], why="family rule")
+        elif tool == "independent_set":
+            self.submit("indep", w_indep, self.path, int(a.get("restarts", 4)), self.seed + 1)
+        elif tool in ("hoffman", "binomial_match"):
+            self.run_checks([step], summary)
+        self.drain(kinds={"code", "indep"})
 
     # ----- main
     def run(self):
@@ -244,16 +260,20 @@ class Run:
         payload = {"summary": summary, "board": self.view()}
         plan, src = self.agents.solver(payload, default)
         rounds = 0
+        history = []                                    # every check result so far, shown to both agents
         while self.backend is not None and rounds < 3:
-            crit, _ = self.agents.critic({"summary": summary, "solver": plan, "board": self.view()})
+            crit, _ = self.agents.critic({"summary": summary, "solver": plan, "board": self.view(),
+                                          "check_history": history})
             rounds += 1
             if crit["verdict"] == "accept":
                 break
             checks = self.run_checks(crit.get("requested_checks", []), summary)
+            history += checks
             if self.closed():
                 break
             plan, _ = self.agents.solver({**payload, "board": self.view(), "critic_objections": crit["objections"],
-                                          "check_results": checks, "previous_plan": plan}, plan)
+                                          "check_results": checks, "check_history": history,
+                                          "previous_plan": plan}, plan)
         self.trace("plan_accepted", plan=plan["plan"], hypothesis=plan.get("family_hypothesis"), critic_rounds=rounds)
         if not self.closed():
             self.execute(plan["plan"], summary)
@@ -261,8 +281,15 @@ class Run:
             self.trace("event", name="checkpoint")
             tried = sorted(self.tried)
             fallback = {"plan": [{"tool": "spectral", "args": {"top": 30}, "why": "fallback"}]}
-            plan2, _ = self.agents.checkpoint({"summary": summary, "board": self.view(), "tried_codes": tried}, fallback)
+            plan2, _ = self.agents.checkpoint({"summary": summary, "board": self.view(), "tried_codes": tried,
+                                               "hypothesis": plan.get("family_hypothesis"),
+                                               "check_history": history}, fallback)
             self.execute(plan2.get("plan", []), summary)
+            if self.backend is not None and not self.closed() and self.left() > 0:
+                # safety net (the server version's rule "a wrong plan costs only time"): the LLM's plans left the
+                # bracket open, so the deterministic generic search still runs; pairs already tried are skipped
+                self.trace("event", name="safety_net", plan=fallback["plan"])
+                self.execute(fallback["plan"], summary)
         self.drain(kinds={"cover", "indep", "code"}, stop_when_closed=True)
         wall = time.perf_counter() - self.t0
         for f in list(self.pending):
@@ -298,7 +325,7 @@ class Run:
             "invalid" if not all(checks.values()) else "gap")
         truth = json.loads(graphs.TRUTH.read_text()).get(Path(self.path).stem, {})
         result = {"graph": self.name, "spec": self.spec, "receivers": self.N, "llm": self.llm_name,
-                  "family_rule_allowed": self.allow_family, "bracket": [b["lower"], b["upper"]], "verdict": verdict,
+                  "family_rule_allowed": self.allow_family, "prompt_version": PROMPT_VERSION if self.backend else None, "bracket": [b["lower"], b["upper"]], "verdict": verdict,
                   "upper_certificate": uc, "checks": checks, "wall_s": round(wall, 3),
                   "llm_s": round(self.llm_seconds(), 3), "warmup_s": self.warmup_s, "compute_s": round(wall - self.llm_seconds(), 3),
                   "llm_calls": getattr(self.backend, "calls", 0) if self.backend else 0, "critic_rounds": rounds,
