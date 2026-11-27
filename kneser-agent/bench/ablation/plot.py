@@ -58,10 +58,10 @@ diff = sum(len(v) > 1 for v in brackets.values())
 note = ((f"Final certified bracket identical for every model on all {ng} graph instances. " if same else
          f"Same verdict for every model on all {ng} graph instances; the bracket differs on {diff} (the random control: "
          "lower bound 336 for Claude, 331-333 for Qwen, from fewer independent-set restarts). ")
-        + "Graphs: K(16,4), K(16,4) minus 1% of edges, K(14,4) (rule exception), K(13,4), K(15,5), random 6-regular "
+        + "\nGraphs: K(16,4), K(16,4) minus 1% of edges, K(14,4) (rule exception), K(13,4), K(15,5), random 6-regular "
         "(1000 vertices); 2 relabelling seeds each, one run per cell.\nQwen 32B GPU (vLLM, AWQ): 3-graph pilot on the "
         "code before 9081f70; every other bar: fixed code. Qwen CPU bars: llama.cpp, GGUF Q4_K_M; Qwen3 4B with a 1,500-token reply limit.")
 fig.text(0.01, 0.005, note, color=SUB, fontsize=7.5)
-fig.tight_layout(rect=(0, 0.07, 1, 0.93))
+fig.tight_layout(rect=(0, 0.10, 1, 0.93))
 fig.savefig(HERE / "model_ablation.png", facecolor="white")
 print("wrote", HERE / "model_ablation.png")
