@@ -18,7 +18,7 @@ TRUTH = {"K_16_4_s3": (16, 4, "rule applies"), "K_16_4-del0.01_s0": (16, 4, "per
          "reg_1000_6_s1": (None, None, "control")}
 PILOT = ("K_16_4_s3", "K_16_4-del0.01_s0", "K_14_4_s0")
 CONFIGS = {"Qwen2.5-32B": "{g}_ref_Qwen2.5-Coder-32B-Instruct-AWQ.jsonl", "Qwen3-4B": "{g}_Qwen3-4B-Instruct-2507.jsonl",
-           # Qwen 32B on CPU (llama.cpp, GGUF Q4_K_M), fixed code (d22d46c), run while the GPUs failed cuInit
+           # Qwen 32B on CPU (llama.cpp, GGUF Q4_K_M), fixed code (9081f70), run while the GPUs failed cuInit
            "Qwen2.5-32B-cpu": "{g}_Qwen2.5-Coder-32B-Instruct-Q4_K_M-cpu.jsonl",
            "Qwen3-4B-cpu": "{g}_Qwen3-4B-Instruct-2507-Q4_K_M-cpu-1500.jsonl"}
 for c in ("haiku-med", "sonnet-med", "opus-low", "opus-med", "opus-high"):

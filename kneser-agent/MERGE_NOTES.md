@@ -3,7 +3,7 @@
 Two independent implementations of the same idea (Solver/Critic/Verifier LLM agents around a deterministic
 scheduler, a bound board that only accepts certified tool results, and an independent verifier) existed on 26 Nov:
 
-| | **branch version** (`kneser-agent/`, pushed to `feature/kneser-agent`, commits 79a5449, 9b5ed59) | **server version** (written on the GPU server on 26 Nov 09:16-12:37, untracked in the `main` worktree `~/ie624-main/kneser-agent/`) |
+| | **branch version** (`kneser-agent/`, pushed to `feature/kneser-agent`, commits 9f37c8b, b542646) | **server version** (written on the GPU server on 26 Nov 09:16-12:37, untracked in the `main` worktree `~/ie624-main/kneser-agent/`) |
 |---|---|---|
 | size | ~1,270 lines (kagent + bench) | ~4,200 lines in 23 modules, 63 tests |
 | entry point | `python -m kagent.pipeline "K(16,4)" --llm none\|chat\|local` | `python -m kagent.run bench/graphs/<id> --mode full\|no_critic\|no_llm\|small_model` |
@@ -55,7 +55,7 @@ scheduler, a bound board that only accepts certified tool results, and an indepe
 5. The server version's rule "a wrong plan costs only time", as a safety net in the scheduler: if the LLM's plans
    leave the bracket open after the checkpoint, the deterministic generic search still runs.
 
-After the first Qwen 32B runs (see the commit message of a46af20 and `traces/*_promptsv1_*`), more fixes in
+After the first Qwen 32B runs (see the commit message of 9bcaaad and `traces/*_promptsv1_*`), more fixes in
 `kagent/` (schemas unchanged): deterministic arithmetic check of the Solver's evidence ("C(a,b) = X" claims, and
 C(n,k) = receivers for a Kneser hypothesis), tool-argument validation, bad arguments logged and skipped instead of
 crashing the run, check history shown to both agents, prompt rules (copy (n, k) from binomial_match, query the rule

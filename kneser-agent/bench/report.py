@@ -237,7 +237,7 @@ if sc.exists():
     rows = [json.loads(line) for line in sc.read_text().splitlines() if line.strip()]
     A += ["", "## Model ablation: blind agents on the three reference cases (bench/ablation/)", "",
           "Each run gives the Solver, Critic and Verifier roles to one model answering blind (bench/ablation/README.md). "
-          "Claude rows: fixed code (d22d46c). Qwen rows: GPU server, prompts v3, code before d22d46c. One run per cell; "
+          "Claude rows: fixed code (9081f70). Qwen rows: GPU server, prompts v3, code before 9081f70. One run per cell; "
           "false objections labelled by hand (bench/ablation/false_objections.json).", "",
           "![model ablation](bench/ablation/model_ablation.png)", "",
           "| graph | model | verdict | bracket | LLM calls | invalid | fallbacks | (n, k) in first reply | Critic objections | false | safety net | codes tried |",

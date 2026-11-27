@@ -6,7 +6,7 @@ GPU server (64 cores; baselines pinned to cores 16-27, 3 graphs at a time; agent
 
 Conditions: other users' jobs ran on the machine throughout. To save time, the agent runs overlapped with the
 baselines (on separate cores), so the baseline timings were not measured on an otherwise idle machine. All benchmark Qwen
-numbers below are **Qwen2.5-Coder-32B-AWQ with prompts v3, before the plan-results fix d22d46c** (results of checks
+numbers below are **Qwen2.5-Coder-32B-AWQ with prompts v3, before the plan-results fix 9081f70** (results of checks
 run by the Solver's own plan were not shown to the agents). The model ablation below ran Qwen on CPU (llama.cpp) on the
 fixed code, because from 18:59 UTC `cuInit` failed on every GPU of the server (error 3): the A6000 at PCI 3D:00.0
 reports "GPU requires reset", which blocks CUDA machine-wide until an admin resets it.
@@ -144,7 +144,7 @@ reports "GPU requires reset", which blocks CUDA machine-wide until an admin rese
 
 ## Model ablation: blind agents on the three reference cases (bench/ablation/)
 
-Each run gives the Solver, Critic and Verifier roles to one model answering blind (bench/ablation/README.md). Claude rows: fixed code (d22d46c). Qwen rows: GPU server, prompts v3, code before d22d46c. One run per cell; false objections labelled by hand (bench/ablation/false_objections.json).
+Each run gives the Solver, Critic and Verifier roles to one model answering blind (bench/ablation/README.md). Claude rows: fixed code (9081f70). Qwen rows: GPU server, prompts v3, code before 9081f70. One run per cell; false objections labelled by hand (bench/ablation/false_objections.json).
 
 ![model ablation](bench/ablation/model_ablation.png)
 

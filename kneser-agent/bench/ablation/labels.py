@@ -20,7 +20,7 @@ from score import CONFIGS, TR, TRUTH  # noqa: E402
 # default to "not false" (checked one by one: true statements or process requests); unlisted Qwen objections are an
 # error, so nothing is labelled silently.
 L = {
-    # ---- Qwen 32B, GPU (reference traces *_ref_*, code before d22d46c)
+    # ---- Qwen 32B, GPU (reference traces *_ref_*, code before 9081f70)
     ("K_16_4_s3|Qwen2.5-32B", "does not specify (n, k)"): (False, "true: params were empty"),
     ("K_16_4_s3|Qwen2.5-32B", "should be C(12,4) = 495"): (True, "says 495 does not match, then that it should be 495"),
     ("K_16_4_s3|Qwen2.5-32B", "C(12,3) = 220"): (True, "the K(16,4) degree is C(12,4) = 495, not C(12,3)"),

@@ -65,7 +65,7 @@ Reply with ONE JSON object: {"checks_requested": [str], "analysis": str}"""
 
 # v1: branch prompts; v2: + arithmetic/evidence rules, check history, safety net; v3: + argument validation,
 # evidence may name a summary field, "a rule naming no field is an exception, not a perturbation"
-PROMPT_VERSION = "v4"   # v4: + plan-step results in the check history (d22d46c), prompts unchanged from v3
+PROMPT_VERSION = "v4"   # v4: + plan-step results in the check history (9081f70), prompts unchanged from v3
 
 ALLOWED = {"spectral", "try_code", "family_rule", "independent_set", "binomial_match", "hoffman"}
 
