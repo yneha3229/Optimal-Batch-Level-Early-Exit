@@ -1,0 +1,16 @@
+\begin{tabular}{@{}lcccccccc@{}}
+\toprule
+ & \multicolumn{4}{c}{QQP, length 128} & \multicolumn{4}{c}{QQP, length 32} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+Policy & $B=8$ & $B=16$ & $B=64$ & $B=128$ & $B=8$ & $B=16$ & $B=64$ & $B=128$ \\
+\midrule
+Per-sample threshold & 1.48 & 1.79 & 2.11 & 2.13 & 0.84 & 0.85 & 1.75 & 2.03 \\
+Threshold + exit plan & 1.90$^{*}$ & 1.83 & 2.15 & 2.13 & 1.73$^{*}$ & 1.80$^{*}$ & 1.86 & 2.04 \\
+Unified exit & 1.91$^{*}$ & 1.96$^{*}$ & 1.99$^{*}$ & 1.99$^{*}$ & 1.79$^{*}$ & 1.83$^{*}$ & 1.97$^{*}$ & 1.98$^{*}$ \\
+Majority vote & 1.33 & 1.40 & 1.80 & 1.87 & 1.06 & 1.16 & 1.73 & 1.83 \\
+Random search (150 rules) & 1.77 & 1.99 & 2.11 & 2.26 & 1.09 & 1.14 & 1.75 & 2.34 \\
+\midrule
+Cost rule, all exits \textit{(ours)} & 1.84 & \textbf{2.20} & 2.45 & 2.39 & \textbf{1.33} & \textbf{1.30} & \textbf{2.11} & \textbf{2.37} \\
+Cost rule + exit plan \textit{(ours)} & \textbf{1.95} & \textbf{2.20} & \textbf{2.46} & \textbf{2.44} & 1.68$^{*}$ & 1.76$^{*}$ & \textbf{2.11} & 2.30 \\
+\bottomrule
+\end{tabular}

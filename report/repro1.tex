@@ -1,0 +1,405 @@
+% ---------------------------------------------------------------------------------------------------- 7
+\section{Reproducing Part I step by step}\label{sec:repro1}
+
+This section says what to do, in order, to obtain every number of Part~I from public data and models. Each step
+gives the procedure and its parameters, the data it produces, and a check against the numbers reported above. The
+file of the repository that implements each step is listed in Appendix~\ref{app:map}.
+
+Two kinds of numbers appear. \emph{Measured} numbers (wall-clock speedups and the cost tables) need a GPU and will
+differ slightly on other hardware. \emph{Replayed} numbers (selection, accuracy drops, fronts, re-splits,
+certificates, load, bandit, robustness, theory) are computed on the CPU from the recorded traces and a cost table,
+and are deterministic: given the same traces and cost tables they reproduce to the last printed digit. The traces
+and cost tables we measured are committed, so every replayed number can be reproduced without a GPU by starting at
+Step~R\ref{st:calib}.
+
+\begin{figure}[ht]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[
+      font=\small, >={Stealth[length=2.2mm]}, node distance=4mm and 6mm,
+      gpu/.style={rectangle, rounded corners=2pt, draw=iitb, fill=iitb!12, align=center, text width=2.55cm,
+                  minimum height=1.25cm, inner sep=3pt},
+      cpu/.style={rectangle, rounded corners=2pt, draw=black!60, fill=black!3, align=center, text width=2.55cm,
+                  minimum height=1.25cm, inner sep=3pt},
+      dat/.style={rectangle, draw=okgreen, fill=okgreen!8, align=center, text width=2.35cm, minimum height=0.8cm,
+                  font=\footnotesize, inner sep=2pt}]
+    \node[gpu] (r1) {\textbf{R1} Fine-tune backbone + 6 exits};
+    \node[gpu, right=of r1] (r2) {\textbf{R2} Record validation traces};
+    \node[dat, below=of r2] (tr) {traces: conf, pred, probs per exit; tuning / held-out halves};
+    \node[gpu, right=of r2] (r3) {\textbf{R3} Measure the per-layer cost $c(n)$, $h$};
+    \node[dat, below=of r3] (ct) {cost table $c(n)$, head cost $h$};
+    \node[cpu, below=13mm of tr] (r4) {\textbf{R4--R6} Calibration tables, policies, replay};
+    \node[cpu, right=of r4] (r7) {\textbf{R7} Certified selection};
+    \node[gpu, right=of r7] (r8) {\textbf{R8} Timed runs on the GPU};
+    \node[cpu, below=of r4] (r9) {\textbf{R9--R12} Fronts, re-splits, certificates, load};
+    \node[cpu, below=of r7] (r13) {\textbf{R13--R14} Bandit, robustness};
+    \node[cpu, below=of r8] (r16) {\textbf{R15--R16} LLM tracks, theory checks};
+    \draw[->] (r1) -- (r2);
+    \draw[->] (r2) -- (tr);
+    \draw[->] (r3) -- (ct);
+    \draw[->] (tr) -- (r4);
+    \draw[->] (ct) -- (r7);
+    \draw[->] (r4) -- (r7);
+    \draw[->] (r7) -- (r8);
+    \draw[->] (r4) -- (r9);
+    \draw[->] (r7) -- (r13);
+    \draw[->] (r8) -- (r16);
+    \node[anchor=north west, font=\footnotesize, align=left] at ($(r9.south west)+(0,-2mm)$)
+      {\tikz\draw[draw=iitb,fill=iitb!12] (0,0) rectangle (0.3,0.2);~needs a GPU\quad
+       \tikz\draw[draw=black!60,fill=black!3] (0,0) rectangle (0.3,0.2);~CPU only (deterministic replay)\quad
+       \tikz\draw[draw=okgreen,fill=okgreen!8] (0,0) rectangle (0.3,0.2);~data committed to the repository};
+  \end{tikzpicture}}
+  \caption{The reproduction pipeline of Part~I. Every replayed result (grey) depends only on the committed traces and
+  cost tables (green), so it can be reproduced on a CPU.}
+  \label{fig:pipeline1}
+\end{figure}
+
+% ---------------------------------------------------------------------------------- R0
+\subsection{Environment}
+\begin{itemize}
+  \item \textbf{Software.} Linux, Python 3.12.3, PyTorch 2.14.0 (CUDA 13.0), transformers 5.17.0, datasets 5.0.1,
+  accelerate 1.15.0, numpy 2.5.3, scipy 1.18.1, pandas 3.0.6, scikit-learn 1.9.1 (isotonic regression), matplotlib
+  3.11.2. Every package version we used is listed in Appendix~\ref{app:env}.
+  \item \textbf{Hardware we used.} Server: 2\x{} Intel Xeon Silver 4216 (64 threads), 4\x{} RTX A6000 (48\,GB) and 2\x{} RTX 3080 Ti,
+  NVIDIA driver 580.159.04; every server number in this report was measured on an RTX A6000. Laptop: GTX 1650 (4\,GB), 4 CPU threads. Any CUDA GPU can replace either; the measured
+  speedups then change with it, the replayed numbers do not.
+  \item \textbf{Data and models} (all public, from Hugging Face or torchvision): GLUE MNLI (\nolinkurl{validation_matched},
+  9{,}815 examples) and QQP (\nolinkurl{validation}, 40{,}430) from \nolinkurl{nyu-mll/glue}; CIFAR-100 (test set, 10{,}000
+  images) from torchvision; WikiText-103 (\nolinkurl{wikitext-103-raw-v1}) from \nolinkurl{Salesforce/wikitext}; backbones
+  \nolinkurl{textattack/roberta-base-MNLI}, \nolinkurl{roberta-base}, \nolinkurl{google/vit-base-patch16-224-in21k},
+  \nolinkurl{Qwen/Qwen2.5-1.5B}, \nolinkurl{meta-llama/Llama-3.1-8B-Instruct}, and the LayerSkip checkpoints
+  \nolinkurl{facebook/layerskip-llama3.2-1B} and \nolinkurl{facebook/layerskip-llama3-8B}.
+  \item \textbf{Conventions.} Speedup = full-model latency divided by the policy's latency at the same batch size.
+  Drop = full-model accuracy minus policy accuracy, in points, on held-out data. Policies never see labels at decision
+  time; labels are used only offline, to build calibration tables and to score.
+\end{itemize}
+
+% ---------------------------------------------------------------------------------- R1
+\begin{step}{st:train}{Fine-tune each backbone jointly with its exits (GPU)}
+\begin{enumerate}
+  \item \textbf{Attach exits} after layers 2, 4, 6, 8, 10 and 12 of the 12-layer backbone; the exit after layer 12
+  is the full model. A text exit is the RoBERTa classification head applied to the hidden state of the first token:
+  dropout $\to$ Linear(768, 768) $\to$ tanh $\to$ dropout $\to$ Linear(768, classes). A ViT exit is LayerNorm
+  $\to$ Linear(768, 100) on the class token.
+  \item \textbf{Initialise.} MNLI: start from \texttt{textattack/roberta-base-MNLI} and copy its classifier into all
+  six exit heads; its class order differs from GLUE's, so map checkpoint class $k$ to GLUE label $[2,1,0]_k$ (with
+  the mapping the checkpoint scores 88.0\%, without it 28.5\%). QQP: start from \texttt{roberta-base} with randomly
+  initialised heads. CIFAR-100: start from \texttt{google/vit-base-patch16-224-in21k}.
+  \item \textbf{Loss.} The sum over exits of the cross-entropy of each exit, weighted by depth: the exit after layer
+  $l$ has weight $l/\sum_{e} l_e$, i.e.\ $2/42, 4/42, \dots, 12/42$ (as in DeeBERT/PABEE).
+  \item \textbf{Optimiser.} AdamW with two parameter groups (backbone and heads, each with its own learning rate),
+  linear warm-up over the first warm-up fraction of steps followed by linear decay to zero, bf16 autocast, gradient
+  norm clipped at 1.0. The training set is shuffled with seed 0. Text: premise and hypothesis (or the two questions)
+  are tokenised as a pair, truncated to 128 tokens and padded to the longest sequence of the batch. Vision: images are
+  resized from 32 to 224 pixels, augmented with pad-and-crop and horizontal flip, and normalised with mean = std = 0.5.
+\end{enumerate}
+\begin{center}\small
+\begin{tabular}{@{}lccc@{}}
+  \toprule
+  Hyperparameter & MNLI & QQP & CIFAR-100 \\
+  \midrule
+  Initial weights & \makecell{\texttt{textattack/}\\\texttt{roberta-base-MNLI}} & \texttt{roberta-base} & \makecell{\texttt{google/vit-base-}\\\texttt{patch16-224-in21k}} \\
+  Epochs / batch size & 2 / 64 & 2 / 64 & 4 / 128 \\
+  Learning rate backbone / heads & $2\cdot10^{-5}$ / $2\cdot10^{-4}$ & $3\cdot10^{-5}$ / $2\cdot10^{-4}$ & $5\cdot10^{-5}$ / $10^{-3}$ \\
+  Weight decay / warm-up fraction & 0.01 / 0.06 & 0.01 / 0.06 & 0.05 / 0.1 \\
+  Dropout / label smoothing & 0.1 / 0 & 0.1 / 0 & 0 / 0.1 \\
+  Max length / image size & 128 tokens & 128 tokens & 224 px \\
+  Seed & 0 & 0 & 0 \\
+  \bottomrule
+\end{tabular}
+\end{center}
+\outp{a checkpoint per task (backbone + six heads) and a table of the accuracy of every exit.}
+\chk{full-model (layer 12) validation accuracy 0.8777 (MNLI), 0.9106 (QQP), 0.9331 (CIFAR-100), Table~\ref{tab:models}.
+One to three GPU-hours per model on an A6000.}
+\end{step}
+
+% ---------------------------------------------------------------------------------- R2
+\begin{step}{st:traces}{Record the validation traces (GPU)}
+\begin{enumerate}
+  \item Run the whole validation set through the trained model once, in fp16 autocast, batch size 256, computing
+  every exit (no early exit here).
+  \item For every input $j$ and exit $e$ store the softmax vector $p_{j,e}$, the confidence
+  $\text{conf}_{j,e}=\max_c p_{j,e,c}$ and the prediction $\text{pred}_{j,e}=\arg\max_c p_{j,e,c}$, plus the label.
+  \item Split the validation set into two halves with a random permutation of seed 0: the first half of the
+  permutation is the \emph{tuning} half (called ``evolve'' in the files), the rest is the \emph{held-out} half. All
+  tuning, tables and selection use only the tuning half; every reported accuracy is on the held-out half.
+\end{enumerate}
+\outp{one trace table per task with columns \texttt{idx, label, split, conf\_e, pred\_e, p\_e\_c}.}
+\chk{MNLI tuning half has about 4{,}900 inputs and QQP about 20{,}200. The traces we recorded are committed, so all
+later CPU steps can start from them.}
+\end{step}
+
+% ---------------------------------------------------------------------------------- R3
+\begin{step}{st:profile}{Measure the per-layer cost $c(n)$ and the head cost $h$ (GPU)}
+\begin{enumerate}
+  \item \textbf{Timing network.} Build the model of Step~R\ref{st:train} with random weights (\texttt{torch.manual\_seed(0)})
+  in the dtype to be timed (fp32 on the GTX 1650). Timing does not depend on weight values. Make a pool of 512
+  synthetic inputs of length $T\in\{16,32,128\}$: token ids uniform in $[5, 50000)$, first token 0, true length
+  uniform in $[T/4, T]$ with the matching attention mask. (ViT: random $3\times224\times224$ images, 197 tokens.)
+  \item \textbf{What one timed run does} (the same code path is used for the policies in Step~R\ref{st:time}): embed
+  the batch; run the layers up to the next evaluated exit; apply that exit's head and softmax; copy the vector of
+  maximum confidences to pinned host memory and synchronise (one host sync per evaluated exit); then continue.
+  \item \textbf{Batch sizes} $B\in\{1,2,4,8,16,32,64,128\}$. For each $B$ time two plans: \emph{full} (only the last
+  exit evaluated) and \emph{all heads} (all six exits evaluated, nobody leaves). Warm up once, then repeat each plan
+  $r=\min(20,\max(3,\lfloor 20\,\text{s}/(0.02\,\text{s}\cdot B\,T/128)\rfloor))$ times and take the median; run
+  the order full, heads, full, heads and average the two medians of each plan.
+  \item \textbf{Derive} the per-layer cost $c(B) = t_{\text{full}}(B)/12$ and the head cost
+  $h=\operatorname{median}_B\,(t_{\text{heads}}(B)-t_{\text{full}}(B))/5$. For reference fit the affine model
+  $t_{\text{full}}(B)=12(a+bB)$ by least squares weighted by $1/t_{\text{full}}$ (relative error), and record
+  $\rho=a/(bB)$ at $B=8$ and 64 and the largest relative error of the fit.
+  \item \textbf{Cost table used by all later steps:} make $c(B)$ non-decreasing in $B$ with isotonic regression,
+  interpolate linearly to every integer $n\in[0,256]$, extrapolate linearly beyond the last measured $B$, and set
+  $c(0)=0$.
+\end{enumerate}
+\outp{one cost table per device, sequence length and model.}
+\chk{Table~\ref{tab:cost} (GTX 1650): $c(1)\approx1.8$--2.3\,ms, $h\approx0.4$--0.5\,ms, affine error 41/31/10\% at
+$T=16/32/128$; about 5 minutes per sequence length. The machine must be otherwise idle: the timed path synchronises
+with the host after every exit, so CPU load from other jobs lowers the speedups and spreads them across rounds.}
+\end{step}
+
+% ---------------------------------------------------------------------------------- R4
+\begin{step}{st:calib}{Build the calibration tables (CPU)}
+For a set of tuning traces and an exit plan $S$ (the full plan has all six exits):
+\begin{enumerate}
+  \item For each evaluated exit $e$, cut its confidences into 20 bins at the quantiles of $\text{conf}_{\cdot,e}$
+  (duplicate edges merged).
+  \item In each bin $k$ and for every exit $e'$ of the plan estimate $P(\text{correct at } e' \mid \text{bin } k
+  \text{ at } e)$ as $(\#\text{correct}+30\,\bar a_{e'})/(\#\text{inputs}+30)$, where $\bar a_{e'}$ is the overall
+  accuracy of exit $e'$ (shrinkage with 30 pseudo-counts).
+  \item Make each column non-decreasing in the bin index with isotonic regression weighted by the bin counts.
+\end{enumerate}
+The expected gain of input $j$ at exit $e$ is then $g_j(e\to e')=\max(0,\,P_{e'}(\text{bin}_j)-P_e(\text{bin}_j))$.
+\end{step}
+
+% ---------------------------------------------------------------------------------- R5
+\begin{step}{st:policies}{Implement the policies and their candidate grids (CPU)}
+Every policy is a function called at each evaluated exit (except the last) with the confidences of the $n$ active
+inputs; it returns which inputs leave and whether the whole batch stops.
+\begin{itemize}
+  \item \textbf{Cost rule (ours).} With $F=12\,c(B)+h$, $\ell=L-l_e$ layers left and marginal cost
+  $\Delta=c(n)-c(n-1)$ (for $n=1$ use $c(2)-c(1)$): input $j$ leaves if $g_j(e\to E)/B<\lambda\Delta\ell/F$, equation
+  \eqref{eq:indiv}. If any inputs remain ($R$), the batch stops unless some later evaluated exit $e'$ has
+  $\sum_{j\in R} g_j(e\to e')/B \ge \lambda[(l_{e'}-l_e)\,c(|R|)+(e'-e)\,h]/F$, equation~\eqref{eq:coll}.
+  Grid: 40 values $\lambda\in\{10^{-3.5},\dots,10^{1.5}\}$, log-spaced.
+  \item \textbf{Cost rule + exit plan.} Same rule on a plan $S$; the 31 plans are all non-empty subsets of the five
+  intermediate exits, plus the last exit. Grid: every second $\lambda$ (20) \x{} 31 plans = 620 candidates. The
+  calibration table is built on the plan's exits only.
+  \item \textbf{Per-sample threshold:} input leaves if its confidence $>\tau$; 36 values $\tau\in[0.40,0.995]$ evenly
+  spaced. \textbf{Threshold + exit plan:} every second $\tau$ (18) \x{} 31 plans = 558 candidates.
+  \item \textbf{Majority vote:} the batch stops when more than half of the active inputs have confidence $>\tau$;
+  same 36 values of $\tau$.
+  \item \textbf{Unified exit:} every input leaves at one fixed intermediate exit (only that head is evaluated); 5
+  candidates.
+  \item \textbf{Random search:} a 3-parameter collective rule (per-sample threshold $\tau$; the batch also stops when
+  the remaining share of the batch is below \texttt{frac\_cut} and their mean confidence exceeds \texttt{conf\_floor});
+  150 candidates drawn with seed 0 from $\tau\sim U(0.5,1)$, $\texttt{frac\_cut}\sim U(0,0.5)$,
+  $\texttt{conf\_floor}\sim U(0.3,0.95)$.
+\end{itemize}
+The counts above are for the six exits of the encoders. With $E$ exits the plans are the $2^{E-1}-1$ non-empty subsets
+of the intermediate exits plus the last one; the LLM classifiers of Step~R\ref{st:llm} have $E=7$, so 63 plans, 1{,}260
+candidates for the cost rule with a plan, 1{,}134 for the threshold with a plan and 6 unified exits.
+\end{step}
+
+% ---------------------------------------------------------------------------------- R6
+\begin{step}{st:replay}{Replay a policy on recorded traces under a cost table (CPU)}
+For each batch (a set of $B$ trace rows): walk through the evaluated exits of the plan in order; at each one add
+(layers since the previous evaluated exit) \x{} $c(n)$ + $h$ to the batch's latency, where $n$ is the number of
+active inputs, as in equation~\eqref{eq:latency}; at the last exit return the remaining predictions; otherwise call
+the policy with the recorded confidences, return the recorded predictions of the inputs that leave and remove them.
+The per-batch drop is the full model's accuracy on the batch minus the policy's; the speedup is $F$ divided by the
+mean batch latency. This replay is exact for accuracy and is the ``cost-table'' speedup of Tables~\ref{tab:matched}
+and~\ref{tab:resplit}.
+\end{step}
+
+% ---------------------------------------------------------------------------------- R7
+\begin{step}{st:select}{Certified selection (CPU)}
+For each task, batch size $B$ and method:
+\begin{enumerate}
+  \item Split the tuning half with a random permutation (seed 0) into a \emph{fit} part (40\%) and a \emph{cert}
+  part (60\%). Cut each into disjoint random batches of size $B$ (permutation seeds $B$ and $B+1$).
+  \item Build the calibration tables on the fit part. Replay every candidate on the fit batches.
+  \item Order the candidates by mean drop (ascending), breaking ties by speedup (descending), and keep only those that
+  are strictly faster than every candidate before them: this is the \emph{path} from safest to fastest.
+  \item Walk along the path on the cert part. For each candidate compute the $K$ batch drops $Z_1,\dots,Z_K$, their
+  mean $\bar Z$ and standard deviation $s$, and certify it if $(\alpha-\bar Z)/(s/\sqrt K) > t_{1-\delta,K-1}$ with
+  $\alpha=0.01$ and $\delta=0.10$. Stop at the first candidate that is not certified.
+  \item Return the fastest certified candidate (or none).
+\end{enumerate}
+The \emph{old protocol} of the first report, used for comparison in Table~\ref{tab:resplit}, pools fit and cert,
+replays every candidate on it and takes the fastest one with empirical drop $\le\alpha$.
+\outp{the certified parameters of every method at every $B$.}
+\end{step}
+
+% ---------------------------------------------------------------------------------- R8
+\begin{step}{st:time}{Timed runs on the GPU}
+\begin{enumerate}
+  \item Take the held-out half and cut it into disjoint random batches of size $B$ (permutation seed $100+B$); time
+  $n/B$ of them, with $n=1{,}920$ inputs at lengths 16 and 32 and $n=768$ at length 128 on the GTX 1650, and
+  $n=2{,}048$ on the A6000. Each batch is mapped to $B$ random rows of the synthetic input pool (seed $B$).
+  \item Policies timed: the full model, all heads with no exit (to measure the head overhead) and the certified
+  policy of each method from Step~R\ref{st:select}, with calibration tables built on the fit part.
+  \item Run one warm-up pass. Then, in each round, run every policy once over the same batches in a fixed order
+  (interleaved), timing the whole pass with a host synchronisation before and after. The device executes exactly what
+  Step~R\ref{st:profile} describes; after each host sync the confidences computed by the random-weight network are
+  replaced by the trained model's recorded confidences for the same rows, the policy decides, and the leaving rows are
+  removed from the hidden states with \texttt{index\_select}.
+  \item Rounds: 5 at lengths 16 and 32 and 3 at length 128 (GTX 1650); 5 on the A6000. For each round compute the
+  paired speedup (full time / policy time of the same round); report the median and the range over rounds.
+  \item Confirm that the decisions taken on the device equal the replay of Step~R\ref{st:replay} for every batch,
+  and compute the held-out drop by replaying the same policy on all held-out batches.
+\end{enumerate}
+\chk{Tables~\ref{tab:t04}--\ref{tab:t05} (GTX 1650, about 63 minutes in total) and
+Tables~\ref{tab:t11}--\ref{tab:t12b} (A6000, about 28 minutes). Held-out drops must match exactly; speedups within a
+few percent on the same GPU model, \emph{on an otherwise idle machine} (a loaded CPU spreads the rounds, because this
+path synchronises after every exit).}
+\end{step}
+
+% ---------------------------------------------------------------------------------- R9
+\begin{step}{st:front}{Accuracy--speed fronts and the hard quarter (CPU)}
+\begin{enumerate}
+  \item Run certified selection (Step~R\ref{st:select}) once per accuracy target
+  $\alpha\in\{0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3\}$ points, reusing one path per method and $B$.
+  \item Score each selected policy once on the held-out half (disjoint batches, seed $100+B$) with the cost table:
+  held-out drop and speedup. This gives Figure~\ref{fig:front}.
+  \item Read each front at ``held-out drop $\le1$ point'': the fastest such point is the entry of
+  Table~\ref{tab:matched}.
+  \item Define the \emph{hard quarter} as the 25\% of held-out inputs with the lowest mean confidence over the five
+  intermediate exits, and report the drop separately on it and on the rest at the one-point target
+  (Table~\ref{tab:hard}, mean over $B=8,16,64$).
+\end{enumerate}
+\chk{Tables~\ref{tab:matched} and~\ref{tab:hard} exactly; about 5 minutes on 6 cores.}
+\end{step}
+
+% ---------------------------------------------------------------------------------- R10
+\begin{step}{st:resplit}{Re-split validity check (CPU)}
+Pool both halves of the traces. For each of 30 seeds $s$: permute with seed $1000+s$ and split into fit (20\%), cert
+(30\%) and test (50\%); run certified selection (fit, cert) and the old protocol (fit + cert pooled); replay both
+choices on disjoint test batches (seed $s+7$). Report the share of seeds whose test drop exceeds one point, the mean
+drop and the mean speedup, at sequence length 16 with the GTX 1650 cost table, for $B=8$ and 64 and the three methods
+of Table~\ref{tab:resplit}.
+\chk{Table~\ref{tab:resplit} exactly (after the cache fix); about 8 minutes for both tasks on 6 cores. Build the
+calibration table inside every re-split job from that job's fit part; never reuse a table across jobs
+(Appendix~\ref{app:issues}).}
+\end{step}
+
+% ---------------------------------------------------------------------------------- R11
+\begin{step}{st:certcheck}{Finite-sample and label-free certificates, and less calibration data (CPU)}
+Repeat Step~R\ref{st:resplit} (30 seeds, 20/30/50\%) at $B=8,16,64,128$ with the A6000 cost table at length 128 (text)
+and the A6000 ViT cost table (CIFAR-100), for five methods, with three certificates applied to the $K$ batch means of
+the cert part: the $t$-test of Step~R\ref{st:select}; Hoeffding--Bentkus~\cite{rcps}; and the Waudby-Smith--Ramdas betting
+bound~\cite{wsr}.
+For the two finite-sample bounds map the batch drop from $[-1,1]$ to $[0,1]$. For the label-free version use the
+disagreement with the full model's prediction as the risk (it upper-bounds the drop on every batch). For the data
+experiment subsample both the fit and the cert parts to 10\%, 25\% and 50\%. Repeat MNLI with $\delta=5\%$.
+\chk{Table~\ref{tab:cert}; about 1 h 47 min on 14 cores (3 h on 6 cores).}
+\end{step}
+
+% ---------------------------------------------------------------------------------- R12
+\begin{step}{st:load}{Fluctuating load (CPU)}
+\begin{enumerate}
+  \item Generate an arrival trace: Poisson arrivals whose rate swings between light and heavy load (a sinusoid with a
+  20\,s period plus bursts). A single server takes $\min(\text{queue},128)$ requests whenever it is free and serves a
+  batch of size $B$ in the full model's time from the cost table. Record the sequence of batch sizes (3{,}000
+  batches; 3 arrival seeds). All methods are replayed on the same sequence.
+  \item For every method prepare three variants: certified once at $B=64$ (``once@64''), once at $B=8$
+  (``once@8''), and re-certified per bucket $B\in\{1,2,4,\dots,128\}$ (each batch uses the parameters of the largest
+  bucket $\le B$).
+  \item Report the throughput speedup ($\sum$ full-model time / $\sum$ method time over all batches) and the drop over
+  all served held-out inputs. Pass: tuned once, within budget, within 5\% of the best per-bucket baseline and ahead
+  of every tuned-once baseline.
+\end{enumerate}
+\chk{Table~\ref{tab:load}; about 7 minutes per task.}
+\end{step}
+
+% ---------------------------------------------------------------------------------- R13
+\begin{step}{st:bandit}{Label-free bandit (CPU)}
+\begin{enumerate}
+  \item Replace ``correct'' by ``agrees with the last exit'': keep, per exit $e$ and confidence bin $k$ (12 bins),
+  the estimated rate $D[e,k,e']$ at which exit $e'$ disagrees with the last exit; the gain of going from $e$ to $e'$
+  is $D[e,k,e]-D[e,k,e']$. No label is used.
+  \item At batch $t$, with probability $\min(1, t^{-1/3})$ run a \emph{probe} batch to full depth (it still answers,
+  at full cost) and update every table cell its inputs touch; otherwise run the cost rule with an optimistic
+  (upper-confidence, $\beta=1$) gain, so that with little data it continues rather than stops. Use the $\lambda$ that
+  the cost rule selected on the tuning half.
+  \item Run $T=3{,}000$ batches of $B=64$ against an oracle that knows the true tables; record cumulative regret and
+  fit its log--log slope. Use ten seeds (0--9) and three probe schedules: $\min(1,t^{-1/3})$, $\min(1,t^{-1/2})$, and a constant rate
+  of 5\% of batches (probe probability $0.05\,t^{0}$); and a warm start
+  from 20 labelled tuning batches. Baseline: a CeeBERT-style UCB1 over per-sample thresholds with reward = mean
+  confidence $-$ $\mu\cdot$mean depth fraction.
+\end{enumerate}
+\chk{slopes 0.55--0.77 (Section~\ref{sec:bandit10}); about 22 minutes for ten seeds and six settings.}
+\end{step}
+
+% ---------------------------------------------------------------------------------- R14
+\begin{step}{st:robust}{Slowdown inputs and the trimmed rule (CPU, plus one GPU step)}
+\begin{enumerate}
+  \item \textbf{Attack inputs.} ViT/CIFAR-100: a DeepSloth-style attack~\cite{sloth} (re-implemented): projected
+  gradient descent in the $32\times32$ image space (before the resize to 224), $L_\infty$ budget $\varepsilon=8/255$,
+  30 steps, loss $\sum_e \mathrm{CE}(\text{logits}_e,\text{uniform})$ so that no internal exit becomes confident, on
+  500 images taken from the tuning half; record their traces as in Step~R\ref{st:traces} (GPU, once). Text tasks:
+  use the hardest 2\% of held-out inputs as natural slowdown inputs.
+  \item \textbf{Trimmed rule.} In the collective sum of~\eqref{eq:coll} drop the $m$ largest gains,
+  $m\in\{0,B/16,B/8\}$.
+  \item \textbf{Bound check.} For $k$ attackers, build 300 batches of $B=64$ with $B-k$ clean held-out inputs $C$ and
+  $k$ attack inputs $K$; check $\operatorname{depth}(C\cup K;m)\le\operatorname{depth}(C;m-k)$ on every batch for
+  every $k\le m$ (violations must be 0). Also record the victims' latency relative to the full model for
+  $k\in\{0,1,2,4,8\}$ (16 and 32 in the final runs) and the same for majority vote, consensus and the threshold, all
+  tuned by certified selection, on 4 cost profiles per task.
+\end{enumerate}
+\chk{0 violations in 25{,}200 batches; Section~\ref{sec:robust5}; about 7 minutes. The unit tests of the simulator and the bound
+(19 tests) must pass.}
+\end{step}
+
+% ---------------------------------------------------------------------------------- R15
+\begin{step}{st:llm}{LLM tracks (GPU for training and timing, CPU for the rest)}
+\textbf{Batched classifiers} (Tables~\ref{tab:t15}--\ref{tab:t16}):
+\begin{enumerate}
+  \item Prompts. MNLI: \texttt{Premise: \{premise\}\textbackslash nHypothesis: \{hypothesis\}} followed by
+  \texttt{\textbackslash nRelation of the hypothesis to the premise (entailment, neutral or contradiction):}. QQP:
+  \texttt{Question 1: \{q1\}\textbackslash nQuestion 2: \{q2\}} followed by
+  \texttt{\textbackslash nDo the two questions ask the same thing (yes or no)?}. Truncate to 128 tokens.
+  \item Model. Freeze the base weights (bf16) and add LoRA~\cite{lora} (rank 16, $\alpha=32$) to the attention and MLP projections
+  of every layer. Exits: Qwen2.5-1.5B after layers 4, 8, \dots, 28; Llama-3.1-8B after layers 8, 12, \dots, 32. Each
+  exit is its own copy of the final norm followed by Linear($d$, classes), applied to the hidden state of the last
+  prompt token.
+  \item Train with the depth-weighted cross-entropy of Step~R\ref{st:train}: learning rate $2\cdot10^{-4}$ (LoRA)
+  and $10^{-3}$ (heads); 8{,}000 steps at batch 16 for both models (128{,}000 training examples); seed 0. These are the values of the
+  committed logs \file{logs/cls\_\{mnli,qqp\}\_\{qwen,llama\}.log}. The training script's defaults are 4{,}000
+  steps at batch 32, and \file{scripts/reproduce\_gpu.sh} runs Qwen with those defaults, so pass
+  \texttt{--steps 8000 --bs 16} for Qwen as well. Record traces as in
+  Step~R\ref{st:traces}.
+  \item Measure the cost table (Step~R\ref{st:profile}) and time the certified policies (Steps~R\ref{st:select},
+  R\ref{st:time}) on the \emph{trained} weights with the real prompts padded to 128 tokens, in bf16. Check that the
+  device's predictions agree with the traces (97--100\% at every exit).
+\end{enumerate}
+\textbf{Decoding} (Section~\ref{sec:llm}): train exit heads with LoRA (rank 16) or frozen (rank 0) on WikiText-103
+next-token prediction (6{,}000 steps), record per-token traces, then, assuming a pure fixed cost ($b=0$), compare a
+static exit (one exit for every batch, mixing adjacent exits at random to meet the budget exactly) with an adaptive
+whole-batch stop (stop at the first exit where the batch's mean confidence reaches $\tau$), both tuned on the tuning
+half to a one-point budget, for $B$ from 1 to 64.
+\chk{Tables~\ref{tab:t15}--\ref{tab:t16}: Llama 60--63 minutes and Qwen 17--21 minutes of timing per task; adaptive
+gain 12\% at $B=1$ falling to 0.2\% at $B=64$.}
+\end{step}
+
+% ---------------------------------------------------------------------------------- R16
+\begin{step}{st:theory}{Theory checks (CPU)}
+Enumerate small instances (a few inputs, 3--4 exits, monotone and non-monotone calibration tables, affine and floor
+costs), compute the optimal policy by exact dynamic programming over (exit, active set), and compare it with
+rules~\eqref{eq:indiv} and~\eqref{eq:coll}. Then replay the corrected per-input rule (test every later exit) against
+the implemented one on the real traces (QQP, MNLI; both cost tables; $B=8$--128) and compare them at the certified
+one-point target and at matched held-out drop.
+\chk{210/210 and 17/190 (collective), 301 and 165 (per-input), 40 real-trace settings with $-1.4\%$ at matched drop
+(Section~\ref{sec:theory}); about 10 seconds for the exact checks and 20 minutes for the real traces.}
+\end{step}
+
+\subsection{Checking a reproduction}
+\begin{itemize}
+  \item Every number printed in Part~I can be recomputed from the result files and compared with the text; we did
+  this for every table cell (all match) and every number in the text (the ten that do not match the committed files are corrected and marked
+  above).
+  \item We regenerated every CPU-derived result file from the committed traces and cost tables on 25 November (72
+  steps, 5\,h\,16\,min on 6 cores, CPU only): 92 of 102 files matched to the last printed digit. The other 10 differed
+  only in cost-rule rows because of the cache bug of Appendix~\ref{app:issues}; after the fix, runs with 3 and 6
+  workers give identical files.
+  \item GPU numbers cannot be checked without a GPU; their raw logs are committed next to the result files.
+\end{itemize}

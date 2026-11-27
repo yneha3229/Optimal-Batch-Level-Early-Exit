@@ -1,0 +1,251 @@
+% ---------------------------------------------------------------------------------------------------- 11
+\section{Conclusions}\label{sec:conclusions}
+\begin{itemize}
+  \item \textbf{Early exit.} The fastest rule changes with batch size and input length; a rule derived from the
+  measured cost tracks it. At matched accuracy it leads on QQP (2--17\% on the GTX 1650 cost table; 8--14\% timed on
+  the A6000, replaying recorded decisions on a random-weight network) and on Llama classifiers with trained weights
+  (3.66\x). Certified selection keeps the one-point budget on re-splits. The slowdown bound is proved for the trimmed
+  collective stop and held empirically for the full rule in every tested batch. No gain on RoBERTa MNLI or on LLM
+  decoders, and the accuracy loss lands on hard inputs.
+  \item \textbf{Minrank.} $\operatorname{rank}_{\Fp}(I+\varepsilon D)=\binom{n-1}{k-1}$ exactly when $q_p(k)\mid n-2k$.
+  Hence, whenever $q_p(k)\mid n-2k$, $\operatorname{minrk}_{\Fp}(K(n,k))=\beta=\alpha$ with an explicit optimal
+  index code; this is new for $k\nmid n$. The converse does not hold for the minrank: $K(9,3)$ over $\mathbb{F}_2$ has
+  $\operatorname{minrk}=\alpha$ by Baranyai's theorem although $4\nmid3$. Small cases such as $K(9,2)$ over
+  $\mathbb{F}_2$ remain open.
+  \item \textbf{Agent.} A Solver--Critic--Verifier pipeline, not given the graph's name, proves $\beta$ on 19 of 25
+  graphs with each of the four Claude settings run on the full benchmark; the no-LLM Kneser script also proves 19. The
+  LLM's measurable contribution is recognising the Kneser family, which a no-LLM fast path also does (17 of the 23
+  graphs it ran on, all that the Claude agents prove there). The pipeline's speed on large graphs (43--55\,s against
+  88\,s at 10{,}626 receivers) comes from its $O(N^2r)$ rank engine; the LLM adds a median of 30\,s per graph (12--50\,s). Whether an LLM
+  helps on graphs that no fixed rule recognises is untested.
+\end{itemize}
+
+% ---------------------------------------------------------------------------------------------------- references
+\begin{thebibliography}{99}\small
+\bibitem{deebert} J.~Xin, R.~Tang, J.~Lee, Y.~Yu, J.~Lin. DeeBERT: Dynamic Early Exiting for Accelerating BERT Inference. ACL 2020.
+\bibitem{pabee} W.~Zhou, C.~Xu, T.~Ge, J.~McAuley, K.~Xu, F.~Wei. BERT Loses Patience: Fast and Robust Inference with Early Exit. NeurIPS 2020.
+\bibitem{drex} X.~Liu et al. Dynamic Rebatching for Efficient Early-Exit Inference with DREX. arXiv:2512.15705, 2025.
+\bibitem{geep} L.~Li et al. Accelerating BERT Inference with GPU-Efficient Exit Prediction. Frontiers of Computer Science 18(3), 2024.
+\bibitem{miao} R.~Miao, Y.~Yan, X.~Yao, T.~Yang. An Efficient Inference Framework for Early-exit Large Language Models. arXiv:2407.20272, 2024.
+\bibitem{apparate} Y.~Dai, R.~Pan, A.~Iyer, K.~Li, R.~Netravali. Apparate: Rethinking Early Exits to Tame Latency-Throughput Tensions in ML Serving. SOSP 2024.
+\bibitem{fastsafe} M.~Jazbec, A.~Timans, et al. Fast yet Safe: Early-Exiting with Risk Control. NeurIPS 2024.
+\bibitem{e3} A.~Iyer et al. Improving DNN Inference Throughput Using Practical, Per-Input Compute Adaptation (E3). SOSP 2024.
+\bibitem{sloth} S.~Hong, Y.~Kaya, I.-V.~Modoranu, T.~Dumitra\c{s}. A Panda? No, It's a Sloth: Slowdown Attacks on Adaptive Multi-Exit Neural Network Inference. ICLR 2021.
+\bibitem{lostpatience} Z.~Coalson, G.~Ritter, R.~Bobba, S.~Hong. BERT Lost Patience Won't Be Robust to Adversarial Slowdown. NeurIPS 2023.
+\bibitem{falsesense} Y.~Chen et al. Dynamic Transformers Provide a False Sense of Efficiency. ACL 2023.
+\bibitem{chow} Y.~S.~Chow, H.~Robbins, D.~Siegmund. \emph{Great Expectations: The Theory of Optimal Stopping}. Houghton Mifflin, 1971.
+\bibitem{ltt} A.~N.~Angelopoulos, S.~Bates, E.~J.~Cand\`es, M.~I.~Jordan, L.~Lei. Learn then Test: Calibrating Predictive Algorithms to Achieve Risk Control. arXiv:2110.01052, 2021.
+\bibitem{labeleff} N.~Cesa-Bianchi, G.~Lugosi, G.~Stoltz. Minimizing Regret with Label Efficient Prediction. IEEE Trans.\ Information Theory 51(6), 2005.
+\bibitem{ceebert} D.~J.~Bajpai, M.~K.~Hanawal. CeeBERT: Cross-Domain Inference in Early Exit BERT. Findings of ACL 2024.
+\bibitem{ucbee} R.~G.~Pacheco et al. UCBEE: A Multi-Armed Bandit Approach for Early-Exit in Neural Networks. IEEE Trans.\ Network and Service Management, 2024.
+\bibitem{roberta} Y.~Liu et al. RoBERTa: A Robustly Optimized BERT Pretraining Approach. arXiv:1907.11692, 2019.
+\bibitem{mnli} A.~Williams, N.~Nangia, S.~Bowman. A Broad-Coverage Challenge Corpus for Sentence Understanding through Inference. NAACL 2018.
+\bibitem{glue} A.~Wang et al. GLUE: A Multi-Task Benchmark and Analysis Platform for Natural Language Understanding. ICLR 2019.
+\bibitem{vit} A.~Dosovitskiy et al. An Image Is Worth 16x16 Words: Transformers for Image Recognition at Scale. ICLR 2021.
+\bibitem{cifar} A.~Krizhevsky. Learning Multiple Layers of Features from Tiny Images. Tech.\ report, University of Toronto, 2009.
+\bibitem{qwen} Qwen Team. Qwen2.5 Technical Report. arXiv:2412.15115, 2024.
+\bibitem{llama} Llama Team, Meta AI. The Llama 3 Herd of Models. arXiv:2407.21783, 2024.
+\bibitem{wikitext} S.~Merity, C.~Xiong, J.~Bradbury, R.~Socher. Pointer Sentinel Mixture Models. ICLR 2017.
+\bibitem{skipdecode} L.~Del Corro et al. SkipDecode: Autoregressive Skip Decoding with Batching and Caching for Efficient LLM Inference. arXiv:2307.02628, 2023.
+\bibitem{layerskip} M.~Elhoushi et al. LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding. ACL 2024.
+\bibitem{calm} T.~Schuster et al. Confident Adaptive Language Modeling. NeurIPS 2022.
+\bibitem{baryossef} Z.~Bar-Yossef, Y.~Birk, T.~S.~Jayram, T.~Kol. Index Coding with Side Information. IEEE Trans.\ Information Theory 57(3), 2011.
+\bibitem{gh} A.~Golovnev, I.~Haviv. The (Generalized) Orthogonality Dimension of (Generalized) Kneser Graphs: Bounds and Applications. Theory of Computing, 2022.
+\bibitem{ducey} J.~E.~Ducey, L.~Engelthaler, J.~Gathje, B.~Jones, I.~Pfaff, J.~Plute. Integer Diagonal Forms for Subset Intersection Relations. arXiv:2310.09227, 2023.
+\bibitem{rcps} S.~Bates, A.~Angelopoulos, L.~Lei, J.~Malik, M.~I.~Jordan. Distribution-Free, Risk-Controlling Prediction Sets. Journal of the ACM 68(6), 2021 (Hoeffding--Bentkus bound).
+\bibitem{wsr} I.~Waudby-Smith, A.~Ramdas. Estimating Means of Bounded Random Variables by Betting. Journal of the Royal Statistical Society Series B 86(1), 2024.
+\bibitem{lora} E.~J.~Hu, Y.~Shen, P.~Wallis, Z.~Allen-Zhu, Y.~Li, S.~Wang, L.~Wang, W.~Chen. LoRA: Low-Rank Adaptation of Large Language Models. ICLR 2022.
+\bibitem{funsearch} B.~Romera-Paredes et al. Mathematical Discoveries from Program Search with Large Language Models. Nature 625, 2024.
+\bibitem{baranyai} Zs.~Baranyai. On the Factorization of the Complete Uniform Hypergraph. In \emph{Infinite and Finite Sets}, Colloq.\ Math.\ Soc.\ J\'anos Bolyai 10, North-Holland, 1975.
+\bibitem{ekr} P.~Erd\H{o}s, C.~Ko, R.~Rado. Intersection Theorems for Systems of Finite Sets. Quarterly Journal of Mathematics 12(1), 1961.
+\bibitem{lucas} E.~Lucas. Th\'eorie des fonctions num\'eriques simplement p\'eriodiques. American Journal of Mathematics 1, 1878.
+\bibitem{cpsat} L.~Perron, F.~Didier. CP-SAT. Google OR-Tools, \url{https://developers.google.com/optimization}.
+\bibitem{cadical} A.~Biere, T.~Faller, K.~Fazekas, M.~Fleury, N.~Froleyks, F.~Pollitt. CaDiCaL 2.0. CAV 2024.
+\bibitem{drattrim} N.~Wetzler, M.~J.~H.~Heule, W.~A.~Hunt. DRAT-trim: Efficient Checking and Trimming Using Expressive Clausal Proofs. SAT 2014.
+\bibitem{flint} The FLINT team. FLINT: Fast Library for Number Theory. \url{https://flintlib.org}.
+\bibitem{tabucol} A.~Hertz, D.~de~Werra. Using Tabu Search Techniques for Graph Coloring. Computing 39(4), 1987.
+\bibitem{vllm} W.~Kwon et al. Efficient Memory Management for Large Language Model Serving with PagedAttention. SOSP 2023.
+\bibitem{llamacpp} G.~Gerganov et al. llama.cpp. \url{https://github.com/ggml-org/llama.cpp}.
+\end{thebibliography}
+
+% ==================================================================================================== appendices
+\appendix
+\section{Environment, versions and seeds}\label{app:env}
+
+\begin{table}[ht]
+  \centering\small
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.6cm}X@{}}
+    \toprule
+    Item & Value \\
+    \midrule
+    Repository & \repo, branch \texttt{main}, commit \texttt{50f1ef4} (the progress report of 13 November is commit \texttt{14e5bfa}) \\
+    GPU server & Linux 6.8.0-151-generic; 2\x{} Intel Xeon Silver 4216 (64 threads); 4\x{} RTX A6000 (48\,GB) and 2\x{} RTX 3080 Ti (every server number in this report is from an RTX A6000); NVIDIA driver 580.159.04, CUDA 13.0 \\
+    Laptop (Tables~\ref{tab:cost}--\ref{tab:summary}) & GTX 1650 4\,GB, fp32, 4 CPU threads; package versions not recorded \\
+    Agent container (Table~\ref{tab:ablation}) & 4-core container; each pipeline pinned to one core (\texttt{taskset}, \texttt{OMP\_NUM\_THREADS=1}) \\
+    Python & 3.12.3 in a virtual environment \\
+    Key packages & torch 2.14.0+cu130, transformers 5.17.0, datasets 5.0.1, accelerate 1.15.0, numpy 2.5.3, scipy 1.18.1, pandas 3.0.6, scikit-learn 1.9.1, matplotlib 3.11.2, ortools 9.15.6755, python-sat 1.9.dev24, networkx 3.7, cvxpy 1.9.3, highspy 1.16.0, python-flint, numba \\
+    Exact versions & \file{requirements-lock.txt} (\texttt{pip freeze} of the environment used for every run) \\
+    External binaries & CaDiCaL and drat-trim (DRAT checks); vLLM and llama.cpp b12780 (local LLMs) \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Hardware and software.}
+\end{table}
+
+\textbf{Seeds.}
+\begin{itemize}
+  \item Training: seed 0 for every model (data order and initialisation of new heads). Tuning/held-out split of each
+  trace: a permutation with seed 0.
+  \item Selection: fit/cert split with seed 0; disjoint batches with seeds $B$ (fit), $B+1$ (cert), $B+2$ (old
+  protocol), $100+B$ (held-out). Random-weight timing network: \texttt{torch.manual\_seed(0)}.
+  \item Re-splits: seeds 0--29 (permutation seed $1000+s$, test batches $s+7$). Bandit: seeds 0--9. Load traces: 3
+  arrival seeds. Random-search candidates: seed 0.
+  \item Agent: the seed sets the vertex relabelling (seed 0 for Table~\ref{tab:ablation}; seeds 0 and 1 for the blind
+  ablation).
+  \item CPU reproductions were run with \texttt{PYTHONHASHSEED=0} and no visible GPU.
+\end{itemize}
+
+\textbf{Fine-tuned checkpoints} are not in the repository (they are large); Step~R\ref{st:train} retrains them. The
+validation traces and all measured cost tables are committed, so every CPU step runs without checkpoints.
+
+% ----------------------------------------------------------------------------------------------------
+\section{Known issues and corrections}\label{app:issues}
+\begin{itemize}
+  \item \textbf{Calibration-cache bug (fixed 26 November).} The cost rule's calibration table was cached under the
+  memory address of the trace object it was fitted on. In the re-split experiments new traces are built for every
+  job; after garbage collection a later job could get the same address and reuse a table fitted on another re-split.
+  Only the cost-rule rows of Tables~\ref{tab:resplit} and~\ref{tab:cert} were affected, and the result depended on
+  the number of worker processes. The fix keeps a weak reference and refits when the object differs; runs with 3 and
+  6 workers now give identical files. No claim changed status. This report shows the fixed values, with the 13
+  November values of Table~\ref{tab:resplit} in brackets.
+  \item \textbf{Labelling of Tables~\ref{tab:t11}--\ref{tab:t12b}.} These timings replay the trained model's recorded
+  decisions on a random-weight fp32 network with random token ids, as on the GTX 1650. Accuracy is exact and timing
+  does not depend on weights, but they are not ``trained checkpoint, real inputs'' timings as first labelled.
+  Tables~\ref{tab:t15}--\ref{tab:t16} do use trained weights and real prompts.
+  \item \textbf{Ten numbers in the 13 November text do not match the committed result files} (two in
+  Table~\ref{tab:corrections}, the rest in the running text; none in a table of measurements, and none changes a
+  claim). For one of them the file changed after 13 November: the CIFAR-100 robust-rule speedup (1.12\x{} in the
+  text) is now a 22 November rerun giving 1.24\x, so the 13 November number may have matched the file of that day.
+  Another, the simulator error of 15--32\%, cannot be traced to any file. All are corrected in Part~I and marked with
+  footnotes: the simulator error of Table~\ref{tab:corrections} (now the per-policy 1--47\% of the files) and its
+  1.12\x{} (file: 1.24\x); the heads' share under CUDA graphs (19\% on MNLI only, 12\%
+  on QQP); the single-run bandit slopes (superseded by ten seeds); consensus collapsing at $k=1$ (only on CIFAR-100);
+  the frozen Llama heads (8.2 points short, not about 5); and the 5.6 of the LLM ``Expected'' paragraph (4.0).
+  \item \textbf{Not run:} the certified CUDA-graph tables (Section~\ref{sec:server-cert}), ViT at $B=16,64,128$, and
+  trained checkpoints on the GTX 1650.
+\end{itemize}
+
+% ----------------------------------------------------------------------------------------------------
+\section{The agents' system prompts (verbatim, prompt version v4)}\label{app:prompts}
+The LLM chooses and orders tools, argues and explains; it never writes a bound.
+
+\subsection*{Solver}
+\lstinputlisting{prompts/solver.txt}
+\subsection*{Critic and checkpoint}
+\lstinputlisting{prompts/critic.txt}
+\subsection*{Verifier}
+\lstinputlisting{prompts/verifier.txt}
+\subsection*{Tool list appended to the Solver and Critic prompts}
+\lstinputlisting{prompts/tools.txt}
+
+% ----------------------------------------------------------------------------------------------------
+\section{Implementation map: where each step is in the repository}\label{app:map}
+
+All paths are relative to the root of \repo{} (branch \texttt{main}, commit \texttt{50f1ef4}), except the sources
+of this report, which are not in that commit (last row). To get the code and the environment:
+\begin{lstlisting}[language=bash]
+git clone https://github.com/yneha3229/Optimal-Batch-Level-Early-Exit.git
+cd Optimal-Batch-Level-Early-Exit && git checkout 50f1ef4
+python3.12 -m venv venv && venv/bin/pip install -r requirements-lock.txt
+\end{lstlisting} Every result file named in the captions of this report is committed
+under \file{results/} (Part~I) or \file{kneser-agent/results/} and \file{minrank/results/} (Part~II), with its raw
+log under \file{logs/}.
+
+{\small
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{3.7cm}>{\raggedright\arraybackslash}p{11.9cm}@{}}
+  \toprule
+  Step & Implementation (files) \\
+  \midrule
+  \endhead
+  \multicolumn{2}{@{}l}{\textbf{Part I: batch-level early exit}} \\
+  R\ref{st:train} Fine-tune with exits & \file{traces/train\_exits.py} (training loop, loss, optimiser);
+    \file{simulator/exit\_model.py} (exit heads, model wrapper); \file{configs/train\_\{mnli,qqp,cifar100\}.yaml}
+    (hyperparameters); wrappers \file{scripts/train\_text.sh}, \file{scripts/train\_vision.sh} \\
+  R\ref{st:traces} Record traces & \file{traces/train\_exits.py} (\texttt{log\_traces}, option \texttt{--traces-only});
+    output \file{traces/<task>\_val.parquet} \\
+  R\ref{st:profile} Cost profile & \file{experiments/local\_hw.py} subcommand \texttt{profile} (classes \texttt{Device},
+    \texttt{TCost}); output \file{results/local\_cost\_<gpu>\_T<len>.json}. Server runs of Figure~\ref{fig:server}:
+    \file{runner/gpu\_runner.py} (eager), \file{runner/graph\_runner.py} (CUDA graphs), plot
+    \file{analysis/report\_figures.py} \\
+  R\ref{st:calib} Calibration tables & \file{simulator/policies.py} (class \texttt{Calibration}) \\
+  R\ref{st:policies} Policies and grids & \file{experiments/local\_hw.py} (\texttt{theory\_c}, \texttt{make},
+    \texttt{grid}); \file{simulator/policies.py} (\texttt{threshold}, \texttt{majority},
+    \texttt{param\_collective}, \texttt{theory\_rule}) \\
+  R\ref{st:replay} Replay & \file{experiments/local\_hw.py} (\texttt{replay}); \file{simulator/simulator.py} \\
+  R\ref{st:select} Certified selection & \file{experiments/local\_hw.py} subcommand \texttt{select}
+    (\texttt{select\_family}, \texttt{pareto\_path}, \texttt{certified}); output \file{results/local\_select\_*.json} \\
+  R\ref{st:time} Timed runs & \file{experiments/local\_hw.py} subcommand \texttt{time} (\texttt{Device},
+    \texttt{LLMDevice}, \texttt{GraphDevice}); drivers \file{scripts/run\_local.sh} (GTX 1650),
+    \file{scripts/run\_server\_a6000.sh}, \file{scripts/run\_server\_a6000\_vit.sh} (A6000); output
+    \file{results/local\_time\_*.csv} \\
+  R\ref{st:front} Fronts, hard quarter & \file{experiments/local\_hw.py} subcommand \texttt{front};
+    \file{scripts/run\_front.sh}; output \file{results/local\_front\_*.csv} \\
+  R\ref{st:resplit} Re-splits & \file{experiments/local\_hw.py} subcommand \texttt{resplit}; output
+    \file{results/local\_resplit\_*.csv}; cache-fix rerun \file{scripts/rerun\_cache\_fix.sh} \\
+  R\ref{st:certcheck} Certificates & \file{experiments/cert\_check.py}, \file{experiments/delta\_check.py};
+    \file{scripts/run\_cert\_check.sh}, \file{scripts/run\_mnli\_delta.sh}; output \file{results/cert\_check\_*.csv} \\
+  R\ref{st:load} Fluctuating load & \file{experiments/load\_trace.py}; \file{scripts/run\_load\_trace.sh}; output
+    \file{results/load\_trace\_*.csv} \\
+  R\ref{st:bandit} Bandit & \file{bandit/bandit.py} (\texttt{LabelFreeStopRule}, \texttt{CeeBertStyle}),
+    \file{bandit/run\_bandit.py}; \file{scripts/run\_bandit\_seeds.sh}; output \file{results/bandit\_slopes\_*\_10seeds.csv} \\
+  R\ref{st:robust} Robustness & \file{attacks/deepsloth\_vit.py} (attack inputs, output
+    \file{traces/cifar100\_attack.parquet}); \file{experiments/robust\_bound.py}; \file{simulator/attacks.py};
+    \file{scripts/run\_robust\_cert.sh}; tests in \file{tests/} and \file{simulator/test\_simulator.py} \\
+  R\ref{st:llm} LLM tracks & \file{decoder/train\_cls\_exit\_lora.py} (classifiers), \file{decoder/train\_exit\_lora.py}
+    and \file{decoder/train\_decoder\_exits.py} (decoder exits), \file{decoder/layerskip\_exits.py};
+    \file{analysis/adaptivity\_vs\_batch.py}; timing via \file{experiments/local\_hw.py} (\texttt{LLMDevice}) and
+    \file{scripts/run\_llm\_cls\_hw.sh} \\
+  R\ref{st:theory} Theory checks & \file{theory/verify\_58.py}, \file{experiments/theory58\_front.py}; proofs
+    \file{theory/THEORY\_58.md} \\
+  Checking a reproduction & \file{analysis/check\_report\_numbers.py} (every printed number against its file);
+    \file{scripts/reproduce\_cpu.sh} (regenerate all CPU results and diff, with \file{analysis/diff\_repro.py});
+    \file{scripts/reproduce\_gpu.sh} (the GPU steps in order); per-number map \file{docs/REPRODUCE\_EARLY\_EXIT.md};
+    the 13 November report generator \file{analysis/make\_report.py} \\
+  \midrule
+  \multicolumn{2}{@{}l}{\textbf{Part II: Kneser graphs}} \\
+  R\ref{st:rank} Theorem by exact ranks & \file{minrank/analysis/verify\_star\_basis.py} \\
+  R\ref{st:indep} Independent rank code & \file{minrank/analysis/verify\_independent.py} \\
+  R\ref{st:secondproof} Second proof & \file{minrank/analysis/verify\_all\_primes.py},
+    \file{minrank/analysis/verify\_general\_k.py}, \file{minrank/analysis/verify\_kneser\_proof.py}; statement and
+    proofs in \file{proof.md} \\
+  R\ref{st:codecheck} Code check & \file{minrank/analysis/verify\_star\_basis.py}; decoding simulation of the agent's
+    verifier \file{kneser-agent/kagent/verify.py} \\
+  R\ref{st:sat} SAT and DRAT & \file{minrank/exact/sat.py} ($\mathbb{F}_2$ encoding), \file{minrank/exact/symmetry.py}
+    (symmetry breaking), \file{minrank/exact/sat\_fq.py} ($\mathbb{F}_q$), \file{minrank/exact/families.py},
+    \file{minrank/exact/field\_sep.py}; DRAT check \file{scripts/minrank/10\_drat\_check.sh}; output
+    \file{minrank/results/drat\_checks.csv} \\
+  R\ref{st:graphs} Benchmark graphs & \file{kneser-agent/kagent/graphs.py}; lists \file{kneser-agent/bench/specs.json},
+    ground truth \file{kneser-agent/bench/truth.json} \\
+  R\ref{st:baselines} Baselines & \file{kneser-agent/bench/baselines.py} (standard methods),
+    \file{kneser-agent/bench/kushagra\_kneser\_agent.py} (Kneser agent, no LLM); container run
+    \file{kneser-agent/bench/ablation/ctr\_baselines.sh} \\
+  R\ref{st:agentrun} Agent runs & \file{kneser-agent/kagent/pipeline.py} (orchestrator, scheduler, bound board,
+    trace); \file{kagent/agents.py} (prompts, JSON schemas, reply validation, default plan); \file{kagent/llm.py}
+    (backends: none, local, file-based); \file{kagent/tools.py} (summary, greedy bounds, tool library);
+    \file{kagent/rank.py} (rank engine); \file{kagent/verify.py} (independent verifier); \file{kagent/view.py}
+    (terminal view of a trace); \file{kneser-agent/bench/run\_agent.py}; blind runs
+    \file{kneser-agent/bench/ablation/full\_run.sh} and \file{next\_req.py} \\
+  R\ref{st:score} Scoring and charts & \file{kneser-agent/bench/report.py} (\file{RESULTS.md}),
+    \file{bench/ablation/score.py}, \file{bench/ablation/plot\_time.py}, \file{bench/ablation/plot\_deck.py};
+    results \file{kneser-agent/results/runs.jsonl}, \file{baselines\_ctr\{,\_xl\}.jsonl} \\
+  R\ref{st:blind} Blind ablation & \file{kneser-agent/bench/ablation/start\_cells.sh}, \file{cpu\_grid.sh} (Qwen on
+    CPU), \file{score.py}, \file{labels.py} (objection labels, \file{label\_detail.json}), \file{plot.py} \\
+  R\ref{st:tests} Unit tests & \file{kneser-agent/tests/} \\
+  \midrule
+  \multicolumn{2}{@{}l}{\textbf{This report}} \\
+  Report & Not part of commit \texttt{50f1ef4}; distributed with this report: \file{main.tex} and its parts, tables
+    generated by \file{make\_tables.py}, three figures redrawn from the committed data by \file{make\_figs.py}; build
+    with \texttt{python make\_tables.py \&\& python make\_figs.py \&\& latexmk -pdf main.tex} \\
+  \bottomrule
+\end{longtable}
+}

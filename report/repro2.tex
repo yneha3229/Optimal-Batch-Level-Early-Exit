@@ -1,0 +1,139 @@
+% ---------------------------------------------------------------------------------------------------- 10
+\section{Reproducing Part II step by step}\label{sec:repro2}
+
+The steps continue the numbering of Section~\ref{sec:repro1}. Everything in this part runs on CPUs; only the
+optional local LLM (Qwen) needs a GPU. Additional software: \texttt{python-flint} (exact ranks over $\Fp$),
+\texttt{numba}, \texttt{ortools} 9.15 (CP-SAT), \texttt{python-sat} 1.9, \texttt{networkx} 3.7, the SAT solver
+CaDiCaL~\cite{cadical} and the proof checker drat-trim~\cite{drattrim}, and for the local LLM vLLM~\cite{vllm} (GPU)
+or llama.cpp~\cite{llamacpp} build b12780 (CPU). The files
+are listed in Appendix~\ref{app:map}.
+
+\subsection{The theorem}
+
+\begin{step}{st:rank}{Check Theorem~\ref{thm:rank} by exact ranks}
+\begin{enumerate}
+  \item For every $k\ge2$, $n>2k$ with $\binom nk\le2000$ and every prime $p$ in the range checked, build the
+  $\binom nk\times\binom nk$ matrix $H_{A,B}=\binom{|A\cap B|-1}{k-1} \bmod p$ (equivalently $I+\varepsilon D$ with
+  $\varepsilon=(-1)^{k-1}$), indexed by the $k$-subsets of $\{1,\dots,n\}$.
+  \item Compute $\operatorname{rank}_p H$ exactly (FLINT \texttt{nmod\_mat}) and compare ``rank $=\binom{n-1}{k-1}$''
+  with ``$q_p(k)\mid n-2k$'', where $q_p(k)$ is the least power of $p$ that is $\ge k$.
+  \item For the same cases check the decoding identity directly: for every row $A'\not\ni1$, compare $H[A',:]$ with
+  $\varepsilon\sum_{A\ni1,\,A\cap A'=\emptyset}H[A,:]$ modulo $p$.
+  \item Check the $k+1$ congruences of step~3 of the proof for $m=n-2k$ up to 400, $k\le12$, $p\le13$, against
+  $q_p(k)\mid m$.
+\end{enumerate}
+\chk{318 $(n,k,p)$ cases, the three statements agree in every case, no exception.}
+\end{step}
+
+\begin{step}{st:indep}{Cross-check with an independent rank code}
+On 82 cases ($\binom nk\le3500$, $k\le6$; 39 with $k\nmid n$) recompute every rank with a separately written
+Gaussian elimination modulo $p$ that shares no code with FLINT, and check that $H$ fits $K(n,k)$ (nonzero diagonal,
+zero on every non-adjacent pair) and that $H$ is the identity on the star.
+\chk{both rank codes agree on all 82 cases.}
+\end{step}
+
+\begin{step}{st:secondproof}{Second proof by integer diagonal forms}
+Using the Smith/diagonal form of the subset-intersection matrices of Ducey et al.~\cite{ducey}, compute for each
+$(n,k,p)$ the predicted $p$-rank of $H$ and compare it with Theorem~\ref{thm:rank}, for $k\le12$, $n\le120$, $p\le13$
+(every prime including $p\le k$). Separately verify the $k=3$ proof by inclusion matrices step by step for $n\le22$
+and the primes up to 23.
+\chk{6{,}666 cases agree.}
+\end{step}
+
+\begin{step}{st:codecheck}{Check the explicit code}
+For $K(7,2)$ over $\mathbb{F}_3$ (and any case with $q\mid n-2k$): draw random messages $x_B\in\Fp$ for all $k$-sets,
+compute the $\alpha$ broadcasts $y_A=x_A+\varepsilon\sum_{B\cap A=\emptyset}x_B$ for $A\ni1$, and let every receiver
+decode as in Theorem~\ref{thm:code} using only its side information. Every receiver must recover its message.
+\end{step}
+
+\begin{step}{st:sat}{Lower bounds over $\mathbb{F}_2$ by SAT, checked with DRAT}
+\begin{enumerate}
+  \item Encode ``$\operatorname{minrk}_2(G)\le r$'' as CNF: variables $u_{ik},v_{jk}$ for the factors $U,V\in
+  \mathbb{F}_2^{N\times r}$ of $M=UV^\top$; for every constrained entry (diagonal or non-adjacent pair) an AND gate
+  $z_k=u_{ik}\wedge v_{jk}$ per coordinate and an XOR chain over $k$, with the final value forced to 1 on the diagonal
+  and 0 on non-adjacent pairs; entries on edges are unconstrained. Break the $GL(r,\mathbb{F}_2)$ symmetry by fixing
+  $u_0=e_1$ (sound because $M_{00}=1$); in the family runs also fix the rows of a known independent set (proved sound
+  and tested against brute force on small graphs).
+  \item Solve with CaDiCaL, asking it to write a DRAT proof when the answer is UNSAT; then check the proof against the
+  exact CNF with drat-trim. Only a VERIFIED check counts as a proof.
+\end{enumerate}
+\chk{$K(7,2)$, $r=6$: UNSAT, VERIFIED in 0.39\,s. $K(7,3)$ at $r=17$ and $K(8,3)$ at $r=21$: UNSAT, VERIFIED ($K(8,3)$:
+solve 950\,s, check 1{,}663\,s), so $\operatorname{minrk}_2=18$ and 22 together with the matching codes.}
+\end{step}
+
+\subsection{The agent}
+
+\begin{step}{st:graphs}{Build the benchmark graphs}
+\begin{enumerate}
+  \item $K(n,k)$: vertices are the $k$-subsets of $\{1,\dots,n\}$, edges join disjoint subsets. Store only the
+  boolean adjacency matrix.
+  \item Relabel the vertices with a random permutation of seed $s$ (seed 0 for Table~\ref{tab:ablation}, seeds 0 and
+  1 for the blind ablation); the agent never receives the graph's name.
+  \item Controls: delete 1\% of the edges of $K(16,4)$ and $K(18,3)$ uniformly at random; a random 6-regular graph on
+  1{,}000 vertices.
+  \item The 25 graphs of Section~\ref{sec:agentres}, with their known $\beta$ or bracket as ground truth.
+\end{enumerate}
+\end{step}
+
+\begin{step}{st:baselines}{Run the baselines}
+Pin every run to one CPU core with \texttt{OMP\_NUM\_THREADS=1}.
+\begin{itemize}
+  \item \textbf{Standard methods}, each in its own process with one thread and 60\,s: maximum independent set by
+  CP-SAT (lower bound); clique cover by CP-SAT, fractional clique cover, and $\mathbb{F}_2$ minrank by the SAT encoding
+  of Step~R\ref{st:sat} (upper bounds). A graph is proven when the best lower bound equals the best upper bound.
+  \item \textbf{Kneser agent (no LLM)}: the five steps of Figure~\ref{fig:baseline}, with a limit of 120\,s on the two
+  largest graphs.
+\end{itemize}
+\end{step}
+
+\begin{step}{st:agentrun}{Run the agent on every graph}
+\begin{enumerate}
+  \item Pin the run to one core; the scheduler's 3 workers share it. Warm up the numba rank kernel before the run
+  clock starts. Budget 300\,s.
+  \item Choose the LLM backend: \emph{none} (a deterministic default plan, no LLM); \emph{local} (an
+  OpenAI-compatible endpoint, e.g.\ vLLM serving \texttt{Qwen/Qwen2.5-Coder-32B-Instruct-AWQ} on one A6000, or
+  llama.cpp with a Q4\_K\_M GGUF on CPU cores, JSON mode on); or \emph{file-based}, where the pipeline writes each
+  request (system prompt + input) as a JSON file and waits for the reply file.
+  \item For the Claude results, answer the file-based requests with a fresh Claude Code agent of the stated model
+  and effort, started once per graph with only this instruction (folder filled in):
+  \begin{quote}\small
+  ``You are acting as the language model behind a running software pipeline. You have no other context, and you must
+  not look for any: reason independently and autonomously, only from the data in each request. The ONLY command you
+  may run is \texttt{python3 next\_req.py <folder>}. The ONLY file operation you may do is writing reply files into
+  that same folder. Do not read, list, search or open any other file or directory, do not run any other command, do
+  not use web search or fetch. Do not write code to compute anything; think it through yourself. Loop: run the
+  command; on DONE stop; otherwise treat "system" as your instructions and "prompt" as the input, produce exactly the
+  reply the system text asks for (one JSON object), write it to \texttt{<folder>/rep\_<id as 3 digits>.json}, repeat.''
+  \end{quote}
+  This instruction is the only safeguard: nothing sandboxes the agent, so it could read other files. To make
+  ``blind'' enforced rather than requested, run each agent in a container or directory that holds only the request
+  folder and \texttt{next\_req.py} (we did not do this; Section~\ref{sec:agentres}).
+  \item Record per run: verdict, final bracket $[L,U]$, every verifier check, the wall time until $L=U$ first held
+  (LLM time included), and the full trace.
+\end{enumerate}
+\end{step}
+
+\begin{step}{st:score}{Score the runs}
+A graph counts as proven when the verdict is ``proven'', $L=U$, and all verifier checks pass. For each configuration
+report the number proven, the median time over proven graphs, and the times at 10{,}626 and 14{,}950 receivers.
+Also run the pipeline with backend \emph{none}, once with the default plan and once with the opt-in fast path, so the
+LLM rows can be compared with the same pipeline without an LLM.
+\chk{Table~\ref{tab:ablation}: 19/25 for every Claude setting and for the Kneser script, 14/25 for the pipeline
+without an LLM (default plan), 17/23 with the fast path, 2/25 for the standard methods. Times depend on the machine and, for the LLM, on the provider's latency; the counts and brackets do not.}
+\end{step}
+
+\begin{step}{st:blind}{Blind-agent ablation}
+Run the 6 graphs of Figure~\ref{fig:ablation} with relabelling seeds 0 and 1 (12 cells) once per model
+configuration. From each trace count the LLM calls, check whether the first Solver reply names the right family and
+$(n,k)$, and label every Critic objection with a fixed rule: an objection is \emph{false} if it asserts something
+wrong about the data or the tools, including a wrong inference (e.g.\ ``\texttt{family\_rule} returned null, so
+$K(14,4)$ is not confirmed'': a rule naming no field says nothing about the family); a true statement, even an
+irrelevant one, and a pure process request (``query X first'') are not false. Average per run.
+\chk{Table~\ref{tab:blind}.}
+\end{step}
+
+\begin{step}{st:tests}{Unit tests}
+Run the test suite of the agent: the rank engine against FLINT and against the verifier's own elimination on random
+matrices, the evidence validation, and a test asserting that the verifier imports nothing from the tools or the rank
+engine. All must pass.
+\end{step}

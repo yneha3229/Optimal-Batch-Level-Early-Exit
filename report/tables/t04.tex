@@ -1,0 +1,18 @@
+\begin{tabular}{@{}lccccccccc@{}}
+\toprule
+ & \multicolumn{3}{c}{sequence length 16} & \multicolumn{3}{c}{sequence length 32} & \multicolumn{3}{c}{sequence length 128} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+Policy & $B=8$ & $B=16$ & $B=64$ & $B=8$ & $B=16$ & $B=64$ & $B=8$ & $B=16$ & $B=64$ \\
+\midrule
+All heads, no exits & 0.93 & 0.96 & 0.99 & 0.96 & 0.97 & 0.99 & 0.99 & 0.99 & 1.00 \\
+\midrule
+Per-sample threshold & 1.27 & 1.73 & 2.13 & 1.87 & 1.83 & 2.20 & 2.26 & 2.20 & 2.28 \\
+Threshold + exit plan & 1.86$^{*}$ & 1.92$^{*}$ & 2.15 & 1.93$^{*}$ & 1.90 & 2.19 & 2.27 & 2.20 & 2.30 \\
+Unified exit & \textbf{1.91}$^{*}$ & 1.95$^{*}$ & 1.97$^{*}$ & 1.94$^{*}$ & 1.94$^{*}$ & 1.97$^{*}$ & 1.98$^{*}$ & 2.00$^{*}$ & 2.00$^{*}$ \\
+Majority vote & 1.30 & 1.38 & 1.80 & 1.35 & 1.42 & 1.80 & 1.39 & 1.42 & 1.88 \\
+Random search (150 rules) & 1.63 & 1.92 & 2.14 & 1.97 & 1.94 & 2.14 & 2.28 & 2.25 & 2.33 \\
+\midrule
+Cost rule, all exits \textit{(ours)} & 1.79 & 2.00 & \textbf{2.52} & \textbf{2.12} & \textbf{2.24} & 2.51 & \textbf{2.46} & \textbf{2.50} & \textbf{2.56} \\
+Cost rule + exit plan \textit{(ours)} & 1.85 & \textbf{2.04} & 2.44 & 2.11 & \textbf{2.24} & \textbf{2.53} & 2.39 & 2.46 & 2.55 \\
+\bottomrule
+\end{tabular}

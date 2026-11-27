@@ -1,0 +1,132 @@
+% IE624 final technical report (27 Nov 2026).
+% Build: cd report && python make_tables.py && ~/venv/bin/python make_figs.py && latexmk -pdf main.tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.3cm]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,tabularx,multirow,makecell,longtable}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc,shapes.misc}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+% ------------------------------------------------------------------ style
+\definecolor{iitb}{HTML}{0F3F91}
+\definecolor{llm}{HTML}{0F3F91}
+\definecolor{codebox}{HTML}{EEF2F9}
+\definecolor{okgreen}{HTML}{2E7D32}
+\captionsetup{font=small,labelfont=bf,margin=0.5em}
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+\setlist{itemsep=1pt,topsep=3pt}
+\titleformat{\part}[display]{\centering\Huge\bfseries\color{iitb}}{\partname~\thepart}{0.5em}{}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{black!60}IE624 Final Report}
+\fancyhead[R]{\small\color{black!60}\nouppercase{\leftmark}}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\lstset{basicstyle=\ttfamily\footnotesize, breaklines=true, breakatwhitespace=true, columns=fullflexible,
+        keepspaces=true, frame=single, framesep=4pt, rulecolor=\color{iitb!40}, backgroundcolor=\color{iitb!4},
+        breakindent=1.5em, aboveskip=6pt, belowskip=6pt}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newcommand{\x}{\ensuremath{\times}}
+\newcommand{\Fp}{\mathbb{F}_p}
+\newcommand{\ours}[1]{\textbf{\color{iitb}#1}}
+\newcommand{\fileus}{\textunderscore\allowbreak}
+\newcommand{\file}[1]{{\small\ttfamily\let\_\fileus #1}}
+\setlength{\emergencystretch}{3em}
+\newcommand{\repo}{\url{https://github.com/yneha3229/Optimal-Batch-Level-Early-Exit}}
+\newcommand{\corr}[1]{\footnote{\textit{Correction to the 13 November text:} #1}}
+\newcommand{\corrtext}[1]{\footnotetext{\textit{Correction to the 13 November text:} #1}}
+% A reproduction step: \step{label}{title}
+\newcounter{rstep}
+\newenvironment{step}[2]{\refstepcounter{rstep}\label{#1}%
+  \par\medskip\noindent{\large\bfseries\color{iitb}Step R\arabic{rstep}. #2}\par\nopagebreak\smallskip}{\par}
+\newcommand{\outp}[1]{\par\noindent\textbf{Output.} #1}
+\newcommand{\chk}[1]{\par\noindent\textbf{Check.} #1}
+\newcommand{\Ex}{\mathbb{E}}
+
+\begin{document}
+
+% ------------------------------------------------------------------ title page
+\begin{titlepage}
+  \centering
+  \includegraphics[height=2.2cm]{fig/iitb.png}\par\vspace{0.8cm}
+  {\large IE624 Course Project \textbullet{} Final Technical Report}\par\vspace{1.2cm}
+  {\Huge\bfseries\color{iitb} When Should a Batch Stop?\par}\vspace{0.4cm}
+  {\Large Cost-Derived Batch-Level Early Exit with Certified Selection,\\[2pt]
+   and an Agent and a Theorem for the Minrank of Kneser Graphs\par}\vspace{1.4cm}
+  {\large Divyanshu Gupta (23B0306) \qquad Kushagra Gupta (23B3956) \qquad Neha Yadav (23B1807)\par}\vspace{0.4cm}
+  {Course instructor and guide: Prof.\ Manjesh K.\ Hanawal\\ Indian Institute of Technology Bombay\par}\vspace{1.0cm}
+  {Progress report: 13 November 2026 \quad\textbullet\quad Final presentation: 26 November 2026\\
+   This report: 27 November 2026\par}\vspace{1.0cm}
+  {\small Code, results and logs: \repo\\ (branch \texttt{main}, commit \texttt{50f1ef4})\par}
+  \vfill
+  \begin{minipage}{0.88\textwidth}
+  \small\textbf{How this report is organised.} Part~I (Sections~\ref{sec:problem}--\ref{sec:repro1}) is the
+  technical report on batch-level early exit: it contains every section, table and claim of the progress report
+  submitted on 13 November, followed by the results of the work planned there (13--26 November), the conclusions,
+  and a step-by-step procedure to reproduce every number. Part~II (Sections~\ref{sec:minrank}--\ref{sec:repro2})
+  covers the Kneser-graph work presented on 26 November: the exact minrank theorem, the architecture and results of
+  the Kneser agent, and a step-by-step procedure to reproduce them. The reproduction steps describe \emph{what to
+  do}; Appendix~\ref{app:map} at the very end lists the file in the repository that implements each step.
+  \end{minipage}
+\end{titlepage}
+
+% ------------------------------------------------------------------ abstract
+\begin{abstract}
+\noindent
+Early-exit networks answer easy inputs at intermediate layers, but under batched GPU inference one hard input keeps
+the whole batch running, so most of the promised speedup disappears. We measure the per-layer cost $c(n)$ of running
+$n$ active inputs and derive from it a rule that decides when single inputs leave, when the whole batch stops, and
+which exits are evaluated at all. Its parameters are chosen with a statistical test on the accuracy drop
+(certified selection). On a GTX~1650 the measured cost is a floor followed by a linear part, not $a+bn$. At a matched
+held-out accuracy drop of at most one point the rule is 2--17\% faster than the best baseline on QQP (GTX~1650 cost
+table) and 8--14\% faster in timed runs on an RTX~A6000 (1.95--2.46\x; the trained model's recorded decisions
+replayed on a random-weight network); used as a batched classifier on Llama-3.1-8B (trained weights, real prompts)
+it reaches 3.48--3.66\x{} against 3.11--3.50\x{} for the best baseline. It has no advantage on RoBERTa MNLI. On LLM
+decoders, in a replay that assumes a pure fixed per-layer cost, the gain of an adaptive whole-batch stop over a
+fixed exit shrinks from 12\% at batch size~1 to 0.2\% at 64. Certified selection keeps the one-point budget on
+random re-splits (the cost rule exceeds it in 0--3\% of re-splits, against 23--47\% for plain tuning). A trimmed
+collective stop bounds the damage from slowdown inputs; the proof covers the collective stop with a fixed set of
+active inputs, and the bound held empirically for the full rule in all 25{,}200 batches tested (DeepSloth inputs on
+CIFAR-100, the hardest 2\% of natural inputs on MNLI and QQP). A label-free bandit has sublinear regret over ten
+seeds. The rule is proved optimal only in the monotone case.
+
+The lesson that search pays off where answers can be checked exactly led us to index coding. For a prime $p$ and
+$q$ the least power of $p$ with $q\ge k$, we prove that $\operatorname{rank}_{\Fp}(I+\varepsilon D)$ for the Kneser
+graph $K(n,k)$ equals $\binom{n-1}{k-1}$ if and only if $q \mid n-2k$; hence
+$\operatorname{minrk}_{\Fp}(K(n,k))=\beta=\alpha$ in these cases, with an explicit optimal index code, which is new
+for $k\nmid n$. Finally, a Solver--Critic--Verifier LLM agent, given the graph without its name, proves the
+broadcast rate $\beta$ on 19 of 25 benchmark graphs with each of the four Claude settings run on the full benchmark
+(standard methods: 2 of 25). A fixed no-LLM Kneser script also proves 19 of 25. The LLM's contribution is to
+recognise the family, which a few lines of code without an LLM also do; the agent's speed on large graphs (43--55\,s
+against 88\,s for the script at 10{,}626 receivers) comes from its $O(N^2r)$ rank engine, not from the LLM.
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\input{part1}
+\input{repro1}
+\input{part2}
+\input{repro2}
+\input{backmatter}
+
+\end{document}

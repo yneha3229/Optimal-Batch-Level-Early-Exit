@@ -1,0 +1,16 @@
+\begin{tabular}{@{}lc@{}}
+\toprule
+ & \multicolumn{1}{c}{eager} \\
+\cmidrule(lr){2-2}
+Policy & $B=8$ \\
+\midrule
+Per-sample threshold & 1.46 \\
+Threshold + exit plan & \textbf{1.48} \\
+Unified exit & -- \\
+Majority vote & 1.00 \\
+Random search (150 rules) & 1.46 \\
+\midrule
+Cost rule, all exits \textit{(ours)} & 1.40 \\
+Cost rule + exit plan \textit{(ours)} & 1.44 \\
+\bottomrule
+\end{tabular}

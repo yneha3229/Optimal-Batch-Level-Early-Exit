@@ -1,0 +1,16 @@
+\begin{tabular}{@{}lcccccccc@{}}
+\toprule
+ & \multicolumn{4}{c}{Llama-3.1-8B} & \multicolumn{4}{c}{Qwen2.5-1.5B} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+Policy & $B=8$ & $B=16$ & $B=64$ & $B=128$ & $B=8$ & $B=16$ & $B=64$ & $B=128$ \\
+\midrule
+Per-sample threshold & 2.38 & 2.44$^{*}$ & 2.62 & 2.61 & 1.34$^{*}$ & 1.65$^{*}$ & 1.89$^{*}$ & 1.94$^{*}$ \\
+Threshold + exit plan & 2.56 & 2.47 & 2.53 & 2.53 & 1.70$^{*}$ & 1.72$^{*}$ & 1.73$^{*}$ & 1.72$^{*}$ \\
+Unified exit & 2.64$^{*}$ & 2.66$^{*}$ & 2.66$^{*}$ & 2.66$^{*}$ & 1.39 & 1.40 & 1.40 & 1.40 \\
+Majority vote & 1.62 & 1.72 & 2.75$^{*}$ & 2.72$^{*}$ & 1.29 & -- & \textbf{1.54} & -- \\
+Random search (150 rules) & 2.40 & 2.66 & 2.66 & 2.66 & \textbf{1.48} & 1.37 & -- & 1.33 \\
+\midrule
+Cost rule, all exits \textit{(ours)} & \textbf{2.97} & \textbf{3.05} & \textbf{3.12} & \textbf{3.14} & 1.10 & 1.16 & 1.18 & 1.19 \\
+Cost rule + exit plan \textit{(ours)} & \textbf{2.97} & 3.04 & \textbf{3.12} & \textbf{3.14} & 1.38 & \textbf{1.41} & 1.44 & \textbf{1.48} \\
+\bottomrule
+\end{tabular}
