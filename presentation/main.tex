@@ -358,41 +358,47 @@
 
 \begin{frame}{Model ablation II: how well does each model reason?}
   \small
-  Same 6 graphs $\times$ 2 relabellings (12 blind runs per model); every Critic objection labelled true/false by hand.\par\medskip
+  12 blind runs per model (6 graphs $\times$ 2 relabellings); every Critic objection labelled true or false by hand.\par\medskip
   \centering\footnotesize
-  \begin{tabular}{@{}lccc@{}}
+  \begin{tabular}{@{}lcccc@{}}
     \toprule
-    LLM & \shortstack{right family,\\1st reply} & \shortstack{false objections\\per run} & \shortstack{LLM calls\\per run} \\
+    LLM & \shortstack{right $K(n,k)$\\1st guess} & \shortstack{false\\objections/run} & \shortstack{LLM\\calls/run}
+        & \shortstack{replies\\rejected} \\
     \midrule
-    \shortstack[l]{Claude (Haiku, Sonnet,\\Opus low/med/high)} & 92--100\,\% & \textbf{0} \,(60 runs) & 3.5--4.1 \\
-    Qwen2.5-Coder 32B & 0\,\% & 2.1 & 8.7 \\
-    Qwen3 4B & 58\,\% & 6.9 & 8.2 \\
+    Claude Haiku 5.5      & 11/12 & \textbf{0} & 4.1 & 1 \\
+    Claude Sonnet 5.5     & 12/12 & \textbf{0} & 3.8 & 0 \\
+    Claude Opus 5.5 (low)   & 11/12 & \textbf{0} & 3.5 & 0 \\
+    Claude Opus 5.5 (medium) & 11/12 & \textbf{0} & 3.8 & 4 \\
+    Claude Opus 5.5 (high)  & 12/12 & \textbf{0} & 3.8 & 2 \\
+    \midrule
+    Qwen2.5-Coder 32B     & 0/12  & 2.1 & 8.7 & 5 \\
+    Qwen3 4B              & 7/12  & 6.9 & 8.2 & 23 \\
     \bottomrule
   \end{tabular}
   \raggedright
-  \begin{itemize}\footnotesize
-    \item \textbf{Same certified verdict for every model on all 12 graphs}: the checks, not the LLM, decide.
+  \begin{itemize}\footnotesize\setlength\itemsep{1pt}
+    \item \textbf{Every model gets the same certified verdict on all 12 graphs}: the checks decide, not the LLM.
     \item Weaker Critics object to correct facts (``counts 70, 126, 210, 330 do not match $K(16,4)$''; they do),
           which doubles the LLM calls.
-    \item Code rejects bad arithmetic before it reaches the board (Qwen3 4B: 23 replies rejected, e.g.\ ``1820 is not a binomial coefficient'').
   \end{itemize}
   \begin{alertblock}{Takeaway}\scriptsize
-    Model quality changes cost and reliability of the dialogue, never correctness.
+    Model quality changes the cost and reliability of the dialogue, never correctness.
   \end{alertblock}
 \end{frame}
 
 \begin{frame}{Model ablation III: how confidently is each model wrong?}
   \centering
-  \includegraphics[width=0.74\linewidth]{fig/calibration.png}\par
+  \includegraphics[width=0.70\linewidth]{fig/calibration.png}\par
   \raggedright
   \begin{itemize}\scriptsize\setlength\itemsep{1pt}
     \item \textbf{Claude models hedge}: never wrong first, and less sure on edge-deleted graphs (0.38--0.60) than on exact ones (0.75--0.89).
     \item \textbf{Qwen2.5-Coder 32B is confidently wrong}: a random graph is ``perturbed Kneser'' at 0.8--0.9; 2 of 3 objections false.
     \item \textbf{Qwen3 4B knows it is unsure} (0--0.3 when wrong) but floods the Critic: 14 objections a run, half false.
     \item \textbf{Haiku on two hard graphs} ($K(13,5)$: theorem names no field; $K(18,3)$ minus 1\% of edges): right
-          diagnosis, confidence 0.4 on the perturbed one, same certified bracket as Opus.
+          diagnosis, low confidence (0.4) on the perturbed one, same bracket as Opus.
   \end{itemize}
-  {\tiny Random control graphs left out of the confidence panel: models read the scale differently there.\par}
+  {\tiny Edge-deleted graph: a Kneser graph with 1\% of its edges removed at random, so it is no longer exactly $K(n,k)$
+   and the theorem does not apply. Random control graphs are left out of the confidence panel (models read the scale differently there).\par}
 \end{frame}
 
 % ================================================================= 4
