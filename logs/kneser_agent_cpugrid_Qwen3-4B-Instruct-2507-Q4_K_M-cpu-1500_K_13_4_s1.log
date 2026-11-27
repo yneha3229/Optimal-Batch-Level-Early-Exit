@@ -1,0 +1,32 @@
+[    0.01s] input            {"graph": "K_13_4_s1", "receivers": 715, "llm": "Qwen3-4B-Instruct-2507-Q4_K_M-cpu-1500", "family_rule": true}
+[    0.05s] start            {"tool": "describe"}
+[    0.05s] start            {"tool": "indep"}
+[    0.05s] start            {"tool": "cover"}
+[    0.16s] board            {"side": "lower", "value": 220, "tool": "greedy independent set", "bracket": [220, 715]}
+[    0.38s] board            {"side": "upper", "value": 254, "tool": "clique_cover", "bracket": [220, 254]}
+[   19.58s] done             {"tool": "describe", "seconds": 19.488}
+[   19.58s] summary          {}
+[   19.58s] llm_request      {"agent": "solver", "attempt": 0}
+[  573.02s] llm_invalid      {"agent": "solver", "error": "hypothesis K(15,5) has C(15,5) = 3003 vertices, but the graph has 715 receivers; use binomial_match", "raw": "{\n  \"family_hypoth
+[  573.02s] llm_request      {"agent": "solver", "attempt": 1}
+[  906.87s] llm_invalid      {"agent": "solver", "error": "evidence item 'spectrum is integral, which is required for Kneser graphs' quotes no number you were given and no summary field", "
+[  906.87s] llm_fallback     {"agent": "solver"}
+[  906.87s] llm_request      {"agent": "critic", "attempt": 0}
+[ 2139.92s] llm_invalid      {"agent": "critic", "error": "Unterminated string starting at: line 12 column 5 (char 3743)", "raw": "{\n  \"verdict\": \"challenge\",\n  \"objections\": [\n   
+[ 2139.92s] llm_request      {"agent": "critic", "attempt": 1}
+[ 2929.20s] llm_reply        critic: {"verdict": "challenge", "objections": ["The degree is 126, and the number of receivers is 715. A regular graph with 715 vertices and degree 126 implies that the total number of edges is (715 * 126) / 2 = 45045, which matches the summary, so regularity is consistent.", "The common neighbours for adj
+[ 2929.20s] checks           {"results": [{"tool": "binomial_match", "result": [{"n": 13, "k": 4}]}, {"tool": "family_rule", "args": {"n": 13, "k": 4}, "result": {"p": 5, "c": 4}}]}
+[ 2929.20s] llm_request      {"agent": "solver", "attempt": 0}
+[ 3347.98s] llm_reply        solver: {"family_hypothesis": {"name": "Kneser", "params": {"n": 13, "k": 4}, "confidence": 0.99, "evidence": ["The number of receivers is 715, and C(13,4) = 715, matching exactly.", "The degree is 126, and C(13-4,4) = C(9,4) = 126, matching exactly.", "The spectrum is integral and sums to zero: 126*1 + 21*
+[ 3347.98s] llm_request      {"agent": "critic", "attempt": 0}
+[ 3372.81s] llm_reply        critic: {"verdict": "accept", "objections": [], "requested_checks": []}
+[ 3372.81s] plan_accepted    {"plan": [{"tool": "binomial_match", "args": {}, "why": "The number of receivers is 715, and C(13,4)=715; degree is 126, and C(9,4)=126, confirming the Kneser g
+[ 3372.81s] checks           {"results": [{"tool": "binomial_match", "result": [{"n": 13, "k": 4}]}]}
+[ 3372.81s] rule             {"tool": "family_rule", "args": {"n": 13, "k": 4}, "result": {"p": 5, "c": 4}}
+[ 3372.81s] start            {"tool": "code", "p": 5, "c": 4, "why": "family rule"}
+[ 3372.90s] done             {"tool": "code", "p": 5, "c": 4, "rank": 220, "seconds": 0.092}
+[ 3372.90s] board            {"side": "upper", "value": 220, "tool": "linear_code", "bracket": [220, 220]}
+[ 3372.90s] event            {"name": "bracket_closed", "bracket": [220, 220]}
+[ 3372.98s] llm_request      {"agent": "verifier", "attempt": 0}
+[ 3585.56s] llm_reply        verifier: {"checks_requested": ["own_rank"], "analysis": "The result is proven via a linear code certificate with p=5, c=4, matching the Kneser graph hypothesis exactly. The agent achieves exact value 220, matching the baseline's proven lower bound. All independent checks pass. LLM time (3353s) dominates tota
+[ 3587.46s] verdict          {"verdict": "proven", "bracket": [220, 220], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true, "own_rank_equals_up

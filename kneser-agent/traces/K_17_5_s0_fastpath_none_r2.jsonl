@@ -1,0 +1,15 @@
+{"t": 0.001, "ev": "input", "graph": "K_17_5_s0_fastpath", "receivers": 6188, "llm": "none", "family_rule": true}
+{"t": 0.01, "ev": "start", "tool": "describe"}
+{"t": 0.01, "ev": "start", "tool": "indep"}
+{"t": 0.01, "ev": "start", "tool": "cover"}
+{"t": 0.365, "ev": "done", "tool": "describe", "seconds": 0.285}
+{"t": 0.512, "ev": "board", "side": "lower", "value": 1820, "tool": "greedy independent set", "bracket": [1820, 6188]}
+{"t": 0.512, "ev": "summary", "summary": {"receivers": 6188, "edges": 2450448, "degree_min": 792, "degree_max": 792, "regular": true, "common_neighbours_adjacent": [21], "common_neighbours_nonadjacent": [56, 126, 252, 462], "triangles_through_sampled_vertex": 8316, "spectrum": "not computed (N > 4000)", "seconds": 0.285}}
+{"t": 0.513, "ev": "fast_path", "matches": [{"n": 17, "k": 5}], "rule": {"p": 7, "c": 1}}
+{"t": 0.513, "ev": "start", "tool": "code", "p": 7, "c": 1, "why": "fast path K(17,5)"}
+{"t": 5.311, "ev": "done", "tool": "code", "p": 7, "c": 1, "rank": 1820, "seconds": 4.797}
+{"t": 5.311, "ev": "board", "side": "upper", "value": 1820, "tool": "linear_code", "bracket": [1820, 1820]}
+{"t": 5.311, "ev": "event", "name": "bracket_closed", "bracket": [1820, 1820]}
+{"t": 5.311, "ev": "plan_accepted", "plan": [{"tool": "family_rule", "args": {"n": 17, "k": 5}, "why": "fast path"}], "hypothesis": {"name": "Kneser (fast path)", "params": {"n": 17, "k": 5}, "confidence": 1, "evidence": ["binomial_match", "regular"]}, "critic_rounds": 0}
+{"t": 10.607, "ev": "event", "name": "bracket_closed", "bracket": [1820, 1820]}
+{"t": 14.52, "ev": "verdict", "verdict": "proven", "bracket": [1820, 1820], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true}}

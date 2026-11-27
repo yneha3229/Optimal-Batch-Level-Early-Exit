@@ -41,8 +41,10 @@ reports "GPU requires reset", which blocks CUDA machine-wide until an admin rese
   K(14,4) ([286, 299] vs [286, 287]); the scheduler's safety net fixed this.
 - **Model ablation (bench/ablation/; 6 graphs x 2 relabelling seeds = 12 cells, one blind run per cell):**
   K(16,4), K(16,4) minus 1% of edges, K(14,4) (rule exception), K(13,4), K(15,5), and a random 6-regular graph on
-  1000 vertices (non-Kneser control). Every model ends with the same certified bracket on every graph instance, so
-  the model changes the dialogue and its cost, not the result. The five Claude configurations (Haiku 5.5 medium,
+  1000 vertices (non-Kneser control). Every model reaches the same verdict on every graph instance and the same
+  bracket on the 10 Kneser-type instances; on the random control the lower bound differs (Claude 336, Qwen 331-333)
+  because the Claude Solvers asked for 200-1,000 independent-set restarts and Qwen for 10. So the model changes the
+  dialogue and its cost, and only through its plan the bound, never the correctness. The five Claude configurations (Haiku 5.5 medium,
   Sonnet 5.5 medium, Opus 5.5 low / medium / high; 12 runs each) made **0 false Critic objections in 60 runs**,
   named the right family in the first Solver reply in 11-12 of 12 runs, and needed 3.5-4.1 LLM calls per run. Qwen
   2.5-Coder 32B (CPU, fixed code, 12 runs): **25 false objections (2.08 per run)**, the right family in the first
@@ -52,11 +54,19 @@ reports "GPU requires reset", which blocks CUDA machine-wide until an admin rese
   not queried" when it had been, while missing that (14,5) cannot fit 715 or 3003 receivers); it made one real
   catch ("3003 receivers do not match C(14,4) = 1001"). Every objection is labelled with a reason in
   bench/ablation/label_detail.json (rule in labels.py; Qwen CPU and new Claude rows labelled by Claude Code).
-- **Qwen3-4B:** with the pipeline's 600-token reply limit (the same limit Qwen 32B ran under) it fails: in the first
-  21 minutes 26 of 48 requests were JSON cut off at exactly 600 tokens and only 7 replies were accepted
-  (logs/kneser_agent_qwen4b_cap600_summary.txt). The Claude agents had no such limit, so a fair rerun with a
-  1,500-token limit runs after Qwen 32B (row "Qwen3 4B" in the chart, when present).
+- **Qwen3-4B (CPU, GGUF Q4_K_M, fixed code, 12 runs):** at the pipeline's 600-token reply limit (the limit Qwen 32B
+  ran under) its JSON was cut off in 26 of 48 requests (logs/kneser_agent_qwen4b_cap600_summary.txt), so it was rerun
+  with a 1,500-token limit (the Claude agents had none). Then: **83 false Critic objections (6.92 per run)**, 23
+  invalid replies and 9 fallbacks to the default plan (10 rejections were arithmetic caught by code: a K(n,k) whose
+  C(n,k) is not the receiver count, or a false "C(a,b) = X"); right family in the first reply in 7 of 12 runs.
+  Its false objections are confident mathematics: eigenvalue sums without multiplicities ("148 != 0"), "1820 is not a
+  binomial coefficient", "K(16,4) has degree C(12,3)", "a 6-regular graph has at most 7 distinct eigenvalues",
+  strongly-regular identities applied to Kneser graphs. It still never changed a verdict: every bound is checked.
+- **Model ranking by false objections per run:** Claude (all five configurations) 0, Qwen 32B 2.08 (CPU) / 1.67 (GPU
+  pilot), Qwen3-4B 6.92. LLM calls per run: Claude 3.5-4.1, Qwen 8.2-8.7.
+- **Fast path (opt-in, no LLM):** recognising K(n,k) from the receiver count and degree and applying the rule proves the
+  three large graphs K(20,4), K(17,5), K(23,4) in 4.2 / 14.5 / 21.4 s on 4 quiet cores (Kushagra's script: 18.7 / 23.0 /
+  41.6 s; the agent without the fast path leaves gaps), with the same results as before on the 20 benchmark graphs.
 - **Two issues the blind agents found:** the summary's sampled common-neighbour counts can miss a rare triangle
   that the exact triangle count sees (reg(1000,6): adjacent pairs "share no neighbour", yet 1 triangle); and the
   run result records the hypothesis of the accepted plan, not the checkpoint's revision. Neither touches a bound.
-- **32B vs 4B:** see Qwen3-4B above (GPU failure; both on CPU).

@@ -1,0 +1,21 @@
+[    0.02s] input            {"graph": "K_16_4_s3", "receivers": 1820, "llm": "Qwen3-4B-Instruct-2507-Q4_K_M-cpu-1500", "family_rule": true}
+[    0.11s] start            {"tool": "describe"}
+[    0.11s] start            {"tool": "indep"}
+[    0.11s] start            {"tool": "cover"}
+[    0.94s] board            {"side": "lower", "value": 455, "tool": "greedy independent set", "bracket": [455, 1820]}
+[    4.96s] board            {"side": "upper", "value": 529, "tool": "clique_cover", "bracket": [455, 529]}
+[   38.09s] done             {"tool": "describe", "seconds": 37.795}
+[   38.09s] summary          {}
+[   38.09s] llm_request      {"agent": "solver", "attempt": 0}
+[  558.29s] llm_invalid      {"agent": "solver", "error": "hypothesis K(10,3) has C(10,3) = 120 vertices, but the graph has 1820 receivers; use binomial_match", "raw": "{\n  \"family_hypoth
+[  558.29s] llm_request      {"agent": "solver", "attempt": 1}
+[ 1031.36s] llm_invalid      {"agent": "solver", "error": "hypothesis K(22,3) has C(22,3) = 1540 vertices, but the graph has 1820 receivers; use binomial_match", "raw": "{\n  \"family_hypot
+[ 1031.36s] llm_fallback     {"agent": "solver"}
+[ 1031.36s] llm_request      {"agent": "critic", "attempt": 0}
+[ 2027.47s] llm_reply        critic: {"verdict": "challenge", "objections": ["The degree is 495, and the number of receivers is 1820. A regular graph with degree 495 and 1820 vertices implies that the total number of edges is (1820 * 495) / 2 = 450450, which matches the summary, so regularity is consistent.", "The common neighbours for
+[ 2027.84s] board            {"side": "upper", "value": 455, "tool": "linear_code", "bracket": [455, 455]}
+[ 2027.85s] checks           {"results": [{"tool": "binomial_match", "result": [{"n": 16, "k": 4}]}, {"tool": "family_rule", "args": {"n": 1820, "k": 495}, "result": null}, {"tool": "try_co
+[ 2027.85s] plan_accepted    {"plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []}, "critic
+[ 2028.18s] llm_request      {"agent": "verifier", "attempt": 0}
+[ 2167.11s] llm_reply        verifier: {"checks_requested": ["own_rank"], "analysis": "The result is proven with a linear code certificate (p=2, c=1) meeting the lower bound. The agent achieves exact rank 455, matching the baseline Kushagra agent's result. It outperforms baselines in accuracy (exact match) and time (wall_s=2027.845s vs. 
+[ 2183.85s] verdict          {"verdict": "proven", "bracket": [455, 455], "checks": {"independent_set": true, "code_fits": true, "factorization": true, "decoding": true, "own_rank_equals_up

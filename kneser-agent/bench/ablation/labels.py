@@ -72,6 +72,11 @@ L = {
 }
 
 
+# Qwen3-4B (167 objections) are labelled one by one in labels_qwen3_4b.json (same rule, reason per objection)
+Q4B = {(r["cell"], r["objection"]): (r["false"], r["why"])
+       for r in json.loads((HERE / "labels_qwen3_4b.json").read_text())} if (HERE / "labels_qwen3_4b.json").exists() else {}
+
+
 def main():
     out, missing = {}, []
     for g in TRUTH:
@@ -84,6 +89,8 @@ def main():
                 if e["ev"] == "llm_reply" and e.get("agent") == "critic":
                     for o in e["reply"].get("objections", []):
                         hit = [v for (cell, sub), v in L.items() if cell == f"{g}|{cfg}" and sub in o]
+                        if not hit and cfg == "Qwen3-4B-cpu" and (g, o) in Q4B:
+                            hit = [Q4B[(g, o)]]
                         if hit:
                             fl, why = hit[0]
                         elif not cfg.startswith("Qwen"):

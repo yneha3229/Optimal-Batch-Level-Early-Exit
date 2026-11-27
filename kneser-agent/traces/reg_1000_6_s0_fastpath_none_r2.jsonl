@@ -1,0 +1,12 @@
+{"t": 0.001, "ev": "input", "graph": "reg_1000_6_s0_fastpath", "receivers": 1000, "llm": "none", "family_rule": true}
+{"t": 0.009, "ev": "start", "tool": "describe"}
+{"t": 0.01, "ev": "start", "tool": "indep"}
+{"t": 0.01, "ev": "start", "tool": "cover"}
+{"t": 0.027, "ev": "board", "side": "lower", "value": 327, "tool": "greedy independent set", "bracket": [327, 1000]}
+{"t": 0.073, "ev": "board", "side": "upper", "value": 537, "tool": "clique_cover", "bracket": [327, 537]}
+{"t": 0.171, "ev": "done", "tool": "describe", "seconds": 0.156}
+{"t": 0.171, "ev": "summary", "summary": {"receivers": 1000, "edges": 3000, "degree_min": 6, "degree_max": 6, "regular": true, "common_neighbours_adjacent": [0, 1], "common_neighbours_nonadjacent": [0, 1, 2], "triangles_through_sampled_vertex": 1, "spectrum_integral": false, "eigenvalues": [[6.0, 1], [4.4476, 1], [4.3987, 1], [4.3693, 1], [4.362, 1], [4.3332, 1], [4.3158, 1], [4.2983, 1], [4.2917, 1], [4.2785, 1], [4.2695, 1], [4.2505, 1], [4.2332, 1], [4.2257, 1]], "distinct_eigenvalues": 1000, "seconds": 0.156}}
+{"t": 0.171, "ev": "fast_path", "matches": [], "rule": null}
+{"t": 0.171, "ev": "plan_accepted", "plan": [{"tool": "spectral", "args": {"top": 8}, "why": "default"}], "hypothesis": {"name": "unknown", "params": {}, "confidence": 0, "evidence": []}, "critic_rounds": 0}
+{"t": 0.171, "ev": "event", "name": "checkpoint"}
+{"t": 0.178, "ev": "verdict", "verdict": "gap", "bracket": [327, 537], "checks": {"independent_set": true, "clique_cover": true}}

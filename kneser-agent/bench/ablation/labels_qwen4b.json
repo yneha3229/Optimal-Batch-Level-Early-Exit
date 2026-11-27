@@ -1,0 +1,859 @@
+{
+ "K_16_4_s3|Qwen3-4B-cpu": [
+  {
+   "objection": "The degree is 495, and the number of receivers is 1820. A regular graph with degree 495 and 1820 vertices implies that the total number of edges is (1820 * 495) / 2 = 450450, which matches the summary, so regularity is consistent.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The common neighbours for adjacent vertices is 70, and for non-adjacent vertices are 126, 210, 330. These values must satisfy the known identities in strongly regular graphs. For a strongly regular graph with parameters (n, k, \u03bb, \u03bc), the eigenvalues are derived from the formula: (k - \u03bb - \u03bc) and the multiplicities must satisfy the equation from the spectrum.",
+   "false": true,
+   "why": "assumes strongly regular identities; Kneser graphs are not strongly regular"
+  },
+  {
+   "objection": "The spectrum is given as: eigenvalue 495 (multiplicity 1), 45 (multiplicity 104), 1 (multiplicity 1260), -9 (multiplicity 440), -165 (multiplicity 15). The sum of eigenvalues must be zero: 495*1 + 45*104 + 1*1260 + (-9)*440 + (-165)*15 = 495 + 4680 + 1260 - 3960 - 2475 = (495 + 4680 + 1260) = 6435; (3960 + 2475) = 6435 \u2192 sum is zero, so spectral consistency holds.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The number of vertices n = 1820. The multiplicity of eigenvalue 495 is 1, which is the degree, and the multiplicity of eigenvalue 1 is 1260. The total number of vertices is 1 + 104 + 1260 + 440 + 15 = 1820 \u2192 consistent.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The parameters of a strongly regular graph must satisfy the equation: k(k - \u03bb - 1) = (n - k)\u03bc. Here, k = 495, \u03bb = 70, \u03bc = 126 (using the first non-adjacent value). Then: 495*(495 - 70 - 1) = 495*424 = 210,380. Right-hand side: (1820 - 495)*126 = 1325*126 = 167,050 \u2192 not equal. Using \u03bc = 210: 1325*210 = 278,250 \u2192 too big. Using \u03bc = 330: 1325*330 = 437,250 \u2192 way too big. So no consistent \u03bc from the non-adjacent values. This contradicts the strongly regular graph assumption.",
+   "false": true,
+   "why": "strongly regular equation applied to a non-SRG (and 495*424 = 209,880, not 210,380)"
+  },
+  {
+   "objection": "The common neighbours for adjacent pairs are 70, which is \u03bb. For non-adjacent pairs, the values are 126, 210, 330 \u2014 this suggests multiple \u03bc values, which is not allowed in a strongly regular graph. Strongly regular graphs must have a single \u03bc for all non-adjacent pairs. Hence, the family hypothesis is invalid.",
+   "false": true,
+   "why": "wrong inference: Kneser graphs have several non-adjacent common-neighbour values"
+  },
+  {
+   "objection": "The family hypothesis is unknown and has no evidence. No family_rule has been applied. The plan only uses spectral, which is insufficient to determine the family.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The binomial_match check is needed to verify if (n, k) = (1820, k) satisfies C(n,k) = 1820 and degree = C(n-k,k). But 1820 is not a binomial coefficient of the form C(n,k) with k < n. For example, C(1820,1) = 1820, but degree would be C(1819,1) = 1819 \u2260 495. So no such (n,k) pair exists with C(n,k)=1820 and degree C(n-k,k)=495. Thus, the graph cannot be a Kneser-type graph.",
+   "false": true,
+   "why": "1820 = C(16,4) is a binomial coefficient"
+  },
+  {
+   "objection": "The Hoffman upper bound on independence number \u03b1 is given by \u03b1 \u2264 n / (1 + (\u03bb - \u03bc)/(k - \u03bc)) when eigenvalues are known. Here, \u03bb = 70, \u03bc = 126 (using first value), k = 495. Then (\u03bb - \u03bc)/(k - \u03bc) = (70 - 126)/(495 - 126) = (-56)/369 \u2248 -0.152 \u2192 1 + (-0.152) = 0.848 \u2192 \u03b1 \u2264 1820 / 0.848 \u2248 2146 \u2192 not useful. But this doesn't contradict anything directly.",
+   "false": true,
+   "why": "wrong Hoffman formula"
+  }
+ ],
+ "K_16_4-del0.01_s0|Qwen3-4B-cpu": [
+  {
+   "objection": "receivers: 1820 is not a binomial coefficient C(n,k) for small n,k \u2014 but binomial_match must be run to confirm this; without it, the absence of a Kneser-type structure is unverified",
+   "false": true,
+   "why": "1820 = C(16,4)"
+  },
+  {
+   "objection": "distinct eigenvalues = 1820 = number of vertices, which implies no symmetry \u2014 this is consistent with non-regular, non-symmetric structure, but must be cross-verified with spectral tool output (top eigenvalues) to confirm non-integrality and multiplicity structure",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "common neighbours differ between adjacent and non-adjacent pairs (63\u201370 vs 65\u2013121), suggesting non-symmetric structure \u2014 this is consistent with the hypothesis, but without checking if these values match known families or spectral predictions, it's not conclusive",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "the plan relies on family_rule with (n=1820, k=1) without querying whether any known family applies to this receiver count; this is a blind test with no prior evidence of relevance",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "the solver claims no family exists, but fails to verify whether 1820 is a binomial coefficient \u2014 this is a critical omission; if 1820 = C(n,k), then a Kneser family could be under consideration",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family hypothesis claims a Kneser graph K(16,4) as a candidate, but the graph is not regular (degree_min=482, degree_max=495), while Kneser graphs are regular \u2014 this contradicts the evidence in the summary.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The binomial_match confirms 1820 = C(16,4), which is correct, but this does not validate the Kneser structure; the degree discrepancy and non-integral spectrum directly refute the hypothesis.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The spectrum is non-integral (e.g., 490.0597, 45.7809, etc.), but Kneser graphs have integral spectra \u2014 this is a fundamental inconsistency.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family_rule call with (n=1820, k=1) returns (p=2, c=1), which is irrelevant to K(16,4); the solver used family_rule with (n=16, k=4) without querying it, and no result is available in check_history for that call.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The solver claims the graph is not an exact Kneser graph, yet still relies on the Kneser family without verifying the spectral integrality or regularity via direct computation \u2014 this is a logical gap.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family hypothesis claims 1820 = C(16,4), which is correct, but the binomial_match result is only confirmed for (16,4); however, the summary's receivers are 1820, and C(16,4) = 1820, so this is valid, but no other (n,k) with C(n,k)=1820 is ruled out \u2014 this does not fully justify the family hypothesis as unique or sufficient.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The spectral evidence is missing: the solver claims non-integral spectrum contradicts vertex-transitive Kneser graphs, but check_history shows 'spectral' result as 'not available'. This is a critical gap \u2014 without confirming non-integral eigenvalues, the claim that the graph is not a Kneser graph is unsupported.",
+   "false": true,
+   "why": "the summary already states spectrum_integral = false"
+  },
+  {
+   "objection": "The common neighbours differ between adjacent and non-adjacent pairs (63\u201370 vs 65\u2013121), which suggests asymmetry. However, this alone does not rule out a perturbed Kneser structure; a more precise check is needed to verify whether such asymmetry is consistent with known perturbations or indicates a contradiction.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The independent_set tool was run with 5 restarts, but the result is not in check_history. Without the actual lower bound value, we cannot verify if the gap to upper bound (534) has improved or if the current lower bound of 455 is still valid. This undermines the claim that a better lower bound is needed.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family_rule call for (n=16,k=4) returns (p=2,c=1), which supports the F_2 code family, but this does not validate the graph structure. The solver assumes this implies a valid code structure, yet no try_code check was performed to verify that M = I + A over F_2 has rank equal to the upper bound of 534. Without this, the claim of a 'cheaper path' is unverified.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The plan relies on family_rule without having queried the structural rule for (n=16,k=4) in the context of the graph's degree and common neighbours \u2014 this is a missing link. The rule may not apply to a perturbed Kneser graph.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  }
+ ],
+ "K_14_4_s0|Qwen3-4B-cpu": [
+  {
+   "objection": "The degree is 210, and the number of receivers is 1001. For a regular graph, the degree must satisfy d = (2 * edges) / n. Computing: (2 * 105105) / 1001 = 210.0 \u2192 consistent.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The common neighbours for adjacent vertices is 15, and for non-adjacent vertices are 35, 70, 126. These values must match the expected values from a known family. The values 15, 35, 70, 126 are binomial coefficients: C(10,3)=120, C(10,4)=210 \u2014 not matching directly. But 35 = C(7,2), 70 = C(8,3), 126 = C(9,3). This suggests a connection to binomial coefficients, possibly K(1001, 500) or similar, but not clear.",
+   "false": true,
+   "why": "wrong binomials (35 != C(7,2), 70 != C(8,3)); 'K(1001,500)' is meaningless here"
+  },
+  {
+   "objection": "The spectrum has 5 distinct eigenvalues: 210, 28, 1, -7, -84. The sum of eigenvalues must be zero (since trace is zero). Sum: 210 + 28 + 1 -7 -84 = 148 \u2260 0 \u2192 contradiction.",
+   "false": true,
+   "why": "eigenvalue sum taken without multiplicities"
+  },
+  {
+   "objection": "The eigenvalues are listed with multiplicities: (210,1), (28,77), (1,637), (-7,273), (-84,13). Total vertices: 1 + 77 + 637 + 273 + 13 = 1001 \u2192 correct.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "Sum of eigenvalues: (210\u00d71) + (28\u00d777) + (1\u00d7637) + (-7\u00d7273) + (-84\u00d713) = 210 + 2156 + 637 - 1911 - 1092 = (210+2156+637) = 3003; (1911+1092)=3003 \u2192 3003 - 3003 = 0 \u2192 sum is zero. So the trace is zero \u2192 valid.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The triangle count through a sampled vertex is 1575. In a regular graph, the number of triangles through a vertex is (degree \u00d7 common_neighbors_adjacent) / 3. So: (210 \u00d7 15) / 3 = 1050. But the summary says 1575 \u2192 contradiction. 1575 \u2260 1050 \u2192 invalid.",
+   "false": true,
+   "why": "triangles per vertex = d*lambda/2 = 1575 (formula divided by 3)"
+  },
+  {
+   "objection": "The common neighbours for adjacent vertices is 15. In a strongly regular graph, the parameters must satisfy: k(k - \u03bb - 1) = (n - k - 1)\u03bc, where \u03bb is common neighbours for adjacent, \u03bc for non-adjacent. Here, k = 210, \u03bb = 15, \u03bc = 35 (first value), n = 1001. Then: 210(210 - 15 - 1) = 210\u00d7194 = 40740. Right side: (1001 - 210 - 1)\u00d735 = 790\u00d735 = 27650 \u2192 40740 \u2260 27650 \u2192 contradiction.",
+   "false": true,
+   "why": "strongly regular equation applied to a non-SRG"
+  },
+  {
+   "objection": "The family hypothesis is unknown with zero confidence and no evidence. No family rule has been queried or validated.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The plan only uses spectral with top=8, but the eigenvalues are 5 in total, and the sum of multiplicities is 1001. The spectral tool alone does not validate the structure or parameters. No family_rule or binomial_match has been used to check if (n,k) = (1001,500) or similar fits.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The Hoffman bound: from spectrum, the largest eigenvalue is 210, and the second largest is 28. Hoffman bound: \u03b1 \u2264 (n - 1) / (\u03bb_max - \u03bb_2) = (1000) / (210 - 28) = 1000 / 182 \u2248 5.49. But the independent set lower bound from the board is 286 \u2192 286 > 5.49 \u2192 contradiction. Hoffman bound cannot exceed the actual independence number. So the spectrum is inconsistent with the independence number.",
+   "false": true,
+   "why": "wrong Hoffman formula and false contradiction"
+  },
+  {
+   "objection": "The binomial_match result confirms (n,k) = (14,4), and C(14,4) = 1001, which matches the receivers, but the degree in K(14,4) is C(10,3) = 120, not 210 as given in the summary. This is a direct contradiction.",
+   "false": true,
+   "why": "K(14,4) degree is C(10,4) = 210, not C(10,3)"
+  },
+  {
+   "objection": "The family_rule query was made for (n,k) = (1001,500), which is unrelated to the Kneser graph hypothesis and likely invalid; no rule exists for K(1001,500), and this query does not validate the Kneser structure. The solver should have queried family_rule for (14,4), not (1001,500).",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The common neighbours are listed as 15, 35, 70, 126. These are binomial coefficients: 15 = C(5,2), 35 = C(7,2), 70 = C(8,3), 126 = C(9,3). But in a Kneser graph K(n,k), common neighbours of adjacent vertices are C(n-k-1, k-1), and for (14,4), this would be C(9,3)=84, not 15. The given value 15 is inconsistent with known Kneser graph structure.",
+   "false": true,
+   "why": "wrong binomials; adjacent pairs in K(14,4) share C(6,4) = 15"
+  },
+  {
+   "objection": "The triangle count through a sampled vertex is 1575. In K(14,4), each vertex has degree 120, and the number of triangles per vertex is C(120,2) / something \u2014 but actual triangle count in K(14,4) is known to be C(10,3) * C(4,2) / something. A direct computation shows that the expected triangle count per vertex is not 1575. For K(14,4), the number of triangles per vertex is C(10,3) = 120, not 1575. The given value 1575 is inconsistent.",
+   "false": true,
+   "why": "triangle count claim wrong (1575 is right)"
+  },
+  {
+   "objection": "The spectrum has 5 distinct eigenvalues, and the sum of eigenvalues must be zero (since the graph is regular). The sum is: 210*1 + 28*77 + 1*637 + (-7)*273 + (-84)*13 = 210 + 2156 + 637 - 1911 - 1092 = (210+2156+637) = 3003; (1911+1092)=3003 \u2192 3003 - 3003 = 0. So the spectrum is valid, but the eigenvalues do not match known Kneser graph spectra. The known eigenvalues for K(14,4) are known to be: 120, 120 - 2*120, etc., with multiplicities based on difference sets. The given eigenvalues (210, 28, 1, -7, -84) are not consistent with K(14,4).",
+   "false": true,
+   "why": "the spectrum matches K(14,4)"
+  },
+  {
+   "objection": "The Hoffman bound is 286, and the lower bound is 286, suggesting a tight independent set. However, this does not validate the graph structure; it only shows a bound. The solver did not verify whether the graph structure (Kneser) is consistent with the spectrum or common neighbours.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The binomial_match result confirms (n,k) = (14,4) with C(14,4) = 1001, but the solver claims no (n,k) has degree C(n-k,k) = 210; however, C(10,3) = 120, not 210, so this contradicts the claim that degree 210 is unattainable \u2014 yet the degree in the summary is 210, which is inconsistent with any known Kneser graph.",
+   "false": true,
+   "why": "degree claim wrong (C(10,4) = 210)"
+  },
+  {
+   "objection": "The common neighbours for adjacent vertices are given as 15, but in K(14,4), adjacent vertices should have common neighbours equal to C(9,3) = 84, not 15. The value 15 is not a binomial coefficient of the form C(n,k) for any n,k relevant here, and the summary lists 15 as a common neighbour, which is inconsistent with known Kneser graph values.",
+   "false": true,
+   "why": "15 is right for K(14,4) (C(6,4))"
+  },
+  {
+   "objection": "The triangle count per vertex is 1575, but in K(14,4) it is known to be C(10,3) = 120, not 1575. This is a clear contradiction: the summary states 1575 triangles per vertex, which is 12.5 times larger than expected, indicating a fundamental mismatch with the Kneser graph structure.",
+   "false": true,
+   "why": "1575 is right for K(14,4)"
+  },
+  {
+   "objection": "The spectrum has eigenvalues [210, 28, 1, -7, -84] with multiplicities [1, 77, 637, 273, 13]. The sum of eigenvalues is 210 + 28 + 1 -7 -84 = 148, not zero \u2014 this contradicts the requirement that the sum of eigenvalues must be zero (since the graph is regular and the eigenvalue 210 is the degree). The sum should be zero, but it is 148. This is a critical error in the summary or in the solver's interpretation.",
+   "false": true,
+   "why": "eigenvalue sum taken without multiplicities"
+  },
+  {
+   "objection": "The solver claims the spectrum is valid, but the sum of eigenvalues is 210 + 28 + 1 -7 -84 = 148 \u2260 0, which violates the fundamental property of a regular graph: the sum of eigenvalues must equal zero (since the trace of the adjacency matrix is zero). This invalidates the entire spectral hypothesis.",
+   "false": true,
+   "why": "eigenvalue sum taken without multiplicities"
+  },
+  {
+   "objection": "The family_rule query for (14,4) returned null, but the binomial_match found (14,4), and the degree in K(14,4) is C(10,3)=120, not 210. The solver fails to recognize that the given degree (210) is incompatible with any known Kneser graph, and thus the family hypothesis is invalid.",
+   "false": true,
+   "why": "K(14,4) degree is 210"
+  },
+  {
+   "objection": "The try_code with p=2, c=1 achieves rank 299, which meets the upper bound, but the solver claims it 'meets_lower' is false \u2014 this is inconsistent with the result, which shows rank 299, and the lower bound is 286, so it should meet the lower bound. The solver misrepresents the result.",
+   "false": true,
+   "why": "rank 299 > 286 does not meet the lower bound"
+  }
+ ],
+ "K_16_4_s1|Qwen3-4B-cpu": [
+  {
+   "objection": "The degree is 495, and the number of receivers is 1820. A regular graph with degree 495 and 1820 vertices implies that the total number of edges is (1820 * 495) / 2 = 450450, which matches the summary, so regularity is consistent.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The common neighbours for adjacent vertices is 70, and for non-adjacent vertices are 126, 210, 330. These values must be consistent with the eigenvalues and multiplicities via the adjacency matrix structure. The eigenvalue 495 with multiplicity 1 suggests a vertex with high degree, but the multiplicity of 1 for 495 is suspicious \u2014 in a regular graph, the largest eigenvalue should be equal to the degree, and its multiplicity should be 1, which is fine. However, the multiplicity of 495 is 1, and the rest are smaller, so this is acceptable.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The spectrum has 5 distinct eigenvalues: 495 (mult 1), 45 (mult 104), 1 (mult 1260), -9 (mult 440), -165 (mult 15). Total vertices: 1 + 104 + 1260 + 440 + 15 = 1820 \u2014 this matches the receiver count. So the spectrum is consistent with the number of vertices.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The common neighbour counts must satisfy the known identity in regular graphs: for adjacent vertices, the number of common neighbours is given by the quadratic form of the adjacency matrix. The value 70 for adjacent pairs must be consistent with the eigenvalues. Using the formula for common neighbours: for adjacent vertices, the expected value is (A^2)_{ij} = (A^T A)_{ij}. The sum over all pairs of adjacent vertices of common neighbours must be consistent with the eigenvalues. We can compute the expected value using the known eigenvalues and multiplicities.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The Hoffman bound gives an upper bound on the independence number. The Hoffman bound is: alpha <= (\u03bb_1 - \u03bb_n) / (\u03bb_1 - \u03bb_2), where \u03bb_1 is the largest eigenvalue (495), \u03bb_n is the smallest (\u2212165), and \u03bb_2 is the second largest (45). So: (495 - (-165)) / (495 - 45) = 660 / 450 = 1.466..., so alpha <= 1.466 * 1820 \u2248 2670, which is not useful since the graph is large. But more importantly, the independence number must be consistent with the structure.",
+   "false": true,
+   "why": "wrong Hoffman formula"
+  },
+  {
+   "objection": "The binomial match check is needed: is there a (n, k) such that C(n,k) = 1820 and degree = C(n-k,k)? Let's check: C(n,k) = 1820. Try small values: C(10,3)=120, C(15,3)=455, C(16,3)=560, C(17,3)=680, C(18,3)=816, C(19,3)=969, C(20,3)=1140, C(21,3)=1330, C(22,3)=1540, C(23,3)=1771, C(24,3)=2024. So 1820 is not a binomial coefficient. So the graph is not a Kneser graph or a known binomial family. This contradicts the solver's family hypothesis of 'unknown' with no evidence.",
+   "false": true,
+   "why": "1820 = C(16,4)"
+  },
+  {
+   "objection": "The solver did not try any family rule or binomial match, and the plan only uses spectral with top=8. This is insufficient to validate the family hypothesis. The family hypothesis must be justified by known families (like Kneser, Johnson, etc.) or by a match to known parameters. Since no such match exists, the hypothesis is unjustified.",
+   "false": true,
+   "why": "'no such match exists' is false (16,4)"
+  },
+  {
+   "objection": "The order of the plan is not justified: the solver only used spectral with top=8, which gives a partial view of the spectrum. Without checking whether the eigenvalues match known families, or whether the binomial match holds, the plan is incomplete.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The binomial_match result gives (n, k) = (16, 4), but for this (n, k), the number of receivers is C(16,4) = 1820, which matches the summary's receivers = 1820. However, the degree of a vertex in K(16,4) is C(12,3) = 1320, which contradicts the summary's degree_min = degree_max = 495. Thus, (16,4) is inconsistent with the degree data.",
+   "false": true,
+   "why": "K(16,4) degree is C(12,4) = 495"
+  },
+  {
+   "objection": "The family_rule results for (23,3) and (24,3) give (p,c) pairs, but these are for Kneser graphs K(n,k), which have degrees C(n-k,k). For K(23,3), degree = C(20,3) = 1140 \u2260 495. For K(24,3), degree = C(21,3) = 1330 \u2260 495. Thus, these families are inconsistent with the degree data.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The Hoffman upper bound gives alpha \u2265 455, and the lower bound is 455, so the independence number is exactly 455. But the family_rule results do not support a consistent (n,k) that matches both the receivers and the degree. The only binomial match that fits receivers is (16,4), which fails on degree. No known family matches the degree, regularity, and eigenvalue structure.",
+   "false": true,
+   "why": "Hoffman bounds alpha from above, not below; (16,4) fits the degree"
+  },
+  {
+   "objection": "The eigenvalues include 495 with multiplicity 1, which is the degree. In a regular graph, the degree is the largest eigenvalue. For a Kneser graph K(n,k), the largest eigenvalue is known to be (n-k)k / k = n-k, which would require n-k = 495. But for (16,4), n-k = 12 \u2260 495. For (23,3), n-k = 20 \u2260 495. For (24,3), n-k = 21 \u2260 495. Thus, no known family matches the degree or eigenvalue structure.",
+   "false": true,
+   "why": "largest eigenvalue of K(n,k) is C(n-k,k), not n-k"
+  },
+  {
+   "objection": "The binomial_match result gives (n, k) = (16, 4), and C(16,4) = 1820, which matches the receivers, but the degree in K(16,4) is C(12,3) = 220, not 495. This contradicts the summary's degree_min = degree_max = 495, so the (16,4) Kneser graph is inconsistent with the degree data.",
+   "false": true,
+   "why": "K(16,4) degree is C(12,4) = 495, not C(12,3)"
+  },
+  {
+   "objection": "The solver claims that n = k + 495 because degree = n - k = 495, and C(n,k) = 1820. Solving C(k+495, k) = 1820 yields no integer solution \u2014 for example, C(495,495)=1, C(496,495)=496, C(500,495)=C(500,5)=190749, which is far above 1820. Thus, no such (n,k) exists in the Kneser family, refuting the family hypothesis.",
+   "false": true,
+   "why": "'no (n,k) exists' is false: (16,4)"
+  },
+  {
+   "objection": "The Hoffman upper bound gives \u03b1 \u2265 455, and the lower bound is 455, so \u03b1 = 455. However, the solver did not verify that this independence number is consistent with the graph structure. The check_history contains no result from independent_set with restarts, so we cannot confirm whether the lower bound is actually achieved in practice.",
+   "false": true,
+   "why": "Hoffman bounds alpha from above, not below"
+  },
+  {
+   "objection": "The try_code with (p=17, c=1) has rank 1820, matching the number of receivers, but fails to meet the lower bound. The solver did not try other (p,c) pairs or verify if any code satisfies both rank = 1820 and meets the lower bound of 455. This is a critical gap in the plan.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  }
+ ],
+ "K_16_4-del0.01_s1|Qwen3-4B-cpu": [
+  {
+   "objection": "receivers = 1820 is not a known binomial coefficient C(n,k) for small n,k; binomial_match must be run to confirm this, and its absence from check_history invalidates the solver's first step",
+   "false": true,
+   "why": "1820 = C(16,4)"
+  },
+  {
+   "objection": "distinct_eigenvalues = 1820 equals the number of receivers, which implies every vertex has a unique eigenvalue \u2014 this contradicts the spectral structure of any known symmetric family (like Kneser), and the solver fails to verify whether this is consistent with any known family rule or code structure",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "the degree range (481\u2013495) is narrow, suggesting possible regularity or symmetry; yet the solver claims 'not regular' and 'not symmetric', but this contradicts the common-neighbour counts: adjacent pairs have common neighbours in 63\u201370, nonadjacent in 66\u2013122, which show a structured pattern \u2014 this suggests a family with regularity in local structure, not random irregularity",
+   "false": true,
+   "why": "the graph is not regular (481-495); no contradiction"
+  },
+  {
+   "objection": "the spectrum has 1820 distinct eigenvalues, each with multiplicity 1, which implies the graph is not a member of any known family with repeated eigenvalues (e.g., Kneser graphs have few distinct eigenvalues). This contradicts the solver's claim of 'perturbed Kneser' \u2014 such graphs have few distinct eigenvalues, not one per vertex",
+   "false": true,
+   "why": "a perturbed graph has N distinct eigenvalues, not few"
+  },
+  {
+   "objection": "the eigenvalues are very close to integers (e.g., 490.057, 45.6572), suggesting a small perturbation from an integral spectrum. The solver does not check whether these values are consistent with a known code family M = I + cA over F_p for some prime p and c, which would be a stronger evidence than just spectral proximity",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family hypothesis claims a Kneser graph K(16,4) as the structure, but the observed spectrum has 1820 distinct eigenvalues, each with multiplicity 1 \u2014 this contradicts known Kneser graphs, which have only a few distinct eigenvalues (e.g., K(16,4) has about 17 distinct eigenvalues, not 1820). The summary states 'distinct_eigenvalues: 1820', which is equal to the number of vertices, indicating a non-symmetric, non-regular structure inconsistent with any known Kneser family.",
+   "false": true,
+   "why": "K(16,4) has 5 distinct eigenvalues, not ~17"
+  },
+  {
+   "objection": "The common neighbour counts for adjacent vertices (63\u201370) are far below the expected value of C(10,4)=210 in a Kneser graph, suggesting a significant deviation from the Kneser structure. This directly refutes the family hypothesis.",
+   "false": true,
+   "why": "adjacent common neighbours in K(16,4) are C(8,4) = 70, not 210"
+  },
+  {
+   "objection": "The binomial_match result confirms 1820 = C(16,4), which supports the receiver count, but does not validate the family structure. The presence of 1820 distinct eigenvalues (one per vertex) is incompatible with any known symmetric graph family, including Kneser graphs.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The plan relies on family_rule without having queried it, and the evidence shows that the known eigenvalue structure of K(16,4) is fundamentally different from the observed one. This is a critical omission.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The solver's conclusion that the graph is a 'perturbed Kneser graph' is unsupported by the data: perturbations do not produce such a drastic change in eigenvalue multiplicity or common neighbour counts. The spectrum is not close to integer eigenvalues with small multiplicities; instead, it has 1820 distinct eigenvalues, each of multiplicity 1, which is incompatible with any known family rule.",
+   "false": true,
+   "why": "1% edge deletion does split multiplicities; the eigenvalues are close to integers"
+  },
+  {
+   "objection": "The receiver count 1820 is confirmed by binomial_match as C(16,4), but the degree range [481, 495] contradicts the uniform degree of K(16,4) which is C(12,4)=495; observed min degree 481 implies irregularity, violating the regularity assumption of any symmetric family.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "Common neighbours for adjacent vertices are 63\u201370, which are far below the expected C(10,4)=210 in a Kneser graph; this deviation is inconsistent with known Kneser structures and cannot be explained by minor perturbations.",
+   "false": true,
+   "why": "expected value is C(8,4) = 70, not 210"
+  },
+  {
+   "objection": "The graph has 1820 distinct eigenvalues (one per vertex), which contradicts the known spectral structure of Kneser graphs (e.g., K(16,4) has only ~17 distinct eigenvalues), and the spectrum is not integral, violating integrality and symmetry required for vertex-transitive families.",
+   "false": true,
+   "why": "K(16,4) has 5 distinct eigenvalues, not ~17"
+  },
+  {
+   "objection": "The family_rule call for (n=16, k=4) returns (p=2, c=1), but this is not validated by the spectral or common neighbour data; the eigenvalues are not close to integers and have multiplicity 1 per vertex, indicating no code family structure.",
+   "false": true,
+   "why": "the eigenvalues are close to integers (490.06, 45.66)"
+  },
+  {
+   "objection": "The plan relies on try_code (p=2, c=1) without confirming whether the rank of M = I + A over F_2 is at least 455; this is critical for the upper bound on independent set, and no such check has been performed in check_history.",
+   "false": true,
+   "why": "a code's rank bounds beta, not the independent set"
+  }
+ ],
+ "K_14_4_s1|Qwen3-4B-cpu": [
+  {
+   "objection": "The degree is 210, and the number of receivers is 1001. For a regular graph, the degree must satisfy d = (2 * edges) / n. Computing: 2 * 105105 / 1001 = 210.0, so this checks out.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The common neighbours for adjacent vertices is 15, and for non-adjacent vertices are 35, 70, 126. These values must match the expected values from a known family. The values 35, 70, 126 are binomial coefficients: C(7,3)=35, C(7,4)=35, C(7,5)=21, not matching. 70 = C(10,4), 126 = C(14,3), suggesting inconsistency.",
+   "false": true,
+   "why": "wrong binomials (70 != C(10,4), 126 != C(14,3))"
+  },
+  {
+   "objection": "The spectrum has 5 distinct eigenvalues: 210, 28, 1, -7, -84. The sum of eigenvalues must be zero (since trace is zero). Compute: 210 + 28 + 1 -7 -84 = 148 \u2260 0. This is a contradiction.",
+   "false": true,
+   "why": "eigenvalue sum taken without multiplicities"
+  },
+  {
+   "objection": "The eigenvalues list includes (210,1), (28,77), (1,637), (-7,273), (-84,13). Total multiplicity: 1+77+637+273+13 = 1001. That matches the number of vertices. But sum of eigenvalues: 210*1 + 28*77 + 1*637 + (-7)*273 + (-84)*13 = 210 + 2156 + 637 - 1911 - 1092 = (210+2156+637) = 3003; (1911+1092)=3003 \u2192 3003 - 3003 = 0. So sum is zero \u2014 this is correct.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The eigenvalue -84 has multiplicity 13. The total number of vertices is 1001. The multiplicities sum to 1+77+637+273+13=1001 \u2014 correct.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The common neighbours for adjacent vertices is 15. In a strongly regular graph, the parameters satisfy: k(k - \u03bb - 1) = (n - k - 1)\u03bc. Here, k=210, \u03bb=15, \u03bc=35 (from adjacent common neighbours), n=1001. Check: 210*(210 - 15 - 1) = 210*194 = 40740. Right side: (1001 - 210 - 1)*35 = 790*35 = 27650. Not equal. So contradiction.",
+   "false": true,
+   "why": "strongly regular equation applied to a non-SRG"
+  },
+  {
+   "objection": "The common neighbours for non-adjacent vertices are 35, 70, 126 \u2014 this suggests multiple values, which is not possible in a strongly regular graph. Strongly regular graphs have a single value for common neighbours of non-adjacent vertices. So this is inconsistent.",
+   "false": true,
+   "why": "wrong inference: Kneser graphs are not strongly regular"
+  },
+  {
+   "objection": "The family hypothesis is unknown and has no evidence. No family rule has been applied or queried.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The plan only uses spectral with top=8, but does not verify whether the eigenvalues match any known family (e.g., Kneser, Johnson). A binomial_match check is needed to see if (n,k) = (1001, k) with C(1001,k) = 1001, which is only possible if k=1 or k=1000, but then degree would not be 210.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family hypothesis claims the graph is a perturbed Kneser graph K(14,4), but the family_rule query was made with (n=1001, k=210), which is not the correct input for a Kneser graph; Kneser graphs are defined on (n,k) with vertex set of k-subsets of an n-set, so (n=14, k=4) is correct, not (1001,210). This mismatch invalidates the structural rule check.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The common_neighbours_adjacent is 15, while common_neighbours_nonadjacent has multiple values (35, 70, 126), which contradicts the definition of a strongly regular graph. The solver incorrectly states this is due to a 'perturbation' without verifying whether such a structure is even possible in a known family. A Kneser graph K(14,4) is known to have uniform common neighbours for adjacent and non-adjacent pairs, so this inconsistency refutes the hypothesis.",
+   "false": true,
+   "why": "Kneser graphs do not have uniform common-neighbour counts"
+  },
+  {
+   "objection": "The binomial_match result correctly identifies (14,4) with C(14,4)=1001 and degree C(10,4)=210, which is consistent, but the solver fails to verify that the actual common neighbour counts in K(14,4) match the observed values. The observed values (15, 35, 70, 126) do not match the known common neighbour counts of K(14,4), which are all equal for adjacent and non-adjacent pairs. This is a direct contradiction.",
+   "false": true,
+   "why": "Kneser graphs do not have uniform common-neighbour counts"
+  },
+  {
+   "objection": "The solver's plan includes try_code with p=2, c=1, but no check result is available in check_history. This test is not validated, and its purpose (to support beta=345/1001) is not confirmed by any data. Without a result, we cannot accept it as evidence.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The independent_set tool was run with 3 restarts, but no result is in check_history. The lower bound of 286 is not verified to be tight or correct, and without a result, we cannot assess whether the independent set bound supports the broadcast rate.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family_rule query for (n,k) = (14,4) returned null, which means the structural rule for Kneser graph K(14,4) was not verified \u2014 a critical gap in the hypothesis.",
+   "false": true,
+   "why": "wrong inference 'rule null = not verified' (reviewer's rule)"
+  },
+  {
+   "objection": "The binomial_match result confirms (14,4) as the only solution to C(n,k)=1001 and degree=C(10,4)=210, so the vertex count and degree are consistent, but this does not confirm the graph is a Kneser graph; the solver assumes this without structural validation.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The common_neighbours_adjacent: 15 and common_neighbours_nonadjacent: [35,70,126] contradict the expected strong regularity of a Kneser graph. Known Kneser graphs K(n,k) have constant common neighbours, and for K(14,4), adjacent vertices should have exactly one common neighbour, and non-adjacent vertices should have a fixed number. Here, adjacent vertices have 15 common neighbours, which is inconsistent with known Kneser graph properties.",
+   "false": true,
+   "why": "adjacent pairs in K(14,4) share 15, not 1"
+  },
+  {
+   "objection": "The spectral data shows 5 distinct eigenvalues, which is consistent with known Kneser graphs, but the solver claims 'not necessarily strongly regular' despite the common neighbour values being inconsistent with strong regularity. This undermines the claim that the graph is a Kneser graph.",
+   "false": true,
+   "why": "wrong inference from strong regularity"
+  },
+  {
+   "objection": "The try_code with p=2, c=1 gives rank 299, which matches the upper bound, but this is only one code check. The solver does not verify if this code matches the structure of K(14,4) or whether the rank is consistent with the known parameters. The result 'meets_lower: false' indicates it fails to meet the lower bound, which contradicts the claim that beta = 299/1001 is achievable.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The independent_set tool returned 'not available' \u2014 the lower bound of 286 is not verified, and the solver claims a tighter bound is needed, but no result was obtained.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  }
+ ],
+ "K_13_4_s0|Qwen3-4B-cpu": [
+  {
+   "objection": "The binomial_match tool was used to find (n,k) = (13,4) because C(13,4) = 715 and degree C(9,4) = 126. However, C(13,4) = 715 is correct, but C(9,4) = 126 is also correct \u2014 this matches the receiver count and degree. But the solver claims this is a Kneser graph K(13,4), which is valid only if the graph is defined as K(n,k) with n=13, k=4. However, the Kneser graph K(n,k) has degree C(n-k,k), which for (13,4) is C(9,4)=126 \u2014 correct. So this part is consistent.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family_rule call with (n,k)=(13,4) is requested but not justified by evidence. The solver assumes the family rule applies without checking whether the known structural properties of K(13,4) match the given spectrum. We must verify that the spectrum of K(13,4) matches the provided eigenvalues.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The eigenvalues in the summary are: [126,1], [21,65], [1,429], [-6,208], [-56,12]. The sum of eigenvalues must be zero (since the graph is regular and the trace is zero). Let's verify: 126*1 + 21*65 + 1*429 + (-6)*208 + (-56)*12 = 126 + 1365 + 429 - 1248 - 672 = (126+1365+429) = 1920; (1248+672)=1920; 1920 - 1920 = 0. So trace is zero \u2014 good.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "Now, check known eigenvalues of K(13,4). The Kneser graph K(n,k) has eigenvalues: (k - n) with multiplicity C(n-k,k), and (k - i) with multiplicity C(n-k,k) for i = 1 to k-1? Actually, standard Kneser graph K(n,k) has eigenvalues: (k - i) with multiplicity C(n-k,k) for i = 0 to k, but more precisely: the eigenvalues are (k - i) for i = 0 to k, with multiplicities C(n-k,k) for each? Actually, correct known result: K(n,k) has eigenvalues: (k - i) with multiplicity C(n-k,k) for i = 0 to k, but only when n-k >= k? Actually, standard result: the eigenvalues of K(n,k) are (k - i) with multiplicity C(n-k,k) for i = 0 to k, but only if n-k >= k. For K(13,4): n-k = 9, k=4. The eigenvalues are: (4 - i) for i = 0 to 4, with multiplicities C(9,4)=126. But that would give eigenvalues: 4, 3, 2, 1, 0 \u2014 but these don't match the given spectrum.",
+   "false": true,
+   "why": "wrong Kneser spectrum"
+  },
+  {
+   "objection": "The given eigenvalues are: 126 (multiplicity 1), 21 (65), 1 (429), -6 (208), -56 (12). The largest eigenvalue is 126, which should be the degree \u2014 yes, in Kneser graphs, the degree is C(n-k,k), which is 126 \u2014 correct. But the next largest eigenvalue is 21, not 4 or 3. So this is inconsistent with known Kneser graph eigenvalues.",
+   "false": true,
+   "why": "wrong Kneser spectrum"
+  },
+  {
+   "objection": "In K(13,4), the eigenvalues are known to be: (4 - i) with multiplicity C(9,4)=126 for i=0 to 4? No \u2014 actually, the correct eigenvalues are: (k - i) for i = 0 to k, with multiplicities C(n-k,k). But that would give eigenvalues 4,3,2,1,0 \u2014 all with multiplicity 126. But here, multiplicity of 126 is 1, which is the degree \u2014 that's the trivial eigenvalue. The next eigenvalue is 21, which is not among 4,3,2,1,0. So contradiction.",
+   "false": true,
+   "why": "wrong Kneser spectrum"
+  },
+  {
+   "objection": "Therefore, the family hypothesis is inconsistent with the spectrum. The eigenvalue 126 appears only once (as the degree), which is correct, but the next eigenvalue is 21, which is not part of the known Kneser graph structure. The known Kneser graph K(n,k) has eigenvalues that are integers and symmetric around zero, and the non-trivial eigenvalues are of the form (k - i) with multiplicities C(n-k,k). For K(13,4), the eigenvalues should be 4,3,2,1,0 with multiplicity 126 each \u2014 but here, the multiplicity of 4 is 0, and we have a large eigenvalue 21 with multiplicity 65 \u2014 this is not possible.",
+   "false": true,
+   "why": "wrong Kneser spectrum"
+  },
+  {
+   "objection": "The sum of multiplicities: 1 + 65 + 429 + 208 + 12 = 715 \u2014 matches the number of vertices. But the structure is wrong. The eigenvalues do not match the known Kneser graph K(13,4).",
+   "false": true,
+   "why": "the spectrum matches K(13,4)"
+  },
+  {
+   "objection": "The solver claims (13,4) is valid based on binomial_match, but fails to verify that the spectrum matches the known Kneser graph. Without that, the family hypothesis is invalid.",
+   "false": true,
+   "why": "the hypothesis K(13,4) is right"
+  },
+  {
+   "objection": "The plan relies on family_rule without having queried it \u2014 we must request it to confirm the expected eigenvalues for (13,4).",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family hypothesis claims (13,4) as a Kneser graph, but the known eigenvalues of K(13,4) are 4,3,2,1,0 with multiplicities 126, 65, 429, 208, 12 \u2014 this contradicts the given spectrum [126, 21, 1, -6, -56] with multiplicities [1, 65, 429, 208, 12]. The eigenvalues do not match at all, especially the multiplicity of 1 (429 vs 65), and the presence of -6 and -56 is not in the Kneser graph structure.",
+   "false": true,
+   "why": "wrong Kneser spectrum"
+  },
+  {
+   "objection": "The binomial_match result correctly identifies (13,4) as the only solution with C(13,4)=715 and degree C(9,4)=126, so the receiver and degree counts are consistent, but this does not validate the family hypothesis if the spectrum is inconsistent with known Kneser graphs.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family_rule returned (p=5, c=4) for (13,4), but this is not a check of whether the Kneser graph structure holds \u2014 it only gives a code parameter. Without verifying that the spectral structure matches a known family (like a code over F_5), we cannot accept the family hypothesis.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The solver's plan includes try_code with (p=5, c=4), but the check_history does not contain the result of try_code, so we cannot verify whether the rank of M = I + 4A over F_5 achieves 260. Without this result, we cannot confirm the upper bound of 260 or the broadcast rate.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The Hoffman bound result is 220.0, which matches the lower bound of 220, but this does not validate the spectral structure or the family hypothesis. The independence number is tight, but that alone does not confirm the graph is a Kneser graph or a valid code family.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  }
+ ],
+ "K_13_4_s1|Qwen3-4B-cpu": [
+  {
+   "objection": "The degree is 126, and the number of receivers is 715. A regular graph with 715 vertices and degree 126 implies that the total number of edges is (715 * 126) / 2 = 45045, which matches the summary, so regularity is consistent.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The common neighbours for adjacent vertices is given as [5], and for non-adjacent as [15, 35, 70]. These values must be consistent with the eigenvalues. Using the known formula for common neighbours in regular graphs, the number of common neighbours between two adjacent vertices should be derivable from the spectrum. The eigenvalue structure suggests a Kneser-type graph, but we must verify if any known family matches.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The spectrum has 5 distinct eigenvalues: 126 (multiplicity 1), 21 (65), 1 (429), -6 (208), -56 (12). The sum of eigenvalues must be zero (since the trace is zero). Let's verify: 126*1 + 21*65 + 1*429 + (-6)*208 + (-56)*12 = 126 + 1365 + 429 - 1248 - 672 = (126+1365+429) = 1920; (1248+672)=1920 \u2192 1920 - 1920 = 0. So the spectrum is valid.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The binomial match should be attempted: is there an (n,k) such that C(n,k) = 715 and degree = C(n-k,k)? Try solving C(n,k) = 715. Known values: C(14,2)=91, C(15,3)=455, C(15,4)=1365, C(14,3)=364, C(15,2)=105, C(16,3)=560, C(16,4)=1820. C(15,3)=455, C(15,4)=1365 \u2014 no match. C(14,5)=2002, too big. C(13,4)=715. Yes! C(13,4)=715. So n=13, k=4. Then degree = C(13-4,4)=C(9,4)=126. This matches the degree. So the graph is the Kneser graph K(13,4), which is known to be regular of degree 126, and has known eigenvalues.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family hypothesis is currently unknown \u2014 we now know that (n,k)=(13,4) fits all numbers: receivers=715=C(13,4), degree=126=C(9,4), common neighbours: adjacent pairs have 5 common neighbours (known in Kneser graphs), non-adjacent have 15,35,70 \u2014 which matches known values in K(13,4).",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The order of the plan is justified: the solver should have tried a binomial_match to find (13,4), which would have confirmed the structure. The plan only used spectral, which is insufficient without binomial match.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "There is a cheaper path: binomial_match can be used to find (13,4) in O(1) time, which is far cheaper than running spectral on top=8 (which is expensive and not necessary).",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  }
+ ],
+ "K_15_5_s0|Qwen3-4B-cpu": [
+  {
+   "objection": "The receivers count is 3003, which is C(39,2) = 741, not matching C(n,k) for any known (n,k) pair; binomial_match should be used to verify if (n,k) = (39,2) or similar gives 3003 receivers.",
+   "false": true,
+   "why": "3003 = C(15,5); C(39,2) = 741 is irrelevant"
+  },
+  {
+   "objection": "The degree is 252; for a Kneser graph K(n,k), degree is C(n-k,k). Solving C(n-k,k) = 252, and with receivers = C(n,k) = 3003, we test: C(39,2) = 741, C(39,3) = 9139, C(39,4) = 81217 \u2014 none match 3003. C(39,2)=741, C(39,1)=39, C(30,3)=4060, C(28,3)=3276, C(29,3)=3654 \u2014 no (n,k) gives C(n,k)=3003. Thus, no known Kneser graph matches the receiver count.",
+   "false": true,
+   "why": "(15,5) gives 3003 and degree 252"
+  },
+  {
+   "objection": "Common neighbours for non-adjacent vertices are [6,21,56,126]. For a Kneser graph, common neighbours of non-adjacent vertices should follow a known pattern. The value 126 appears as a triangle count through a vertex \u2014 this suggests a possible connection to C(7,3)=35, not matching. 126 = C(7,3), but C(7,3)=35, so not directly. 126 = 6*21, which may be coincidental.",
+   "false": true,
+   "why": "126 = C(9,4); the binomials quoted are wrong"
+  },
+  {
+   "objection": "Spectrum has eigenvalues: 252 (1), 56 (90), 6 (910), -1 (1638), -21 (350), -126 (14). Total multiplicity sum: 1+90+910+1638+350+14 = 3003, which matches receiver count \u2014 good. But the structure must match a known family.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The eigenvalue -126 with multiplicity 14: in known Kneser graphs, such values are rare. For example, K(20,2) has eigenvalues involving -1, -2, etc., but not -126. The magnitude is too large for small n.",
+   "false": true,
+   "why": "-126 is an eigenvalue of K(15,5)"
+  },
+  {
+   "objection": "The Hoffman upper bound on independence number: using the spectrum, the Hoffman bound is \u03b1 \u2264 (sum of positive eigenvalues) / (sum of absolute values of negative eigenvalues) = (252 + 56 + 6) / (1 + 21 + 126) = 314 / 148 \u2248 2.12 \u2014 but this is too small, and the actual independence number should be at least 14 (from multiplicity of -126), so inconsistency.",
+   "false": true,
+   "why": "wrong Hoffman formula"
+  },
+  {
+   "objection": "The plan only uses spectral with top=8, but no family_rule or binomial_match to anchor (n,k). Without checking if (n,k) satisfies C(n,k)=3003 and C(n-k,k)=252, the hypothesis is unjustified.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family_rule call with (n=39, k=2) returns (p=5, c=4), but this is for a different graph (K(39,2)), not K(15,5). The solver assumes that the family_rule for K(15,5) gives (p=5, c=4), but this parameter was only derived from (n=39,k=2), which is unrelated. There is no evidence in check_history that family_rule returns (p=5,c=4) for (n=15,k=5). This is a logical gap.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The receiver count 3003 matches C(15,5), and degree 252 matches C(10,5), but the common neighbours for non-adjacent vertices are [6,21,56,126]. In K(15,5), common neighbours of non-adjacent vertices are known to be C(n-k-1, k-1) = C(9,4)=126 for some pairs, but the value 126 appears in both common_neighbours_nonadjacent and triangles_through_sampled_vertex. This suggests a possible misalignment: in Kneser graphs, common neighbours are typically C(n-k-1, k-1), which for (15,5) is C(9,4)=126, so 126 is correct, but the presence of 6,21,56 suggests a more complex structure. These values are not standard in K(15,5), and their appearance in the list implies a potential inconsistency with the family hypothesis.",
+   "false": true,
+   "why": "6, 21, 56, 126 = C(6,5)..C(9,5) are the K(15,5) values"
+  },
+  {
+   "objection": "The spectrum provided has eigenvalues: 252 (1), 56 (90), 6 (910), -1 (1638), -21 (350), -126 (14). The sum of eigenvalues must be zero (since the graph is regular and the trace is zero). Let's verify: 252*1 + 56*90 + 6*910 + (-1)*1638 + (-21)*350 + (-126)*14 = 252 + 5040 + 5460 - 1638 - 7350 - 1764 = (252+5040+5460) = 10752; (1638+7350+1764)=10752; 10752 - 10752 = 0. So the spectrum is valid.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The multiplicity of eigenvalue -126 is 14, and in K(15,5), the multiplicity of eigenvalue -126 is known to be C(15,5) - C(10,5) - ... but standard Kneser graph eigenvalues are of the form (k - i) with multiplicities based on binomial coefficients. For K(15,5), the eigenvalues are (5 - i) for i=0 to 4, so 5,4,3,2,1,0, and negative ones from the structure. The eigenvalue -126 is not standard in K(15,5). The known eigenvalues in K(n,k) are of the form (k - i) for i=0,...,k-1, and negative ones from the complement structure. But -126 is too large in magnitude. The multiplicity 14 for -126 is suspicious and not consistent with known Kneser graph spectra.",
+   "false": true,
+   "why": "-126 with multiplicity 14 is the K(15,5) spectrum"
+  },
+  {
+   "objection": "The independence number is bounded by Hoffman at 1001, and the lower bound is 1001. However, the solver assumes that the independent set of size 1001 exists, but the independent_set tool was not actually run. The check_history shows no independent_set execution. The existence of an independent set of size 1001 is not verified by any check. The solver claims certification via restarts, but no result is in check_history.",
+   "false": true,
+   "why": "the independent set of 1001 is a certified board entry"
+  }
+ ],
+ "reg_1000_6_s0|Qwen3-4B-cpu": [
+  {
+   "objection": "The summary states 1000 receivers, but the spectrum has 1000 distinct eigenvalues \u2014 this implies at least 1000 vertices, which contradicts the receiver count of 1000 unless each vertex has a unique eigenvalue, which is only possible in a non-regular or non-symmetric graph. However, the graph is regular (degree 6), and regular graphs with high symmetry typically have few distinct eigenvalues. A regular graph with 1000 vertices and 1000 distinct eigenvalues is impossible unless the eigenvalues are all distinct, which would violate known spectral bounds (e.g., the number of distinct eigenvalues is at most n, but typically much less in structured graphs).",
+   "false": true,
+   "why": "N distinct eigenvalues is normal for a random regular graph"
+  },
+  {
+   "objection": "The common neighbours for adjacent vertices are [0,1], and for non-adjacent are [0,1,2] \u2014 this implies that adjacent vertices share 0 or 1 common neighbours, and non-adjacent share 0, 1, or 2. This is inconsistent with a regular graph of degree 6 unless the local structure is highly constrained. In a regular graph, the number of common neighbours between adjacent vertices is typically bounded and often constant in symmetric families. Here, the variation suggests non-regular local structure, contradicting the claim of regularity.",
+   "false": true,
+   "why": "varying common-neighbour counts do not contradict regularity"
+  },
+  {
+   "objection": "The degree is uniformly 6, but the spectrum is non-integral and has 1000 distinct eigenvalues. For a regular graph, the eigenvalues are symmetric about 0 (if the graph is undirected), and the largest eigenvalue is exactly the degree (6). The given eigenvalues start at 6.0 and then drop to 4.4476, etc., which is plausible, but the presence of 1000 distinct eigenvalues is impossible in a graph of 1000 vertices: the number of distinct eigenvalues cannot exceed the number of vertices, but in practice, it is far less. For example, a regular graph of degree 6 would have at most a few dozen distinct eigenvalues due to symmetry and structure. The claim of 1000 distinct eigenvalues is likely a misstatement or error \u2014 the summary says 'distinct_eigenvalues: 1000', which is numerically impossible for a 1000-vertex graph with a regular structure.",
+   "false": true,
+   "why": "N distinct eigenvalues is possible and typical here"
+  },
+  {
+   "objection": "The binomial_match tool was used but not queried \u2014 the solver claims no match for C(n,k) with degree C(n-k,k)=6. However, we must verify: for degree 6, we need C(n-k,k)=6. Solving C(n-k,k)=6: possible solutions are (n-k,k) = (6,0), (3,2), (4,1), (5,1), etc. For (n-k,k)=(3,2): n=5, k=2 \u2192 C(5,2)=10 \u22606. (n-k,k)=(4,1): n=5, k=1 \u2192 C(4,1)=4. (n-k,k)=(5,1): n=6, k=1 \u2192 C(5,1)=5. (n-k,k)=(6,0): n=6, k=0 \u2192 C(6,0)=1. None give degree 6. So no solution exists for C(n-k,k)=6. This contradicts the assumption that the graph is a Kneser-type graph with binomial structure.",
+   "false": true,
+   "why": "C(4,2) = 6: K(6,2) has degree 6"
+  },
+  {
+   "objection": "The solver claims the graph is not vertex-transitive and not from a known family, but the regularity and degree 6 suggest a possible Kneser-type graph. However, no known Kneser graph has degree 6 and such a spectrum. For example, K(6,2) has degree C(4,2)=6 \u2014 this matches. So (n,k)=(6,2) gives degree 6. Then total vertices = C(6,2)=15. But the graph has 1000 receivers \u2014 contradiction. So no binomial match exists for 1000 vertices with degree 6. Thus, the family hypothesis is invalid.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The spectral method (top=1) was used, but the largest eigenvalue is 6.0, which matches the degree. However, the presence of 1000 distinct eigenvalues is not possible in a 1000-vertex graph with a regular structure. The number of distinct eigenvalues in a regular graph is bounded by the number of orbits under automorphism, and for a symmetric graph, it is much smaller. A graph with 1000 distinct eigenvalues must have no symmetry, which contradicts the regularity and the common neighbour counts that suggest a structured local environment.",
+   "false": true,
+   "why": "N distinct eigenvalues is possible"
+  },
+  {
+   "objection": "The summary claims 1000 distinct eigenvalues, but in a regular graph with 1000 vertices, the maximum number of distinct eigenvalues is 1000 \u2014 this is only possible if all eigenvalues are distinct, which is highly atypical and contradicts known spectral properties of structured regular graphs. The presence of 1000 distinct eigenvalues with a non-integral spectrum is inconsistent with any known family of regular graphs, including Kneser-type or strongly regular graphs.",
+   "false": true,
+   "why": "N distinct eigenvalues is possible"
+  },
+  {
+   "objection": "The common_neighbours_adjacent: [0,1] and common_neighbours_nonadjacent: [0,1,2] imply a local structure where adjacent vertices have 0 common neighbors (impossible if degree is 6 and regular), and non-adjacent vertices have 1 or 2 common neighbors. This suggests a contradiction: in a regular graph, if adjacent vertices have 0 common neighbors, then the graph is triangle-free, but the triangle count through a sampled vertex is 1, which implies at least one triangle \u2014 contradiction.",
+   "false": true,
+   "why": "adjacent pairs with 0 common neighbours are possible in a 6-regular graph"
+  },
+  {
+   "objection": "The binomial_match result is empty, correctly indicating no (n,k) such that C(n,k)=1000 and C(n-k,k)=6. However, the solver assumes this rules out a Kneser family, but does not verify that no such (n,k) exists with C(n,k)=1000 and degree 6. The solver fails to check whether any such (n,k) could exist \u2014 this is a critical omission.",
+   "false": true,
+   "why": "binomial_match already did that check"
+  },
+  {
+   "objection": "The family_rule call for (6,2) returns p=2,c=1, but C(6,2)=15 \u2260 1000, so it is not applicable. However, the solver does not check whether any other (n,k) pair satisfies C(n,k)=1000 and C(n-k,k)=6. This is a fundamental gap in the hypothesis validation.",
+   "false": true,
+   "why": "binomial_match already did that check"
+  },
+  {
+   "objection": "The spectral tool is used only for top eigenvalue, which is 6.0 \u2014 correct for degree. But the non-integral spectrum and 1000 distinct eigenvalues are inconsistent with any known regular graph structure. The solver does not verify whether the spectrum could be integral or whether the distinct eigenvalues are actually 1000 or less \u2014 this must be checked.",
+   "false": true,
+   "why": "random regular graphs typically have N distinct eigenvalues"
+  },
+  {
+   "objection": "The order of the plan is justified only by evidence, but the plan does not verify the consistency of the family hypothesis with the receivers (1000), degree (6), and common neighbor counts. The solver assumes the graph is not from a known family, but fails to confirm that no such family exists or that the data is inconsistent.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The graph has 1000 vertices, degree 6, and regularity, yet claims 1000 distinct eigenvalues \u2014 this is impossible in a regular graph of order 1000, as the maximum number of distinct eigenvalues is at most 1000, but such a high number of distinct eigenvalues (all different) contradicts known spectral properties of regular graphs, especially with non-integral eigenvalues; in fact, for a regular graph, the spectrum is symmetric and typically has few distinct eigenvalues unless perturbed or random.",
+   "false": true,
+   "why": "N distinct eigenvalues is possible"
+  },
+  {
+   "objection": "Common neighbors: adjacent vertices have 0 common neighbors (from [0,1]), but the triangle count through a sampled vertex is 1 \u2014 this implies at least one triangle, which requires at least one pair of adjacent vertices to have a common neighbor, contradicting the given [0,1] for adjacent vertices. This is a direct inconsistency in the local structure.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The binomial_match result is empty, correctly indicating no (n,k) with C(n,k)=1000 and degree 6, but the solver fails to consider that the family_rule for (n=1000,k=6) returns p=13,c=12 \u2014 this suggests a possible Kneser-type family with n=1000, k=6, which would have degree C(1000-6,6)=C(994,6), which is not 6. Thus, this result is irrelevant to degree 6, and the solver did not validate whether C(994,6)=6, which is false \u2014 the degree must be C(n-k,k)=C(994,6) \u2248 10^14, not 6. So the family_rule result is misapplied.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The solver claims no known family applies, but the family_rule query for (n=1000,k=6) returns a valid (p,c) pair, implying a potential family \u2014 the solver must verify whether this family has degree 6, which it does not. Thus, the hypothesis that no family applies is incorrect.",
+   "false": true,
+   "why": "'no family applies' is correct; family_rule(1000,6) does not imply a family"
+  },
+  {
+   "objection": "The solver's plan does not include checking whether C(n,k)=1000 and C(n-k,k)=6 for any (n,k) \u2014 the binomial_match already returned empty, but the solver should have confirmed that no such (n,k) exists, which it did, but the failure to cross-validate with the family_rule result shows a gap in reasoning.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The Hoffman upper bound is not computed, and the solver does not use it to check the feasibility of the lower bound (327) against the known upper bound from spectral or structural constraints.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  }
+ ],
+ "reg_1000_6_s1|Qwen3-4B-cpu": [
+  {
+   "objection": "The summary states 1000 receivers, but the spectrum has 1000 distinct eigenvalues \u2014 this implies the graph has no symmetry, which contradicts the regularity and the claim that it is not a vertex-transitive family. A regular graph with 1000 vertices and 1000 distinct eigenvalues is only possible if all eigenvalues are distinct, which is highly atypical and suggests a computational error or misstatement in the input.",
+   "false": true,
+   "why": "N distinct eigenvalues is not an error"
+  },
+  {
+   "objection": "The common_neighbours_adjacent: 0 and common_neighbours_nonadjacent: [0,1] implies no triangles through adjacent pairs, but also suggests a weak structure. However, the triangle count through a sampled vertex is 1 \u2014 this is inconsistent with zero common neighbors for adjacent pairs. A vertex with a triangle must have at least one common neighbor, contradicting the adjacent common neighbor count of 0.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The degree is uniformly 6, so the graph is 6-regular. The binomial_match tool should be run to check if C(n,k) = 1000 and C(n-k,k) = 6. No such (n,k) exists with C(n-k,k)=6 and C(n,k)=1000 \u2014 this is a critical omission in the solver's plan. The solver did not query binomial_match, despite the degree being 6 and the number of vertices being 1000, which is a necessary check for Kneser-type graphs.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The distinct eigenvalues count is 1000, which equals the number of vertices. This is only possible if the graph has no symmetry, which contradicts the regularity and the spectral structure. In known regular graphs, especially symmetric ones, the number of distinct eigenvalues is much smaller. For example, in a strongly regular graph, the number of distinct eigenvalues is at most 3. Here, 1000 distinct eigenvalues suggest a non-symmetric, random-like structure \u2014 yet the graph is regular and has a very structured spectrum (many eigenvalues clustered near 4.4). This inconsistency must be resolved.",
+   "false": true,
+   "why": "no inconsistency: random regular graph"
+  },
+  {
+   "objection": "The solver claims no family hypothesis, but fails to verify whether the degree 6 and 1000 vertices can be explained by any known family. The binomial_match check is essential and was not requested. Without it, the hypothesis is not justified by evidence.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The graph has 1000 vertices and 1000 distinct eigenvalues, which implies no symmetry \u2014 this contradicts the regularity and the known property that regular graphs (especially vertex-transitive ones) have few or no distinct eigenvalues. A 6-regular graph with 1000 vertices cannot have 1000 distinct eigenvalues; this is mathematically impossible.",
+   "false": true,
+   "why": "'mathematically impossible' is false"
+  },
+  {
+   "objection": "Common neighbors: adjacent pairs have 0 common neighbors, non-adjacent pairs have 0 or 1. But the triangle count through a sampled vertex is 1. A triangle requires two adjacent vertices sharing a common neighbor. If adjacent vertices have 0 common neighbors, then no two adjacent vertices can share a common neighbor, hence no triangle can exist. Yet the summary states there is 1 triangle through a sampled vertex \u2014 contradiction.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The binomial_match check returned no result, correctly ruling out Kneser graphs, but the solver does not verify whether any (n,k) with C(n,k)=1000 and C(n-k,k)=6 exists \u2014 this is a necessary check for the family hypothesis. The absence of such a pair is valid, but the solver must confirm that no such (n,k) exists via binomial_match, which it already did and found none.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The distinct_eigenvalues count is 1000, equal to the number of vertices. This is only possible if the graph has no symmetry, yet a regular graph with 1000 vertices and degree 6 must have a symmetric spectrum (or at least a highly structured one). The presence of 1000 distinct eigenvalues contradicts known spectral properties of regular graphs and implies a fundamental inconsistency in the data.",
+   "false": true,
+   "why": "N distinct eigenvalues is possible"
+  },
+  {
+   "objection": "The solver's plan relies on the assumption that the graph is 6-regular and has 1000 vertices, but the common neighbor contradiction (0 for adjacent, 0 or 1 for non-adjacent, yet one triangle) is a direct logical inconsistency that invalidates the entire graph structure. This must be resolved before any further checks.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family_hypothesis claims no known family fits, which is correct, but the contradiction in common neighbors and triangle count shows the data itself is inconsistent, not just the family assignment.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The graph has 1000 distinct eigenvalues, which is impossible in a 6-regular graph of 1000 vertices: a regular graph of order n has at most n distinct eigenvalues, but more critically, the number of distinct eigenvalues is bounded by the structure of the adjacency matrix; in particular, a regular graph with degree d has at most d+1 distinct eigenvalues (by known spectral graph theory), and here d=6, so at most 7 distinct eigenvalues, yet the summary lists 1000 distinct eigenvalues \u2014 this is a mathematical contradiction.",
+   "false": true,
+   "why": "a d-regular graph is not limited to d+1 distinct eigenvalues"
+  },
+  {
+   "objection": "Adjacent vertices have 0 common neighbors (common_neighbours_adjacent: [0]), yet the triangle count through a sampled vertex is 1 \u2014 this is logically inconsistent: if two adjacent vertices have no common neighbors, then no triangle can exist, as a triangle requires three vertices where each pair is adjacent. Thus, the triangle count of 1 is impossible under the given common neighbor constraints.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The binomial_match result is empty, correctly ruling out Kneser-type graphs with C(n,k)=1000 and C(n-k,k)=6, but this does not resolve the fundamental contradictions in the graph structure; the presence of such contradictions invalidates the entire hypothesis.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The family_rule result for (n=1000, k=6) returns (p=13, c=12), but this is not validated against the actual graph structure \u2014 the spectral and common neighbor data contradict the expected properties of such a family, and no check was performed to verify whether the resulting code M = I + cA over F_p has the correct degree or spectrum. The family_rule result is used without verification, violating the requirement to check consistency with the data.",
+   "false": false,
+   "why": "true statement, correct arithmetic, or process request (checked)"
+  },
+  {
+   "objection": "The distinct_eigenvalues count is 1000, which equals the number of vertices, but in a regular graph, the number of distinct eigenvalues is at most degree + 1 = 7. This is a clear mathematical impossibility and refutes the entire summary as inconsistent with known graph theory.",
+   "false": true,
+   "why": "a d-regular graph is not limited to d+1 distinct eigenvalues"
+  }
+ ]
+}
