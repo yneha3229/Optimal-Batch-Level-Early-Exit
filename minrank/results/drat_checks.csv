@@ -102,3 +102,10 @@ minrank/results/planted_n100_check/cnf/planted_n100_r10_e0.1_s5_r9_indep.cnf.gz,
 minrank/results/planted_n100_check/cnf/planted_n100_r10_e0.1_s6_r9_indep.cnf.gz,b1ea4f2acf98b21303efc451627d9e6c2d6c75a149152a955e1a3bdf6fabe6c9,79728,275202,UNSAT,4.798025991,VERIFIED,2.473802641,3
 minrank/results/planted_n100_check/cnf/planted_n100_r10_e0.1_s2_r9_indep.cnf.gz,b08494e31f114e71f5fa1c167525d99e51756b46660a6ec069fc4d8cc9e4e69b,80476,277824,UNSAT,2.793705949,VERIFIED,2.289173949,3
 minrank/results/unsat_cnf/families_new/odd_3_r17_indep.cnf.gz,726dfd807bde1de7db3af22994a058482d361ff2dd37a3274b4d02c96be8ac4a,36995,126370,UNSAT,50.806755551,VERIFIED,104.511711364,38
+minrank/results/unsat_cnf/families_new/gkneser_9_4_1_r21_indep.cnf.gz,ed13f5d4c6710f108a9c12637d10cc1e413e390d8dcb60a438c2c477731cf515,423738,1470546,UNSAT,1872.389243768,VERIFIED,3356.686184477,542
+minrank/results/open_portfolio/unsat_cnf/circ_41_1-5-8_r14_indep.cnf.gz,a949e031b0cdbc170d7e413729ec06d96885f8be83a32f964dfd04f5c1a0b8c0,39893,136689,UNSAT,.153277299,VERIFIED,.285495380,1
+minrank/results/open_portfolio/unsat_cnf/circ_41_1-5-8_r15_indep.cnf.gz,0bda1886206a24e52876ff31ab12e0007e8ee618915829aec3aa6e5d0a3bdc64,42845,146760,UNSAT,1.183723702,VERIFIED,2.527904452,3
+minrank/results/open_portfolio/unsat_cnf/circ_41_1-5-8_r16_indep.cnf.gz,71708454b6117c73d02347fee382bca0a22cdb0d42dd5b2da65e8b4e162ab107,45797,156831,UNSAT,139.576648615,VERIFIED,168.357727617,98
+minrank/results/unsat_cnf/families_new/johnson_8_3_r11_indep.cnf.gz,88d7d5b80497be41b90fa63c9bb67336edd014a4eec99054e807e4281eaaa085,49448,170080,UNSAT,3628.605905371,VERIFIED,2957.071648266,920
+minrank/results/open_portfolio/unsat_cnf/paley_37_r7_indep.cnf.gz,311e87aa9fcd6f4a521550bfc5f847676445302e3fea5effbadc3ac18825cd39,9657,32394,UNSAT,4923.841925178,VERIFIED,3034.708672826,877
+minrank/results/open_portfolio/unsat_cnf/paley_61_r8_indep.cnf.gz,03f9627e6c14f5477051886fb537caa204153ec927518daa5a240ba8146fca3b,29341,100303,UNSAT,18429.911124750,VERIFIED,8020.105312656,3263

@@ -1,1 +1,3 @@
 1 specs, 0 already proven, 1 to run
+johnson_8_3: alpha=8 cover=12 minrk in [12, 12] proven=True (2791.3 s) [[11, "unsat", 2779.74]]
+wrote minrank/results/families_new_long.csv

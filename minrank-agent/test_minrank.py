@@ -46,3 +46,16 @@ def test_random_graph_gap_stays_open():
     g = SG.random_gnp(30, 0.5, 1)                            # no structure: spectral cannot close
     r = solve(g, SpectrumAgent())
     assert r["proven_beta"] is None
+
+
+def test_kneser_agent_explicit_code():
+    from minrank_agent.kneser_agent import simulate_code, solve as ksolve
+
+    for n, k, beta, p in [(7, 2, 6, 3), (10, 3, 36, 2), (11, 3, 45, 5)]:
+        g = SG.kneser(n, k)
+        r = ksolve(g.A)
+        assert r["exact"] and r["upper"] == beta and r["field"] == p
+        c = r["code"]
+        assert c["transmissions"] == beta
+        eps = 1 if k % 2 else -1
+        assert simulate_code(g.A, p, eps, c["encoder"], c["decoder"], trials=5, seed=1)

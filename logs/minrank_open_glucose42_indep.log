@@ -1,1 +1,12 @@
 11 specs, 0 already proven, 11 to run
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 5 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+11 specs, 0 already proven, 11 to run
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 5 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+11 specs, 0 already proven, 11 to run
+paley_29: alpha=4 cover=8 minrk in [7, 8] proven=False (28810.5 s) [[7, "timeout", 28800.38]]
+paley_41: alpha=5 cover=9 minrk in [8, 9] proven=False (28810.5 s) [[8, "timeout", 28800.43]]
+mycielski_7: alpha=47 cover=48 minrk in [47, 48] proven=False (28811.3 s) [[47, "timeout", 28801.13]]
+/usr/lib/python3.12/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 5 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
